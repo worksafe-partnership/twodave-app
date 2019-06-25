@@ -1,11 +1,12 @@
-idenifierPath: company
+identifierPath: company
 model: Company
 timestamps: true
 permissions: true
+softDeletes: true
 config:
     singular: Company
     plural: Companies
-    icon: eg-people
+    icon: people
     route_type: resource
 
 fields:
@@ -25,7 +26,6 @@ fields:
     - type: integer
       name: review_timescale
       label: Review Timescale
-      migrationArgument: 2
       formType: select
       formAttribute: 
           - key: list
@@ -40,6 +40,7 @@ fields:
       name: vtrams_name
       label: VTRAMs Name
       migrationArgument: 100
+      datatable: false
       formAttribute:
           - key: value
             value: $record->vtrams_name ?? 'Task RAM'
@@ -67,10 +68,6 @@ fields:
       request:
           - type: required
             message: Please enter a Phone Number
-          - type: max:20
-            message: The Phone Number cannot be more than 30 characters
-          - type: numeric
-            message: Please enter a valid Phone Number
 
     - type: string
       name: fax
@@ -79,15 +76,12 @@ fields:
       request:
           - type: required
             message: Please enter a Fax Number
-          - type: max:30
-            message: The Fax Number cannot be more than 30 characters
-          - type: numeric
-            message: Please enter a valid Fax Number
 
     - type: char
       name: low_risk_character
       label: Low Risk Label
       migrationArguement: 1
+      datatable: false
       default: L
       formAttribute:
           - key: value
@@ -102,6 +96,7 @@ fields:
       name: med_risk_character
       label: Medium Risk Label
       migrationArguement: 1
+      datatable: false
       default: M
       formAttribute:
           - key: value
@@ -116,6 +111,7 @@ fields:
       name: high_risk_character
       label: High Risk Label
       migrationArguement: 1
+      datatable: false
       default: H
       formAttribute:
           - key: value
@@ -130,6 +126,7 @@ fields:
       name: no_risk_character
       label: No Risk Label
       migrationArguement: 1
+      datatable: false
       default: #
       formAttribute:
           - key: value
@@ -145,6 +142,7 @@ fields:
       label: Primary Colour
       formType: colour
       migrationArguement: 7
+      datatable: false
       default: #000000
       formAttribute:
           - key: value
@@ -160,6 +158,7 @@ fields:
       label: Secondary Colour
       formType: colour
       migrationArguement: 7
+      datatable: false
       default: #000000
       formAttribute:
           - key: value
@@ -174,11 +173,16 @@ fields:
       name: light_text
       label: Light Text
       default: false
+      datatable: false
+      formAttribute:
+          - key: value
+            value: $record->light_text ?? false
 
     - type: string
       name: accept_label
       label: Accept Label
       migrationArugement: 20
+      datatable: false
       formAttribute:
           - key: value
             value: $record->accept_label ?? 'Accept'
@@ -192,6 +196,7 @@ fields:
       name: amend_label
       label: Amend Label
       migrationArugement: 20
+      datatable: false
       formAttribute:
           - key: value
             value: $record->amend_label ?? 'Amend'
@@ -205,6 +210,7 @@ fields:
       name: reject_label
       label: Reject Label
       migrationArguement: 20
+      datatable: false
       formAttribute:
           - key: value
             value: $record->reject_label ?? 'Reject'
@@ -218,6 +224,7 @@ fields:
       name: logo
       label: Logo
       nullable: true
+      unsigned: true
       formType: file
       request:
           - type: mimes:jpg,jpeg,png,bmp,tiff
@@ -226,3 +233,4 @@ fields:
           table: files
           id: id
           onDelete: CASCADE
+          onUpdate: CASCADE

@@ -1,0 +1,62 @@
+<?php
+
+namespace App;
+
+use Yajra\DataTables\Datatables;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Project extends Model
+{
+    use SoftDeletes;
+    protected $table = 'projects';
+    
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'ref',
+        'company_id',
+        'project_admin',
+        'principle_contractor',
+        'principle_contractor_name',
+        'principle_contractor_email',
+        'client_name',
+        'review_timescale',
+        'show_contact'
+    ];
+
+    public static function scopeDatatableAll($query, $parent, $identifier)
+    {
+        $query->withTrashed(can('permanentlyDelete', $identifier))->select([
+                'id',
+                'name',
+                'ref',
+                'company_id',
+                'project_admin',
+                'principle_contractor',
+                'principle_contractor_name',
+                'principle_contractor_email',
+                'client_name',
+                'review_timescale',
+                'show_contact',
+                'deleted_at'
+            ]);
+
+        return Datatables::of($query)->make(true);
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id', 'id');
+    }
+
+    public function admin()
+    {
+        return $this->belongsTo(User::class, 'project_admin', 'id');
+    }
+
+}

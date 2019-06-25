@@ -1,0 +1,137 @@
+identifierPath: company.project
+model: Project
+timestamps: true
+permissions: true
+softDeletes: true
+config:
+    singular: Project
+    plural: Projects
+    icon: account_balance_wallet
+    route_type: resource
+
+fields:
+    - type: increments
+      name: id
+
+    - type: string
+      name: name
+      label: Name
+      migrationArguement: 100
+      request:
+          - type: required
+            message: Please enter a Project Name
+          - type: max:100
+            message: The Project Name cannot be more than 100 characters
+
+    - type: string
+      name: ref
+      label: Reference
+      migrationArguement: 100
+      request:
+          - type: required
+            message: Please enter the Project Reference
+          - type: max:100
+            message: The Project Reference cannot be more than 100 characters
+
+    - type: integer
+      name: company_id
+      label: Company
+      formType: select
+      unsigned: true
+      formAttribute:
+          - key: list
+            value: $companies
+          - key: display_value
+            value: $record->company->name ?? 'No Company Selected'
+      request:
+          - type: required
+            message: Please select a Company for this Project
+          - type: exists:company,id
+            message: The selected Company does not exist
+      foreign:
+          table: companies
+          id: id
+          onDelete: CASCADE
+          onUpdate: CASCADE
+
+    - type: integer
+      name: project_admin
+      label: Project Admin
+      nullable: true
+      unsigned: true
+      formType: select
+      formAttribute:
+          - key: list
+            value: $projectAdmins
+          - key: display_value
+            value: $record->admin->name ?? 'No Admin Selected'
+      request:
+          - type: required
+            message: Please select a Project Admin
+          - type: exists:users,id
+            message: The selected Project Admin does not exist
+      foreign:
+          table: users
+          id: id
+          onDelete: SET NULL
+          onUpdate: CASCADE
+
+    - type: boolean
+      name: principle_contractor
+      label: Principle Contractor
+      default: false
+      formAttribute:
+          - key: value
+            value: $record->principle_contractor ?? false
+
+    - type: string
+      name: principle_contractor_name
+      label: Principle Contractor Name
+      request:
+          - type: required_if:principle_contractor,true
+            message: Please fill in the Principle Contractor Name
+          - type: max:255
+            message: The Principle Contractor Name cannot be more than 255 characters
+    
+    - type: string
+      name: principle_contractor_email
+      label: Principle Contractor Email
+      migrationArguement: 100
+      request:
+          - type: required_if:principle_contractor,true
+            message: Please fill in the Principle Contractor Email
+          - type: max:100
+            message: The Principle Contractor Email cannot be more than 100 characters
+          - type: email
+            message: Please enter a valid Email Address
+
+    - type: string
+      name: client_name
+      label: Client Name
+      migrationArguement: 150
+      request:
+          - type: required
+            message: Please enter the Client Name
+          - type: max:150
+            message: The Client Name cannot be more than 150 characters
+
+    - type: integer
+      name: review_timescale
+      label: Review Timescale (Overrides Company)
+      formType: select
+      formAttribute: 
+          - key: list
+            value: config('egc.review_timescales')      
+          - key: value
+            value: $record->review_timescale ?? 0
+      request:
+          - type: required
+            message: Please select the Review Timescale
+
+    - type: boolean
+      name: show_contact
+      label: Show Contact Information on VTRAMs
+      default: false
+      formAttribute:
+          - key: value
+            value: $record->show_contact ?? false
