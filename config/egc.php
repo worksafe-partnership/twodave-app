@@ -40,4 +40,13 @@ return [
         11 => '11 Months',
         12 => '1 Year',
     ],
+    'vtram_status' => [
+        'NEW' => 'New',
+        'PENDING' => 'Pending',
+        'AWAITING_EXTERNAL' => 'Awaiting External Approval',
+        'EXTERNAL_REJECT' => 'Rejected Externally',
+        'REJECTED' => 'Rejected',
+        'CURRENT' => 'Current',
+        'PREVIOUS' => 'Previous',
+    ],
 ];

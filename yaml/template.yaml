@@ -1,0 +1,235 @@
+identifierPath: template
+model: Template
+timestamps: true
+permissions: true
+config:
+    singular: Template
+    plural: Templates
+    icon: insert-template
+    route_type: resource
+
+fields:
+    - type: increments
+      name: id
+
+    - type: integer
+      name: company_id
+      label: Company (Leave blank to make available for all Companies)
+      formType: select
+      unsigned: true
+      nullable: true
+      formAttribute:
+          - key: list
+            value: $companies
+          - key: display_value
+            value: $record->company->name ?? 'No Company Selected'
+          - key: selector
+            value: true
+
+    - type: string
+      name: name
+      label: Name
+      migrationArguement: 100
+      request:
+          - type: required
+            message: Please enter a Template Name
+          - type: max:100
+            message: The Template Name cannot be more than 100 characters
+
+    - type: text
+      name: description
+      label: Description
+      formType: ckeditor
+      request:
+          - type: required
+            message: Please enter a Description
+          
+    - type: integer
+      name: logo
+      label: Logo (Overrides Company Logo on VTRAMs)
+      nullable: true
+      unsigned: true
+      formType: file
+      request:
+          - type: mimes:jpg,jpeg,png,bmp,tiff
+            message: Only images are allowed to be uploaded for the Logo
+      foreign:
+          table: files
+          id: id
+          onDelete: CASCADE
+          onUpdate: CASCADE
+
+    - type: string
+      name: reference
+      label: Reference
+      migrationArguement: 100
+      request:
+          - type: required
+            message: Please enter a Reference
+          - type: max:100
+            message: The Reference cannot be more than 100 characters
+
+    - type: text
+      name: key_points
+      label: Key Points
+      formType: ckeditor
+      request:
+          - type: required
+            message: Please enter the Key Points
+
+    - type: integer
+      name: havs_noise_assessment
+      label: HAVs/Noise Assessment Document
+      nullable: true
+      unsigned: true
+      formType: file
+      request:
+          - type: mimes:jpg,jpeg,png,bmp,tiff,pdf
+            message: Only images and PDFS are allowed to be uploaded for the HAVS/Noise Assessment
+      foreign:
+          table: files
+          id: id
+          onDelete: CASCADE
+          onUpdate: CASCADE
+
+    - type: integer
+      name: coshh_assessment
+      label: COSHH Assessment Document
+      nullable: true
+      unsigned: true
+      formType: file
+      request:
+          - type: mimes:jpg,jpeg,png,bmp,tiff,pdf
+            message: Only images and PDFS are allowed to be uploaded for the COSHH Assessment
+      foreign:
+          table: files
+          id: id
+          onDelete: CASCADE
+          onUpdate: CASCADE
+
+    - type: date
+      name: review_due
+      label: Review Due
+      nullable: true
+      formAttribute:
+          - key: disabled
+            value: true
+
+    - type: date
+      name: approved_date
+      label: Approved Date
+      nullable: true
+      formAttribute:
+          - key: disabled
+            value: true
+
+    - type: integer
+      name: original_id
+      nullable: true
+      formAttribute:
+          - key: disabled
+            value: true
+
+    - type: integer
+      name: revision_number
+      label: Revision Number
+      nullable: true
+      default: null
+      formAttribute:
+          - key: disabled
+            value: true
+
+    - type: string
+      name: status
+      label: Status
+      default: NEW
+      formType: select
+      formAttribute:
+          - key: disabled
+            value: true
+          - key: list
+            value: config('egc.vtram_status')
+          - key: display_value
+            value: isset($record->status) ? config('egc.vtram_status')[$record->status]
+          - key: value
+            value: "'NEW'"
+
+    - type: integer
+      name: created_by
+      label: Created By
+      nullable: true
+      unsigned: true
+      formAttribute:
+          - key: disabled
+            value: true
+          - key: value
+            value: $record->created->name ?? ''
+      foreign:
+          table: users
+          id: id
+          onDelete: NO ACTION
+          onUpdate: NO ACTION
+
+    - type: integer
+      name: updated_by
+      label: Updated By
+      nullable: true
+      unsigned: true
+      formAttribute:
+          - key: disabled
+            value: true
+          - key: value
+            value: $record->updated->name ?? ''
+      foreign:
+          table: users
+          id: id
+          onDelete: NO ACTION
+          onUpdate: NO ACTION
+
+    - type: integer
+      name: submitted_by
+      label: Submitted By
+      nullable: true
+      unsigned: true
+      formAttribute:
+          - key: disabled
+            value: true
+          - key: value
+            value: $record->submitted->name ?? ''
+      foreign:
+          table: users
+          id: id
+          onDelete: NO ACTION
+          onUpdate: NO ACTION
+
+    - type: integer
+      name: approved_by
+      label: Approved By
+      nullable: true
+      unsigned: true
+      formAttribute:
+          - key: disabled
+            value: true
+          - key: value
+            value: $record->approved->name ?? ''
+      foreign:
+          table: users
+          id: id
+          onDelete: NO ACTION
+          onUpdate: NO ACTION
+
+    - type: date
+      name: date_replaced
+      label: Date Replaced
+      nullable: true
+      formAttribute:
+          - key: disabled
+            value: true
+
+    - type: date
+      name: resubmit_by
+      label: Resubmit By
+      nullable: true
+      formAttribute:
+          - key: disabled
+            value: true
