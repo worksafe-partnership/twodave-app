@@ -17,7 +17,8 @@
             'value' => $record["company_id"],
             'type' => $pageType,
             'list' => $companies,
-            'display_value' => $record->company->name ?? 'No Company Selected'
+            'display_value' => $record->company->name ?? 'No Company Selected',
+            'selector' => 1
         ]) }}
 
         {{ EGForm::select('project_admin', [
@@ -25,7 +26,8 @@
             'value' => $record["project_admin"],
             'type' => $pageType,
             'list' => $projectAdmins,
-            'display_value' => $record->admin->name ?? 'No Admin Selected'
+            'display_value' => $record->admin->name ?? 'No Admin Selected',
+            'selector' => 1
         ]) }}
 
         {{ EGForm::checkbox('principle_contractor', [

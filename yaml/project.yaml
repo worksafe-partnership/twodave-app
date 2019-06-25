@@ -43,6 +43,8 @@ fields:
             value: $companies
           - key: display_value
             value: $record->company->name ?? 'No Company Selected'
+          - key: selector
+            value: true
       request:
           - type: required
             message: Please select a Company for this Project
@@ -65,6 +67,8 @@ fields:
             value: $projectAdmins
           - key: display_value
             value: $record->admin->name ?? 'No Admin Selected'
+          - key: selector
+            value: true
       request:
           - type: required
             message: Please select a Project Admin
