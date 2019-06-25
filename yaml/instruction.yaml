@@ -1,0 +1,75 @@
+identifierPath: company.project.vtram.methodology.instruction
+model: Instruction
+timestamps: true
+config:
+    singular: Instruction
+    plural: Instructions
+    icon: view_list
+    exclude_routes:
+        - view
+          create
+          edit
+          delete
+          list
+          datatable_all
+          restore
+          permanentlyDelete
+
+fields:
+    - type: increments
+      name: id
+
+    - type: text
+      name: description
+      label: Description
+      formType: textarea
+      request:
+          - type: required
+            message: Please enter a Description
+
+    - type: string
+      name: label
+      label: Label
+      nullable: true
+      migrationArguement: 5
+      request:
+          - type: max:5
+            message: The Label cannot be more than 5 characters
+
+    - type: boolean
+      nullable: true
+      default: false
+      label: Heading
+      name: heading
+
+    - type: integer
+      name: list_order
+      nullable: true
+      unsigned: true
+
+    - type: integer
+      name: image
+      label: Image
+      formType: file
+      unsigned: true
+      nullable: true
+      request:
+          - type: mimes:jpg,jpeg,png,bmp,tiff
+            message: Only images are allowed to be uploaded
+      foreign:
+          table: files
+          id: id
+          onDelete: CASCADE
+          onUpdate: CASCADE
+
+    - type: integer
+      name: methodology_id
+      unsigned: true
+      request:
+          - type: exists:methodologies,id
+            message: The selected Methodology does not exist
+      foreign:
+          table: methodologies
+          id: id
+          onDelete: CASCADE
+          onUpdate: CASCADE
