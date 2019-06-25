@@ -1,0 +1,69 @@
+identifierPath: company.project.briefing
+model: Briefing
+timestamps: true
+permissions: true
+config:
+    singular: Briefing
+    plural: Briefings
+    icon: briefcase
+    route_type: resource
+
+fields:
+    - type: increments
+      name: id
+
+    - type: integer
+      name: project_id
+      unsigned: true
+      foreign: 
+          table: projects
+          id: id
+          onDelete: CASCADE
+          onUpdate: CASCADE
+
+    - type: integer
+      name: vtram_id
+      unsigned: true
+      formType: select
+      formAttribute:
+          - key: list
+            value: $vtrams
+          - key: display_value
+            value: $record->vtram->name ?? 'No VTRAM Selected'
+          - key: selector
+            value: true
+      request:
+          - type: required
+            message: Please select a VTRAM
+          - type: exists:vtrams,id
+            message: The selected VTRAM does not exist
+      foreign:
+          table: vtrams
+          id: id
+          onDelete: CASCADE
+          onUpdate: CASCADE
+
+    - type: string
+      name: briefed_by
+      migrationArguement: 100
+      label: Briefed By
+      request:
+         - type: required
+           message: Please enter who Briefed the VTRAM
+         - type: max:100
+           message: Briefed By cannot be more than 100 characters
+
+    - type: string
+      name: name
+      label: Briefing Name
+      migrationArguement: 100
+      request:
+          - type: required
+            message: Please enter the Briefing Name
+          - type: max:100
+            message: The Briefing Name cannot be more than 100 characters
+
+    - type: text
+      name: notes
+      label: Notes
+      nullable: true

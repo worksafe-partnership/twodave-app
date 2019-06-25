@@ -48,7 +48,7 @@ fields:
       request:
           - type: required
             message: Please select a Company for this Project
-          - type: exists:company,id
+          - type: exists:companies,id
             message: The selected Company does not exist
       foreign:
           table: companies
@@ -84,6 +84,7 @@ fields:
       name: principle_contractor
       label: Principle Contractor
       default: false
+      nullable: true
       formAttribute:
           - key: value
             value: $record->principle_contractor ?? false
@@ -91,6 +92,7 @@ fields:
     - type: string
       name: principle_contractor_name
       label: Principle Contractor Name
+      nullable: true
       request:
           - type: required_if:principle_contractor,true
             message: Please fill in the Principle Contractor Name
@@ -100,14 +102,13 @@ fields:
     - type: string
       name: principle_contractor_email
       label: Principle Contractor Email
+      nullable: true
       migrationArguement: 100
       request:
           - type: required_if:principle_contractor,true
             message: Please fill in the Principle Contractor Email
           - type: max:100
             message: The Principle Contractor Email cannot be more than 100 characters
-          - type: email
-            message: Please enter a valid Email Address
 
     - type: string
       name: client_name
@@ -136,6 +137,7 @@ fields:
       name: show_contact
       label: Show Contact Information on VTRAMs
       default: false
+      nullable: true
       formAttribute:
           - key: value
             value: $record->show_contact ?? false

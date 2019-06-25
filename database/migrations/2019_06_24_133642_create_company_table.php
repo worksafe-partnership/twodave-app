@@ -26,7 +26,7 @@ class CreateCompanyTable extends Migration
             $table->char('no_risk_character');
             $table->string('primary_colour');
             $table->string('secondary_colour');
-            $table->boolean('light_text');
+            $table->boolean('light_text')->nullable();
             $table->string('accept_label');
             $table->string('amend_label');
             $table->string('reject_label');

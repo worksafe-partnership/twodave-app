@@ -173,6 +173,7 @@ fields:
       name: light_text
       label: Light Text
       default: false
+      nullable: true
       datatable: false
       formAttribute:
           - key: value

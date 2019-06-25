@@ -20,12 +20,12 @@ class CreateProjectTable extends Migration
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->integer('project_admin')->nullable()->unsigned();
             $table->foreign('project_admin')->references('id')->on('users')->onDelete('SET NULL')->onUpdate('CASCADE');
-            $table->boolean('principle_contractor');
-            $table->string('principle_contractor_name');
-            $table->string('principle_contractor_email');
+            $table->boolean('principle_contractor')->nullable();
+            $table->string('principle_contractor_name')->nullable();
+            $table->string('principle_contractor_email')->nullable();
             $table->string('client_name');
             $table->integer('review_timescale');
-            $table->boolean('show_contact');
+            $table->boolean('show_contact')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

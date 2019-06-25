@@ -27,5 +27,5 @@ return [
         'show_contact' => ['label' => 'Show Contact Information on VTRAMs']
     ]
     ],
-    'permissions' => true,
+    'permissions' => true
 ];

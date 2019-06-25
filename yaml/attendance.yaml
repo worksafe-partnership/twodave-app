@@ -1,0 +1,40 @@
+identifierPath: company.project.briefing.attendance
+model: Attendance
+timestamps: true
+permissions: true
+config:
+    singular: Attendance
+    plural: Attendance
+    icon: playlist_add_check
+    route_type: resource
+
+fields:
+    - type: increments
+      name: id
+
+    - type: integer
+      name: briefing_id
+      label: Briefing
+      unsigned: true
+      foreign:
+          table: briefings
+          id: id
+          onDelete: CASCADE
+          onUpdate: CASCADE
+
+    - type: integer
+      name: file_id
+      label: Attendance Document
+      unsigned: true
+      nullable: true
+      formType: file
+      request:
+          - type: required
+            message: Please upload an Attendance Document
+          - type: mimes:jpg,jpeg,png,bmp,tiff,pdf
+            message: Only images and PDFs are allowed to be uploaded
+      foreign:
+          table: files
+          id: id
+          onDelete: CASCADE
+          onUpdate: CASCADE
