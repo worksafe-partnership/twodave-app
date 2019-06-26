@@ -33,6 +33,7 @@ fields:
     - type: integer
       name: completed_by_id
       nullable: true
+      unsigned: true
       foreign:
           table: users
           id: id

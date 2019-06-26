@@ -130,6 +130,6 @@ return [
     ],
     'icon_types' => [
         'MAIN' => 'Main',
-        'SUB' = 'Sub',
+        'SUB' => 'Sub',
     ],
 ];

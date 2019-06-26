@@ -19,7 +19,7 @@ class CreateApprovalTable extends Migration
             $table->text('comment');
             $table->string('type');
             $table->string('completed_by');
-            $table->integer('completed_by_id')->nullable();
+            $table->integer('completed_by_id')->nullable()->unsigned();
             $table->foreign('completed_by_id')->references('id')->on('users')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->date('approved_date');
             $table->date('resubmit_date')->nullable();

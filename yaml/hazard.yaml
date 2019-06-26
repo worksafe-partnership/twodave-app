@@ -1,6 +1,8 @@
 identifierPath: company.project.vtram.hazard
 model: Hazard
 timestamps: true
+permissions: false
+softDeletes: false
 config:
     singular: Hazard
     plural: Hazards

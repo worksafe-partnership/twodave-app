@@ -144,6 +144,8 @@ fields:
       label: Status
       default: NEW
       formType: select
+      index: 
+        - status
       formAttribute:
           - key: disabled
             value: true

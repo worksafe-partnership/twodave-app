@@ -42,6 +42,7 @@ class CreateTemplateTable extends Migration
             $table->date('resubmit_by')->nullable();
             $table->softDeletes();
             $table->timestamps();
+            $table->index('status');
         });
     }
 

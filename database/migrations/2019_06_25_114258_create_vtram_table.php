@@ -53,6 +53,7 @@ class CreateVtramTable extends Migration
             $table->string('responsible_person')->nullable();
             $table->softDeletes();
             $table->timestamps();
+            $table->index('status');
         });
     }
 

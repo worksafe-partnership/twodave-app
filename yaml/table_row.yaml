@@ -1,10 +1,13 @@
 identifierPath: company.project.vtram.methodology.table_row
 model: TableRow
 timestamps: true
+permissions: false
+softDeletes: false
 config:
     singular: Table Row
     plural: Table Rows
     icon: dehaze
+    route_type: index
     exclude_routes:
         - view
           create
@@ -65,7 +68,7 @@ fields:
           id: id
           onDelete: CASCADE
           onUpdate: CASCADE
-      unsigned: true
 
     - type: integer
       name: cols_filled
+      nullable: true

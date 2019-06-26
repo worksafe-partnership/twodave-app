@@ -1,10 +1,13 @@
 identifierPath: company.project.vtram.methodology.instruction
 model: Instruction
 timestamps: true
+permissions: false
+softDeletes: false
 config:
     singular: Instruction
     plural: Instructions
     icon: view_list
+    route_type: index
     exclude_routes:
         - view
           create
