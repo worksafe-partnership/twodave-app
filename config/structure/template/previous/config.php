@@ -1,21 +1,21 @@
 <?php
 
 return [
-    'singular' => 'VTRAM',
-    'plural' => 'VTRAMS',
-    'identifier_path' => 'company.project.vtram',
+    'singular' => 'Template',
+    'plural' => 'Templates',
+    'identifier_path' => 'template.previous',
     'route_type' => 'resource',
     'db' => [
-        'model' => 'Vtram',
+        'model' => 'Template',
         'id' => 'id',
         'column' => 'name'
     ],
-    'icon' => 'document-add',
-    'controller' => 'VtramController',
+    'icon' => 'insert-template',
+    'controller' => 'PreviousTemplateController',
     'datatable' => [
         "columns" => [
             'id' => ['visible' => false, 'searchable' => false, 'label' => 'Id'],
-            'project_id' => ['label' => 'Project'],
+            'company_id' => ['label' => 'Company'],
             'name' => ['label' => 'Name'],
             'logo' => [
                 'label' => 'Logo',
@@ -28,9 +28,17 @@ return [
             'status' => ['label' => 'Status'],
             'submitted_by' => ['label' => 'Submitted By'],
             'approved_by' => ['label' => 'Approved By'],
-            'resubmit_by' => ['label' => 'Resubmit By'],
+            'resubmit_by' => ['label' => 'Resubmit By']
         ]
     ],
     'sidebar' => [],
-    'permissions' => true
+    'permissions' => true,
+    'exclude_route' => [
+        'create',
+        'edit',
+        'delete',
+        'permanentlyDelete',
+        'restore',
+        'datatable_all',
+    ],
 ];

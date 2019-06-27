@@ -8,7 +8,7 @@ return [
     'db' => [
         'model' => 'Company',
         'id' => 'id',
-        'column' => 'id'
+        'column' => 'name'
     ],
     'icon' => 'people',
     'controller' => 'CompanyController',
@@ -23,7 +23,10 @@ return [
             'email' => ['label' => 'Contact Email'],
             'phone' => ['label' => 'Phone Number'],
             'fax' => ['label' => 'Fax Number'],
-            'primary_colour' => ['label' => 'Primary Colour'],
+            'primary_colour' => [
+                'label' => 'Primary Colour',
+                'raw' => true
+            ],
             'vtrams_name' => ['label' => 'VTRAMs Name'],
             'review_timescale' => ['label' => 'Review Timescale'],
         ]

@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'singular' => 'VTRAM',
-    'plural' => 'VTRAMS',
-    'identifier_path' => 'company.project.vtram',
+    'singular' => 'Previous VTRAM',
+    'plural' => 'Previous VTRAMs',
+    'identifier_path' => 'company.project.vtram.previous',
     'route_type' => 'resource',
     'db' => [
         'model' => 'Vtram',
@@ -11,7 +11,7 @@ return [
         'column' => 'name'
     ],
     'icon' => 'document-add',
-    'controller' => 'VtramController',
+    'controller' => 'PreviousVtramController',
     'datatable' => [
         "columns" => [
             'id' => ['visible' => false, 'searchable' => false, 'label' => 'Id'],
@@ -32,5 +32,12 @@ return [
         ]
     ],
     'sidebar' => [],
-    'permissions' => true
+    'permissions' => true,
+    'exclude_routes' => [
+        'create',
+        'edit',
+        'delete',
+        'permanentlyDelete',
+        'restore',
+    ],
 ];

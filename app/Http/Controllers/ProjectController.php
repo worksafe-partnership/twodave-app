@@ -17,6 +17,27 @@ class ProjectController extends Controller
         $this->customValues['companies'] = Company::pluck('name', 'id');
         $this->customValues['projectAdmins'] = User::pluck('name', 'id');
     }
+
+    public function viewHook() 
+    {
+        $briefConfig = config('structure.company.project.briefing.config');
+        $this->actionButtons['breifings'] = [
+            'label' => ucfirst($this->pageType)." ".$briefConfig['plural'],
+            'path' => '/company/'.$this->parentId.'/project/'.$this->id.'/briefing',
+            'icon' => $briefConfig['icon'],
+            'order' => '400',
+            'id' => 'briefingsList'
+        ];
+
+        $vtramConfig = config('structure.company.project.vtram.config');
+        $this->actionButtons['vtrams'] = [
+            'label' => ucfirst($this->pageType)." ".$vtramConfig['plural'],
+            'path' => '/company/'.$this->parentId.'/project/'.$this->id.'/vtram',
+            'icon' => $vtramConfig['icon'],
+            'order' => '500',
+            'id' => 'vtramsList'
+        ];
+    }
     
     public function store(ProjectRequest $request)
     {

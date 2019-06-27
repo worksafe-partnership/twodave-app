@@ -61,8 +61,9 @@ class Company extends Model
             ]);
 
         return app('datatables')->of($query)
+            ->rawColumns(['logo', 'primary_colour'])
             ->editColumn('review_timescale', function ($item) {
-                return self::reviewTimeScaleName($item);
+                return $item->reviewTimeScaleName();
             })
             ->editColumn('logo', function ($item) {
                 if (!is_null($item->logo)) {
@@ -71,18 +72,17 @@ class Company extends Model
                     return 'No Logo';
                 }
             })
-            /*->editColumn('primary_colour', function ($item) {
-                return '<div
-            })*/
+            ->editColumn('primary_colour', function ($item) {
+                return '<div style="background-color:'.$item->primary_colour.';height:30px;width:100%;"></div>';
+            })
             ->make("query");
-        return Datatables::of($query)->make(true);
     }
 
-    public static function reviewTimeScaleName($company)
+    public function reviewTimeScaleName()
     {
         $config = config('egc.review_timescales');
-        if (isset($config[$company->review_timescale])) {
-            return $config[$company->review_timescale];
+        if (isset($config[$this->review_timescale])) {
+            return $config[$this->review_timescale];
         }
         return 'None Selected';
     }

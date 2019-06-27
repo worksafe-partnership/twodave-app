@@ -8,16 +8,21 @@ return [
     'db' => [
         'model' => 'Attendance',
         'id' => 'id',
-        'column' => 'id'
+        'column' => 'name'
     ],
     'icon' => 'playlist_add_check',
     'controller' => 'AttendanceController',
     'datatable' => [
         "columns" => [
-        'id' => ['visible' => false, 'searchable' => false, 'label' => 'Id'],
-        'briefing_id' => ['label' => 'Briefing'],
-        'file_id' => ['label' => 'Attendance Document']
-    ]
+            'id' => ['visible' => false, 'searchable' => false, 'label' => 'Id'],
+            'file_id' => [
+                'label' => 'Attendance Document',
+                'raw' => true
+            ],
+            'created_at' => [
+                'label' => 'Created',
+            ],
+        ]
     ],
     'sidebar' => [],
     'permissions' => true

@@ -9,6 +9,11 @@ use App\Http\Requests\AttendanceRequest;
 class AttendanceController extends Controller
 {
     protected $identifierPath = 'company.project.briefing.attendance';
+
+    public function postIndexHook()
+    {
+        $this->datatable['href'] = null;
+    }
     
     public function store(AttendanceRequest $request, $companyId, $projectId, $briefingId)
     {
