@@ -61,13 +61,13 @@
             'type' => $pageType
         ]) }}
 
-        {{ EGForm::colour('primary_colour', [
+        {{ VTForm::colour('primary_colour', [
             'label' => 'Primary Colour',
             'value' => $record->primary_colour ?? '#000000',
             'type' => $pageType
         ]) }}
 
-        {{ EGForm::colour('secondary_colour', [
+        {{ VTForm::colour('secondary_colour', [
             'label' => 'Secondary Colour',
             'value' => $record->secondary_colour ?? '#000000',
             'type' => $pageType

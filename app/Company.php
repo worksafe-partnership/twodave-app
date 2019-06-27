@@ -60,6 +60,30 @@ class Company extends Model
                 'deleted_at'
             ]);
 
+        return app('datatables')->of($query)
+            ->editColumn('review_timescale', function ($item) {
+                return self::reviewTimeScaleName($item);
+            })
+            ->editColumn('logo', function ($item) {
+                if (!is_null($item->logo)) {
+                    return '<img src="/image/'.$item->logo.'">';
+                } else {
+                    return 'No Logo';
+                }
+            })
+            /*->editColumn('primary_colour', function ($item) {
+                return '<div
+            })*/
+            ->make("query");
         return Datatables::of($query)->make(true);
+    }
+
+    public static function reviewTimeScaleName($company)
+    {
+        $config = config('egc.review_timescales');
+        if (isset($config[$company->review_timescale])) {
+            return $config[$company->review_timescale];
+        }
+        return 'None Selected';
     }
 }
