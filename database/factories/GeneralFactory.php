@@ -50,7 +50,7 @@ $factory->define(App\Project::class, function (Faker $faker) {
     $config = Config('egc');
 
     return [
-        'name' => $faker->name,
+        'name' => $faker->words(3, true),
         'ref' => $faker->randomNumber,
         'company_id' => 1, // should always be overridden
         'project_admin' => 1, // should always be overridden

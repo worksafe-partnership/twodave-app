@@ -1,11 +1,5 @@
 <div class="columns">
     <div class="column is-12">
-		{{ EGForm::number('project_id', [
-            'label' => 'project_id',
-            'value' => $record["project_id"],
-            'type' => $pageType
-        ]) }}
-
         {{ EGForm::select('vtram_id', [
             'label' => 'vtram_id',
             'value' => $record["vtram_id"],
