@@ -46,6 +46,16 @@ class Approval extends Model
                 'deleted_at'
             ]);
 
+        if ($identifier['identifier_path'] == 'company.project.vtram.approval') {
+            // VTRAM
+            $query->where('entity', '=' , 'VTRAM')
+                ->where('entity_id', '=', $parent);
+        } else {
+            // Template
+            $query->where('entity', '=' , 'TEMPLATE')
+                ->where('entity_id', '=', $parent);
+        }
+
         return Datatables::of($query)->make(true);
     }
 }

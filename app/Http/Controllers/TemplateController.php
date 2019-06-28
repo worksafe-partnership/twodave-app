@@ -21,7 +21,7 @@ class TemplateController extends Controller
         return parent::_store(func_get_args());
     }
 
-    public function update(TemplateRequest $request)
+    public function update(TemplateRequest $request, $companyId)
     {
         return parent::_update(func_get_args());
     }

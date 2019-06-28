@@ -46,7 +46,27 @@ class Project extends Model
                 'deleted_at'
             ]);
 
-        return Datatables::of($query)->make(true);
+        $query->where('company_id', '=', $parent);
+
+        return app('datatables')->of($query)
+            ->editColumn('review_timescale', function ($item) {
+                return $item->reviewTimeScaleName();
+            })
+            ->editColumn('company_id', function ($item) {
+                $company = $item->company;
+                if (!is_null($company)) {
+                    return $item->company->name;
+                }
+                return 'All';
+            })
+            ->editColumn('project_admin', function ($item) {
+                $admin = $item->admin;
+                if (!is_null($admin)) {
+                    return $item->admin->name;
+                }
+                return 'None Selected';
+            })
+            ->make("query");
     }
 
     public function company()
@@ -59,4 +79,12 @@ class Project extends Model
         return $this->belongsTo(User::class, 'project_admin', 'id');
     }
 
+    public function reviewTimeScaleName()
+    {
+        $config = config('egc.review_timescales');
+        if (isset($config[$this->review_timescale])) {
+            return $config[$this->review_timescale];
+        }
+        return 'None Selected';
+    }
 }

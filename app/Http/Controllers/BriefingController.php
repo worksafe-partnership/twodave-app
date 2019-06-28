@@ -16,6 +16,18 @@ class BriefingController extends Controller
         $this->customValues['vtrams'] = Vtram::where('project_id', '=', $this->parentId)
             ->pluck('name', 'id');
     }
+
+    public function viewHook()
+    {
+        $attendanceConfig = config('structure.company.project.briefing.attendance.config');
+        $this->actionButtons['attendance'] = [
+            'label' => ucfirst($this->pageType)." ".$attendanceConfig['plural'],
+            'path' => '/company/'.$this->args[0].'/project/'.$this->parentId.'/briefing/'.$this->id.'/attendance',
+            'icon' => $attendanceConfig['icon'],
+            'order' => '400',
+            'id' => 'briefingsList'
+        ];
+    }
     
     public function store(BriefingRequest $request, $companyId, $projectId)
     {

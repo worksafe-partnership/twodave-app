@@ -36,6 +36,33 @@ class Briefing extends Model
                 'deleted_at'
             ]);
 
-        return Datatables::of($query)->make(true);
+        $query->where('project_id', '=', $parent);
+
+        return app('datatables')->of($query)
+            ->editColumn('project_id', function ($item) {
+                $project = $item->project;
+                if (!is_null($project)) {
+                    return $item->project->name;
+                }
+                return 'Not Selected';
+            })
+            ->editColumn('vtram_id', function ($item) {
+                $vtram = $item->vtram;
+                if (!is_null($vtram)) {
+                    return $item->vtram->name;
+                }
+                return 'Not Selected';
+            })
+            ->make('query');
+    }
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class, 'project_id', 'id');
+    }
+
+    public function vtram()
+    {
+        return $this->belongsTo(Vtram::class, 'vtram_id', 'id');
     }
 }

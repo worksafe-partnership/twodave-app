@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon;
 use Yajra\DataTables\Datatables;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -27,9 +28,23 @@ class Attendance extends Model
                 'id',
                 'briefing_id',
                 'file_id',
-                'deleted_at'
+                'deleted_at',
+                'created_at'
             ]);
 
-        return Datatables::of($query)->make(true);
+        $query->where('briefing_id', '=', $parent);
+
+        return app('datatables')->of($query)
+            ->rawColumns(['file_id'])
+            ->editColumn('file_id', function ($item) {
+                return '<a href="/image/'.$item->file_id.'" target="_blank" class="button is-primary">View Document</a>';
+            })
+            ->editColumn('created_at', function ($item) {
+                if (is_null($item->created_at)) {
+                    return '';
+                }
+                return Carbon::createFromFormat('Y-m-d H:i:s', $item->created_at)->format('d/m/Y H:i');
+            })
+            ->make('query');
     }
 }

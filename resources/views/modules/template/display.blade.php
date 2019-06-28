@@ -1,13 +1,15 @@
 <div class="columns">
     <div class="column is-12">
-		{{ EGForm::select('company_id', [
-            'label' => 'Company (Leave blank to make available for all Companies)',
-            'value' => $record["company_id"],
-            'type' => $pageType,
-            'list' => $companies,
-            'display_value' => $record->company->name ?? 'No Company Selected',
-            'selector' => 1
-        ]) }}
+        @if ($identifierPath == 'template')
+            {{ EGForm::select('company_id', [
+                'label' => 'Company (Leave blank to make available for all Companies)',
+                'value' => $record["company_id"],
+                'type' => $pageType,
+                'list' => $companies,
+                'display_value' => $record->company->name ?? 'No Company Selected',
+                'selector' => 1
+            ]) }}
+        @endif
 
         {{ EGForm::text('name', [
             'label' => 'Name',
