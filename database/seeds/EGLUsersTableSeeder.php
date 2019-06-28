@@ -14,7 +14,7 @@ class EGLUsersTableSeeder extends Seeder
         $hash = new Bhash();
 
         $suffix = env("EGC_PROJECT_NAME", "egl");
-        $prefix = "egHappy";
+        $prefix = "egWelding";
         $password = $prefix.$suffix;
 
         DB::table('users')->insert([

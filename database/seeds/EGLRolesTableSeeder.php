@@ -13,30 +13,55 @@ class EGLRolesTableSeeder extends Seeder
      */
     public function run()
     {
-        $role = Role::create([
-            'name' => 'Admin',
-            'slug' => 'admin',
-            'permissions' => [
-                'edit-role' => 1,
-                'view-role' => 1,
-                'list-role' => 1,
-                'create-role' => 1,
-                'delete-role' => 1,
-                'permanentlyDelete-role' => 1,
-                'restore-role' => 1,
-                'edit-user' => 1,
-                'view-user' => 1,
-                'list-user' => 1,
-                'create-user' => 1,
-                'delete-user' => 1,
-                'permanentlyDelete-user' => 1,
-                'restore-user' => 1,
-            ]
-        ]);
+
+        $evergreenPermissions = [];
+        $adminPermissions = [];
+        $contractsManagerPermissions = [];
+        $projectAdminPermissions = [];
+        $supervisorPermissions = [];
+
+        // $permissions = [];
+        foreach (Gate::abilities() as $perm => $ability) {
+            $evergreenPermissions[$perm] = 1;
+            if (strpos($perm, "role") !== false) {
+                $adminPermissions[$perm] = 1;
+                $contractsManagerPermissions[$perm] = 1;
+                $projectAdminPermissions[$perm] = 1;
+                $supervisorPermissions[$perm] = 1;
+            }
+        }
 
         $users = User::all();
-        foreach ($users as $user) {
-            $user->roles()->attach([$role->id]);
-        }
+        $evergreen = Role::create([
+            'name' => 'Evergreen Super Admin',
+            'slug' => 'evergreen',
+            'permissions' => $evergreenPermissions
+        ]);
+        $users->where('email', 'info@evergreen.co')->first()->roles()->attach([$evergreen->id]);
+
+        // make the rest but don't attach them yet
+        Role::create([
+            'name' => 'Worksafe Admin',
+            'slug' => 'admin',
+            'permissions' => $adminPermissions
+        ]);
+
+        Role::create([
+            'name' => 'Contract Manager',
+            'slug' => 'contract_manager',
+            'permissions' => $contractsManagerPermissions
+        ]);
+
+        Role::create([
+            'name' => 'Project Admin',
+            'slug' => 'project_admin',
+            'permissions' => $projectAdminPermissions
+        ]);
+
+        Role::create([
+            'name' => 'Supervisor',
+            'slug' => 'supervisor',
+            'permissions' => $supervisorPermissions
+        ]);
     }
 }
