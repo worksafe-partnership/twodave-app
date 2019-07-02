@@ -17,10 +17,6 @@ return [
             'id' => ['visible' => false, 'searchable' => false, 'label' => 'Id'],
             'company_id' => ['label' => 'Company'],
             'name' => ['label' => 'Name'],
-            'logo' => [
-                'label' => 'Logo',
-                'raw' => true
-            ],
             'reference' => ['label' => 'Reference'],
             'approved_date' => ['label' => 'Approved Date'],
             'review_due' => ['label' => 'Review Due'],

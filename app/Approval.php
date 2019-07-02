@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon;
 use Yajra\DataTables\Datatables;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -56,6 +57,43 @@ class Approval extends Model
                 ->where('entity_id', '=', $parent);
         }
 
-        return Datatables::of($query)->make(true);
+        return app('datatables')->of($query)
+            ->editColumn('status_at_time', function ($item) {
+                return $item->niceStatus();
+            })
+            ->editColumn('type', function ($item) {
+                return $item->niceType();
+            })
+            ->editColumn('approved_date', function ($item) {
+                if (is_null($item->approved_date)) {
+                    return '';
+                }
+                return Carbon::createFromFormat('Y-m-d', $item->approved_date)->format('d/m/Y');
+            })
+            ->editColumn('resubmit_date', function ($item) {
+                if (is_null($item->resubmit_date)) {
+                    return '';
+                }
+                return Carbon::createFromFormat('Y-m-d', $item->resubmit_date)->format('d/m/Y');
+            })
+            ->make('query');
+    }
+
+    public function niceStatus()
+    {
+        $config = config('egc.vtram_status');
+        if (isset($config[$this->status_at_time])) {
+            return $config[$this->status_at_time];
+        }
+        return '';
+    }
+
+    public function niceType()
+    {
+        $config = config('egc.approval_type_list');
+        if (isset($config[$this->type])) {
+            return $config[$this->type];
+        }
+        return '';
     }
 }

@@ -11,6 +11,26 @@ class TemplateController extends Controller
 {
     protected $identifierPath = 'template';
 
+    public function viewHook()
+    {
+        $prevConfig = config('structure.template.previous.config');
+        $this->actionButtons['previous'] = [
+            'label' => ucfirst($this->pageType)." ".$prevConfig['plural'],
+            'path' => '/template/'.$this->id.'/previous',
+            'icon' => $prevConfig['icon'],
+            'order' => '500',
+            'id' => 'previousList'
+        ];
+        $approvalConfig = config('structure.template.approval.config');
+        $this->actionButtons['approval'] = [
+            'label' => ucfirst($this->pageType)." ".$approvalConfig['plural'],
+            'path' => '/template/'.$this->id.'/approval',
+            'icon' => $approvalConfig['icon'],
+            'order' => '500',
+            'id' => 'approvalList'
+        ];
+    }
+
     public function bladeHook()
     {
         $this->customValues['companies'] = Company::pluck('name', 'id');

@@ -11,6 +11,26 @@ class CompanyTemplateController extends TemplateController
 {
     protected $identifierPath = 'company.template';
     
+    public function viewHook()
+    {
+        $prevConfig = config('structure.company.template.previous.config');
+        $this->actionButtons['previous'] = [
+            'label' => ucfirst($this->pageType)." ".$prevConfig['plural'],
+            'path' => '/company/'.$this->parentId.'/template/'.$this->id.'/previous',
+            'icon' => $prevConfig['icon'],
+            'order' => '500',
+            'id' => 'previousList'
+        ];
+        $approvalConfig = config('structure.company.template.approval.config');
+        $this->actionButtons['approval'] = [
+            'label' => ucfirst($this->pageType)." ".$approvalConfig['plural'],
+            'path' => '/company/'.$this->parentId.'/template/'.$this->id.'/approval',
+            'icon' => $approvalConfig['icon'],
+            'order' => '500',
+            'id' => 'approvalList'
+        ];
+    }
+
     public function store(TemplateRequest $request, $companyId = null)
     {
         $request->merge([

@@ -90,14 +90,6 @@ class Vtram extends Model
         }
 
         return app('datatables')->of($query)
-            ->rawColumns(['logo'])
-            ->editColumn('logo', function ($item) {
-                if (!is_null($item->logo)) {
-                    return '<img src="/image/'.$item->logo.'">';
-                } else {
-                    return 'No Logo';
-                }
-            })
             ->editColumn('project_id', function ($item) {
                 $project = $item->project;
                 if (!is_null($project)) {

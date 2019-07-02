@@ -59,6 +59,14 @@ return [
         'PC_AC' => 'Principle Contractor Amended',
         'PC_R' => 'Principle Contractor Rejected',
     ],
+    'approval_type_list' => [
+        'A' => 'Accepted',
+        'AC' => 'Amended',
+        'R' => 'Rejected',
+        'PC_A' => 'Principle Contractor Accepted',
+        'PC_AC' => 'Principle Contractor Amended',
+        'PC_R' => 'Principle Contractor Rejected',
+    ],
     'hazard_who_risk' => [
         'C' => 'Client',
         'M' => 'Management',

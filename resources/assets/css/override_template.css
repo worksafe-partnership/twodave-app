@@ -1,0 +1,53 @@
+<style>
+.has-text-primary {
+  color: #203878;
+}
+.input:focus,
+.input.is-focused,
+.input:active,
+.input.is-active,
+.textarea:focus,
+.textarea.is-focused,
+.textarea:active,
+.textarea.is-active {
+  border-color: #203878;
+}
+.input.is-primary,
+.textarea.is-primary {
+  border-color: #203878;
+}
+.select:not(.is-multiple)::after {
+    border: 1px solid #203878;
+}
+.select select:focus,
+.select select.is-focused,
+.select select:active,
+.select select.is-active {
+  border-color: #203878;
+}
+.select select:focus,
+.select select.is-focused,
+.select select:active,
+.select select.is-active {
+  border-color: #203878;
+}
+.select.is-primary select {
+  border-color: #203878;
+}
+.help.is-primary {
+  color: #203878;
+}
+.notification.is-primary {
+  background-color: #203878;
+}
+.progress.is-primary::-webkit-progress-value {
+  background-color: #203878;
+}
+.progress.is-primary::-moz-progress-bar {
+  background-color: #203878;
+}
+.table tr.is-selected {
+  background-color: #203878;
+}
+
+</style>

@@ -71,14 +71,13 @@ class Template extends Model
         }
 
         if (in_array($identifier['identifier_path'], ['template.previous', 'company.template.previous'])) {
-            $query-where('original_id', '=', $parent)
-                ->where('status', '=', 'PERVIOUS');
+            $query->where('original_id', '=', $parent)
+                ->where('status', '=', 'PREVIOUS');
         } else {
             $query->where('status', '!=', 'PREVIOUS');
         }
 
         return app('datatables')->of($query)
-            ->rawColumns(['logo'])
             ->editColumn('company_id', function ($item) {
                 $company = $item->company;
                 if (!is_null($company)) {
@@ -99,13 +98,6 @@ class Template extends Model
                     return $item->approved->name;
                 }
                 return 'Not Approved';
-            })
-            ->editColumn('logo', function ($item) {
-                if (!is_null($item->logo)) {
-                    return '<img src="/image/'.$item->logo.'">';
-                } else {
-                    return 'No Logo';
-                }
             })
             ->editColumn('status', function ($item) {
                 return $item->niceStatus();

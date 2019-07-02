@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'singular' => 'Template',
-    'plural' => 'Templates',
+    'singular' => 'Previous Template',
+    'plural' => 'Previous Templates',
     'identifier_path' => 'template.previous',
     'route_type' => 'resource',
     'db' => [
@@ -31,7 +31,6 @@ return [
             'resubmit_by' => ['label' => 'Resubmit By']
         ]
     ],
-    'sidebar' => [],
     'permissions' => true,
     'exclude_route' => [
         'create',

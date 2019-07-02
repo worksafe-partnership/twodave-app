@@ -40,4 +40,37 @@ class CompanyController extends Controller
     {
         return parent::_update(func_get_args());
     }
+
+    public function created($company, $args)
+    {
+        $this->setupColour($company->primary_colour, $company->light_text, $company->id);
+        $this->setupLogo($company->logo);
+    }
+
+    public function updated($company, $orig, $args)
+    {
+        $this->setupColour($company->primary_colour, $company->light_text, $company->id);
+        $this->setupLogo($company->logo);
+    }
+
+    protected function setupColour($primary, $light, $id)
+    {
+        if (!is_null($colour)) {
+            $template = base_path('/resources/assets/css/override_template.css');
+            $lightTemplate = base_path('/resources/assets/css/override_light.css');
+            if (file_exists($template)) {
+                $colours = file_get_contents($template);
+                $newColours = str_replace(['%COLOUR%'], [$primary], $colours);
+                if ($light && file_exists($lightTemplate)) {
+                    $newColours .= file_get_contents($lightTemplate);
+                }
+                return file_put_contents(public_path('/css/'.$id.'_colour.css'));
+            }
+        }
+    }
+
+    protected function setupLogo()
+    {
+
+    }
 }

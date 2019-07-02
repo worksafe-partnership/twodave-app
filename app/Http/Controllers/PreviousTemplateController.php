@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use Controller;
-use App\Approval;
-use App\Http\Requests\ApprovalRequest;
+use App\Template;
+use App\Company;
+use App\Http\Requests\TemplateRequest;
 
-class ApprovalController extends Controller
+class PreviousTemplateController extends TemplateController
 {
-    protected $identifierPath = 'company.project.vtram.approval';
+    protected $identifierPath = 'template.previous';
     
     public function __construct() 
     {
@@ -19,13 +20,18 @@ class ApprovalController extends Controller
         $this->disablePermanetlyDelete = true;
         parent::__construct();
     }
-    
-    public function store(ApprovalRequest $request)
+
+    public function viewHook()
+    {
+
+    }
+
+    public function store(TemplateRequest $request, $companyId = null)
     {
         return parent::_store(func_get_args());
     }
 
-    public function update(ApprovalRequest $request)
+    public function update(TemplateRequest $request, $companyId, $templateId = null)
     {
         return parent::_update(func_get_args());
     }

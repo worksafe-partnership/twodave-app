@@ -6,9 +6,9 @@ use Controller;
 use App\Approval;
 use App\Http\Requests\ApprovalRequest;
 
-class ApprovalController extends Controller
+class CompanyTemplateApprovalController extends ApprovalController
 {
-    protected $identifierPath = 'company.project.vtram.approval';
+    protected $identifierPath = 'company.template.approval';
     
     public function __construct() 
     {

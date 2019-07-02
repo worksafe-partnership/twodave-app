@@ -28,8 +28,8 @@ class ProjectRequest extends FormRequest
             'ref' => 'required|max:100',
             'company_id' => 'required|exists:companies,id',
             'project_admin' => 'required|exists:users,id',
-            'principle_contractor_name' => 'required_if:principle_contractor,true|max:255',
-            'principle_contractor_email' => 'required_if:principle_contractor,true|max:100',
+            'principle_contractor_name' => 'required_if:principle_contractor,1|max:255',
+            'principle_contractor_email' => 'required_if:principle_contractor,1|max:100',
             'client_name' => 'required|max:150',
             'review_timescale' => 'required'
         ];

@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'singular' => 'Approval',
-    'plural' => 'Approvals',
-    'identifier_path' => 'company.project.vtram.approval',
+    'singular' => 'Template Approval',
+    'plural' => 'Template Approvals',
+    'identifier_path' => 'company.template.approval',
     'route_type' => 'resource',
     'db' => [
         'model' => 'Approval',
@@ -11,7 +11,7 @@ return [
         'column' => 'id'
     ],
     'icon' => 'tick',
-    'controller' => 'ApprovalController',
+    'controller' => 'CompanyTemplateApprovalController',
     'datatable' => [
         "columns" => [
             'id' => ['visible' => false, 'searchable' => false, 'label' => 'Id'],
