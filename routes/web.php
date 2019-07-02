@@ -11,5 +11,5 @@
 |
 */
 Route::get('/', function () {
-    return redirect('/user');
+    return redirect('/dashboard');
 });
