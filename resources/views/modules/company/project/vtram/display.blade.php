@@ -110,7 +110,7 @@
                 'type' => $pageType,
                 'disabled' => 1,
                 'list' => config('egc.vtram_status'),
-                'display_value' => isset($record->status) ? config('egc.vtram_status')[$record->status]
+                'display_value' => isset($record->status) ? config('egc.vtram_status')[$record->status] : ''
             ]) }}
         </div>
 
