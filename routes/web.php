@@ -11,7 +11,7 @@
 |
 */
 Route::get('/', function () {
-    return redirect('/user');
+    return redirect('/dashboard');
 });
 Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/methodology', 'VtramController@editContent');
 Route::get('/company/{company_id}/template/{template_id}/methodology', 'CompanyTemplateController@editContent');

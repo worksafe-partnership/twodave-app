@@ -37,7 +37,7 @@ class VtramController extends Controller
             'id' => 'approvalList'
         ];
     }
-    
+
     public function store(VtramRequest $request, $companyId, $projectId)
     {
         $request->merge([

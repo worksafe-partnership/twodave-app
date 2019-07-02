@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon;
 use Yajra\DataTables\Datatables;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,13 +11,14 @@ class Vtram extends Model
 {
     use SoftDeletes;
     protected $table = 'vtrams';
-    
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
+        'company_id',
         'project_id',
         'name',
         'description',
@@ -136,8 +138,65 @@ class Vtram extends Model
         return $this->belongsTo(User::class, 'submitted_by', 'id');
     }
 
+    public function submittedName()
+    {
+        if (!is_null($this->submitted)) {
+            return $this->submitted->name;
+        }
+        return 'Not Submitted';
+    }
+
+    public function submittedDateTimestamp() // for custom datatables
+    {
+        if (!is_null($this->submitted_date)) {
+            return Carbon::createFromFormat("Y-m-d", $this->submitted_date)->timestamp;
+        }
+        return "Not Submitted";
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by', 'id');
+    }
+
+    public function createdName()
+    {
+        if (!is_null($this->createdBy)) {
+            return $this->createdBy->name;
+        }
+        return "User Not Found"; // shouldn't happen
+    }
+
     public function approved()
     {
         return $this->belongsTo(User::class, 'approved_by', 'id');
     }
+
+    public function approvedName()
+    {
+        if (!is_null($this->approved)) {
+            return $this->approved->name;
+        }
+        return 'Not Approved';
+    }
+
+    public function approvedDateTimestamp() // for custom datatables
+    {
+        if (!is_null($this->approved_date)) {
+            return Carbon::createFromFormat("Y-m-d", $this->approved_date)->timestamp;
+        }
+        return "Not Approved";
+    }
+
+    public function nextReviewDateTimestamp() // for custom datatables
+    {
+        if (!is_null($this->review_due)) {
+            return Carbon::createFromFormat("Y-m-d", $this->review_due)->timestamp;
+        }
+        return "N/A";
+    }
+
+
+
+
 }

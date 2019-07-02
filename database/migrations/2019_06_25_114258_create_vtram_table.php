@@ -14,6 +14,8 @@ class CreateVtramTable extends Migration
     {
         Schema::create('vtrams', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('company_id')->unsigned();
+            $table->foreign('company_id')->references('id')->on('companies')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->integer('project_id')->unsigned();
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->string('name');
@@ -38,6 +40,7 @@ class CreateVtramTable extends Migration
             $table->foreign('updated_by')->references('id')->on('users')->onDelete('NO ACTION')->onUpdate('NO ACTION');
             $table->integer('submitted_by')->nullable()->unsigned();
             $table->foreign('submitted_by')->references('id')->on('users')->onDelete('NO ACTION')->onUpdate('NO ACTION');
+            $table->date('submitted_date')->nullable();
             $table->integer('approved_by')->nullable()->unsigned();
             $table->foreign('approved_by')->references('id')->on('users')->onDelete('NO ACTION')->onUpdate('NO ACTION');
             $table->date('date_replaced')->nullable();

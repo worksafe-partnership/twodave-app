@@ -2,3 +2,4 @@
 /vendor
 .env
 public/css/company/*
+/storage
