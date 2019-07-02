@@ -1,4 +1,4 @@
 /node_modules
 /vendor
 .env
-
+public/css/company/*

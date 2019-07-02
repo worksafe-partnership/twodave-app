@@ -53,7 +53,6 @@ fields:
       label: Logo (Overrides Company Logo on VTRAMs)
       nullable: true
       unsigned: true
-      nullable: true
       formType: file
       request:
           - type: mimes:jpg,jpeg,png,bmp,tiff

@@ -1,107 +1,141 @@
 <div class="columns">
-    <div class="column is-12">
-		{{ EGForm::text('name', [
-            'label' => 'Name',
-            'value' => $record["name"],
-            'type' => $pageType
-        ]) }}
+    <div class="column is-8 is-offset-2">
+		<div class="field">
+            {{ EGForm::text('name', [
+                'label' => 'Name',
+                'value' => $record["name"],
+                'type' => $pageType
+            ]) }}
+        </div>
 
-        {{ EGForm::select('review_timescale', [
-            'label' => 'Review Timescale',
-            'value' => $record->review_timescale ?? 0,
-            'type' => $pageType,
-            'list' => config('egc.review_timescales')
-        ]) }}
+        <div class="field">
+            {{ EGForm::select('review_timescale', [
+                'label' => 'Review Timescale',
+                'value' => $record->review_timescale ?? 0,
+                'type' => $pageType,
+                'list' => config('egc.review_timescales')
+            ]) }}
+        </div>
 
-        {{ EGForm::text('vtrams_name', [
-            'label' => 'VTRAMs Name',
-            'value' => $record->vtrams_name ?? 'Task RAM',
-            'type' => $pageType
-        ]) }}
+        <div class="field">
+            {{ EGForm::text('vtrams_name', [
+                'label' => 'VTRAMs Name',
+                'value' => $record->vtrams_name ?? 'Task RAM',
+                'type' => $pageType
+            ]) }}
+        </div>
 
-        {{ EGForm::text('email', [
-            'label' => 'Contact Email',
-            'value' => $record["email"],
-            'type' => $pageType
-        ]) }}
+        <div class="field">
+            {{ EGForm::text('email', [
+                'label' => 'Contact Email',
+                'value' => $record["email"],
+                'type' => $pageType
+            ]) }}
+        </div>
 
-        {{ EGForm::text('phone', [
-            'label' => 'Phone Number',
-            'value' => $record["phone"],
-            'type' => $pageType
-        ]) }}
+        <div class="field">
+            {{ EGForm::text('phone', [
+                'label' => 'Phone Number',
+                'value' => $record["phone"],
+                'type' => $pageType
+            ]) }}
+        </div>
 
-        {{ EGForm::text('fax', [
-            'label' => 'Fax Number',
-            'value' => $record["fax"],
-            'type' => $pageType
-        ]) }}
+        <div class="field">
+            {{ EGForm::text('fax', [
+                'label' => 'Fax Number',
+                'value' => $record["fax"],
+                'type' => $pageType
+            ]) }}
+        </div>
 
-        {{ EGForm::text('low_risk_character', [
-            'label' => 'Low Risk Label',
-            'value' => $record->low_risk_character ?? 'L',
-            'type' => $pageType
-        ]) }}
+        <div class="field">
+            {{ EGForm::text('low_risk_character', [
+                'label' => 'Low Risk Label',
+                'value' => $record->low_risk_character ?? 'L',
+                'type' => $pageType
+            ]) }}
+        </div>
 
-        {{ EGForm::text('med_risk_character', [
-            'label' => 'Medium Risk Label',
-            'value' => $record->med_risk_character ?? 'M',
-            'type' => $pageType
-        ]) }}
+        <div class="field">
+            {{ EGForm::text('med_risk_character', [
+                'label' => 'Medium Risk Label',
+                'value' => $record->med_risk_character ?? 'M',
+                'type' => $pageType
+            ]) }}
+        </div>
 
-        {{ EGForm::text('high_risk_character', [
-            'label' => 'High Risk Label',
-            'value' => $record->high_risk_character ?? 'H',
-            'type' => $pageType
-        ]) }}
+        <div class="field">
+            {{ EGForm::text('high_risk_character', [
+                'label' => 'High Risk Label',
+                'value' => $record->high_risk_character ?? 'H',
+                'type' => $pageType
+            ]) }}
+        </div>
 
-        {{ EGForm::text('no_risk_character', [
-            'label' => 'No Risk Label',
-            'value' => $record->no_risk_character ?? '#',
-            'type' => $pageType
-        ]) }}
+        <div class="field">
+            {{ EGForm::text('no_risk_character', [
+                'label' => 'No Risk Label',
+                'value' => $record->no_risk_character ?? '#',
+                'type' => $pageType
+            ]) }}
+        </div>
 
-        {{ VTForm::colour('primary_colour', [
-            'label' => 'Primary Colour',
-            'value' => $record->primary_colour ?? '#000000',
-            'type' => $pageType
-        ]) }}
+        <div class="field">
+            {{ VTForm::colour('primary_colour', [
+                'label' => 'Primary Colour',
+                'value' => $record->primary_colour ?? '#000000',
+                'type' => $pageType
+            ]) }}
+        </div>
 
-        {{ VTForm::colour('secondary_colour', [
-            'label' => 'Secondary Colour',
-            'value' => $record->secondary_colour ?? '#000000',
-            'type' => $pageType
-        ]) }}
+        <div class="field">
+            {{ VTForm::colour('secondary_colour', [
+                'label' => 'Secondary Colour',
+                'value' => $record->secondary_colour ?? '#000000',
+                'type' => $pageType
+            ]) }}
+        </div>
 
-        {{ EGForm::checkbox('light_text', [
-            'label' => 'Light Text',
-            'value' => $record->light_text ?? false,
-            'type' => $pageType
-        ]) }}
+        <div class="field">
+            {{ EGForm::checkbox('light_text', [
+                'label' => 'Dark Text',
+                'value' => $record->light_text ?? false,
+                'type' => $pageType
+            ]) }}
+        </div>
 
-        {{ EGForm::text('accept_label', [
-            'label' => 'Accept Label',
-            'value' => $record->accept_label ?? 'Accept',
-            'type' => $pageType
-        ]) }}
+        <div class="field">
+            {{ EGForm::text('accept_label', [
+                'label' => 'Accept Label',
+                'value' => $record->accept_label ?? 'Accept',
+                'type' => $pageType
+            ]) }}
+        </div>
 
-        {{ EGForm::text('amend_label', [
-            'label' => 'Amend Label',
-            'value' => $record->amend_label ?? 'Amend',
-            'type' => $pageType
-        ]) }}
+        <div class="field">
+            {{ EGForm::text('amend_label', [
+                'label' => 'Amend Label',
+                'value' => $record->amend_label ?? 'Amend',
+                'type' => $pageType
+            ]) }}
+        </div>
 
-        {{ EGForm::text('reject_label', [
-            'label' => 'Reject Label',
-            'value' => $record->reject_label ?? 'Reject',
-            'type' => $pageType
-        ]) }}
+        <div class="field">
+            {{ EGForm::text('reject_label', [
+                'label' => 'Reject Label',
+                'value' => $record->reject_label ?? 'Reject',
+                'type' => $pageType
+            ]) }}
+        </div>
 
-        {{ EGForm::file('logo', [
-            'label' => 'Logo',
-            'value' => $record["logo"],
-            'type' => $pageType
-        ]) }}
+        <div class="field">
+            {{ EGForm::file('logo', [
+                'label' => 'Logo',
+                'value' => $record["logo"],
+                'type' => $pageType
+            ]) }}
+        </div>
 
 
 	</div>
