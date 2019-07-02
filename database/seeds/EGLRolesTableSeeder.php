@@ -23,7 +23,7 @@ class EGLRolesTableSeeder extends Seeder
         // $permissions = [];
         foreach (Gate::abilities() as $perm => $ability) {
             $evergreenPermissions[$perm] = 1;
-            if (strpos($perm, "role") !== false) {
+            if (strpos($perm, "role") === false) {
                 $adminPermissions[$perm] = 1;
                 $contractsManagerPermissions[$perm] = 1;
                 $projectAdminPermissions[$perm] = 1;
