@@ -44,18 +44,16 @@ class CompanyController extends Controller
     public function created($company, $args)
     {
         $this->setupColour($company->primary_colour, $company->light_text, $company->id);
-        $this->setupLogo($company->logo);
     }
 
     public function updated($company, $orig, $args)
     {
         $this->setupColour($company->primary_colour, $company->light_text, $company->id);
-        $this->setupLogo($company->logo);
     }
 
     protected function setupColour($primary, $light, $id)
     {
-        if (!is_null($colour)) {
+        if (!is_null($primary)) {
             $template = base_path('/resources/assets/css/override_template.css');
             $lightTemplate = base_path('/resources/assets/css/override_light.css');
             if (file_exists($template)) {
@@ -64,13 +62,8 @@ class CompanyController extends Controller
                 if ($light && file_exists($lightTemplate)) {
                     $newColours .= file_get_contents($lightTemplate);
                 }
-                return file_put_contents(public_path('/css/'.$id.'_colour.css'));
+                return file_put_contents(public_path('/css/company/'.$id.'_colour.css'), $newColours);
             }
         }
-    }
-
-    protected function setupLogo()
-    {
-
     }
 }

@@ -1,40 +1,52 @@
 <div class="columns">
-    <div class="column is-12">
-		{{ EGForm::textarea('description', [
-            'label' => 'Description',
-            'value' => $record["description"],
-            'type' => $pageType
-        ]) }}
+    <div class="column is-8 is-offset-2">
+		<div class="field">
+            {{ EGForm::textarea('description', [
+                'label' => 'Description',
+                'value' => $record["description"],
+                'type' => $pageType
+            ]) }}
+        </div>
 
-        {{ EGForm::text('label', [
-            'label' => 'Label',
-            'value' => $record["label"],
-            'type' => $pageType
-        ]) }}
+        <div class="field">
+            {{ EGForm::text('label', [
+                'label' => 'Label',
+                'value' => $record["label"],
+                'type' => $pageType
+            ]) }}
+        </div>
 
-        {{ EGForm::checkbox('heading', [
-            'label' => 'Heading',
-            'value' => $record["heading"],
-            'type' => $pageType
-        ]) }}
+        <div class="field">
+            {{ EGForm::checkbox('heading', [
+                'label' => 'Heading',
+                'value' => $record["heading"],
+                'type' => $pageType
+            ]) }}
+        </div>
 
-        {{ EGForm::number('list_order', [
-            'label' => 'list_order',
-            'value' => $record["list_order"],
-            'type' => $pageType
-        ]) }}
+        <div class="field">
+            {{ EGForm::number('list_order', [
+                'label' => 'list_order',
+                'value' => $record["list_order"],
+                'type' => $pageType
+            ]) }}
+        </div>
 
-        {{ EGForm::file('image', [
-            'label' => 'Image',
-            'value' => $record["image"],
-            'type' => $pageType
-        ]) }}
+        <div class="field">
+            {{ EGForm::file('image', [
+                'label' => 'Image',
+                'value' => $record["image"],
+                'type' => $pageType
+            ]) }}
+        </div>
 
-        {{ EGForm::number('methodology_id', [
-            'label' => 'methodology_id',
-            'value' => $record["methodology_id"],
-            'type' => $pageType
-        ]) }}
+        <div class="field">
+            {{ EGForm::number('methodology_id', [
+                'label' => 'methodology_id',
+                'value' => $record["methodology_id"],
+                'type' => $pageType
+            ]) }}
+        </div>
 
 
 	</div>
