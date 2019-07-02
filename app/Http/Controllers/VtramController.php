@@ -37,9 +37,12 @@ class VtramController extends Controller
             'id' => 'approvalList'
         ];
     }
-    
-    public function store(VtramRequest $request)
+
+    public function store(VtramRequest $request, $companyId, $projectId)
     {
+        $request->merge([
+            'company_id' => $companyId,
+        ]);
         return parent::_store(func_get_args());
     }
 
