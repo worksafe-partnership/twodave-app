@@ -13,6 +13,14 @@ class TemplateController extends Controller
 
     public function viewHook()
     {
+        $this->actionButtons['methodologies'] = [
+            'label' => 'Edit Hazards & Methodologies',
+            'path' => '/template/'.$this->id.'/methodology',
+            'icon' => 'receipt',
+            'order' => '300',
+            'id' => 'methodologyEdit',
+        ];
+
         $prevConfig = config('structure.template.previous.config');
         $this->actionButtons['previous'] = [
             'label' => ucfirst($this->pageType)." ".$prevConfig['plural'],
@@ -44,5 +52,11 @@ class TemplateController extends Controller
     public function update(TemplateRequest $request, $companyId)
     {
         return parent::_update(func_get_args());
+    }
+
+    public function editContent($templateId, $otherId = null)
+    {
+        $this->view = 'modules.company.project.vtram.editVtram';
+        return parent::_custom();
     }
 }
