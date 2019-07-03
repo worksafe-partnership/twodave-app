@@ -80,7 +80,7 @@ $factory->define(App\Vtram::class, function (Faker $faker) {
         // 'approved_date',
         // 'original_id',
         // 'revision_number',
-        'status' => 'NEW',
+        'status' => $faker->randomElement(['NEW', 'PENDING', 'REJECTED', 'EXTERNAL_REJECT']),
         // 'created_by',
         // 'updated_by',
         // 'submitted_by',

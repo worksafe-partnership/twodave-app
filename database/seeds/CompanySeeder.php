@@ -66,12 +66,14 @@ class CompanySeeder extends Seeder
                 factory(App\Vtram::class, 1)->create([
                     'company_id' => $company->id,
                     'project_id' => $project->id,
-                    'created_by' => $projectAdmin->id
+                    'created_by' => $projectAdmin->id,
+                    'submitted_by' => $projectAdmin->id,
                 ]);
                 factory(App\Vtram::class, 1)->create([
                     'company_id' => $company->id,
                     'project_id' => $project->id,
-                    'created_by' => $contractManager->id
+                    'created_by' => $contractManager->id,
+                    'submitted_by' => $contractManager->id,
                 ]);
             }
 
