@@ -62,3 +62,38 @@ $factory->define(App\Project::class, function (Faker $faker) {
         'show_contact' => $faker->randomElement([null, 1]),
     ];
 });
+
+$factory->define(App\Vtram::class, function (Faker $faker) {
+    $config = Config('egc');
+
+    return [
+        'company_id' => 1,
+        'project_id' => 1,
+        'name' => $faker->words(3, true),
+        'description' => $faker->words(3, true),
+        // 'logo',
+        'reference' => $faker->words(2, true),
+        'key_points' => "<p>".$faker->words(3, true)."</p>",
+        // 'havs_noise_assessment',
+        // 'coshh_assessment',
+        'review_due' => $faker->dateTimeBetween('now', '+1 months', null),
+        // 'approved_date',
+        // 'original_id',
+        // 'revision_number',
+        'status' => 'NEW',
+        // 'created_by',
+        // 'updated_by',
+        // 'submitted_by',
+        // 'approved_by',
+        // 'date_replaced',
+        // 'resubmit_by',
+        // 'pre_risk_assessment_text',
+        // 'post_risk_assessment_text',
+        // 'dynamic_risk',
+        // 'pdf',
+        // 'pages_in_pdf',
+        // 'created_from',
+        // 'show_responsible_person',
+        // 'responsible_person'
+    ];
+});
