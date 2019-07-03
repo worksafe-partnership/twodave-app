@@ -23,6 +23,11 @@ class AttendanceController extends Controller
         return parent::_store(func_get_args());
     }
 
+    public function created($insert, $reuqest, $args)
+    {
+        return '/company/'.$args[1].'/project/'.$args[2].'/briefing/'.$args[3].'/attendance';
+    }
+
     public function update(AttendanceRequest $request)
     {
         return parent::_update(func_get_args());

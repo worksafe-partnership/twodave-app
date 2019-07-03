@@ -65,16 +65,10 @@ class Approval extends Model
                 return $item->niceType();
             })
             ->editColumn('approved_date', function ($item) {
-                if (is_null($item->approved_date)) {
-                    return '';
-                }
-                return Carbon::createFromFormat('Y-m-d', $item->approved_date)->format('d/m/Y');
+                return $item->niceApproved();
             })
             ->editColumn('resubmit_date', function ($item) {
-                if (is_null($item->resubmit_date)) {
-                    return '';
-                }
-                return Carbon::createFromFormat('Y-m-d', $item->resubmit_date)->format('d/m/Y');
+                return $item->niceResubmit();
             })
             ->make('query');
     }
@@ -95,5 +89,21 @@ class Approval extends Model
             return $config[$this->type];
         }
         return '';
+    }
+
+    public function niceResubmit()
+    {
+        if (is_null($this->resubmit_date)) {
+            return '';
+        }
+        return Carbon::createFromFormat('Y-m-d', $this->resubmit_date)->format('d/m/Y');
+    }
+
+    public function niceApproved()
+    {
+        if (is_null($this->approved_date)) {
+            return '';
+        }
+        return Carbon::createFromFormat('Y-m-d', $this->approved_date)->format('d/m/Y');
     }
 }

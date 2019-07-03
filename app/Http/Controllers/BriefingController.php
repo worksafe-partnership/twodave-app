@@ -13,8 +13,14 @@ class BriefingController extends Controller
 
     public function bladeHook()
     {
-        $this->customValues['vtrams'] = Vtram::where('project_id', '=', $this->parentId)
-            ->pluck('name', 'id');
+        if ($this->pageType == 'create') {
+            $this->customValues['vtrams'] = Vtram::where('project_id', '=', $this->parentId)
+                ->where('status', '=', 'CURRENT')
+                ->pluck('name', 'id');
+        } else {
+            $this->customValues['vtrams'] = Vtram::where('project_id', '=', $this->parentId)
+                ->pluck('name', 'id');
+        }
     }
 
     public function viewHook()

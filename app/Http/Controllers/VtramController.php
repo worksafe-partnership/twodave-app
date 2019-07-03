@@ -11,15 +11,15 @@ class VtramController extends Controller
 {
     protected $identifierPath = 'company.project.vtram';
 
-    public function bladeHook()
-    {
-        $project = Project::findOrFail($this->parentId);
-        $this->customValues['projects'] = Project::where('company_id', '=' , $project->company_id)
-            ->pluck('name', 'id');
-    }
-
     public function viewHook()
     {
+        $this->actionButtons['methodologies'] = [
+            'label' => 'Edit Hazards & Methodologies',
+            'path' => '/company/'.$this->args[0].'/project/'.$this->parentId.'/vtram/'.$this->id.'/methodology',
+            'icon' => 'receipt',
+            'order' => '300',
+            'id' => 'methodologyEdit',
+        ];
         $prevConfig = config('structure.company.project.vtram.previous.config');
         $this->actionButtons['previous'] = [
             'label' => ucfirst($this->pageType)." ".$prevConfig['plural'],
@@ -41,6 +41,7 @@ class VtramController extends Controller
     public function store(VtramRequest $request, $companyId, $projectId)
     {
         $request->merge([
+            'project_id' => $projectId,
             'company_id' => $companyId,
         ]);
         return parent::_store(func_get_args());
@@ -49,5 +50,11 @@ class VtramController extends Controller
     public function update(VtramRequest $request)
     {
         return parent::_update(func_get_args());
+    }
+
+    public function editContent($companyId, $projectId, $vtramId)
+    {
+        $this->view = 'modules.company.project.vtram.editVtram';
+        return parent::_custom();
     }
 }

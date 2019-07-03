@@ -21,19 +21,12 @@ class PreviousVtramController extends VtramController
         parent::__construct();
     }
 
-    public function bladeHook()
-    {
-        $project = Project::findOrFail($this->parentId);
-        $this->customValues['projects'] = Project::where('company_id', '=' , $project->company_id)
-            ->pluck('name', 'id');
-    }
-
     public function viewHook()
     {
 
     }
     
-    public function store(VtramRequest $request)
+    public function store(VtramRequest $request, $companyId, $projectId)
     {
         return parent::_store(func_get_args());
     }

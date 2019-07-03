@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Auth;
 use Yajra\DataTables\Datatables;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -46,7 +47,10 @@ class Project extends Model
                 'deleted_at'
             ]);
 
-        $query->where('company_id', '=', $parent);
+        $user = Auth::user();
+        $query->when($user->company_id != null, function ($q) use ($parent) {
+            $q->where('company_id', '=', $parent); 
+        });
 
         return app('datatables')->of($query)
             ->editColumn('review_timescale', function ($item) {

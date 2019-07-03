@@ -26,5 +26,5 @@ return [
     ]
     ],
     'sidebar' => [],
-    'permissions' => false
+    'permissions' => false,
 ];
