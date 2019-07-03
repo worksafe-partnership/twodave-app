@@ -26,9 +26,10 @@ class CompanySeeder extends Seeder
 
         $starterCompanies = ['UK FM Services', 'Woodford Heating and Energy', 'Berkeley Homes'];
         $usersAndRoles = [
-            'Contracts Manager' => 2,
-            'Project Admin' => 3,
-            'Supervisor' => 4,
+            'Company Admin' => 3,
+            'Contracts Manager' => 4,
+            'Project Admin' => 5,
+            'Supervisor' => 6,
         ];
 
         foreach ($starterCompanies as $companyName) {
@@ -48,7 +49,7 @@ class CompanySeeder extends Seeder
 
             $projectAdmin = User::join('role_users', 'role_users.user_id', '=', 'users.id')
                 ->where('company_id', $company->id)
-                ->where('role_id', 4)
+                ->where('role_id', 5)
                 ->first();
 
             $projects = factory(App\Project::class, 5)->create([

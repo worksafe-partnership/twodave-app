@@ -16,6 +16,7 @@ class EGLRolesTableSeeder extends Seeder
 
         $evergreenPermissions = [];
         $adminPermissions = [];
+        $companyAdminPermissions = [];
         $contractsManagerPermissions = [];
         $projectAdminPermissions = [];
         $supervisorPermissions = [];
@@ -25,6 +26,7 @@ class EGLRolesTableSeeder extends Seeder
             $evergreenPermissions[$perm] = 1;
             if (strpos($perm, "role") === false) {
                 $adminPermissions[$perm] = 1;
+                $companyAdminPermissions[$perm] = 1;
                 $contractsManagerPermissions[$perm] = 1;
                 $projectAdminPermissions[$perm] = 1;
                 $supervisorPermissions[$perm] = 1;
@@ -44,6 +46,12 @@ class EGLRolesTableSeeder extends Seeder
             'name' => 'Worksafe Admin',
             'slug' => 'admin',
             'permissions' => $adminPermissions
+        ]);
+
+        Role::create([
+            'name' => 'Company Admin',
+            'slug' => 'company_admin',
+            'permissions' => $companyAdminPermissions
         ]);
 
         Role::create([
