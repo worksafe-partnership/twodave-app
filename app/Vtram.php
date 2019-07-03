@@ -195,7 +195,11 @@ class Vtram extends Model
         return "N/A";
     }
 
-
-
-
+    public function url() // for custom datatables
+    {
+        if (!is_null($this->company_id) && !is_null($this->project_id) && !is_null($this->id)) {
+            return "/company/".$this->company_id."/project/".$this->project_id."/vtram/".$this->id;
+        }
+        return '/dashboard'; // Assuming this should never be hit, but placeholder to be safe.
+    }
 }

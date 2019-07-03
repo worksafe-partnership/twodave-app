@@ -14,6 +14,7 @@
                     <th>Approval Date</th>
                     <th>Approved By</th>
                     <th>Next Review Date</th>
+                    <th>URL</th>
                 </thead>
                 <tbody>
                     @foreach($data['data'] as $vtram)
@@ -26,6 +27,7 @@
                         <td>{{ $vtram->approvedDateTimestamp() }}</td>
                         <td>{{ $vtram->approvedName() }}</td>
                         <td>{{ $vtram->nextReviewDateTimestamp() }}</td>
+                        <td>{{ $vtram->url() }}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -37,7 +39,7 @@
 @push('scripts')
     <script>
         $(document).ready(function(){
-            $("#{{$data['table-id']}}").DataTable({
+            var table = $("#{{$data['table-id']}}").DataTable({
                 dom: 'Bfrtlip',
                 responsive: true,
                 oLanguage: {
@@ -90,12 +92,37 @@
                             return data;
                         },
                     },
+                    { data: 'url', name: 'url', 'visible': '', 'searchable': false}
                 ],
                 "oLanguage": {
                     "sEmptyTable": "No Vtrams found"
                 }
 
             });
+
+            $("#{{$data['table-id']}}").on('click', 'tr', function(e) {
+                var row = table.row(this);
+                if (!row.responsive.hasHidden()) {
+                    if (e.currentTarget.classList.contains("multiselect")) {
+                        var checkbox = $(e.currentTarget).find(".b-checkbox input[type=checkbox]");
+                        if (checkbox.is(":checked")) {
+                            checkbox.removeAttr("checked");
+                        } else {
+                            checkbox.attr("checked", "checked");
+                        }
+                    } else {
+                        e.preventDefault();
+                        document.location.href = row.data().url;
+                    }
+                }
+            } );
+            table.on('responsive-display', function (e, datatable, row, showHide, update){
+                if (showHide) {
+                    e.preventDefault();
+                    $("ul[data-dtr-index=" + row.index() + "] li").last().after("<li><a href='" + row.data().url + "' class='button is-success'>View VTRAM</a></li>")
+                }
+            });
+
 
             $('#show-hide-{{$key}}').click(function() {
                 let table = "#"+$(this).data('table');

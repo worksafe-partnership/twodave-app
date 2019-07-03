@@ -8,6 +8,21 @@ use Controller;
 class DashboardController extends Controller
 {
     protected $identifierPath = 'dashboard';
+    protected $datatableFields = [
+        // 'company name', // "leave for now" - CP
+        // 'plan number', // "leave for now" - CP
+        'id',
+        'company_id',
+        'project_id',
+        'name',
+        'status',
+        'created_by',
+        'submitted_by',
+        'submitted_date',
+        'approved_date',
+        'approved_by',
+        'review_due'
+    ];
 
     public function __construct()
     {
@@ -34,18 +49,7 @@ class DashboardController extends Controller
                             ->when($user->company_id !== null, function ($q) use ($user) {
                                 $q->where('company_id', '=', $user->company_id);
                             })
-                            ->get([
-                                // 'company name', // "leave for now" - CP
-                                // 'plan number', // "leave for now" - CP
-                                'name',
-                                'status',
-                                'created_by',
-                                'submitted_by',
-                                'submitted_date',
-                                'approved_date',
-                                'approved_by',
-                                'review_due'
-                            ]);
+                            ->get($this->datatableFields);
 
         $this->customValues['tables'][] = [
             'heading' => 'Submitted By You',
@@ -63,18 +67,7 @@ class DashboardController extends Controller
                                     $sub->whereIn('slug', ['contract_manager', 'project_admin', 'supervisor']);
                                 });
                             })
-                            ->get([
-                                // 'company name', // "leave for now" - CP
-                                // 'plan number', // "leave for now" - CP
-                                'name',
-                                'status',
-                                'created_by',
-                                'submitted_by',
-                                'submitted_date',
-                                'approved_date',
-                                'approved_by',
-                                'review_due'
-                            ]);
+                            ->get($this->datatableFields);
 
             $this->customValues['tables'][] = [
                 'heading' => 'Pending',
@@ -86,23 +79,7 @@ class DashboardController extends Controller
                             ->when($user->company_id !== null, function ($q) use ($user) {
                                 $q->where('company_id', '=', $user->company_id);
                             })
-                            // ->whereHas('submitted', function ($roleQuery) {
-                            //     $roleQuery->whereHas('roles', function ($sub) {
-                            //         $sub->whereIn('slug', ['contract_manager', 'project_admin', 'supervisor']);
-                            //     });
-                            // })
-                            ->get([
-                                // 'company name', // "leave for now" - CP
-                                // 'plan number', // "leave for now" - CP
-                                'name',
-                                'status',
-                                'created_by',
-                                'submitted_by',
-                                'submitted_date',
-                                'approved_date',
-                                'approved_by',
-                                'review_due'
-                            ]);
+                            ->get($this->datatableFields);
 
             $this->customValues['tables'][] = [
                 'heading' => 'Rejected',
