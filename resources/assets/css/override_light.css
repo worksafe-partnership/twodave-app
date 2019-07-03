@@ -21,3 +21,9 @@ body > aside .menu-list a:hover:not(.is-active) {
 .button.is-primary {
     border-color: #404040;
 }
+.dash-heading {
+    color: #404040 !important;
+}
+.dash-button {
+    border-color: #404040 !important;
+}

@@ -1,7 +1,7 @@
 <div class="columns">
     <div class="column dash-container">
         <p class="dash-heading">{{$data['heading']}}
-            <button style="float: right" class="button is-primary is-small" id="show-hide-{{$key}}" data-table="table-{{$key}}">Show/Hide</button>
+            <button class="dash-button button is-primary is-small" id="show-hide-{{$key}}" data-table="table-{{$key}}">Show/Hide</button>
         </p>
         <div class="dash-table" id="table-{{$key}}">
             <table class="table" id="{{$data['table-id']}}" style="width:100%">
@@ -131,6 +131,10 @@
 
         .dash-table {
             margin: 5px;
+        }
+        .dash-button {
+            float: right;
+            border: 1px solid #FFF;
         }
     </style>
 @endpush

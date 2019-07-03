@@ -63,6 +63,7 @@ class Template extends Model
                 'resubmit_by',
                 'deleted_at'
             ]);
+
         if ($identifier['identifier_path'] == 'company.template') {
             $query->where(function ($q) use ($parent) {
                 $q->where('company_id', '=', $parent)

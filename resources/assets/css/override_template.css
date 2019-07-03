@@ -9,7 +9,7 @@ body > aside,
 .pagination-link.is-current,
 .button.is-primary {
     background-color: %COLOUR% !important;
-    border-color: %COLOUR% !important; 
+    border-color: %COLOUR%; 
 }
 .button.is-primary.is-inverted {
     border-color: #FFF !important;
@@ -24,6 +24,15 @@ body > aside,
 .selectize-dropdown .active {
     color: %COLOUR% !important;
 }
+.dash-container {
+    border-color: %COLOUR% !important;
+}
+.dash-heading {
+    background-color: %COLOUR% !important;
+}
+
+
+
 
 .has-text-primary {
   color: %COLOUR%;
@@ -74,4 +83,7 @@ body > aside,
 }
 .table tr.is-selected {
   background-color: %COLOUR%;
+}
+.dash-button {
+    border-color: #FFF !important;
 }

@@ -82,13 +82,12 @@ class Vtram extends Model
                 'deleted_at'
             ]);
 
-        $query->where('project_id', '=', $parent);
-
         if ($identifier['identifier_path'] == 'company.project.vtram.previous') {
             $query->where('original_id', '=', $parent)
                 ->where('status', '=', 'PREVIOUS');
         } else {
-            $query->where('status', '!=', 'PREVIOUS');
+            $query->where('status', '!=', 'PREVIOUS')
+                ->where('project_id', '=', $parent);
         }
 
         return app('datatables')->of($query)
