@@ -14,8 +14,11 @@ class ProjectController extends Controller
 
     public function bladeHook()
     {
-        $this->customValues['companies'] = Company::pluck('name', 'id');
-        $this->customValues['projectAdmins'] = User::pluck('name', 'id');
+        $this->customValues['projectAdmins'] = User::where('company_id', '=', $this->parentId)
+            ->whereHas('roles', function ($q) {
+                $q->where('slug', '=', 'project_admin');
+            })
+            ->pluck('name', 'id');
     }
 
     public function viewHook() 
@@ -39,8 +42,11 @@ class ProjectController extends Controller
         ];
     }
     
-    public function store(ProjectRequest $request)
+    public function store(ProjectRequest $request, $companyId)
     {
+        $request->merge([
+            'company_id' => $companyId
+        ]);
         return parent::_store(func_get_args());
     }
 
