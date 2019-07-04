@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Auth;
 use Evergreen\Generic\App\Role;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -30,11 +31,18 @@ class User extends Authenticatable
 
     public function scopeDatatableAll($query)
     {
+        $user = Auth::user();
         $data = $query->select(
             "id",
             "name",
             "email"
-        )->get();
+        );
+        
+        if ($user->company_id !== null) {
+            $data->where('company_id', '=', $user->company_id);
+        }
+        
+        $data = $data->get();
         return ["data" => $data];
     }
 

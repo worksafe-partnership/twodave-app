@@ -17,8 +17,14 @@ return [
             'id' => ['visible' => false, 'searchable' => false, 'label' => 'Id'],
             'type' => ['label' => 'Type'],
             'completed_by' => ['label' => 'Approved By'],
-            'approved_date' => [ 'label' => 'Approval Date'],
-            'resubmit_date' => [ 'label' => 'Resubmit Date'],
+            'approved_date' => [
+                'label' => 'Approval Date',
+                'col_type' => 'date',
+            ],
+            'resubmit_date' => [
+                'label' => 'Resubmit Date',
+                'col_type' => 'date',
+            ],
             'status_at_time' => ['label' => 'Status At Time'],
         ]
     ],

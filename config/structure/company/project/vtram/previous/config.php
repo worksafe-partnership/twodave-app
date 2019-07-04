@@ -22,13 +22,22 @@ return [
                 'raw' => true
             ],
             'reference' => ['label' => 'Reference'],
-            'approved_date' => ['label' => 'Approved Date'],
-            'review_due' => ['label' => 'Review Due'],
+            'approved_date' => [
+                'label' => 'Approved Date',
+                'col_type' => 'date',
+            ],
+            'review_due' => [
+                'label' => 'Review Due',
+                'col_type' => 'date',
+            ],
             'revision_number' => ['label' => 'Revision Number'],
             'status' => ['label' => 'Status'],
             'submitted_by' => ['label' => 'Submitted By'],
             'approved_by' => ['label' => 'Approved By'],
-            'resubmit_by' => ['label' => 'Resubmit By'],
+            'resubmit_by' => [
+                'label' => 'Resubmit By',
+                'col_type' => 'date',
+            ],
         ]
     ],
     'sidebar' => [],

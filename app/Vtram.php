@@ -115,6 +115,15 @@ class Vtram extends Model
             ->editColumn('status', function ($item) {
                 return $item->niceStatus();
             })
+            ->editColumn('approved_date', function ($item) {
+                return $item->approvedDateTimestamp();
+            })
+            ->editColumn('review_due', function ($item) {
+                return $item->nextReviewDateTimestamp();
+            })
+            ->editColumn('resubmit_by', function ($item) {
+                return $item->resubmitByDateTimestamp();
+            })
             ->make('query');
     }
 
@@ -192,10 +201,14 @@ class Vtram extends Model
         if (!is_null($this->review_due)) {
             return Carbon::createFromFormat("Y-m-d", $this->review_due)->timestamp;
         }
-        return "N/A";
+        return "";
     }
 
-
-
-
+    public function resubmitByDateTimestamp() // for custom datatables
+    {
+        if (!is_null($this->resubmit_by)) {
+            return Carbon::createFromFormat("Y-m-d", $this->resubmit_by)->timestamp;
+        }
+        return "";
+    }
 }

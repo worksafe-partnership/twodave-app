@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "507c272482dcc620fe9ea5557e4b0401",
+    "content-hash": "0faf48f0e7088f20b74c0b09ca1f9f9d",
     "packages": [
         {
             "name": "barryvdh/laravel-snappy",
@@ -563,16 +563,16 @@
         },
         {
             "name": "evergreen/generic",
-            "version": "dev-yamls",
+            "version": "2.1.3",
             "source": {
                 "type": "git",
                 "url": "git@github.com:evergreencomputing/laravel-generic.git",
-                "reference": "565970892d926f4d18053ce42cef93359e7fc25f"
+                "reference": "83e1d7f001cfc4699aaa550837088d31edd3a3a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/evergreencomputing/laravel-generic/zipball/565970892d926f4d18053ce42cef93359e7fc25f",
-                "reference": "565970892d926f4d18053ce42cef93359e7fc25f",
+                "url": "https://api.github.com/repos/evergreencomputing/laravel-generic/zipball/83e1d7f001cfc4699aaa550837088d31edd3a3a6",
+                "reference": "83e1d7f001cfc4699aaa550837088d31edd3a3a6",
                 "shasum": ""
             },
             "require": {
@@ -606,10 +606,10 @@
             },
             "description": "Evergreen laravel package",
             "support": {
-                "source": "https://github.com/evergreencomputing/laravel-generic/tree/yamls",
+                "source": "https://github.com/evergreencomputing/laravel-generic/tree/2.1.3",
                 "issues": "https://github.com/evergreencomputing/laravel-generic/issues"
             },
-            "time": "2019-07-01T13:32:01+00:00"
+            "time": "2019-03-27T12:41:18+00:00"
         },
         {
             "name": "fideloper/proxy",
@@ -5222,9 +5222,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "evergreen/generic": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

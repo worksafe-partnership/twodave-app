@@ -19,6 +19,10 @@ return [
             'vtram_id' => ['label' => 'VTRAM'],
             'name' => ['label' => 'Briefing Name'],
             'briefed_by' => ['label' => 'Briefed By'],
+            'created_at' => [
+                'label' => 'Created Date',
+                'col_type' => 'date',
+            ],
         ]
     ],
     'sidebar' => [],

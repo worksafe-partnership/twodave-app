@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon;
 use Yajra\DataTables\Datatables;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -79,6 +80,18 @@ class Template extends Model
         }
 
         return app('datatables')->of($query)
+            ->editColumn('approved_date', function ($item) {
+                if ($item->approved_date !== null) {
+                    return Carbon::createFromFormat('Y-m-d', $item->approved_date)->timestamp;
+                }
+                return '';
+            })
+            ->editColumn('review_due', function ($item) {
+                if ($item->review_due !== null) {
+                    return Carbon::createFromFormat('Y-m-d', $item->review_due)->timestamp;
+                }
+                return '';
+            })
             ->editColumn('company_id', function ($item) {
                 $company = $item->company;
                 if (!is_null($company)) {
@@ -102,6 +115,9 @@ class Template extends Model
             })
             ->editColumn('status', function ($item) {
                 return $item->niceStatus();
+            })
+            ->editColumn('resubmit_by', function ($item) {
+                return $item->resubmitByDateTimestamp();
             })
             ->make('query');
     }
@@ -128,5 +144,13 @@ class Template extends Model
     public function approved()
     {
         return $this->belongsTo(User::class, 'approved_by', 'id');
+    }
+
+    public function resubmitByDateTimestamp() // for custom datatables
+    {
+        if (!is_null($this->resubmit_by)) {
+            return Carbon::createFromFormat("Y-m-d", $this->resubmit_by)->timestamp;
+        }
+        return "";
     }
 }
