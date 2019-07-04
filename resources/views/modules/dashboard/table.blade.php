@@ -35,7 +35,11 @@
                         <td>{{ $vtram->approvedDateTimestamp() }}</td>
                         <td>{{ $vtram->approvedName() }}</td>
                         <td>{{ $vtram->nextReviewDateTimestamp() }}</td>
-                        <td>{{ $vtram->url() }}</td>
+                        @if(is_null($companyId))
+                            <td>{{ $vtram->adminUrl() }}</td>
+                        @else
+                            <td>{{ $vtram->url() }}</td>
+                        @endif
                     </tr>
                     @endforeach
                 </tbody>
