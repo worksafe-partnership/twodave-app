@@ -77,7 +77,6 @@ class Vtram extends Model
                 'dynamic_risk',
                 'pdf',
                 'pages_in_pdf',
-                'created_from',
                 'show_responsible_person',
                 'responsible_person',
                 'deleted_at'

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Auth;
 use Carbon;
 use Yajra\DataTables\Datatables;
 use Illuminate\Database\Eloquent\Model;
@@ -65,9 +66,15 @@ class Template extends Model
                 'deleted_at'
             ]);
 
-        if ($identifier['identifier_path'] == 'company.template') {
-            $query->where(function ($q) use ($parent) {
-                $q->where('company_id', '=', $parent)
+        $user = Auth::user();
+        if ($identifier['identifier_path'] == 'company.template' || $user->company_id !== null) {
+            if ($user->company_id !== null) {
+                $companyId = $user->company_id;
+            } else {
+                $companyId = $parent;
+            }
+            $query->where(function ($q) use ($companyId) {
+                $q->where('company_id', '=', $companyId)
                    ->orWhereNull('company_id'); 
             });
         }
