@@ -127,6 +127,11 @@ class Vtram extends Model
         return '';
     }
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id', 'id');
+    }
+
     public function project()
     {
         return $this->belongsTo(Project::class, 'project_id', 'id');
@@ -210,5 +215,13 @@ class Vtram extends Model
             return "/project/".$this->project_id."/vtram/".$this->id;
         }
         return '/dashboard'; // Assuming this should never be hit, but placeholder to be safe.
+    }
+
+    public function companyName()
+    {
+        if (!is_null($this->company)) {
+            return $this->company->name;
+        }
+        return "";
     }
 }

@@ -22,25 +22,25 @@
                 </thead>
                 <tbody>
                     @foreach($data['data'] as $vtram)
-                    <tr>
-                        @if(is_null($companyId))
-                            <td>{{ $vtram->companyName}} </td>
-                        @endif
-                        <!-- <td>Plan Name</td>  COMING SOON? -->
-                        <td>{{ $vtram->name }}</td>
-                        <td>{{ $vtram->niceStatus() }}</td>
-                        <td>{{ $vtram->createdName() }}</td>
-                        <td>{{ $vtram->submittedName() }}</td>
-                        <td>{{ $vtram->submittedDateTimestamp() }}</td>
-                        <td>{{ $vtram->approvedDateTimestamp() }}</td>
-                        <td>{{ $vtram->approvedName() }}</td>
-                        <td>{{ $vtram->nextReviewDateTimestamp() }}</td>
-                        @if(is_null($companyId))
-                            <td>{{ $vtram->adminUrl() }}</td>
-                        @else
-                            <td>{{ $vtram->url() }}</td>
-                        @endif
-                    </tr>
+                        <tr>
+                            @if(is_null($companyId))
+                                <td> {{ $vtram->companyName() }} </td>
+                            @endif
+                            <!-- <td>Plan Name</td>  COMING SOON? -->
+                            <td>{{ $vtram->name }}</td>
+                            <td>{{ $vtram->niceStatus() }}</td>
+                            <td>{{ $vtram->createdName() }}</td>
+                            <td>{{ $vtram->submittedName() }}</td>
+                            <td>{{ $vtram->submittedDateTimestamp() }}</td>
+                            <td>{{ $vtram->approvedDateTimestamp() }}</td>
+                            <td>{{ $vtram->approvedName() }}</td>
+                            <td>{{ $vtram->nextReviewDateTimestamp() }}</td>
+                            @if(is_null($companyId))
+                                <td>{{ $vtram->adminUrl() }}</td>
+                            @else
+                                <td>{{ $vtram->url() }}</td>
+                            @endif
+                        </tr>
                     @endforeach
                 </tbody>
             </table>
@@ -128,7 +128,9 @@
                         }
                     } else {
                         e.preventDefault();
-                        document.location.href = row.data().url;
+                        if (row.data()) {
+                            document.location.href = row.data().url;
+                        }
                     }
                 }
             } );
