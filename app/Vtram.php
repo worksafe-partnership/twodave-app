@@ -150,7 +150,7 @@ class Vtram extends Model
         if (!is_null($this->submitted_date)) {
             return Carbon::createFromFormat("Y-m-d", $this->submitted_date)->timestamp;
         }
-        return "Not Submitted";
+        return "";
     }
 
     public function createdBy()
@@ -184,7 +184,7 @@ class Vtram extends Model
         if (!is_null($this->approved_date)) {
             return Carbon::createFromFormat("Y-m-d", $this->approved_date)->timestamp;
         }
-        return "Not Approved";
+        return "";
     }
 
     public function nextReviewDateTimestamp() // for custom datatables
@@ -192,7 +192,7 @@ class Vtram extends Model
         if (!is_null($this->review_due)) {
             return Carbon::createFromFormat("Y-m-d", $this->review_due)->timestamp;
         }
-        return "N/A";
+        return "";
     }
 
     public function url() // for custom datatables

@@ -6,6 +6,10 @@
         <div class="dash-table" id="table-{{$key}}">
             <table class="table" id="{{$data['table-id']}}" style="width:100%">
                 <thead>
+                    @if(is_null($companyId))
+                        <th>Company</th>
+                    @endif
+                    <!-- <th>Plan Name</th> -->
                     <th>VTRAM Name</th>
                     <th>Status</th>
                     <th>Created By</th>
@@ -19,6 +23,10 @@
                 <tbody>
                     @foreach($data['data'] as $vtram)
                     <tr>
+                        @if(is_null($companyId))
+                            <td>{{ $vtram->companyName}} </td>
+                        @endif
+                        <!-- <td>Plan Name</td>  COMING SOON? -->
                         <td>{{ $vtram->name }}</td>
                         <td>{{ $vtram->niceStatus() }}</td>
                         <td>{{ $vtram->createdName() }}</td>
@@ -48,6 +56,10 @@
                 },
                 buttons: [],
                 columns : [
+                    @if(is_null($companyId))
+                        { data: 'company_name', name: 'company_name' },
+                    @endif
+                    // { data: 'plan_name', name: 'plan_name' },
                     { data: 'name', name: 'name' },
                     { data: 'status', name: 'status' },
                     { data: 'created_name', name: 'created_name' },
@@ -59,7 +71,7 @@
                                     var dateFormat = "DD/MM/YYYY";
                                     return (moment(data * 1000).format(dateFormat));
                                 } else {
-                                    return '';
+                                    return data;
                                 }
                             }
                             return data;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use App\Vtram;
 use Controller;
 
@@ -9,7 +10,7 @@ class DashboardController extends Controller
 {
     protected $identifierPath = 'dashboard';
     protected $datatableFields = [
-        // 'company name', // "leave for now" - CP
+        'company_id', // "leave for now" - CP
         // 'plan number', // "leave for now" - CP
         'id',
         'company_id',
@@ -34,17 +35,29 @@ class DashboardController extends Controller
         parent::__construct();
     }
 
-    public function viewHook()
+    public function view()
     {
-        $user = $this->user;
+
+        $user = Auth::user();
         $role = $user->roles->first()->slug;
 
+        if ($role == "supervisor") {
+            return redirect('/project'); // route TBC!
+        }
+
+        $this->getTables($user, $role);
+        $this->customValues['companyId'] = $user->company_id;
+        return parent::_view();
+    }
+
+    public function getTables($user, $role)
+    {
         $statuses = Config('egc.vtram_status');
         if ($role != 'supervisor') {
             unset($statuses['EXTERNAL_REJECT']);
         }
 
-        $submitted = Vtram::where('submitted_by', $this->user->id)
+        $submitted = Vtram::where('submitted_by', $user->id)
                             ->whereIn('status', $statuses)
                             ->when($user->company_id !== null, function ($q) use ($user) {
                                 $q->where('company_id', '=', $user->company_id);
@@ -57,14 +70,22 @@ class DashboardController extends Controller
             'data' => $submitted,
         ];
 
-        if ($role == 'company_admin') {
+        if (in_array($role, ['company_admin', 'contract_manager', 'project_admin'])) {
+            if ($role == 'company_admin') {
+                $roleCheck = ['contract_manager', 'project_admin', 'supervisor'];
+            } else if ($role == 'contact_manager') {
+                $roleCheck = ['project_admin', 'supervisor'];
+            } else { // must be project admin based on above if!
+                $roleCheck = ['supervisor'];
+            }
+
             $pending = Vtram::where('status', "PENDING")
                             ->when($user->company_id !== null, function ($q) use ($user) {
                                 $q->where('company_id', '=', $user->company_id);
                             })
-                            ->whereHas('submitted', function ($roleQuery) {
-                                $roleQuery->whereHas('roles', function ($sub) {
-                                    $sub->whereIn('slug', ['contract_manager', 'project_admin', 'supervisor']);
+                            ->whereHas('submitted', function ($roleQuery) use ($roleCheck) {
+                                $roleQuery->whereHas('roles', function ($sub) use ($roleCheck) {
+                                    $sub->whereIn('slug', $roleCheck);
                                 });
                             })
                             ->get($this->datatableFields);
@@ -75,9 +96,32 @@ class DashboardController extends Controller
                 'data' => $pending,
             ];
 
+
+            // weird indentation but PSR2 demands it?
+            $tracker = Vtram::when($user->company_id !== null, function ($q) use ($user) {
+                            $q->where('company_id', '=', $user->company_id);
+            })
+            ->when($role == "project_admin", function ($pm) use ($user) {
+                $pm->whereHas('project', function ($project) use ($user) {
+                    $project->where('project_admin', $user->id);
+                });
+            })
+            ->get($this->datatableFields);
+
+            $this->customValues['tables'][] = [
+                'heading' => 'VTRAMS Tracker',
+                'table-id' => 'tracker',
+                'data' => $tracker,
+            ];
+
             $rejected = Vtram::whereIn('status', ["EXTERNAL_REJECT", "REJECTED"])
                             ->when($user->company_id !== null, function ($q) use ($user) {
                                 $q->where('company_id', '=', $user->company_id);
+                            })
+                            ->when($role == 'project_admin', function ($pa) use ($user) {
+                                $pa->whereHas('project', function ($project) use ($user) {
+                                    $project->where('project_admin', '=', $user->id);
+                                });
                             })
                             ->get($this->datatableFields);
 
@@ -87,7 +131,5 @@ class DashboardController extends Controller
                 'data' => $rejected,
             ];
         }
-
-
     }
 }
