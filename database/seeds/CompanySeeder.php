@@ -50,12 +50,34 @@ class CompanySeeder extends Seeder
             $projectAdmin = User::join('role_users', 'role_users.user_id', '=', 'users.id')
                 ->where('company_id', $company->id)
                 ->where('role_id', 5)
-                ->first();
+                ->get(['id'])->first();
 
             $projects = factory(App\Project::class, 5)->create([
                 'company_id' => $company->id,
                 'project_admin' => $projectAdmin->id
             ]);
+
+            $contractManager = User::join('role_users', 'role_users.user_id', '=', 'users.id')
+                ->where('company_id', $company->id)
+                ->where('role_id', 4)
+                ->get(['id'])->first();
+
+            foreach ($projects as $project) {
+                factory(App\Vtram::class, 1)->create([
+                    'company_id' => $company->id,
+                    'project_id' => $project->id,
+                    'created_by' => $projectAdmin->id,
+                    'submitted_by' => $projectAdmin->id,
+                ]);
+                factory(App\Vtram::class, 1)->create([
+                    'company_id' => $company->id,
+                    'project_id' => $project->id,
+                    'created_by' => $contractManager->id,
+                    'submitted_by' => $contractManager->id,
+                ]);
+            }
+
+
         }
 
         // $seededCompanies = factory(App\Company::class, $counts['extraCompanies'])->create();

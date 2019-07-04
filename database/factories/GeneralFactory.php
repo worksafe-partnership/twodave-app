@@ -23,10 +23,10 @@ $factory->define(App\Company::class, function (Faker $faker) {
         'email' => $faker->safeEmail,
         'phone' => 'TBC',
         'fax' => 'TBC',
-        'low_risk_character' => 'TBC',
-        'med_risk_character' => 'TBC',
-        'high_risk_character' => 'TBC',
-        'no_risk_character' => 'TBC',
+        'low_risk_character' => 'L',
+        'med_risk_character' => 'M',
+        'high_risk_character' => 'H',
+        'no_risk_character' => '#',
         'primary_colour' => $faker->hexcolor,
         'secondary_colour' => $faker->hexcolor,
         'light_text' => $faker->randomElement([null, 1]),
@@ -60,5 +60,40 @@ $factory->define(App\Project::class, function (Faker $faker) {
         'client_name' => $faker->name,
         'review_timescale' => $faker->randomElement(array_flip($config['review_timescales'])),
         'show_contact' => $faker->randomElement([null, 1]),
+    ];
+});
+
+$factory->define(App\Vtram::class, function (Faker $faker) {
+    $config = Config('egc');
+
+    return [
+        'company_id' => 1,
+        'project_id' => 1,
+        'name' => $faker->words(3, true),
+        'description' => $faker->words(3, true),
+        // 'logo',
+        'reference' => $faker->words(2, true),
+        'key_points' => "<p>".$faker->words(3, true)."</p>",
+        // 'havs_noise_assessment',
+        // 'coshh_assessment',
+        'review_due' => $faker->dateTimeBetween('now', '+1 months', null),
+        // 'approved_date',
+        // 'original_id',
+        // 'revision_number',
+        'status' => $faker->randomElement(['NEW', 'PENDING', 'REJECTED', 'EXTERNAL_REJECT']),
+        // 'created_by',
+        // 'updated_by',
+        // 'submitted_by',
+        // 'approved_by',
+        // 'date_replaced',
+        // 'resubmit_by',
+        // 'pre_risk_assessment_text',
+        // 'post_risk_assessment_text',
+        // 'dynamic_risk',
+        // 'pdf',
+        // 'pages_in_pdf',
+        // 'created_from',
+        // 'show_responsible_person',
+        // 'responsible_person'
     ];
 });

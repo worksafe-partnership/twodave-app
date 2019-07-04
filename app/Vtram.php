@@ -136,6 +136,11 @@ class Vtram extends Model
         return '';
     }
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id', 'id');
+    }
+
     public function project()
     {
         return $this->belongsTo(Project::class, 'project_id', 'id');
@@ -159,7 +164,7 @@ class Vtram extends Model
         if (!is_null($this->submitted_date)) {
             return Carbon::createFromFormat("Y-m-d", $this->submitted_date)->timestamp;
         }
-        return "Not Submitted";
+        return "";
     }
 
     public function createdBy()
@@ -193,7 +198,7 @@ class Vtram extends Model
         if (!is_null($this->approved_date)) {
             return Carbon::createFromFormat("Y-m-d", $this->approved_date)->timestamp;
         }
-        return "Not Approved";
+        return "";
     }
 
     public function nextReviewDateTimestamp() // for custom datatables
@@ -208,6 +213,30 @@ class Vtram extends Model
     {
         if (!is_null($this->resubmit_by)) {
             return Carbon::createFromFormat("Y-m-d", $this->resubmit_by)->timestamp;
+        }
+        return "";
+    }
+    public function adminUrl()
+    {
+        if (!is_null($this->company_id) && !is_null($this->project_id) && !is_null($this->id)) {
+            return "/company/".$this->company_id."/project/".$this->project_id."/vtram/".$this->id;
+        }
+        return '/dashboard'; // Assuming this should never be hit, but placeholder to be safe.
+    }
+
+
+    public function url() // for custom datatables
+    {
+        if (!is_null($this->project_id) && !is_null($this->id)) {
+            return "/project/".$this->project_id."/vtram/".$this->id;
+        }
+        return '/dashboard'; // Assuming this should never be hit, but placeholder to be safe.
+    }
+
+    public function companyName()
+    {
+        if (!is_null($this->company)) {
+            return $this->company->name;
         }
         return "";
     }

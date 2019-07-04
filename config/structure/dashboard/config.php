@@ -9,4 +9,7 @@ return [
     'controller' => 'DashboardController',
     'permissions' => true,
     'sidebar' => ['order' => 1],
+    'override_route_actions' => [
+        '_view' => 'view',
+    ],
 ];
