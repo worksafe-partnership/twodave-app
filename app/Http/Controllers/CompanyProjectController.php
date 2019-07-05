@@ -2,26 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
 use Controller;
 use App\Project;
 use App\Company;
 use App\User;
 use App\Http\Requests\ProjectRequest;
 
-class ProjectController extends CompanyProjectController
+class CompanyProjectController extends Controller
 {
-    protected $identifierPath = 'project';
+    protected $identifierPath = 'company.project';
 
     public function bladeHook()
     {
-        if ($this->user->company_id !== null) {
-            if ($this->user->company_id !== $this->record->company_id) {
-                abort(404);
-            }
-        }
-
-        $this->customValues['projectAdmins'] = User::where('company_id', '=', $this->user->company_id)
+        $this->customValues['projectAdmins'] = User::where('company_id', '=', $this->parentId)
             ->whereHas('roles', function ($q) {
                 $q->where('slug', '=', 'project_admin');
             })
@@ -30,29 +23,29 @@ class ProjectController extends CompanyProjectController
 
     public function viewHook() 
     {
-        $briefConfig = config('structure.project.briefing.config');
+        $briefConfig = config('structure.company.project.briefing.config');
         $this->actionButtons['briefings'] = [
             'label' => ucfirst($this->pageType)." ".$briefConfig['plural'],
-            'path' => '/project/'.$this->id.'/briefing',
+            'path' => '/company/'.$this->parentId.'/project/'.$this->id.'/briefing',
             'icon' => $briefConfig['icon'],
             'order' => '400',
             'id' => 'briefingsList'
         ];
 
-        $vtramConfig = config('structure.project.vtram.config');
+        $vtramConfig = config('structure.company.project.vtram.config');
         $this->actionButtons['vtrams'] = [
             'label' => ucfirst($this->pageType)." ".$vtramConfig['plural'],
-            'path' => '/project/'.$this->id.'/vtram',
+            'path' => '/company/'.$this->parentId.'/project/'.$this->id.'/vtram',
             'icon' => $vtramConfig['icon'],
             'order' => '500',
             'id' => 'vtramsList'
         ];
     }
     
-    public function store(ProjectRequest $request, $companyId = null)
+    public function store(ProjectRequest $request, $companyId)
     {
         $request->merge([
-            'company_id' => Auth::user()->company_id
+            'company_id' => $companyId
         ]);
         return parent::_store(func_get_args());
     }

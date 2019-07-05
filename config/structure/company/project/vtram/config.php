@@ -11,7 +11,7 @@ return [
         'column' => 'name'
     ],
     'icon' => 'document-add',
-    'controller' => 'VtramController',
+    'controller' => 'CompanyVtramController',
     'datatable' => [
         "columns" => [
             'id' => ['visible' => false, 'searchable' => false, 'label' => 'Id'],

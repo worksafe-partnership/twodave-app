@@ -48,6 +48,9 @@ class Project extends Model
             ]);
 
         $user = Auth::user();
+        if (!$parent) {
+            $parent = $user->company_id;
+        }
         $query->when($user->company_id != null, function ($q) use ($parent) {
             $q->where('company_id', '=', $parent); 
         });

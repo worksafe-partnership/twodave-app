@@ -7,9 +7,9 @@ use App\Vtram;
 use App\Project;
 use App\Http\Requests\VtramRequest;
 
-class PreviousVtramController extends CompanyPreviousVtramController
+class CompanyPreviousVtramController extends VtramController
 {
-    protected $identifierPath = 'project.vtram.previous';
+    protected $identifierPath = 'company.project.vtram.previous';
 
     public function __construct() 
     {

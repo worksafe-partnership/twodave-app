@@ -47,7 +47,7 @@ class Approval extends Model
                 'deleted_at'
             ]);
 
-        if ($identifier['identifier_path'] == 'company.project.vtram.approval') {
+        if (in_array($identifier['identifier_path'], ['company.project.vtram.approval', 'project.vtram.approval'])) {
             // VTRAM
             $query->where('entity', '=' , 'VTRAM')
                 ->where('entity_id', '=', $parent);

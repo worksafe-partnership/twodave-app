@@ -1,4 +1,4 @@
-identifierPath: company.project.briefing.attendance
+identifierPath: project.briefing.attendance
 model: Attendance
 timestamps: true
 permissions: true

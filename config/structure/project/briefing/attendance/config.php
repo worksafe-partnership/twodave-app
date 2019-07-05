@@ -3,7 +3,7 @@
 return [
     'singular' => 'Attendance',
     'plural' => 'Attendance',
-    'identifier_path' => 'company.project.briefing.attendance',
+    'identifier_path' => 'project.briefing.attendance',
     'route_type' => 'resource',
     'db' => [
         'model' => 'Attendance',
@@ -11,7 +11,7 @@ return [
         'column' => 'name'
     ],
     'icon' => 'playlist_add_check',
-    'controller' => 'CompanyAttendanceController',
+    'controller' => 'AttendanceController',
     'datatable' => [
         "columns" => [
             'id' => ['visible' => false, 'searchable' => false, 'label' => 'Id'],

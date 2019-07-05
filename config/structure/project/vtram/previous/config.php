@@ -3,7 +3,7 @@
 return [
     'singular' => 'Previous VTRAM',
     'plural' => 'Previous VTRAMs',
-    'identifier_path' => 'company.project.vtram.previous',
+    'identifier_path' => 'project.vtram.previous',
     'route_type' => 'resource',
     'db' => [
         'model' => 'Vtram',
@@ -11,7 +11,7 @@ return [
         'column' => 'name'
     ],
     'icon' => 'document-add',
-    'controller' => 'CompanyPreviousVtramController',
+    'controller' => 'PreviousVtramController',
     'datatable' => [
         "columns" => [
             'id' => ['visible' => false, 'searchable' => false, 'label' => 'Id'],

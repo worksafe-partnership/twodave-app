@@ -82,7 +82,7 @@ class Vtram extends Model
                 'deleted_at'
             ]);
 
-        if ($identifier['identifier_path'] == 'company.project.vtram.previous') {
+        if (in_array($identifier['identifier_path'], ['company.project.vtram.previous', 'project.vtram.previous'])) {
             $query->where('original_id', '=', $parent)
                 ->where('status', '=', 'PREVIOUS');
         } else {

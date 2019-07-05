@@ -1,4 +1,4 @@
-identifierPath: company.project.vtram
+identifierPath: project.vtram
 model: Vtram
 timestamps: true
 permissions: true

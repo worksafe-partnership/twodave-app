@@ -3,7 +3,7 @@
 return [
     'singular' => 'Briefing',
     'plural' => 'Briefings',
-    'identifier_path' => 'company.project.briefing',
+    'identifier_path' => 'project.briefing',
     'route_type' => 'resource',
     'db' => [
         'model' => 'Briefing',
@@ -11,7 +11,7 @@ return [
         'column' => 'name'
     ],
     'icon' => 'briefcase',
-    'controller' => 'CompanyBriefingController',
+    'controller' => 'BriefingController',
     'datatable' => [
         "columns" => [
             'id' => ['visible' => false, 'searchable' => false, 'label' => 'Id'],
@@ -25,6 +25,5 @@ return [
             ],
         ]
     ],
-    'sidebar' => [],
     'permissions' => true
 ];

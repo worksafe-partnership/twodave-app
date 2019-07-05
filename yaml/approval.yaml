@@ -1,4 +1,4 @@
-identifierPath: company.project.vtram.approval
+identifierPath: project.vtram.approval
 model: Approval
 timestamps: true
 permissions: true
