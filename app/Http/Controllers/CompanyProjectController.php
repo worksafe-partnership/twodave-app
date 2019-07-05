@@ -21,7 +21,7 @@ class CompanyProjectController extends Controller
             ->pluck('name', 'id');
     }
 
-    public function viewHook() 
+    public function viewHook()
     {
         $briefConfig = config('structure.company.project.briefing.config');
         $this->actionButtons['briefings'] = [
@@ -40,8 +40,17 @@ class CompanyProjectController extends Controller
             'order' => '500',
             'id' => 'vtramsList'
         ];
+
+        $trackerConfig = config('structure.company.project.tracker.config');
+        $this->actionButtons['tracker'] = [
+            'label' => "VTRAM Tracker",
+            'path' => '/company/'.$this->parentId.'/project/'.$this->id.'/tracker',
+            'icon' => $trackerConfig['icon'],
+            'order' => '600',
+            'id' => 'vtramsTracker'
+        ];
     }
-    
+
     public function store(ProjectRequest $request, $companyId)
     {
         $request->merge([

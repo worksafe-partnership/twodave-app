@@ -186,4 +186,9 @@ return [
         'MAIN' => 'Main',
         'SUB' => 'Sub',
     ],
+    'review_colours' => [
+        'review-okay' => '#98fb98',
+        'review-two-weeks' => '#eee8aa',
+        'review-overdue' => '#FF0000',
+    ]
 ];
