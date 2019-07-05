@@ -5,11 +5,32 @@ namespace App\Http\Controllers;
 use Controller;
 use App\Briefing;
 use App\Vtram;
+use App\Project;
 use App\Http\Requests\BriefingRequest;
 
 class BriefingController extends CompanyBriefingController
 {
     protected $identifierPath = 'project.briefing';
+
+    public function bladeHook()
+    {
+        if ($this->user->company_id !== null) {
+            if ($this->user->company_id !== $this->record->project->company_id) {
+                abort(404);
+            }
+        }
+        parent::bladeHook();
+    }
+
+    public function indexHook()
+    {
+        if ($this->user->company_id !== null) {
+            $project = Project::findOrFail($this->parentId);
+            if ($this->user->company_id !== $project->company_id) {
+                abort(404);
+            }
+        }
+    }
 
     public function viewHook()
     {

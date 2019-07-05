@@ -112,4 +112,13 @@ class Approval extends Model
         }
         return Carbon::createFromFormat('Y-m-d', $this->approved_date)->format('d/m/Y');
     }
+
+    public function vtram()
+    {
+        if ($this->entity == 'VTRAM') {
+            return $this->belongsTo(Vtram::class, 'entity_id', 'id');
+        } else {
+            return $this->belongsTo(Template::class, 'entity_id', 'id');
+        }
+    }
 }

@@ -8,7 +8,7 @@ return [
     'db' => [
         'model' => 'Approval',
         'id' => 'id',
-        'column' => 'id'
+        'column' => 'completed_by'
     ],
     'icon' => 'tick',
     'controller' => 'CompanyTemplateApprovalController',
