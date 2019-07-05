@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use Carbon;
 use App\Vtram;
 use Controller;
 
@@ -10,7 +11,7 @@ class DashboardController extends Controller
 {
     protected $identifierPath = 'dashboard';
     protected $datatableFields = [
-        'company_id', // "leave for now" - CP
+        'company_id',
         // 'plan number', // "leave for now" - CP
         'id',
         'company_id',
@@ -37,7 +38,6 @@ class DashboardController extends Controller
 
     public function view()
     {
-
         $user = Auth::user();
         $role = $user->roles->first()->slug;
 
@@ -47,6 +47,9 @@ class DashboardController extends Controller
 
         $this->getTables($user, $role);
         $this->customValues['companyId'] = $user->company_id;
+        $this->customValues['nowCarbon'] = Carbon::now();
+        $this->customValues['twoWeeksCarbon'] = $this->customValues['nowCarbon']->copy()->addWeeks(2);
+
         return parent::_view();
     }
 
@@ -106,6 +109,7 @@ class DashboardController extends Controller
                     $project->where('project_admin', $user->id);
                 });
             })
+            ->where('status', '!=', 'PREVIOUS')
             ->get($this->datatableFields);
 
             $this->customValues['tables'][] = [

@@ -34,7 +34,7 @@
                             <td>{{ $vtram->submittedDateTimestamp() }}</td>
                             <td>{{ $vtram->approvedDateTimestamp() }}</td>
                             <td>{{ $vtram->approvedName() }}</td>
-                            <td>{{ $vtram->nextReviewDateTimestamp() }}</td>
+                            <td class="{{$vtram->dTClass($nowCarbon, $twoWeeksCarbon)}}">{{ $vtram->nextReviewDateTimestamp() }}</td>
                             @if(is_null($companyId))
                                 <td>{{ $vtram->adminUrl() }}</td>
                             @else
