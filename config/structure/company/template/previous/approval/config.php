@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'singular' => 'Previous Template Approval',
-    'plural' => 'Previous Template Approvals',
+    'singular' => 'Company Previous Template Approval',
+    'plural' => 'Company Previous Template Approvals',
     'identifier_path' => 'company.template.previous.approval',
     'route_type' => 'resource',
     'db' => [

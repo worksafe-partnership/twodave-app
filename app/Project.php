@@ -48,12 +48,11 @@ class Project extends Model
             ]);
 
         $user = Auth::user();
-        if (!$parent) {
-            $parent = $user->company_id;
+        if ($identifier['identifier_path'] == 'project') {
+            $query->where('company_id', '=', $user->company_id);
+        } else {
+            $query->where('company_id', '=', $parent);
         }
-        $query->when($user->company_id != null, function ($q) use ($parent) {
-            $q->where('company_id', '=', $parent); 
-        });
 
         return app('datatables')->of($query)
             ->editColumn('review_timescale', function ($item) {

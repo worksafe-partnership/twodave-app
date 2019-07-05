@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'singular' => 'Approval',
-    'plural' => 'Approvals',
+    'singular' => 'Company Approval',
+    'plural' => 'Company Approvals',
     'identifier_path' => 'company.project.vtram.approval',
     'route_type' => 'resource',
     'db' => [

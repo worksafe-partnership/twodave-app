@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'singular' => 'Attendance',
-    'plural' => 'Attendance',
+    'singular' => 'Company Attendance',
+    'plural' => 'Company Attendance',
     'identifier_path' => 'company.project.briefing.attendance',
     'route_type' => 'resource',
     'db' => [

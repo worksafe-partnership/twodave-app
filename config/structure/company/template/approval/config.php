@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'singular' => 'Template Approval',
-    'plural' => 'Template Approvals',
+    'singular' => 'Company Template Approval',
+    'plural' => 'Company Template Approvals',
     'identifier_path' => 'company.template.approval',
     'route_type' => 'resource',
     'db' => [
