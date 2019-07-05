@@ -240,4 +240,18 @@ class Vtram extends Model
         }
         return "";
     }
+
+    public function dTClass($nowCarbon, $twoWeeksCarbon)
+    {
+        if ($this->review_due) {
+            $dueCarbon = Carbon::createFromFormat("Y-m-d", $this->review_due);
+            if ($nowCarbon->gt($dueCarbon)) {
+                return "review-overdue";
+            }
+            if ($dueCarbon->lt($twoWeeksCarbon)) {
+                return "review-two-weeks";
+            }
+        }
+        return "review-okay";
+    }
 }
