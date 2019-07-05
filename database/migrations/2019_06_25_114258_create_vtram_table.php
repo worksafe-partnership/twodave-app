@@ -51,8 +51,8 @@ class CreateVtramTable extends Migration
             $table->integer('pdf')->nullable()->unsigned();
             $table->foreign('pdf')->references('id')->on('files')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->integer('pages_in_pdf')->nullable();
-            $table->integer('created_from')->nullable()->unsigned();
-            $table->foreign('created_from')->references('id')->on('templates')->onDelete('SET NULL')->onUpdate('SET NULL');
+            $table->string('created_from_entity')->nullable();
+            $table->integer('created_from_id')->nullable()->unsigned();
             $table->boolean('show_responsible_person')->nullable();
             $table->string('responsible_person')->nullable();
             $table->softDeletes();

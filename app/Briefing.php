@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon;
 use Yajra\DataTables\Datatables;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -33,7 +34,8 @@ class Briefing extends Model
                 'briefed_by',
                 'name',
                 'notes',
-                'deleted_at'
+                'deleted_at',
+                'created_at',
             ]);
 
         $query->where('project_id', '=', $parent);
@@ -53,6 +55,9 @@ class Briefing extends Model
                 }
                 return 'Not Selected';
             })
+            ->editColumn('created_at', function ($item) {
+                return $item->createdTimestamp();
+            })
             ->make('query');
     }
 
@@ -64,5 +69,13 @@ class Briefing extends Model
     public function vtram()
     {
         return $this->belongsTo(Vtram::class, 'vtram_id', 'id');
+    }
+
+    public function createdTimestamp()
+    {
+        if ($this->created_at !== null) {
+            return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->timestamp;
+        }
+        return '';
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Validator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,7 +14,26 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Validator::extend('onlyOneRole', function ($attribute, $value, $parameters, $validator) {
+            $totalVal = 0;
+            foreach ($value as $role => $val) {
+                $totalVal += $val;
+            }
+            if ($totalVal == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        Validator::extend('companyRequired', function ($attribute, $value, $parameters, $validator) {
+            $data = $validator->getData();
+            $roles = $data['roles'];
+            if ($roles[1] == 0 && $roles[2] == 0 && strlen($value) == 0) {
+                return false;
+            }
+            return true;
+        });
     }
 
     /**

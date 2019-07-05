@@ -11,7 +11,7 @@ return [
         'column' => 'name'
     ],
     'icon' => 'playlist_add_check',
-    'controller' => 'AttendanceController',
+    'controller' => 'CompanyAttendanceController',
     'datatable' => [
         "columns" => [
             'id' => ['visible' => false, 'searchable' => false, 'label' => 'Id'],

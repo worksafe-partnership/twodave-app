@@ -6,26 +6,30 @@ use Controller;
 use App\Attendance;
 use App\Http\Requests\AttendanceRequest;
 
-class AttendanceController extends Controller
+class AttendanceController extends CompanyAttendanceController
 {
-    protected $identifierPath = 'company.project.briefing.attendance';
+    protected $identifierPath = 'project.briefing.attendance';
 
     public function postIndexHook()
     {
         $this->datatable['href'] = null;
     }
     
-    public function store(AttendanceRequest $request, $companyId, $projectId, $briefingId)
+    public function store(AttendanceRequest $request, $projectId, $briefingId, $otherId = null)
     {
         $request->merge([
             'briefing_id' => $briefingId,
         ]);
-        return parent::_store(func_get_args());
+        return parent::_store([
+            $request,
+            $projectId,
+            $briefingId
+        ]);
     }
 
-    public function created($insert, $reuqest, $args)
+    public function created($insert, $request, $args)
     {
-        return '/company/'.$args[1].'/project/'.$args[2].'/briefing/'.$args[3].'/attendance';
+        return '/project/'.$args[1].'/briefing/'.$args[2].'/attendance';
     }
 
     public function update(AttendanceRequest $request)

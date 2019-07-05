@@ -43,7 +43,8 @@ class Vtram extends Model
         'dynamic_risk',
         'pdf',
         'pages_in_pdf',
-        'created_from',
+        'created_from_entity',
+        'created_from_id',
         'show_responsible_person',
         'responsible_person'
     ];
@@ -76,13 +77,12 @@ class Vtram extends Model
                 'dynamic_risk',
                 'pdf',
                 'pages_in_pdf',
-                'created_from',
                 'show_responsible_person',
                 'responsible_person',
                 'deleted_at'
             ]);
 
-        if ($identifier['identifier_path'] == 'company.project.vtram.previous') {
+        if (in_array($identifier['identifier_path'], ['company.project.vtram.previous', 'project.vtram.previous'])) {
             $query->where('original_id', '=', $parent)
                 ->where('status', '=', 'PREVIOUS');
         } else {
@@ -114,6 +114,15 @@ class Vtram extends Model
             })
             ->editColumn('status', function ($item) {
                 return $item->niceStatus();
+            })
+            ->editColumn('approved_date', function ($item) {
+                return $item->approvedDateTimestamp();
+            })
+            ->editColumn('review_due', function ($item) {
+                return $item->nextReviewDateTimestamp();
+            })
+            ->editColumn('resubmit_by', function ($item) {
+                return $item->resubmitByDateTimestamp();
             })
             ->make('query');
     }
@@ -200,6 +209,13 @@ class Vtram extends Model
         return "";
     }
 
+    public function resubmitByDateTimestamp() // for custom datatables
+    {
+        if (!is_null($this->resubmit_by)) {
+            return Carbon::createFromFormat("Y-m-d", $this->resubmit_by)->timestamp;
+        }
+        return "";
+    }
     public function adminUrl()
     {
         if (!is_null($this->company_id) && !is_null($this->project_id) && !is_null($this->id)) {

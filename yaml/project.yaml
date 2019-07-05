@@ -1,4 +1,4 @@
-identifierPath: company.project
+identifierPath: project
 model: Project
 timestamps: true
 permissions: true

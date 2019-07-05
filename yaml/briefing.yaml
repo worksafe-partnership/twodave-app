@@ -1,4 +1,4 @@
-identifierPath: company.project.briefing
+identifierPath: project.briefing
 model: Briefing
 timestamps: true
 permissions: true

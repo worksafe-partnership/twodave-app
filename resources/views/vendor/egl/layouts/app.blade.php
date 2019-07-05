@@ -15,8 +15,11 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}?<?php echo filemtime(public_path().'/css/app.css'); ?>" rel="stylesheet">
     <script src="{{ asset('js/app.js') }}?<?php echo filemtime(public_path().'/js/app.js'); ?>"></script>
-    @if (!is_null(Auth::user()->company_id) && file_exists(public_path('/css/company/'.Auth::user()->company_id.'_colour.css')))
-        <link href="{{ asset('css/company/'.Auth::user()->company_id.'_colour.css') }}?<?php echo filemtime(public_path('/css/company/'.Auth::user()->company_id.'_colour.css')); ?>" rel="stylesheet">
+    @php
+        $authUser = Auth::user();
+    @endphp
+    @if (!is_null($authUser->company_id) && file_exists(public_path('/css/company/'.$authUser->company_id.'_colour.css')))
+        <link href="{{ asset('css/company/'.$authUser->company_id.'_colour.css') }}?<?php echo filemtime(public_path('/css/company/'.$authUser->company_id.'_colour.css')); ?>" rel="stylesheet">
     @endif
     @stack('styles')
     <style id="antiClickjack">body{display:none !important;}</style>
@@ -57,8 +60,8 @@
         <div class="nano">
             <div class="nano-content">
                 <div class="menu-top"></div>
-                @if (isset(Auth::user()->company) && Auth::user()->company->logo !== null) 
-                    <div class="site-logo" style="background-image:url('/image/{{ Auth::user()->company->logo }}');"
+                @if (isset($authUser->company) && $authUser->company->logo !== null) 
+                    <div class="site-logo" style="background-image:url('/image/{{ $authUser->company->logo }}');"
                 @else
                     <div class="site-logo" style="background-image:url('/logo.png');"
                 @endif

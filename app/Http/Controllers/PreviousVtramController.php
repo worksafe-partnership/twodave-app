@@ -7,9 +7,9 @@ use App\Vtram;
 use App\Project;
 use App\Http\Requests\VtramRequest;
 
-class PreviousVtramController extends VtramController
+class PreviousVtramController extends CompanyPreviousVtramController
 {
-    protected $identifierPath = 'company.project.vtram.previous';
+    protected $identifierPath = 'project.vtram.previous';
 
     public function __construct() 
     {
@@ -24,15 +24,5 @@ class PreviousVtramController extends VtramController
     public function viewHook()
     {
 
-    }
-    
-    public function store(VtramRequest $request, $companyId, $projectId)
-    {
-        return parent::_store(func_get_args());
-    }
-
-    public function update(VtramRequest $request)
-    {
-        return parent::_update(func_get_args());
     }
 }

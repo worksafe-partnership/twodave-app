@@ -47,7 +47,7 @@ class Approval extends Model
                 'deleted_at'
             ]);
 
-        if ($identifier['identifier_path'] == 'company.project.vtram.approval') {
+        if (in_array($identifier['identifier_path'], ['company.project.vtram.approval', 'project.vtram.approval'])) {
             // VTRAM
             $query->where('entity', '=' , 'VTRAM')
                 ->where('entity_id', '=', $parent);
@@ -65,10 +65,16 @@ class Approval extends Model
                 return $item->niceType();
             })
             ->editColumn('approved_date', function ($item) {
-                return $item->niceApproved();
+                if ($item->approved_date !== null) {
+                    return Carbon::createFromFormat('Y-m-d', $item->approved_date)->timestamp;
+                }
+                return '';
             })
             ->editColumn('resubmit_date', function ($item) {
-                return $item->niceResubmit();
+                if ($item->resubmit_date !== null) {
+                    return Carbon::createFromFormat('Y-m-d', $item->resubmit_date)->timestamp;
+                }
+                return '';
             })
             ->make('query');
     }

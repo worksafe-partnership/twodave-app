@@ -11,11 +11,10 @@ return [
         'column' => 'name'
     ],
     'icon' => 'account_balance_wallet',
-    'controller' => 'ProjectController',
+    'controller' => 'CompanyProjectController',
     'datatable' => [
         "columns" => [
             'id' => ['visible' => false, 'searchable' => false, 'label' => 'Id'],
-            'company_id' => ['label' => 'Company'],
             'client_name' => ['label' => 'Client'],
             'name' => ['label' => 'Name'],
             'ref' => ['label' => 'Reference'],

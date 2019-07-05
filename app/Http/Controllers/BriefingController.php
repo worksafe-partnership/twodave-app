@@ -7,40 +7,32 @@ use App\Briefing;
 use App\Vtram;
 use App\Http\Requests\BriefingRequest;
 
-class BriefingController extends Controller
+class BriefingController extends CompanyBriefingController
 {
-    protected $identifierPath = 'company.project.briefing';
-
-    public function bladeHook()
-    {
-        if ($this->pageType == 'create') {
-            $this->customValues['vtrams'] = Vtram::where('project_id', '=', $this->parentId)
-                ->where('status', '=', 'CURRENT')
-                ->pluck('name', 'id');
-        } else {
-            $this->customValues['vtrams'] = Vtram::where('project_id', '=', $this->parentId)
-                ->pluck('name', 'id');
-        }
-    }
+    protected $identifierPath = 'project.briefing';
 
     public function viewHook()
     {
-        $attendanceConfig = config('structure.company.project.briefing.attendance.config');
+        $attendanceConfig = config('structure.project.briefing.attendance.config');
         $this->actionButtons['attendance'] = [
             'label' => ucfirst($this->pageType)." ".$attendanceConfig['plural'],
-            'path' => '/company/'.$this->args[0].'/project/'.$this->parentId.'/briefing/'.$this->id.'/attendance',
+            'path' => '/project/'.$this->parentId.'/briefing/'.$this->id.'/attendance',
             'icon' => $attendanceConfig['icon'],
             'order' => '400',
             'id' => 'briefingsList'
         ];
     }
     
-    public function store(BriefingRequest $request, $companyId, $projectId)
+    public function store(BriefingRequest $request, $projectId, $otherId = null)
     {
         $request->merge([
             'project_id' => $projectId,
         ]);
-        return parent::_store(func_get_args());
+        unset($otherId);
+        return parent::_store([
+            $request,
+            $projectId
+        ]);
     }
 
     public function update(BriefingRequest $request)
