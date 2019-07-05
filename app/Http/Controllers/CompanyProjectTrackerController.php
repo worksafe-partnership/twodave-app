@@ -23,7 +23,7 @@ class CompanyProjectTrackerController extends Controller
         $args = func_get_args();
         $nowCarbon = Carbon::now();
         $twoWeeksCarbon = $nowCarbon->copy()->addWeeks(2);
-        $query = Vtram::where('status', "PENDING")
+        $query = Vtram::where('status', '!=', 'PREVIOUS')
                         ->where('company_id', '=', $args[0])
                         ->get([
                             'company_id',

@@ -24,6 +24,7 @@ class ProjectTrackerController extends Controller
         $nowCarbon = Carbon::now();
         $twoWeeksCarbon = $nowCarbon->copy()->addWeeks(2);
         $query = Vtram::where('company_id', '=', $user->company_id)
+                        ->where('status', '!=', 'PREVIOUS')
                         ->where('project_id', '=', $args[0])
                         ->get([
                             // 'plan number', // "leave for now" - CP
