@@ -56,6 +56,7 @@ class DashboardController extends Controller
     public function getTables($user, $role)
     {
         $statuses = Config('egc.vtram_status');
+        unset($statuses['PREVIOUS']);
         if ($role != 'supervisor') {
             unset($statuses['EXTERNAL_REJECT']);
         }
