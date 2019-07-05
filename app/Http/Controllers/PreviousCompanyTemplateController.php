@@ -23,7 +23,14 @@ class PreviousCompanyTemplateController extends CompanyTemplateController
 
     public function viewHook()
     {
-
+        $approvalConfig = config('structure.company.template.previous.approval.config');
+        $this->actionButtons['approval'] = [
+            'label' => ucfirst($this->pageType)." ".$approvalConfig['plural'],
+            'path' => '/company/'.$this->args[0].'/template/'.$this->parentId.'/previous/'.$this->id.'/approval',
+            'icon' => $approvalConfig['icon'],
+            'order' => '500',
+            'id' => 'approvalList'
+        ];
     }
 
     public function store(TemplateRequest $request, $companyId = null)

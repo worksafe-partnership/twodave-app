@@ -23,6 +23,13 @@ class CompanyPreviousVtramController extends VtramController
 
     public function viewHook()
     {
-
+        $approvalConfig = config('structure.company.project.vtram.previous.approval.config');
+        $this->actionButtons['approval'] = [
+            'label' => ucfirst($this->pageType)." ".$approvalConfig['plural'],
+            'path' => '/company/'.$this->args[0].'/project/'.$this->args[1].'/vtram/'.$this->parentId.'/previous/'.$this->id.'/approval',
+            'icon' => $approvalConfig['icon'],
+            'order' => '500',
+            'id' => 'approvalList'
+        ];
     }
 }
