@@ -3,7 +3,7 @@
         <p class="dash-heading">{{$data['heading']}}
             <button class="dash-button button is-primary is-small" id="show-hide-{{$key}}" data-table="table-{{$key}}">Show/Hide</button>
         </p>
-        <div class="dash-table" id="table-{{$key}}">
+        <div class="dash-table" id="table-{{$key}}" style="display:none">
             <table class="table" id="{{$data['table-id']}}" style="width:100%">
                 <thead>
                     @if(is_null($companyId))
@@ -159,7 +159,9 @@
 @push('styles')
     <style>
         .dash-container {
-            border: 5px solid #203878;
+            border-top: 5px solid #203878;
+            border-left: 5px solid #203878;
+            border-right: 5px solid #203878;
             padding: 0;
             margin-bottom: 5px;
         }
