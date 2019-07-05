@@ -12,6 +12,25 @@ class VtramController extends CompanyVtramController
 {
     protected $identifierPath = 'project.vtram';
 
+    public function bladeHook()
+    {
+        if ($this->user->company_id !== null) {
+            if ($this->user->company_id !== $this->record->project->company_id) {
+                abort(404);
+            }
+        }
+    }
+
+    public function indexHook()
+    {
+        if ($this->user->company_id !== null) {
+            $project = Project::findOrFail($this->parentId);
+            if ($this->user->company_id !== $project->company_id) {
+                abort(404);
+            }
+        }
+    }
+
     public function viewHook()
     {
         $this->actionButtons['methodologies'] = [

@@ -3,12 +3,24 @@
 namespace App\Http\Controllers;
 
 use Controller;
+use App\Briefing;
 use App\Attendance;
 use App\Http\Requests\AttendanceRequest;
 
 class AttendanceController extends CompanyAttendanceController
 {
     protected $identifierPath = 'project.briefing.attendance';
+
+    public function indexHook()
+    {
+        if ($this->user->company_id !== null) {
+            $briefing = Briefing::with('project')
+                ->findOrFail($this->parentId);
+            if ($this->user->company_id !== $briefing->project->company_id) {
+                abort(404);
+            }
+        }
+    }
 
     public function postIndexHook()
     {

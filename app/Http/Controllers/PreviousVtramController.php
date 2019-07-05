@@ -25,4 +25,24 @@ class PreviousVtramController extends CompanyPreviousVtramController
     {
 
     }
+
+    public function indexHook()
+    {
+        if ($this->user->company_id !== null) {
+            $vtram = Vtram::with('project')
+                ->findOrFail($this->parentId);
+            if ($this->user->company_id !== $vtram->project->company_id) {
+                abort(404);
+            }
+        }
+    }
+
+    public function bladeHook()
+    {
+        if ($this->user->company_id !== null) {
+            if ($this->user->company_id !== $this->record->project->company_id) {
+                abort(404);
+            }
+        }
+    }
 }
