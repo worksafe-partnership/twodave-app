@@ -31,7 +31,8 @@
                     {{ EGForm::password("password", [
                         "label" => "Password",
                         "attributes" =>[
-                            "placeholder" => "Password Set"
+                            "placeholder" => "Password Set",
+                            "autocomplete" => "new-password",
                         ],
                         "type" => $pageType
                     ]) }}
