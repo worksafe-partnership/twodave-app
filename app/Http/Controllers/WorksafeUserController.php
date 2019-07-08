@@ -17,7 +17,7 @@ class WorksafeUserController extends Controller
 
     public function bladeHook()
     {
-        if ($this->user->company_id !== null) {
+        if ($this->user->company_id !== null && $this->record !== null) {
             if ($this->user->company_id !== $this->record->company_id) {
                 abort(404);
             }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Controller;
+use App\UserProject;
 use App\Project;
 use App\Company;
 use App\User;
@@ -19,6 +20,29 @@ class CompanyProjectController extends Controller
                 $q->where('slug', '=', 'project_admin');
             })
             ->pluck('name', 'id');
+
+        $this->getProjectUsers($this->parentId);
+    }
+
+    protected function getProjectUsers($companyId)
+    {
+        $selected = [];
+        if ($this->pageType != 'create') {
+            $users = UserProject::where('project_id', '=', $this->id)
+                ->get();
+            foreach ($users as $user) {
+                $selected[$user->user_id] = true;
+            }
+        }
+        $this->customValues['selectedUsers'] = $selected;
+        if ($this->pageType == 'view') {
+            $this->customValues['allUsers'] = UserProject::where('project_id', '=', $this->id)
+                ->join('users', 'user_projects.user_id', '=', 'users.id')
+                ->pluck('name', 'users.id');    
+        } else {
+            $this->customValues['allUsers'] = User::where('company_id', '=', $companyId)
+                ->pluck('name', 'id');
+        }
     }
 
     public function viewHook()
@@ -62,5 +86,34 @@ class CompanyProjectController extends Controller
     public function update(ProjectRequest $request)
     {
         return parent::_update(func_get_args());
+    }
+
+    public function created($insert, $request, $args)
+    {
+        if (isset($request['users']) && count($request['users']) > 0) {
+            $toInsert = [];
+            foreach ($request['users'] as $user) {
+                $toInsert[] = [
+                    'user_id' => $user,
+                    'project_id' => $insert->id,
+                ];
+            }
+            UserProject::insert($toInsert);
+        }
+    }
+
+    public function updated($updated, $orig, $request, $args)
+    {
+        UserProject::where('project_id', '=', $updated->id)->delete();
+        if (isset($request['users']) && count($request['users']) > 0) {
+            $toInsert = [];
+            foreach ($request['users'] as $user) {
+                $toInsert[] = [
+                    'user_id' => $user,
+                    'project_id' => $updated->id,
+                ];
+            }
+            UserProject::insert($toInsert);
+        }
     }
 }

@@ -14,7 +14,7 @@ class VtramController extends CompanyVtramController
 
     public function bladeHook()
     {
-        if ($this->user->company_id !== null) {
+        if ($this->user->company_id !== null && $this->record !== null) {
             if ($this->user->company_id !== $this->record->project->company_id) {
                 abort(404);
             }

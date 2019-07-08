@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Auth;
 use Controller;
+use App\UserProject;
 use App\Project;
 use App\Company;
 use App\User;
@@ -15,7 +16,7 @@ class ProjectController extends CompanyProjectController
 
     public function bladeHook()
     {
-        if ($this->user->company_id !== null) {
+        if ($this->user->company_id !== null && $this->record !== null) {
             if ($this->user->company_id !== $this->record->company_id) {
                 abort(404);
             }
@@ -26,6 +27,8 @@ class ProjectController extends CompanyProjectController
                 $q->where('slug', '=', 'project_admin');
             })
             ->pluck('name', 'id');
+
+        $this->getProjectUsers($this->user->company_id);
     }
 
     public function viewHook()
