@@ -56,18 +56,9 @@ class CompanyProjectController extends Controller
             'id' => 'briefingsList'
         ];
 
-        $vtramConfig = config('structure.company.project.vtram.config');
-        $this->actionButtons['vtrams'] = [
-            'label' => ucfirst($this->pageType)." ".$vtramConfig['plural'],
-            'path' => '/company/'.$this->parentId.'/project/'.$this->id.'/vtram',
-            'icon' => $vtramConfig['icon'],
-            'order' => '500',
-            'id' => 'vtramsList'
-        ];
-
         $trackerConfig = config('structure.company.project.tracker.config');
         $this->actionButtons['tracker'] = [
-            'label' => "VTRAM Tracker",
+            'label' => 'VTRAMs Tracker',
             'path' => '/company/'.$this->parentId.'/project/'.$this->id.'/tracker',
             'icon' => $trackerConfig['icon'],
             'order' => '600',

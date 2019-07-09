@@ -72,7 +72,7 @@ class DashboardController extends Controller
                             ->get($this->datatableFields);
 
         $this->customValues['tables'][] = [
-            'heading' => 'Submitted By You',
+            'heading' => 'Submitted By You ('.$submitted->count().')',
             'table-id' => 'submitted',
             'data' => $submitted,
         ];
@@ -98,7 +98,7 @@ class DashboardController extends Controller
                             ->get($this->datatableFields);
 
             $this->customValues['tables'][] = [
-                'heading' => 'Pending',
+                'heading' => 'Pending ('.$pending->count().')',
                 'table-id' => 'pending',
                 'data' => $pending,
             ];
@@ -117,7 +117,7 @@ class DashboardController extends Controller
             ->get($this->datatableFields);
 
             $this->customValues['tables'][] = [
-                'heading' => 'VTRAMS Tracker',
+                'heading' => 'VTRAMS Tracker ('.$tracker->count().')',
                 'table-id' => 'tracker',
                 'data' => $tracker,
             ];
@@ -134,7 +134,7 @@ class DashboardController extends Controller
                             ->get($this->datatableFields);
 
             $this->customValues['tables'][] = [
-                'heading' => 'Rejected',
+                'heading' => 'Rejected ('.$rejected->count().')',
                 'table-id' => 'rejected',
                 'data' => $rejected,
             ];

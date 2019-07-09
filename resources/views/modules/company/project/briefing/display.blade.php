@@ -33,6 +33,11 @@
             </div>
         </div>
 
+        @if ($pageType == 'view')
+            <div class="field">
+                <a download="Attendance Schedule.pdf" href="/attendance_schedule.pdf" class="button">Download Attendance Schedule Template</a>
+            </div>
+        @endif
         <div class="field">
             {{ EGForm::ckEditor('notes', [
                 'label' => 'Notes',

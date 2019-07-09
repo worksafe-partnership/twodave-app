@@ -223,7 +223,7 @@ class Vtram extends Model
         if (!is_null($this->company_id) && !is_null($this->project_id) && !is_null($this->id)) {
             return "/company/".$this->company_id."/project/".$this->project_id."/vtram/".$this->id;
         }
-        return '/dashboard'; // Assuming this should never be hit, but placeholder to be safe.
+        return '/'; // Assuming this should never be hit, but placeholder to be safe.
     }
 
 
@@ -232,7 +232,7 @@ class Vtram extends Model
         if (!is_null($this->project_id) && !is_null($this->id)) {
             return "/project/".$this->project_id."/vtram/".$this->id;
         }
-        return '/dashboard'; // Assuming this should never be hit, but placeholder to be safe.
+        return '/'; // Assuming this should never be hit, but placeholder to be safe.
     }
 
     public function companyName()
