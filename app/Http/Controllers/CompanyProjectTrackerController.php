@@ -27,7 +27,7 @@ class CompanyProjectTrackerController extends Controller
                         ->where('company_id', '=', $args[0])
                         ->get([
                             'company_id',
-                            // 'plan number', // "leave for now" - CP
+                            'number',
                             'id',
                             'company_id',
                             'project_id',

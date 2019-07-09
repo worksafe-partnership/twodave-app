@@ -9,8 +9,8 @@
                     @if(is_null($companyId))
                         <th>Company</th>
                     @endif
-                    <!-- <th>Plan Name</th> -->
                     <th>VTRAM Name</th>
+                    <th>VTRAM Number</th>
                     <th>Status</th>
                     <th>Created By</th>
                     <th>Submitted By</th>
@@ -26,7 +26,7 @@
                             @if(is_null($companyId))
                                 <td> {{ $vtram->companyName() }} </td>
                             @endif
-                            <!-- <td>Plan Name</td>  COMING SOON? -->
+                            <td>{{ $vtram->number }}</td>
                             <td>{{ $vtram->name }}</td>
                             <td>{{ $vtram->niceStatus() }}</td>
                             <td>{{ $vtram->createdName() }}</td>

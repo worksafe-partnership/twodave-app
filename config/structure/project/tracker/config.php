@@ -10,6 +10,7 @@ return [
     'datatable' => [
         "columns" => [
             'id' => ['visible' => false, 'searchable' => false, 'label' => 'Id'],
+            'number' => ['label' => 'VTRAM Number'],
             'name' => ['label' => 'VTRAM Name'],
             'status' => ['label' => 'Status'],
             'created_by' => ['label' => 'Created By'],

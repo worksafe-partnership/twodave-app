@@ -12,10 +12,11 @@
             </div>
             <div class="column is-3">
                 <div class="field">
-                    {{ EGForm::text('reference', [
-                        'label' => 'Reference',
-                        'value' => $record["reference"],
-                        'type' => $pageType
+                    {{ EGForm::text('number', [
+                        'label' => 'Number',
+                        'value' => $record["number"],
+                        'type' => $pageType,
+                        'disabled' => 1,
                     ]) }}
                 </div>
             </div>
@@ -43,7 +44,16 @@
             </div>
         </div>
         <div class="columns">
-            <div class="column is-4">
+            <div class="column is-3">
+                <div class="field">
+                    {{ EGForm::text('reference', [
+                        'label' => 'Reference',
+                        'value' => $record["reference"],
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+            <div class="column is-3">
                 <div class="field">
                     {{ EGForm::file('logo', [
                         'label' => 'Logo (Company Logo used if blank)',
@@ -52,7 +62,7 @@
                     ]) }}
                 </div>
             </div>
-            <div class="column is-4">
+            <div class="column is-3">
                 <div class="field">
                     {{ EGForm::checkbox('show_responsible_person', [
                         'label' => 'Show Responsible Person',
@@ -61,7 +71,7 @@
                     ]) }}
                 </div>
             </div>
-            <div class="column is-4">
+            <div class="column is-3">
                 <div class="field">
                     {{ EGForm::text('responsible_person', [
                         'label' => 'Responsible Person',

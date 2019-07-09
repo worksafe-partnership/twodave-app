@@ -46,7 +46,8 @@ class Vtram extends Model
         'created_from_entity',
         'created_from_id',
         'show_responsible_person',
-        'responsible_person'
+        'responsible_person',
+        'number'
     ];
 
     public static function scopeDatatableAll($query, $parent, $identifier)
@@ -79,7 +80,8 @@ class Vtram extends Model
                 'pages_in_pdf',
                 'show_responsible_person',
                 'responsible_person',
-                'deleted_at'
+                'deleted_at',
+                'number'
             ]);
 
         if (in_array($identifier['identifier_path'], ['company.project.vtram.previous', 'project.vtram.previous'])) {

@@ -12,7 +12,7 @@ class DashboardController extends Controller
     protected $identifierPath = 'dashboard';
     protected $datatableFields = [
         'company_id',
-        // 'plan number', // "leave for now" - CP
+        'number',
         'id',
         'company_id',
         'project_id',

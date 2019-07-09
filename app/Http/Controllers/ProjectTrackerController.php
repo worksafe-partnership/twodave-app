@@ -27,8 +27,8 @@ class ProjectTrackerController extends Controller
                         ->where('status', '!=', 'PREVIOUS')
                         ->where('project_id', '=', $args[0])
                         ->get([
-                            // 'plan number', // "leave for now" - CP
                             'id',
+                            'number',
                             'project_id',
                             'name',
                             'status',

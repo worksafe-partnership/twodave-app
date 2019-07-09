@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Controller;
 use App\Vtram;
 use App\Project;
+use App\NextNumber;
 use App\Http\Requests\VtramRequest;
 
 class CompanyVtramController extends Controller
@@ -56,5 +57,21 @@ class CompanyVtramController extends Controller
     {
         $this->view = 'modules.company.project.vtram.editVtram';
         return parent::_custom();
+    }
+
+    public function created($insert, $request, $args)
+    {
+        $nextNumber = NextNumber::where('company_id', '=', $insert->company_id)
+            ->first();
+        if (is_null($nextNumber)) {
+            $nextNumber = NextNumber::create([
+                'company_id' => $insert->company_id,
+                'number' => 1,
+            ]);
+        }
+        $insert->update([
+           'number' => $nextNumber->number,
+        ]);
+        $nextNumber->increment('number');
     }
 }
