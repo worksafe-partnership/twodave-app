@@ -21,6 +21,11 @@ class ProjectController extends CompanyProjectController
                 abort(404);
             }
         }
+        if ($this->user->inRole('supervisor') && $this->record !== null) {
+            if (!$this->record->userOnProject($this->user->id)) {
+                abort(404);
+            }        
+        }
 
         $this->customValues['projectAdmins'] = User::where('company_id', '=', $this->user->company_id)
             ->whereHas('roles', function ($q) {

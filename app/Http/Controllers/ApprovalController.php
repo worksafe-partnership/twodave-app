@@ -29,5 +29,10 @@ class ApprovalController extends CompanyApprovalController
                 abort(404);
             }
         }
+        if ($this->user->inRole('supervisor') && $this->record !== null) {
+            if (!$this->record->vtram->project->userOnProject($this->user->id)) {
+                abort(404);
+            }        
+        }
     }
 }

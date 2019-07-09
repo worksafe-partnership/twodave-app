@@ -53,6 +53,11 @@ class Project extends Model
         } else {
             $query->where('company_id', '=', $parent);
         }
+        if ($user->inRole('supervisor')) {
+            $query->whereHas('users', function ($q) use ($user) {
+                return $q->where('user_id', '=', $user->id);
+            });
+        }
 
         return app('datatables')->of($query)
             ->editColumn('review_timescale', function ($item) {
@@ -92,5 +97,19 @@ class Project extends Model
             return $config[$this->review_timescale];
         }
         return 'None Selected';
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_projects');
+    }
+
+    public function userOnProject($userId)
+    {
+        $count = $this->users()->where('user_id', '=', $userId)->count();
+        if ($count == 1) {
+            return true;
+        }
+        return false;
     }
 }

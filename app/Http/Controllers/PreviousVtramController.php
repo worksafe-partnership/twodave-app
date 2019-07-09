@@ -51,5 +51,10 @@ class PreviousVtramController extends CompanyPreviousVtramController
                 abort(404);
             }
         }
+        if ($this->user->inRole('supervisor') && $this->record !== null) {
+            if (!$this->record->project->userOnProject($this->user->id)) {
+                abort(404);
+            }        
+        }
     }
 }

@@ -42,7 +42,10 @@ class DashboardController extends Controller
         $role = $user->roles->first()->slug;
 
         if ($role == "supervisor") {
-            return redirect('/project'); // route TBC!
+            return redirect('/project');
+        }
+        if (in_array($role, ['evergreen','admin'])) {
+            return redirect('/company');
         }
 
         $this->getTables($user, $role);

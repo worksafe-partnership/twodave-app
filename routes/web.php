@@ -13,10 +13,22 @@
 Route::get('/', function () {
     return redirect('/dashboard');
 });
-Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/methodology', 'CompanyVtramController@editContent');
-Route::get('/company/{company_id}/template/{template_id}/methodology', 'CompanyTemplateController@editContent');
-Route::get('/template/{template_id}/methodology', 'TemplateController@editContent');
-Route::get('/project/{project_id}/vtram/{vtram_id}/methodology', 'VtramController@editContent');
+Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/methodology', [
+    'middleware' => 'can:edit-company.project.vtram',
+    'uses' => 'CompanyVtramController@editContent'
+]);
+Route::get('/company/{company_id}/template/{template_id}/methodology', [
+    'middleware' => 'can:edit-company.template',
+    'uses' => 'CompanyTemplateController@editContent'
+]);
+Route::get('/template/{template_id}/methodology', [
+    'middleware' => 'can:edit-template',
+    'uses' => 'TemplateController@editContent'
+]);
+Route::get('/project/{project_id}/vtram/{vtram_id}/methodology', [
+    'middleware' => 'can:edit-project.vtram',
+    'uses' => 'VtramController@editContent'
+]);
 
 Route::get('user.datatable.json', 'WorksafeUserController@_datatableAll');
 Route::get('user.json', 'WorksafeUserController@jsonAll');

@@ -18,7 +18,7 @@ return [
         ],
     ],
     'search' => [
-        'on' => true,
+        'on' => false,
         'url' => '/egsearch'
     ],
     'sidebar_logo_href' => [

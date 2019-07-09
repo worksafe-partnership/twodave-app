@@ -19,6 +19,11 @@ class VtramController extends CompanyVtramController
                 abort(404);
             }
         }
+        if ($this->user->inRole('supervisor') && $this->record !== null) {
+            if (!$this->record->project->userOnProject($this->user->id)) {
+                abort(404);
+            }        
+        }
     }
 
     public function indexHook()
@@ -33,21 +38,25 @@ class VtramController extends CompanyVtramController
 
     public function viewHook()
     {
-        $this->actionButtons['methodologies'] = [
-            'label' => 'Edit Hazards & Methodologies',
-            'path' => '/project/'.$this->parentId.'/vtram/'.$this->id.'/methodology',
-            'icon' => 'receipt',
-            'order' => '300',
-            'id' => 'methodologyEdit',
-        ];
-        $prevConfig = config('structure.project.vtram.previous.config');
-        $this->actionButtons['previous'] = [
-            'label' => ucfirst($this->pageType)." ".$prevConfig['plural'],
-            'path' => '/project/'.$this->parentId.'/vtram/'.$this->id.'/previous',
-            'icon' => $prevConfig['icon'],
-            'order' => '500',
-            'id' => 'previousList'
-        ];
+        if (can('edit', $this->identifierPath)) {
+            $this->actionButtons['methodologies'] = [
+                'label' => 'Edit Hazards & Methodologies',
+                'path' => '/project/'.$this->parentId.'/vtram/'.$this->id.'/methodology',
+                'icon' => 'receipt',
+                'order' => '300',
+                'id' => 'methodologyEdit',
+            ];
+        }
+        if (can('view', $this->identifierPath)) {
+            $prevConfig = config('structure.project.vtram.previous.config');
+            $this->actionButtons['previous'] = [
+                'label' => ucfirst($this->pageType)." ".$prevConfig['plural'],
+                'path' => '/project/'.$this->parentId.'/vtram/'.$this->id.'/previous',
+                'icon' => $prevConfig['icon'],
+                'order' => '500',
+                'id' => 'previousList'
+            ];
+        }
         $approvalConfig = config('structure.project.vtram.approval.config');
         $this->actionButtons['approval'] = [
             'label' => ucfirst($this->pageType)." ".$approvalConfig['plural'],
