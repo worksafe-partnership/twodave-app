@@ -58,12 +58,13 @@
                     {{ EGForm::file('logo', [
                         'label' => 'Logo (Company Logo used if blank)',
                         'value' => $record["logo"],
-                        'type' => $pageType
+                        'type' => $pageType,
+                        'show_image' => true,
                     ]) }}
                 </div>
             </div>
             <div class="column is-3">
-                <div class="field">
+                <div class="field responsible-check">
                     {{ EGForm::checkbox('show_responsible_person', [
                         'label' => 'Show Responsible Person',
                         'value' => $record->show_responsible_person ?? false,
@@ -72,7 +73,7 @@
                 </div>
             </div>
             <div class="column is-3">
-                <div class="field">
+                <div class="field responsible-details">
                     {{ EGForm::text('responsible_person', [
                         'label' => 'Responsible Person',
                         'value' => $record["responsible_person"],
@@ -156,9 +157,9 @@
             <div class="columns">
                 <div class="column is-3">
                     <div class="field">
-                        {{ EGForm::number('created_by', [
+                        {{ EGForm::text('created_by', [
                             'label' => 'Created By',
-                            'value' => $record->created->name ?? '',
+                            'value' => $record->createdBy->name ?? '',
                             'type' => $pageType,
                             'disabled' => 1
                         ]) }}
@@ -166,9 +167,9 @@
                 </div> 
                 <div class="column is-3">
                     <div class="field">
-                        {{ EGForm::number('updated_by', [
+                        {{ EGForm::text('updated_by', [
                             'label' => 'Updated By',
-                            'value' => $record->updated->name ?? '',
+                            'value' => $record->updatedBy->name ?? '',
                             'type' => $pageType,
                             'disabled' => 1
                         ]) }}
@@ -176,7 +177,7 @@
                 </div> 
                 <div class="column is-3">
                     <div class="field">
-                        {{ EGForm::number('submitted_by', [
+                        {{ EGForm::text('submitted_by', [
                             'label' => 'Submitted By',
                             'value' => $record->submitted->name ?? '',
                             'type' => $pageType,
@@ -198,9 +199,9 @@
             <div class="columns">
                 <div class="column is-3">
                     <div class="field">
-                        {{ EGForm::number('approved_by', [
+                        {{ EGForm::text('approved_by', [
                             'label' => 'Approved By',
-                            'value' => $record->approved->name ?? '',
+                            'value' => $record->approvedName() ?? '',
                             'type' => $pageType,
                             'disabled' => 1
                         ]) }}
@@ -239,7 +240,7 @@
             </div>
 
             <div class="field">
-                {{ EGForm::number('created_from', [
+                {{ EGForm::text('created_from', [
                     'label' => 'Created From',
                     'value' => $record->createdFrom->name ?? '',
                     'type' => $pageType,
@@ -249,3 +250,29 @@
         @endif
 	</div>
 </div>
+@push('styles')
+    @php
+        $oldR = old('show_responsible_person');
+    @endphp
+    @if (($oldR != "1" && $pageType == 'create') || (isset($record) && $record->show_responsible_person != "1"))
+        @push('styles')
+            <style>
+               .responsible-details {
+                    display: none;
+                } 
+            </style>
+        @endpush
+    @endif
+@endpush
+@push('scripts')
+    <script>
+        $('.responsible-check [id^=show_responsible_person]').click(function() {
+            var name = $(this).prev().val();
+            if (name == "1") {
+                $('.responsible-details').hide(); 
+            } else {
+                $('.responsible-details').show(); 
+            }
+        });
+    </script>
+@endpush

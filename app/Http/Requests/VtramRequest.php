@@ -31,7 +31,7 @@ class VtramRequest extends FormRequest
             'key_points' => 'required',
             'havs_noise_assessment' => 'mimes:jpg,jpeg,png,bmp,tiff,pdf',
             'coshh_assessment' => 'mimes:jpg,jpeg,png,bmp,tiff,pdf',
-            'responsible_person' => 'max:100|required_if:show_responsible_person,true'
+            'responsible_person' => 'max:100|required_if:show_responsible_person,1'
         ];
     }
 

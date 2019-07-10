@@ -14,7 +14,21 @@ class ProjectTrackerController extends Controller
 
     public function postIndexHook()
     {
-        $this->heading = str_replace("VTRAMS of", "VTRAMs Tracker for", $this->heading);
+        $this->heading = str_replace("VTRAMs Tracker of", "VTRAMs Tracker for", $this->heading);
+    }
+
+    public function indexHook()
+    {
+        if (can('create', 'project.vtram')) {
+            $this->actionButtons['create_vtram'] = [
+                'label' => 'Create VTRAM',
+                'path' => '/project/'.$this->parentId.'/vtram/create',
+                'icon' => 'plus2',
+                'order' => '500',
+                'id' => 'create_vtram',
+                'class' => 'is-success',
+            ];
+        }
     }
 
     public function _datatableAll()

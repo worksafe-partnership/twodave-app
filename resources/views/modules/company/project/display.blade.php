@@ -45,7 +45,7 @@
             <div class="column is-4">
                 <div class="field">
                     {{ EGForm::select('review_timescale', [
-                        'label' => 'Review Timescale (Overrides Company)',
+                        'label' => 'Review Timescale (Overrides '.$company->reviewTimeScaleName().' from Company)',
                         'value' => $record->review_timescale ?? 0,
                         'type' => $pageType,
                         'list' => config('egc.review_timescales')
@@ -64,7 +64,7 @@
         </div>
         <div class="columns">
             <div class="column is-4">
-                <div class="field">
+                <div class="field pc-check">
                     {{ EGForm::checkbox('principle_contractor', [
                         'label' => 'Principle Contractor',
                         'value' => $record->principle_contractor ?? false,
@@ -73,7 +73,7 @@
                 </div>
             </div>
             <div class="column is-4">
-                <div class="field">
+                <div class="field principle-contractor-details">
                     {{ EGForm::text('principle_contractor_name', [
                         'label' => 'Principle Contractor Name',
                         'value' => $record["principle_contractor_name"],
@@ -82,7 +82,7 @@
                 </div>
             </div>
             <div class="column is-4">
-                <div class="field">
+                <div class="field principle-contractor-details">
                     {{ EGForm::text('principle_contractor_email', [
                         'label' => 'Principle Contractor Email',
                         'value' => $record["principle_contractor_email"],
@@ -137,6 +137,18 @@
             right: 1.7em !important;
         }
     </style>
+    @php
+        $oldPC = old('principle_contractor');
+    @endphp
+    @if (($oldPC != "1" && $pageType == 'create') || (isset($record) && $record->principle_contractor != "1"))
+        @push('styles')
+            <style>
+               .principle-contractor-details {
+                    display: none;
+                } 
+            </style>
+        @endpush
+    @endif
 @endpush
 @push('scripts')
     <script>
@@ -158,6 +170,16 @@
         });
         $(document).on('DOMSubtreeModified', '.selectize-input', function () {
             this.scrollTop = this.scrollHeight;
+        });
+    </script>
+    <script>
+        $('.pc-check [id^=principle_contractor]').click(function() {
+            var name = $(this).prev().val();
+            if (name == "1") {
+                $('.principle-contractor-details').hide(); 
+            } else {
+                $('.principle-contractor-details').show(); 
+            }
         });
     </script>
 @endpush

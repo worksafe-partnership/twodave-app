@@ -42,6 +42,11 @@ class CreateTemplateTable extends Migration
             $table->foreign('approved_by')->references('id')->on('users')->onDelete('NO ACTION')->onUpdate('NO ACTION');
             $table->date('date_replaced')->nullable();
             $table->date('resubmit_by')->nullable();
+            $table->integer('pdf')->nullable()->unsigned();
+            $table->foreign('pdf')->references('id')->on('files')->onDelete('CASCADE')->onUpdate('CASCADE');
+            $table->integer('pages_in_pdf')->nullable();
+            $table->integer('created_from')->nullable()->unsigned();
+            $table->foreign('created_from')->references('id')->on('templates')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->softDeletes();
             $table->timestamps();
             $table->index('status');

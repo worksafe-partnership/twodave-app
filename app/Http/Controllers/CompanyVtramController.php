@@ -20,7 +20,7 @@ class CompanyVtramController extends Controller
             'label' => 'Edit Hazards & Methodologies',
             'path' => '/company/'.$this->args[0].'/project/'.$this->parentId.'/vtram/'.$this->id.'/methodology',
             'icon' => 'receipt',
-            'order' => '300',
+            'order' => '500',
             'id' => 'methodologyEdit',
         ];
         $prevConfig = config('structure.company.project.vtram.previous.config');
@@ -47,7 +47,7 @@ class CompanyVtramController extends Controller
         if ($this->record->pages_in_pdf == 4) {
             $this->pillButtons['view_pdf_a3'] = [
                 'label' => 'View PDF A3',
-                'path' => $this->record->id.'/view_a3',
+                'path' => '',//$this->record->id.'/view_a3',
                 'icon' => 'file-pdf',
                 'order' => 100,
                 'id' => 'view_pdf_a3',
@@ -55,7 +55,7 @@ class CompanyVtramController extends Controller
             ];
             $this->pillButtons['print_pdf_a3'] = [
                 'label' => 'Print PDF A3',
-                'path' => "javascript: var wnd = window.open('".$this->record->id."/view_a3', '_blank');wnd.print();",
+                'path' => '',//"javascript: var wnd = window.open('".$this->record->id."/view_a3', '_blank');wnd.print();",
                 'icon' => 'print',
                 'order' => 100,
                 'id' => 'print_pdf_a3',
@@ -65,7 +65,7 @@ class CompanyVtramController extends Controller
 
         $this->pillButtons['view_pdf'] = [
             'label' => 'View PDF',
-            'path' => '/image/'.$this->record->pdf,
+            'path' => '',//'/image/'.$this->record->pdf,
             'icon' => 'file-pdf',
             'order' => 100,
             'id' => 'view_pdf',
@@ -73,7 +73,7 @@ class CompanyVtramController extends Controller
         ];
         $this->pillButtons['print_pdf'] = [
             'label' => 'Print PDF',
-            'path' => "javascript:var wnd = window.open('/image/".$this->record->pdf."', '_blank');wnd.print();",
+            'path' => '',//"javascript:var wnd = window.open('/image/".$this->record->pdf."', '_blank');wnd.print();",
             'icon' => 'print',
             'order' => 100,
             'id' => 'print_pdf',
@@ -135,12 +135,16 @@ class CompanyVtramController extends Controller
         $request->merge([
             'project_id' => $projectId,
             'company_id' => $companyId,
+            'created_by' => Auth::id(),
         ]);
         return parent::_store(func_get_args());
     }
 
     public function update(VtramRequest $request)
     {
+        $request->merge([
+            'updated_by' => Auth::id(),
+        ]);
         return parent::_update(func_get_args());
     }
 

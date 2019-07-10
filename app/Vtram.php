@@ -179,7 +179,21 @@ class Vtram extends Model
         if (!is_null($this->createdBy)) {
             return $this->createdBy->name;
         }
-        return "User Not Found"; // shouldn't happen
+        return ""; // shouldn't happen
+    }
+
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by', 'id');
+    }
+
+    public function updatedName()
+    {
+        $updated = $this->updatedBy;
+        if (!is_null($updated)) {
+            return $updated->name;
+        }
+        return ""; // shouldn't happen
     }
 
     public function approved()

@@ -15,6 +15,7 @@ return [
     'datatable' => [
         "columns" => [
             "id" => ["visible" => false, "searchable" => false],
+            "company_name" => ["label" => "Company"],
             "name" => ["label" => "Name"],
             "email" => ["label" => "Email"]
         ],

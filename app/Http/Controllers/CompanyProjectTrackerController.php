@@ -14,7 +14,21 @@ class CompanyProjectTrackerController extends Controller
 
     public function postIndexHook()
     {
-        $this->heading = str_replace("VTRAMS of", "VTRAMs Tracker for", $this->heading);
+        $this->heading = str_replace("VTRAMs Tracker of", "VTRAMs Tracker for", $this->heading);
+    }
+
+    public function indexHook()
+    {
+        if (can('create', 'company.project.vtram')) {
+            $this->actionButtons['create_vtram'] = [
+                'label' => 'Create VTRAM',
+                'path' => '/company/'.$this->args[0].'/project/'.$this->parentId.'/vtram/create',
+                'icon' => 'plus2',
+                'order' => '500',
+                'id' => 'create_vtram',
+                'class' => 'is-success',
+            ];
+        }
     }
 
     public function _datatableAll()
@@ -24,6 +38,7 @@ class CompanyProjectTrackerController extends Controller
         $nowCarbon = Carbon::now();
         $twoWeeksCarbon = $nowCarbon->copy()->addWeeks(2);
         $query = Vtram::where('status', '!=', 'PREVIOUS')
+                        ->where('project_id', '=', $args[1])
                         ->where('company_id', '=', $args[0])
                         ->get([
                             'company_id',

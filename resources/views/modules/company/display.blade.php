@@ -162,7 +162,8 @@
             {{ EGForm::file('logo', [
                 'label' => 'Logo',
                 'value' => $record["logo"],
-                'type' => $pageType
+                'type' => $pageType,
+                'show_image' => true,
             ]) }}
         </div>
 

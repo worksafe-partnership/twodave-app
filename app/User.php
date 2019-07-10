@@ -34,16 +34,27 @@ class User extends Authenticatable
         $user = Auth::user();
         $data = $query->select(
             "id",
+            "company_id",
             "name",
             "email"
-        );
+        )
+        ->with('company');
         
         if ($user->company_id !== null) {
             $data->where('company_id', '=', $user->company_id);
         }
         
         $data = $data->get();
-        return ["data" => $data];
+        $result = [];
+        foreach ($data as $row) {
+            $result[] = [
+                'id' => $row->id,
+                'company_name' => $row->company_name,
+                'name' => $row->name,
+                'email' => $row->email,
+            ];
+        }
+        return ["data" => $result];
     }
 
     public function roles()
@@ -76,5 +87,14 @@ class User extends Authenticatable
     public function company()
     {
         return $this->belongsTo(Company::class, 'company_id', 'id');
+    }
+
+    public function getCompanyNameAttribute()
+    {
+        $company = $this->company;
+        if ($company != null) {
+            return $company->name;
+        }
+        return '';
     }
 }

@@ -27,6 +27,7 @@ class ProjectController extends CompanyProjectController
             }        
         }
 
+        $this->customValues['company'] = Company::findOrFail($this->user->company_id);
         $this->customValues['projectAdmins'] = User::where('company_id', '=', $this->user->company_id)
             ->whereHas('roles', function ($q) {
                 $q->where('slug', '=', 'project_admin');

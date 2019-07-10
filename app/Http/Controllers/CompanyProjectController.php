@@ -15,6 +15,7 @@ class CompanyProjectController extends Controller
 
     public function bladeHook()
     {
+        $this->customValues['company'] = Company::findOrFail($this->parentId);
         $this->customValues['projectAdmins'] = User::where('company_id', '=', $this->parentId)
             ->whereHas('roles', function ($q) {
                 $q->where('slug', '=', 'project_admin');
@@ -52,7 +53,7 @@ class CompanyProjectController extends Controller
             'label' => ucfirst($this->pageType)." ".$briefConfig['plural'],
             'path' => '/company/'.$this->parentId.'/project/'.$this->id.'/briefing',
             'icon' => $briefConfig['icon'],
-            'order' => '400',
+            'order' => '600',
             'id' => 'briefingsList'
         ];
 

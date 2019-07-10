@@ -30,7 +30,10 @@ body > aside,
 .dash-heading {
     background-color: %COLOUR% !important;
 }
-
+.is-primary input[type="checkbox"]:checked + label::before {
+    background-color: %COLOUR% !important;
+    border-color: %COLOUR% !important;
+}
 
 
 
@@ -50,9 +53,6 @@ body > aside,
 .input.is-primary,
 .textarea.is-primary {
   border-color: %COLOUR%;
-}
-.select:not(.is-multiple)::after {
-    border: 1px solid %COLOUR%;
 }
 .select select:focus,
 .select select.is-focused,

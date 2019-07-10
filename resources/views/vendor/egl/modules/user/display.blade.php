@@ -57,7 +57,7 @@
                 <div class="columns">
                     <div class="column is-6">
                         @if (Auth::user()->company_id == null)
-                            <div class="fieldi company-field">
+                            <div class="field company-field">
                                 {{ EGForm::select('company_id', [
                                     "label" => "Company",
                                     "type" => $pageType,

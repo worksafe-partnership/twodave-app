@@ -43,7 +43,7 @@ class VtramController extends CompanyVtramController
                 'label' => 'Edit Hazards & Methodologies',
                 'path' => '/project/'.$this->parentId.'/vtram/'.$this->id.'/methodology',
                 'icon' => 'receipt',
-                'order' => '300',
+                'order' => '500',
                 'id' => 'methodologyEdit',
             ];
         }
@@ -53,7 +53,7 @@ class VtramController extends CompanyVtramController
                 'label' => ucfirst($this->pageType)." ".$prevConfig['plural'],
                 'path' => '/project/'.$this->parentId.'/vtram/'.$this->id.'/previous',
                 'icon' => $prevConfig['icon'],
-                'order' => '500',
+                'order' => '600',
                 'id' => 'previousList'
             ];
         }
@@ -79,9 +79,11 @@ class VtramController extends CompanyVtramController
 
     public function store(VtramRequest $request, $projectId, $otherId = null)
     {
+        $user = Auth::user();
         $request->merge([
             'project_id' => $projectId,
-            'company_id' => Auth::user()->company_id,
+            'company_id' => $user->company_id,
+            'created_by' => $user->id,
         ]);
         return parent::_store([
             $request,
@@ -91,6 +93,9 @@ class VtramController extends CompanyVtramController
 
     public function update(VtramRequest $request)
     {
+        $request->merge([
+            'updated_by' => Auth::id(),
+        ]);
         return parent::_update(func_get_args());
     }
 
