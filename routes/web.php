@@ -52,14 +52,54 @@ Route::group(['prefix' => 'your_details'], function () {
 });
 
 // VTRAM Actions
-Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/submit', 'CompanyVtramController@submitForApproval');
-Route::get('/project/{project_id}/vtram/{vtram_id}/submit', 'VtramController@submitForApproval');
-
-Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/view_a3', 'CompanyVtramController@viewA3');
-Route::get('/project/{project_id}/vtram/{vtram_id}/view_a3', 'VtramController@viewA3');
-
-Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/previous/{previous_id}/view_a3', 'CompanyPreviousVtramController@viewA3');
-Route::get('/project/{project_id}/vtram/{vtram_id}/previous/{previous_id}/view_a3', 'PreviousVtramController@viewA3');
+Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/submit', [
+    'middleware' => 'can:edit-company.project.vtram',
+    'uses' => 'CompanyVtramController@submitForApproval'
+]);
+Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/previous/{previous_id}/view_a3', [
+    'middleware' => 'can:view-company.project.vtram.previous',
+    'uses' => 'CompanyPreviousVtramController@viewA3'
+]);
+Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/view_a3', [
+    'middleware' => 'can:view-company.project.vtram',
+    'uses' => 'CompanyVtramController@viewA3'
+]);
+Route::get('/project/{project_id}/vtram/{vtram_id}/submit', [
+    'middleware' => 'can:edit-project.vtram',
+    'uses' => 'VtramController@submitForApproval'
+]);
+Route::get('/project/{project_id}/vtram/{vtram_id}/view_a3', [
+    'middleware' => 'can:view-project.vtram',
+    'uses' => 'VtramController@viewA3'
+]);
+Route::get('/project/{project_id}/vtram/{vtram_id}/previous/{previous_id}/view_a3', [
+    'middleware' => 'can:view-project.vtram.previous',
+    'uses' => 'PreviousVtramController@viewA3'
+]);
 
 // Template Actions
+Route::get('/company/{company_id}/template/{template_id}/view_a3', [
+    'middleware' => 'can:view-company.template',   
+    'uses' => 'CompanyTemplateController@viewA3'
+]);
+Route::get('/company/{company_id}/template/{template_id}/submit', [
+    'middleware' => 'can:edit-company.template',   
+    'uses' => 'CompanyTemplateController@submitForApproval'
+]);
+Route::get('/company/{company_id}/template/{template_id}/previous/{previous_id}/view_a3', [
+    'middleware' => 'can:view-company.template.previous',   
+    'uses' => 'PreviousCompanyTemplateController@viewA3'
+]);
+Route::get('/template/{template_id}/previous/{previous_id}/view_a3', [
+    'middleware' => 'can:view-template.previous',   
+    'uses' => 'PreviousTemplateController@viewA3'
+]);
+Route::get('/template/{template_id}/submit', [
+    'middleware' => 'can:edit-template',   
+    'uses' => 'TemplateController@submitForApproval'
+]);
+Route::get('/template/{template_id}/view_a3', [
+    'middleware' => 'can:view-template',   
+    'uses' => 'TemplateController@viewA3'
+]);
 

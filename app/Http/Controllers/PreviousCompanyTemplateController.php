@@ -42,4 +42,9 @@ class PreviousCompanyTemplateController extends CompanyTemplateController
     {
         return parent::_update(func_get_args());
     }
+
+    public function viewA3($companyId, $parentTemplateId = null, $templateId = null)
+    {
+        return parent::viewA3($companyId, $templateId);
+    }
 }

@@ -8,6 +8,7 @@ use Controller;
 use App\Vtram;
 use App\Project;
 use App\NextNumber;
+use App\Http\Classes\VTLogic;
 use App\Http\Requests\VtramRequest;
 
 class CompanyVtramController extends Controller
@@ -65,7 +66,7 @@ class CompanyVtramController extends Controller
 
         $this->pillButtons['view_pdf'] = [
             'label' => 'View PDF',
-            'path' => '',//'/image/'.$this->record->pdf,
+            'path' => '/image/'.$this->record->pdf,
             'icon' => 'file-pdf',
             'order' => 100,
             'id' => 'view_pdf',
@@ -73,7 +74,7 @@ class CompanyVtramController extends Controller
         ];
         $this->pillButtons['print_pdf'] = [
             'label' => 'Print PDF',
-            'path' => '',//"javascript:var wnd = window.open('/image/".$this->record->pdf."', '_blank');wnd.print();",
+            'path' => "javascript:var wnd = window.open('/image/".$this->record->pdf."', '_blank');wnd.print();",
             'icon' => 'print',
             'order' => 100,
             'id' => 'print_pdf',
@@ -112,22 +113,29 @@ class CompanyVtramController extends Controller
 
     public function submitForApproval($companyId, $projectId, $vtramId)
     {
+        $user = Auth::user();
+        $vtram = Vtram::findOrFail($vtramId);
+        if ($user->company_id !== null) {
+            if ($user->company_id !== $vtram->company_id) {
+                abort(404);
+            }
+        }
         dd("need to do the submit for approval logic, see teamwork");
     }
 
     public function viewA3($companyId, $projectId, $vtramId, $otherId = null)
     {
+        $user = Auth::user();
         if ($companyId == null) {
-            $companyId = Auth::user()->companyId;
+            $companyId = $user->companyId;
         }
-        //$vtram = Vtram::findOrFail($vtramId);
-        //return EGFiles::image($vtram->pdf);
-        dd("need to get the pdf, do the A3 thing and return as stream, see teamwork (this route handles print and view)");
-    }
-
-    public function printA3($companyId, $projectId, $vtramId)
-    {
-        dd(func_get_args());
+        $vtram = Vtram::findOrFail($vtramId);
+        if ($user->company_id !== null) {
+            if ($user->company_id !== $vtram->company_id) {
+                abort(404);
+            }
+        }
+        return VTLogic::createA3Pdf($vtram);
     }
 
     public function store(VtramRequest $request, $companyId, $projectId)

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use Controller;
 use App\Template;
 use App\Company;
+use App\Http\Classes\VTLogic;
 use App\Http\Requests\TemplateRequest;
 
 class TemplateController extends Controller
@@ -17,7 +19,7 @@ class TemplateController extends Controller
             'label' => 'Edit Hazards & Methodologies',
             'path' => '/template/'.$this->id.'/methodology',
             'icon' => 'receipt',
-            'order' => '300',
+            'order' => '500',
             'id' => 'methodologyEdit',
         ];
 
@@ -119,18 +121,30 @@ class TemplateController extends Controller
         }
     }
 
-    public function submitForApproval($companyId, $projectId, $vtramId)
+    public function submitForApproval($templateId, $otherId = null)
     {
+        $user = Auth::user();
+        $template = Template::findOrFail($templateId);
+        if ($user->company_id !== null) {
+            if ($user->company_id !== $template->company_id && $template->company_id !== null) {
+                abort(404);
+            }
+        }
         dd("need to do the submit for approval logic, see teamwork");
     }
 
-    public function viewA3($companyId, $projectId, $vtramId, $otherId = null)
+    public function viewA3($templateId, $companyId = null, $otherId = null)
     {
+        $user = Auth::user();
         if ($companyId == null) {
-            $companyId = Auth::user()->companyId;
+            $companyId = $user->companyId;
         }
-        //$vtram = Vtram::findOrFail($vtramId);
-        //return EGFiles::image($vtram->pdf);
-        dd("need to get the pdf, do the A3 thing and return as stream, see teamwork (this route handles print and view)");
+        $template = Template::findOrFail($templateId);
+        if ($user->company_id !== null) {
+            if ($user->company_id !== $template->company_id && $template->company_id !== null) {
+                abort(404);
+            }
+        }
+        return VTLogic::createA3Pdf($template);
     }
 }

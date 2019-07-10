@@ -17,7 +17,7 @@ class CompanyTemplateController extends TemplateController
             'label' => 'Edit Hazards & Methodologies',
             'path' => '/company/'.$this->parentId.'/template/'.$this->id.'/methodology',
             'icon' => 'receipt',
-            'order' => '300',
+            'order' => '500',
             'id' => 'methodologyEdit',
         ];
 
@@ -56,5 +56,15 @@ class CompanyTemplateController extends TemplateController
     {
         $this->view = 'modules.company.project.vtram.editVtram';
         return parent::_custom();
+    }
+
+    public function submitForApproval($companyId, $templateId = null)
+    {
+        return parent::submitForApproval($templateId);
+    }
+
+    public function viewA3($companyId, $templateId = null, $otherId = null)
+    {
+        return parent::viewA3($templateId, $companyId);
     }
 }

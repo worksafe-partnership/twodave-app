@@ -42,4 +42,9 @@ class PreviousTemplateController extends TemplateController
     {
         return parent::_update(func_get_args());
     }
+
+    public function viewA3($parentTemplateId, $templateId = null, $companyId = null)
+    {
+        return parent::viewA3($templateId); 
+    }
 }
