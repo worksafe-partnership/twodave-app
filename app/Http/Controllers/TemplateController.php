@@ -13,6 +13,23 @@ class TemplateController extends Controller
 {
     protected $identifierPath = 'template';
 
+    public function postEditHook()
+    {
+        if (in_array($this->record->status, ['REJECTED','EXTERNAL_REJECT','NEW'])) {
+            $this->formButtons['save_and_submit'] = [
+                'class' => [
+                    'submitbutton',
+                    'button',
+                    'is-primary',
+                ],
+                'name' => 'send_for_approval',
+                'label' => 'Update and Submit for Approval',       
+                'order' => 300,
+                'value' => true,
+            ];
+        }
+    }
+
     public function viewHook()
     {
         $this->actionButtons['methodologies'] = [
@@ -130,7 +147,14 @@ class TemplateController extends Controller
                 abort(404);
             }
         }
-        dd("need to do the submit for approval logic, see teamwork");
+        VTLogic::submitForApproval($template);
+        if ($this->identifierPath == 'company.template') {
+            $url = '/company/'.$otherId.'/template/'.$templateId;
+        } else {
+            $url = '/template/'.$templateId;
+        }
+        toast()->success("Template submitted for Approval");
+        return redirect($url);
     }
 
     public function viewA3($templateId, $companyId = null, $otherId = null)
@@ -146,5 +170,13 @@ class TemplateController extends Controller
             }
         }
         return VTLogic::createA3Pdf($template);
+    }
+
+    public function updated($update, $orig, $request, $args)
+    {
+        if (isset($request['send_for_approval'])) {
+            VTLogic::submitForApproval($update);
+            toast()->success("Template submitted for Approval");
+        }
     }
 }

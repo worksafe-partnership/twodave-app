@@ -24,7 +24,7 @@
                 <div class="field">
                     {{ EGForm::select('status', [
                         'label' => 'Status',
-                        'value' => 'NEW',
+                        'value' => $record->status ?? 'NEW',
                         'type' => $pageType,
                         'disabled' => 1,
                         'list' => config('egc.vtram_status'),

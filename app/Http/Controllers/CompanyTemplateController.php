@@ -60,7 +60,7 @@ class CompanyTemplateController extends TemplateController
 
     public function submitForApproval($companyId, $templateId = null)
     {
-        return parent::submitForApproval($templateId);
+        return parent::submitForApproval($templateId, $companyId);
     }
 
     public function viewA3($companyId, $templateId = null, $otherId = null)

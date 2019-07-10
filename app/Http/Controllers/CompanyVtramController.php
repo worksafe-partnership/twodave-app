@@ -15,6 +15,23 @@ class CompanyVtramController extends Controller
 {
     protected $identifierPath = 'company.project.vtram';
 
+    public function postEditHook()
+    {
+        if (in_array($this->record->status, ['REJECTED','EXTERNAL_REJECT','NEW'])) {
+            $this->formButtons['save_and_submit'] = [
+                'class' => [
+                    'submitbutton',
+                    'button',
+                    'is-primary',
+                ],
+                'name' => 'send_for_approval',
+                'label' => 'Update and Submit for Approval',       
+                'order' => 300,
+                'value' => true,
+            ];
+        }
+    }
+
     public function viewHook()
     {
         $this->actionButtons['methodologies'] = [
@@ -120,7 +137,14 @@ class CompanyVtramController extends Controller
                 abort(404);
             }
         }
-        dd("need to do the submit for approval logic, see teamwork");
+        VTLogic::submitForApproval($vtram);
+        if ($this->identifierPath == 'company.project.vtram') {
+            $url = '/company/'.$companyId.'/project/'.$projectId.'/vtram/'.$vtramId;
+        } else {
+            $url = '/project/'.$projectId.'/vtram/'.$vtramId;
+        }
+        toast()->success("Template submitted for Approval");
+        return redirect($url);
     }
 
     public function viewA3($companyId, $projectId, $vtramId, $otherId = null)
@@ -176,5 +200,13 @@ class CompanyVtramController extends Controller
            'number' => $nextNumber->number,
         ]);
         $nextNumber->increment('number');
+    }
+
+    public function updated($update, $orig, $request, $args)
+    {
+        if (isset($request['send_for_approval'])) {
+            VTLogic::submitForApproval($update);
+            toast()->success("VTRAM submitted for Approval");
+        }
     }
 }
