@@ -127,6 +127,18 @@
         <div class="columns">
             <div class="column is-6">
                 <div class="field">
+                    <a download="HAVS Calculator.xls" href="/havs.xls" class="button">Download HAVS Calculator</a>
+                </div>
+            </div>
+            <div class="column is-6">
+                <div class="field">
+                    <a download="Noise Calculator.xlsx" href="/noise.xlsx" class="button">Download Noise Calculator</a>
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column is-6">
+                <div class="field">
                     {{ EGForm::ckeditor('pre_risk_assessment_text', [
                         'label' => 'Pre Risk Assessment Text',
                         'value' => $record["pre_risk_assessment_text"],
