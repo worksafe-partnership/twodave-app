@@ -50,3 +50,16 @@ Route::group(['prefix' => 'your_details'], function () {
     Route::get('edit', 'WorksafeYourDetailsController@_edit');
     Route::post('edit', 'WorksafeYourDetailsController@update');
 });
+
+// VTRAM Actions
+Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/submit', 'CompanyVtramController@submitForApproval');
+Route::get('/project/{project_id}/vtram/{vtram_id}/submit', 'VtramController@submitForApproval');
+
+Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/view_a3', 'CompanyVtramController@viewA3');
+Route::get('/project/{project_id}/vtram/{vtram_id}/view_a3', 'VtramController@viewA3');
+
+Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/previous/{previous_id}/view_a3', 'CompanyPreviousVtramController@viewA3');
+Route::get('/project/{project_id}/vtram/{vtram_id}/previous/{previous_id}/view_a3', 'PreviousVtramController@viewA3');
+
+// Template Actions
+

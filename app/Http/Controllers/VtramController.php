@@ -67,6 +67,16 @@ class VtramController extends CompanyVtramController
         ];
     }
 
+    public function submitForApproval($projectId, $vtramId, $otherId = null)
+    {
+        return parent::submitForApproval(null, $projectId, $vtramId);
+    } 
+
+    public function viewA3($projectId, $vtramId, $otherId = null, $otherId2 = null)
+    {
+        return parent::viewA3($otherId, $projectId, $vtramId);
+    }
+
     public function store(VtramRequest $request, $projectId, $otherId = null)
     {
         $request->merge([

@@ -57,4 +57,9 @@ class PreviousVtramController extends CompanyPreviousVtramController
             }        
         }
     }
+
+    public function viewA3($projectId, $parentVtramId, $vtramId = null, $otherId = null)
+    {
+        return parent::viewA3(null, $projectId, $parentVtramId, $vtramId);
+    }
 }

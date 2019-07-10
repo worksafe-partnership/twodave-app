@@ -32,4 +32,9 @@ class CompanyPreviousVtramController extends VtramController
             'id' => 'approvalList'
         ];
     }
+
+    public function viewA3($companyId, $projectId, $parentVtramId = null, $vtramId = null)
+    {
+        return parent::viewA3($projectId, $vtramId, $companyId);
+    }       
 }
