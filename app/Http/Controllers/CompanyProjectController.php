@@ -59,7 +59,7 @@ class CompanyProjectController extends Controller
 
         $trackerConfig = config('structure.company.project.tracker.config');
         $this->actionButtons['tracker'] = [
-            'label' => 'VTRAMs Tracker',
+            'label' => 'VTRAMS Tracker',
             'path' => '/company/'.$this->parentId.'/project/'.$this->id.'/tracker',
             'icon' => $trackerConfig['icon'],
             'order' => '600',

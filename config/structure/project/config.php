@@ -18,12 +18,12 @@ return [
             'name' => ['label' => 'Name'],
             'ref' => ['label' => 'Reference'],
             'project_admin' => ['label' => 'Project Admin'],
-            'principle_contractor' => ['label' => 'Principle Contractor'],
-            'principle_contractor_name' => ['label' => 'Principle Contractor Name'],
-            'principle_contractor_email' => ['label' => 'Principle Contractor Email'],
+            'principle_contractor' => ['label' => 'Principal Contractor'],
+            'principle_contractor_name' => ['label' => 'Principal Contractor Name'],
+            'principle_contractor_email' => ['label' => 'Principal Contractor Email'],
             'client_name' => ['label' => 'Client Name'],
             'review_timescale' => ['label' => 'Review Timescale (Overrides Company)'],
-            'show_contact' => ['label' => 'Show Contact Information on VTRAMs']
+            'show_contact' => ['label' => 'Show Contact Information on VTRAMS']
         ]
     ],
     'sidebar' => [],

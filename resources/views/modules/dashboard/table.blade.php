@@ -9,8 +9,8 @@
                     @if(is_null($companyId))
                         <th>Company</th>
                     @endif
-                    <th>VTRAM Name</th>
-                    <th>VTRAM Number</th>
+                    <th>VTRAMS Name</th>
+                    <th>VTRAMS Number</th>
                     <th>Status</th>
                     <th>Created By</th>
                     <th>Submitted By</th>

@@ -17,11 +17,11 @@ class CreateTemplateTable extends Migration
             $table->integer('company_id')->nullable()->unsigned();
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->string('name');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->integer('logo')->nullable()->unsigned();
             $table->foreign('logo')->references('id')->on('files')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->string('reference');
-            $table->text('key_points');
+            $table->text('key_points')->nullable();
             $table->integer('havs_noise_assessment')->nullable()->unsigned();
             $table->foreign('havs_noise_assessment')->references('id')->on('files')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->integer('coshh_assessment')->nullable()->unsigned();
@@ -38,6 +38,7 @@ class CreateTemplateTable extends Migration
             $table->foreign('updated_by')->references('id')->on('users')->onDelete('NO ACTION')->onUpdate('NO ACTION');
             $table->integer('submitted_by')->nullable()->unsigned();
             $table->foreign('submitted_by')->references('id')->on('users')->onDelete('NO ACTION')->onUpdate('NO ACTION');
+            $table->date('submitted_date')->nullable();
             $table->integer('approved_by')->nullable()->unsigned();
             $table->foreign('approved_by')->references('id')->on('users')->onDelete('NO ACTION')->onUpdate('NO ACTION');
             $table->date('date_replaced')->nullable();
@@ -47,6 +48,8 @@ class CreateTemplateTable extends Migration
             $table->integer('pages_in_pdf')->nullable();
             $table->integer('created_from')->nullable()->unsigned();
             $table->foreign('created_from')->references('id')->on('templates')->onDelete('CASCADE')->onUpdate('CASCADE');
+            $table->boolean('show_responsible_person')->nullable();
+            $table->string('responsible_person')->nullable();
             $table->softDeletes();
             $table->timestamps();
             $table->index('status');

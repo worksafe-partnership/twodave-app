@@ -29,6 +29,14 @@ class CompanyController extends Controller
             'order' => '500',
             'id' => 'templatesList'
         ];
+
+        $this->actionButtons['clone'] = [
+            'label' => 'Clone',
+            'path' => '/company/'.$this->id.'/clone',
+            'icon' => 'copy',
+            'order' => '500',
+            'id' => 'cloneCompany',
+        ];
     }
     
     public function store(CompanyRequest $request)
@@ -65,5 +73,14 @@ class CompanyController extends Controller
                 return file_put_contents(public_path('/css/company/'.$id.'_colour.css'), $newColours);
             }
         }
+    }
+
+    public function clone ($companyId) 
+    {
+        $company = Company::findOrFail($companyId);
+        $newCompany = $company->replicate();
+        $newCompany->save();
+        toast()->success('Company Cloned!', 'You\'re now editing the new Company');
+        return redirect('/company/'.$newCompany->id.'/edit');
     }
 }

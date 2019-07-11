@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'singular' => 'Previous VTRAM Approval',
-    'plural' => 'Previous VTRAM Approvals',
+    'singular' => 'Previous VTRAMS Approval',
+    'plural' => 'Previous VTRAMS Approvals',
     'identifier_path' => 'project.vtram.previous.approval',
     'route_type' => 'resource',
     'db' => [

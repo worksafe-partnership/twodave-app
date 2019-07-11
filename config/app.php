@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Worksafe VTRAMs'),
+    'name' => env('APP_NAME', 'Worksafe VTRAMS'),
 
     /*
     |--------------------------------------------------------------------------

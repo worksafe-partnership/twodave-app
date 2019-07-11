@@ -32,6 +32,16 @@ class CreateCompanyTable extends Migration
             $table->string('reject_label');
             $table->integer('logo')->nullable()->unsigned();
             $table->foreign('logo')->references('id')->on('files')->onDelete('CASCADE')->onUpdate('CASCADE');
+            $table->text('main_description')->nullable();
+            $table->text('post_risk_assessment_text')->nullable();
+            $table->text('task_description')->nullable();
+            $table->text('plant_and_equipment')->nullable();
+            $table->text('disposing_of_waste')->nullable();
+            $table->text('first_aid')->nullable();
+            $table->text('noise')->nullable();
+            $table->text('working_at_height')->nullable();
+            $table->text('manual_handling')->nullable();
+            $table->text('accident_reporting')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

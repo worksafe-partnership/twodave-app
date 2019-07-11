@@ -33,9 +33,9 @@ class BriefingRequest extends FormRequest
     public function messages()
     {
         return [
-            'vtram_id.required' => 'Please select a VTRAM',
-            'vtram_id.exists' => 'The selected VTRAM does not exist',
-            'briefed_by.required' => 'Please enter who Briefed the VTRAM',
+            'vtram_id.required' => 'Please select a VTRAMS',
+            'vtram_id.exists' => 'The selected VTRAMS does not exist',
+            'briefed_by.required' => 'Please enter who Briefed the VTRAMS',
             'briefed_by.max' => 'Briefed By cannot be more than 100 characters',
             'name.required' => 'Please enter the Briefing Name',
             'name.max' => 'The Briefing Name cannot be more than 100 characters'

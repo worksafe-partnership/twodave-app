@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'singular' => 'Company VTRAM',
-    'plural' => 'Company VTRAMs',
+    'singular' => 'Company VTRAMS',
+    'plural' => 'Company VTRAMS',
     'identifier_path' => 'company.project.vtram',
     'route_type' => 'resource',
     'db' => [
@@ -15,7 +15,7 @@ return [
     'datatable' => [
         "columns" => [
             'id' => ['visible' => false, 'searchable' => false, 'label' => 'Id'],
-            'number' => ['label' => 'VTRAM Number'],
+            'number' => ['label' => 'VTRAMS Number'],
             'project_id' => ['label' => 'Project'],
             'name' => ['label' => 'Name'],
             'reference' => ['label' => 'Reference'],

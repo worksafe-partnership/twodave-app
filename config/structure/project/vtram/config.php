@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'singular' => 'VTRAM',
+    'singular' => 'VTRAMS',
     'plural' => 'VTRAMS',
     'identifier_path' => 'project.vtram',
     'route_type' => 'resource',
@@ -15,7 +15,7 @@ return [
     'datatable' => [
         "columns" => [
             'id' => ['visible' => false, 'searchable' => false, 'label' => 'Id'],
-            'number' => ['label' => 'VTRAM Number'],
+            'number' => ['label' => 'VTRAMS Number'],
             'project_id' => ['label' => 'Project'],
             'name' => ['label' => 'Name'],
             'reference' => ['label' => 'Reference'],

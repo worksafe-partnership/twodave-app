@@ -20,10 +20,10 @@ return [
             'ref' => ['label' => 'Reference'],
             'project_admin' => ['label' => 'Project Admin'],
             'principle_contractor' => [
-                'label' => 'Principle Contractor',
+                'label' => 'Principal Contractor',
                 'col_type' => 'checkbox'
             ],
-            'principle_contractor_name' => ['label' => 'Principle Contractor Name'],
+            'principle_contractor_name' => ['label' => 'Principal Contractor Name'],
             'review_timescale' => ['label' => 'Review Timescale'],
         ]
     ],

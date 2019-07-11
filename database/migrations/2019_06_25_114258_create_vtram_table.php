@@ -19,11 +19,11 @@ class CreateVtramTable extends Migration
             $table->integer('project_id')->unsigned();
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->string('name');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->integer('logo')->nullable()->unsigned();
             $table->foreign('logo')->references('id')->on('files')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->string('reference');
-            $table->text('key_points');
+            $table->text('key_points')->nullable();
             $table->integer('havs_noise_assessment')->nullable()->unsigned();
             $table->foreign('havs_noise_assessment')->references('id')->on('files')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->integer('coshh_assessment')->nullable()->unsigned();
@@ -45,7 +45,6 @@ class CreateVtramTable extends Migration
             $table->foreign('approved_by')->references('id')->on('users')->onDelete('NO ACTION')->onUpdate('NO ACTION');
             $table->date('date_replaced')->nullable();
             $table->date('resubmit_by')->nullable();
-            $table->text('pre_risk_assessment_text')->nullable();
             $table->text('post_risk_assessment_text')->nullable();
             $table->boolean('dynamic_risk')->nullable();
             $table->integer('pdf')->nullable()->unsigned();

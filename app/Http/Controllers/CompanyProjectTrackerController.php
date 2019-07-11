@@ -14,14 +14,14 @@ class CompanyProjectTrackerController extends Controller
 
     public function postIndexHook()
     {
-        $this->heading = str_replace("VTRAMs Tracker of", "VTRAMs Tracker for", $this->heading);
+        $this->heading = str_replace("VTRAMS Tracker of", "VTRAMS Tracker for", $this->heading);
     }
 
     public function indexHook()
     {
         if (can('create', 'company.project.vtram')) {
             $this->actionButtons['create_vtram'] = [
-                'label' => 'Create VTRAM',
+                'label' => 'Create VTRAMS',
                 'path' => '/company/'.$this->args[0].'/project/'.$this->parentId.'/vtram/create',
                 'icon' => 'plus2',
                 'order' => '500',

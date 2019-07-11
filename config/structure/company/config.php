@@ -27,7 +27,7 @@ return [
                 'label' => 'Primary Colour',
                 'raw' => true
             ],
-            'vtrams_name' => ['label' => 'VTRAMs Name'],
+            'vtrams_name' => ['label' => 'VTRAMS Name'],
             'review_timescale' => ['label' => 'Review Timescale'],
         ]
     ],

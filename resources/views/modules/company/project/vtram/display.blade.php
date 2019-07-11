@@ -12,12 +12,23 @@
             </div>
             <div class="column is-3">
                 <div class="field">
-                    {{ EGForm::text('number', [
-                        'label' => 'Number',
-                        'value' => $record["number"],
-                        'type' => $pageType,
-                        'disabled' => 1,
-                    ]) }}
+                    @if (strpos($identifierPath, 'template') !== false)
+                        {{ EGForm::select('company_id', [
+                            'label' => 'Company (Leave blank for all)',
+                            'value' => $record["company_id"],
+                            'type' => $pageType,
+                            'list' => $companies,
+                            'display_value' => $record->company->name ?? 'No Company Selected',
+                            'selector' => 1
+                        ]) }}
+                    @else 
+                        {{ EGForm::text('number', [
+                            'label' => 'Number',
+                            'value' => $record["number"],
+                            'type' => $pageType,
+                            'disabled' => 1,
+                        ]) }}
+                    @endif
                 </div>
             </div>
             <div class="column is-3">
@@ -82,88 +93,28 @@
                 </div>
             </div>
         </div>
-
-        <div class="columns">
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::ckeditor('description', [
-                        'label' => 'Description',
-                        'value' => $record["description"],
-                        'type' => $pageType
-                    ]) }}
+        @if ($pageType != 'create')
+            <div class="columns">
+                <div class="column is-6">
+                    <div class="field">
+                        {{ EGForm::ckeditor('description', [
+                            'label' => 'Company Description',
+                            'value' => $record["description"],
+                            'type' => $pageType
+                        ]) }}
+                    </div>
+                </div>
+                <div class="column is-6">
+                    <div class="field">
+                        {{ EGForm::ckeditor('post_risk_assessment_text', [
+                            'label' => 'Post Risk Assessment Text',
+                            'value' => $record["post_risk_assessment_text"],
+                            'type' => $pageType
+                        ]) }}
+                    </div>
                 </div>
             </div>
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::ckeditor('key_points', [
-                        'label' => 'Key Points',
-                        'value' => $record["key_points"],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-        </div>
-
-        <div class="columns">
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::file('havs_noise_assessment', [
-                        'label' => 'HAVs/Noise Assessment Document',
-                        'value' => $record["havs_noise_assessment"],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::file('coshh_assessment', [
-                        'label' => 'COSHH Assessment Document',
-                        'value' => $record["coshh_assessment"],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-        </div>
-        <div class="columns">
-            <div class="column is-6">
-                <div class="field">
-                    <a download="HAVS Calculator.xls" href="/havs.xls" class="button">Download HAVS Calculator</a>
-                </div>
-            </div>
-            <div class="column is-6">
-                <div class="field">
-                    <a download="Noise Calculator.xlsx" href="/noise.xlsx" class="button">Download Noise Calculator</a>
-                </div>
-            </div>
-        </div>
-        <div class="columns">
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::ckeditor('pre_risk_assessment_text', [
-                        'label' => 'Pre Risk Assessment Text',
-                        'value' => $record["pre_risk_assessment_text"],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::ckeditor('post_risk_assessment_text', [
-                        'label' => 'Post Risk Assessment Text',
-                        'value' => $record["post_risk_assessment_text"],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-        </div>
-
-        <div class="field">
-            {{ EGForm::checkbox('dynamic_risk', [
-                'label' => 'Dynamic Risk (Adds Dynamic Risk boxes to the VTRAM)',
-                'value' => $record->dynamic_risk ?? false,
-                'type' => $pageType
-            ]) }}
-        </div>
+        @endif
 
         @if ($pageType == 'view')
             <div class="columns">
@@ -250,15 +201,16 @@
                     </div>
                 </div>
             </div>
-
-            <div class="field">
-                {{ EGForm::text('created_from', [
-                    'label' => 'Created From',
-                    'value' => $record->createdFrom->name ?? '',
-                    'type' => $pageType,
-                    'disabled' => 1
-                ]) }}
-            </div>
+            @if (strpos($identifierPath, 'vtram') !== false)
+                <div class="field">
+                    {{ EGForm::text('created_from', [
+                        'label' => 'Created From',
+                        'value' => $record->createdFrom->name ?? '',
+                        'type' => $pageType,
+                        'disabled' => 1
+                    ]) }}
+                </div>
+            @endif
         @endif
 	</div>
 </div>

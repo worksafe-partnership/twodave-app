@@ -22,11 +22,11 @@
             <div class="column is-4">
                 <div class="field">
                     {{ EGForm::select('vtram_id', [
-                        'label' => 'VTRAM Briefed',
+                        'label' => 'VTRAMS Briefed',
                         'value' => $record["vtram_id"],
                         'type' => $pageType,
                         'list' => $vtrams,
-                        'display_value' => $record->vtram->name ?? 'No VTRAM Selected',
+                        'display_value' => $record->vtram->name ?? 'No VTRAMS Selected',
                         'selector' => 1
                     ]) }}
                 </div>

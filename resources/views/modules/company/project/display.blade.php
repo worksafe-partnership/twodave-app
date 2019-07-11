@@ -55,7 +55,7 @@
             <div class="column is-4">
                 <div class="field">
                     {{ EGForm::checkbox('show_contact', [
-                        'label' => 'Show Contact Information on VTRAMs',
+                        'label' => 'Show Contact Information on VTRAMS',
                         'value' => $record->show_contact ?? false,
                         'type' => $pageType
                     ]) }}
@@ -66,7 +66,7 @@
             <div class="column is-4">
                 <div class="field pc-check">
                     {{ EGForm::checkbox('principle_contractor', [
-                        'label' => 'Principle Contractor',
+                        'label' => 'Principal Contractor',
                         'value' => $record->principle_contractor ?? false,
                         'type' => $pageType
                     ]) }}
@@ -75,7 +75,7 @@
             <div class="column is-4">
                 <div class="field principle-contractor-details">
                     {{ EGForm::text('principle_contractor_name', [
-                        'label' => 'Principle Contractor Name',
+                        'label' => 'Principal Contractor Name',
                         'value' => $record["principle_contractor_name"],
                         'type' => $pageType
                     ]) }}
@@ -84,7 +84,7 @@
             <div class="column is-4">
                 <div class="field principle-contractor-details">
                     {{ EGForm::text('principle_contractor_email', [
-                        'label' => 'Principle Contractor Email',
+                        'label' => 'Principal Contractor Email',
                         'value' => $record["principle_contractor_email"],
                         'type' => $pageType
                     ]) }}

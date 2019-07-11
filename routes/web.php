@@ -29,6 +29,10 @@ Route::get('/project/{project_id}/vtram/{vtram_id}/methodology', [
     'middleware' => 'can:edit-project.vtram',
     'uses' => 'VtramController@editContent'
 ]);
+Route::get('/company/{company_id}/clone', [
+    'middleware' => 'can:create-company',
+    'uses' => 'CompanyController@clone',
+]);
 
 Route::get('user.datatable.json', 'WorksafeUserController@_datatableAll');
 Route::get('user.json', 'WorksafeUserController@jsonAll');

@@ -116,9 +116,9 @@ class CompanyVtramController extends Controller
                     'order' => 100,
                     'id' => 'view_created_from',
                 ];
-            } else if ($this->record->created_from_entity == 'VTRAM' && $this->record->created_from_id != null) {
+            } else if ($this->record->created_from_entity == 'VTRAMS' && $this->record->created_from_id != null) {
                 $this->pillButtons['view_created_from'] = [
-                    'label' => 'View VTRAM Created From',
+                    'label' => 'View VTRAMS Created From',
                     'path' => $this->record->id.'/previous/'.$this->record->created_from_id,
                     'icon' => 'call_missed',
                     'order' => 100,

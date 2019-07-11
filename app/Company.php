@@ -33,7 +33,17 @@ class Company extends Model
         'accept_label',
         'amend_label',
         'reject_label',
-        'logo'
+        'logo',
+        'main_description',
+        'post_risk_assessment_text',
+        'task_description',
+        'plant_and_equipment',
+        'disposing_of_waste',
+        'first_aid',
+        'noise',
+        'working_at_height',
+        'manual_handling',
+        'accident_reporting',
     ];
 
     public static function scopeDatatableAll($query, $parent, $identifier)

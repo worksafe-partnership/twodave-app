@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'singular' => 'Company Previous VTRAM',
-    'plural' => 'Company Previous VTRAMs',
+    'singular' => 'Company Previous VTRAMS',
+    'plural' => 'Company Previous VTRAMS',
     'identifier_path' => 'company.project.vtram.previous',
     'route_type' => 'resource',
     'db' => [

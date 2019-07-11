@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'singular' => 'Company VTRAMs Tracker',
-    'plural' => 'Company VTRAMs Tracker',
+    'singular' => 'Company VTRAMS Tracker',
+    'plural' => 'Company VTRAMS Tracker',
     'identifier_path' => 'company.project.tracker',
     'route_type' => 'index',
     'icon' => 'document-add',
@@ -10,9 +10,9 @@ return [
     'datatable' => [
         "columns" => [
             'id' => ['visible' => false, 'searchable' => false, 'label' => 'Id'],
-            'number' => ['label' => 'VTRAM Number'],
+            'number' => ['label' => 'VTRAMS Number'],
             'company_id' => ['label' => 'Company'],
-            'name' => ['label' => 'VTRAM Name'],
+            'name' => ['label' => 'VTRAMS Name'],
             'status' => ['label' => 'Status'],
             'created_by' => ['label' => 'Created By'],
             'submitted_by' => ['label' => 'Submitted By'],
