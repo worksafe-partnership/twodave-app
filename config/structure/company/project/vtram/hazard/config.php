@@ -4,7 +4,7 @@ return [
     'singular' => 'Hazard',
     'plural' => 'Hazards',
     'identifier_path' => 'company.project.vtram.hazard',
-    'route_type' => 'index',
+    'route_type' => 'resource',
     'db' => [
         'model' => 'Hazard',
         'id' => 'id',
@@ -12,20 +12,27 @@ return [
     ],
     'icon' => 'warning',
     'controller' => 'HazardController',
-    'datatable' => [
-        "columns" => [
-        'id' => ['visible' => false, 'searchable' => false, 'label' => 'Id'],
-        'description' => ['label' => 'Description'],
-        'entity' => ['label' => 'entity'],
-        'entity_id' => ['label' => 'entity_id'],
-        'control' => ['label' => 'control'],
-        'risk' => ['label' => 'Risk'],
-        'r_risk' => ['label' => 'Reduced Risk'],
-        'list_order' => ['label' => 'list_order'],
-        'at_risk' => ['label' => 'Who is at Risk'],
-        'other_at_risk' => ['label' => 'Please Specify']
-    ]
+        'datatable' => [
+            "columns" => [
+            'id' => ['visible' => false, 'searchable' => false, 'label' => 'Id'],
+            'description' => ['label' => 'Description'],
+            'entity' => ['label' => 'entity'],
+            'entity_id' => ['label' => 'entity_id'],
+            'control' => ['label' => 'control'],
+            'risk' => ['label' => 'Risk'],
+            'r_risk' => ['label' => 'Reduced Risk'],
+            'list_order' => ['label' => 'list_order'],
+            'at_risk' => ['label' => 'Who is at Risk'],
+            'other_at_risk' => ['label' => 'Please Specify']
+        ]
     ],
     'sidebar' => [],
-    'permissions' => false
+    'permissions' => false,
+    'exclude_routes' => [
+        'list',
+        'restore',
+        'permanentlyDelete',
+        'datatable_all',
+        'view',
+    ],
 ];

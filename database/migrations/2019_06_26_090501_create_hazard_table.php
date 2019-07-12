@@ -18,11 +18,15 @@ class CreateHazardTable extends Migration
             $table->string('entity');
             $table->integer('entity_id');
             $table->text('control');
-            $table->char('risk');
-            $table->char('r_risk');
+            $table->integer('risk')->nullable();
+            $table->integer('risk_probability')->nullable();
+            $table->integer('risk_severity')->nullable();
+            $table->integer('r_risk')->nullable();
+            $table->integer('r_risk_probability')->nullable();
+            $table->integer('r_risk_severity')->nullable();
             $table->integer('list_order')->nullable();
             $table->string('at_risk');
-            $table->string('other_at_risk');
+            $table->string('other_at_risk')->nullable();
             $table->timestamps();
         });
     }

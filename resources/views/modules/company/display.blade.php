@@ -171,7 +171,7 @@
 <hr>
 <div class="columns">
     <div class="column is-8 is-offset-2">    
-        <h2 class="heading">VTRAMS Configuration</h2>
+        <h2 class="sub-heading">VTRAMS Configuration</h2>
         <div class="columns">
             <div class="column is-6">
                 <div class="field">

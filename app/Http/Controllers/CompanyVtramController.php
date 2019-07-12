@@ -6,8 +6,11 @@ use Auth;
 use EGFiles;
 use Controller;
 use App\Vtram;
+use App\Hazard;
 use App\Project;
+use App\Company;
 use App\NextNumber;
+use App\Methodology;
 use App\Http\Classes\VTLogic;
 use App\Http\Requests\VtramRequest;
 
@@ -182,7 +185,26 @@ class CompanyVtramController extends Controller
 
     public function editContent($companyId, $projectId, $vtramId)
     {
+        $company = Company::findOrFail($companyId);
         $this->view = 'modules.company.project.vtram.editVtram';
+        $this->parentId = $vtramId;
+        $this->customValues['whoList'] = config('egc.hazard_who_risk');
+        $this->customValues['riskList'] = [
+            0 => $company->no_risk_character, 
+            1 => $company->low_risk_character,
+            2 => $company->med_risk_character,
+            3 => $company->high_risk_character,
+        ]; 
+        $this->customValues['hazards'] = Hazard::where('entity', '=', 'VTRAM')
+            ->where('entity_id', '=', $vtramId)
+            ->orderBy('list_order')
+            ->get()
+            ->toJson();
+        $this->customValues['methodologies'] = Methodology::where('entity', '=', 'VTRAM')
+            ->where('entity_id', '=', $vtramId)
+            ->orderBy('list_order')
+            ->get()
+            ->toJson();
         return parent::_custom();
     }
 
