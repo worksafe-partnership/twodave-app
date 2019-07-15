@@ -67,18 +67,19 @@
                                     "display_value" => $record->company->name ?? '',
                                 ]) }}
                             </div>
-                        @endif 
+                        @endif
                     </div>
                     <div class="column is-6">
                         <div class="field roles">
-                        {{ EGForm::multiCheckbox("roles", [
-                            "type"  => $pageType,
-                            "label" => "Roles",
-                            "list"  => $roles,
-                            "values"  => $currentRoles,
-                            "classes" => ['roles'],
-                            "list-style" => "multi-block"
-                        ]) }}
+                            {{ EGForm::multiCheckbox("roles", [
+                                "type"  => $pageType,
+                                "label" => "Roles",
+                                "list"  => $roles,
+                                "values"  => $currentRoles,
+                                "classes" => ['roles'],
+                                "list-style" => "multi-block"
+                            ]) }}
+                        </div>
                     </div>
                 </div>
             @endcan
@@ -89,13 +90,13 @@
     @php
         $oldRoles = old('roles');
     @endphp
-        @if ((isset($currentRoles[1]) && ($oldRoles == null && $oldRoles[1] == null)) 
+        @if ((isset($currentRoles[1]) && ($oldRoles == null && $oldRoles[1] == null))
             || (isset($currentRoles[2]) && ($oldRoles == null && $oldRoles[2] == null)))
         @push('styles')
             <style>
                .company-field {
                     display: none;
-                } 
+                }
             </style>
         @endpush
     @endif
@@ -108,9 +109,9 @@
                 $(this).prev().val(1);
                 var name = $(this).prev()[0].name;
                 if (name == 'roles[1]' || name == 'roles[2]') {
-                    $('.company-field').hide(); 
+                    $('.company-field').hide();
                 } else {
-                    $('.company-field').show(); 
+                    $('.company-field').show();
                 }
             });
         </script>

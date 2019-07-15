@@ -4,11 +4,17 @@ namespace App\Http\Controllers;
 
 use Controller;
 use App\Company;
+use App\Project;
 use App\Http\Requests\CompanyRequest;
 
 class CompanyController extends Controller
 {
     protected $identifierPath = 'company';
+
+    public function editHook()
+    {
+        $this->customValues['projects'] = Project::where('company_id', $this->id)->pluck('name', 'id');
+    }
 
     public function viewHook()
     {
@@ -38,7 +44,7 @@ class CompanyController extends Controller
             'id' => 'cloneCompany',
         ];
     }
-    
+
     public function store(CompanyRequest $request)
     {
         return parent::_store(func_get_args());
@@ -49,14 +55,17 @@ class CompanyController extends Controller
         return parent::_update(func_get_args());
     }
 
-    public function created($company, $args)
+    public function created($company, $request)
     {
         $this->setupColour($company->primary_colour, $company->light_text, $company->id);
     }
 
-    public function updated($company, $orig, $args)
+    public function updated($company, $orig, $request)
     {
         $this->setupColour($company->primary_colour, $company->light_text, $company->id);
+        if (isset($request['timescale_update']) && $request['timescale_update'] != "forward") {
+            $this->overrideTimescales($company->id, $request);
+        }
     }
 
     protected function setupColour($primary, $light, $id)
@@ -75,7 +84,25 @@ class CompanyController extends Controller
         }
     }
 
-    public function clone ($companyId) 
+    public function overrideTimescales($companyId, $request)
+    {
+        if ($request['timescale_update'] == "all") {
+            Project::where('company_id', $companyId)
+                   ->update(['review_timescale' => $request['review_timescale']]);
+        } else if ($request['timescale_update'] == "select") {
+            $projectIds = [];
+            foreach ($request['projects_to_update'] as $key => $value) {
+                if ($value != "") {
+                    $projectIds[] = $key;
+                }
+            }
+            Project::where('company_id', $companyId)
+                   ->whereIn('id', [$projectIds])
+                   ->update(['review_timescale' => $request['review_timescale']]);
+        }
+    }
+
+    public function clone($companyId)
     {
         $company = Company::findOrFail($companyId);
         $newCompany = $company->replicate();

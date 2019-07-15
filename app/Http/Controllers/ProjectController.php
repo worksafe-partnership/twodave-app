@@ -24,7 +24,7 @@ class ProjectController extends CompanyProjectController
         if ($this->user->inRole('supervisor') && $this->record !== null) {
             if (!$this->record->userOnProject($this->user->id)) {
                 abort(404);
-            }        
+            }
         }
 
         $this->customValues['company'] = Company::findOrFail($this->user->company_id);
@@ -33,6 +33,10 @@ class ProjectController extends CompanyProjectController
                 $q->where('slug', '=', 'project_admin');
             })
             ->pluck('name', 'id');
+
+        $timescales = config('egc.review_timescales');
+        $timescales[0] = "Use Company Schedule";
+        $this->customValues['timescales'] = $timescales;
 
         $this->getProjectUsers($this->user->company_id);
     }

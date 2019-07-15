@@ -10,7 +10,7 @@
                     ]) }}
                 </div>
             </div>
-            <div class="column is-4">
+            <div class="column">
                 <div class="field">
                     {{ EGForm::select('review_timescale', [
                         'label' => 'Review Timescale',
@@ -20,7 +20,7 @@
                     ]) }}
                 </div>
             </div>
-            <div class="column is-4">
+            <div class="column">
                 <div class="field">
                     {{ EGForm::text('vtrams_name', [
                         'label' => 'VTRAMS Name',
@@ -30,6 +30,38 @@
                 </div>
             </div>
         </div>
+
+        @if($pageType == 'edit')
+            <div class="columns">
+                <div class="column hidden" id="timescale_1">
+                    <div class="field">
+                        {{ EGForm::select('timescale_update', [
+                            'label' => 'Updating Timescale',
+                            'value' => 0,
+                            'type' => $pageType,
+                            'list' => [
+                                'forward' => 'Only Apply Going Forward',
+                                'all' => 'Apply to All Projects',
+                                'select' => 'Select Projects to Change'
+                            ]
+                        ]) }}
+                    </div>
+                </div>
+            </div>
+            <div class="columns">
+                <div class="column hidden" id="timescale_2">
+                    <div class="field">
+                        {{ EGForm::multiCheckbox("projects_to_update", [
+                            "type"  => $pageType,
+                            "label" => "Projects to Update",
+                            "list"  => $projects,
+                            "values"  => [],
+                            "list-style" => "multi-block"
+                        ]) }}
+                    </div>
+                </div>
+            </div>
+        @endif
 
         <div class="columns">
             <div class="column is-4">
@@ -170,7 +202,7 @@
 </div>
 <hr>
 <div class="columns">
-    <div class="column is-8 is-offset-2">    
+    <div class="column is-8 is-offset-2">
         <h2 class="sub-heading">VTRAMS Configuration</h2>
         <div class="columns">
             <div class="column is-6">
@@ -274,3 +306,22 @@
         </div>
 	</div>
 </div>
+
+
+@if($pageType == "edit")
+    @push('scripts')
+        <script>
+            $('#review_timescale').change(function() {
+                $('#timescale_1').removeClass('hidden');
+            });
+
+            $('#timescale_update').on('change', function() {
+                if($(this).val() == "select") {
+                    $('#timescale_2').removeClass('hidden');
+                } else {
+                    $('#timescale_2').addClass('hidden');
+                }
+            });
+        </script>
+    @endpush
+@endif
