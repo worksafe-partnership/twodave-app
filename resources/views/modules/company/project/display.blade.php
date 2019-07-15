@@ -48,7 +48,7 @@
                         'label' => 'Review Timescale (Overrides '.$company->reviewTimeScaleName().' from Company)',
                         'value' => $record->review_timescale ?? 0,
                         'type' => $pageType,
-                        'list' => config('egc.review_timescales')
+                        'list' => config('egc.review_timescales_project')
                     ]) }}
                 </div>
             </div>
@@ -101,7 +101,7 @@
                             'list' => $allUsers,
                             'type' => $pageType,
                             'list-style' => 'multi-block',
-                        ]) }}  
+                        ]) }}
                     @else
                         @php
                             $old = old('users');
@@ -109,15 +109,15 @@
                             if (count($old) > 0) {
                                 foreach ($old as $val) {
                                     $selectedUsers[$val] = true;
-                                }   
-                            }   
+                                }
+                            }
                         @endphp
                         {{ VTForm::multiSelect('users[]', [
                             'label' => 'Associated Users',
                             'value' => $selectedUsers,
                             'list' => $allUsers,
                             'type' => $pageType,
-                        ]) }}                    
+                        ]) }}
                     @endif
                 </div>
             </div>
@@ -145,7 +145,7 @@
             <style>
                .principle-contractor-details {
                     display: none;
-                } 
+                }
             </style>
         @endpush
     @endif
@@ -176,9 +176,9 @@
         $('.pc-check [id^=principle_contractor]').click(function() {
             var name = $(this).prev().val();
             if (name == "1") {
-                $('.principle-contractor-details').hide(); 
+                $('.principle-contractor-details').hide();
             } else {
-                $('.principle-contractor-details').show(); 
+                $('.principle-contractor-details').show();
             }
         });
     </script>
