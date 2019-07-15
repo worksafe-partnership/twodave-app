@@ -48,7 +48,7 @@
                         'label' => 'Review Timescale (Overrides '.$company->reviewTimeScaleName().' from Company)',
                         'value' => $record->review_timescale ?? 0,
                         'type' => $pageType,
-                        'list' => config('egc.review_timescales_project')
+                        'list' => $timescales
                     ]) }}
                 </div>
             </div>

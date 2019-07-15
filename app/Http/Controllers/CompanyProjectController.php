@@ -23,6 +23,24 @@ class CompanyProjectController extends Controller
             ->pluck('name', 'id');
 
         $this->getProjectUsers($this->parentId);
+
+        $timescales = config('egc.review_timescales');
+        $timescales[0] = "Use Company Schedule";
+        $limit = $this->customValues['company']->review_timescale;
+
+        if (isset($this->record->review_timescale)) { // view / edit
+            if ($this->record->review_timescale > $this->customValues['company']->review_timescale) {
+                $limit = $this->record->review_timescale;
+            }
+        }
+
+        foreach ($timescales as $key => $value) {
+            if ($key > $limit) {
+                unset($timescales[$key]);
+            }
+        }
+
+        $this->customValues['timescales'] = $timescales;
     }
 
     protected function getProjectUsers($companyId)
@@ -39,7 +57,7 @@ class CompanyProjectController extends Controller
         if ($this->pageType == 'view') {
             $this->customValues['allUsers'] = UserProject::where('project_id', '=', $this->id)
                 ->join('users', 'user_projects.user_id', '=', 'users.id')
-                ->pluck('name', 'users.id');    
+                ->pluck('name', 'users.id');
         } else {
             $this->customValues['allUsers'] = User::where('company_id', '=', $companyId)
                 ->pluck('name', 'id');
