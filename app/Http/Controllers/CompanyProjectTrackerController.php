@@ -6,6 +6,7 @@ use Auth;
 use Carbon;
 use Controller;
 use App\Vtram;
+use App\Template;
 
 class CompanyProjectTrackerController extends Controller
 {
@@ -15,6 +16,11 @@ class CompanyProjectTrackerController extends Controller
     public function postIndexHook()
     {
         $this->heading = str_replace("VTRAMS Tracker of", "VTRAMS Tracker for", $this->heading);
+        $this->customValues['templates'] = Template::where('company_id', $this->args[0])->pluck('name', 'id');
+        if (isset($this->actionButtons['create_vtram']['class'])) {
+            $this->actionButtons['create_vtram']['class'] .= " create_vtram";
+        }
+        $this->customValues['path'] = 'vtram/create';
     }
 
     public function indexHook()
