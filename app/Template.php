@@ -12,7 +12,7 @@ class Template extends Model
 {
     use SoftDeletes;
     protected $table = 'templates';
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -75,7 +75,7 @@ class Template extends Model
             }
             $query->where(function ($q) use ($companyId) {
                 $q->where('company_id', '=', $companyId)
-                   ->orWhereNull('company_id'); 
+                   ->orWhereNull('company_id');
             });
         }
 
@@ -159,5 +159,13 @@ class Template extends Model
             return Carbon::createFromFormat("Y-m-d", $this->resubmit_by)->timestamp;
         }
         return "";
+    }
+
+    public function approvedName()
+    {
+        if (!is_null($this->approved)) {
+            return $this->approved->name;
+        }
+        return 'Not Approved';
     }
 }

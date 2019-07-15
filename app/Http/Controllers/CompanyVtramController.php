@@ -9,6 +9,7 @@ use App\Vtram;
 use App\Hazard;
 use App\Project;
 use App\Company;
+use App\Template;
 use App\NextNumber;
 use App\Methodology;
 use App\Http\Classes\VTLogic;
@@ -18,8 +19,41 @@ class CompanyVtramController extends Controller
 {
     protected $identifierPath = 'company.project.vtram';
 
+    public function postIndexHook()
+    {
+        $this->customValues['templates'] = Template::where('company_id', $this->args[0])->pluck('name', 'id');
+        if (isset($this->actionButtons['create']['class'])) {
+            $this->actionButtons['create']['class'] .= " create_vtram";
+        }
+        $this->customValues['path'] = 'vtram/create';
+    }
+
+    public function postBladeHook()
+    {
+        $this->customValues['templates'] = Template::where('company_id', $this->args[0])->pluck('name', 'id');
+        if (isset($this->actionButtons['create']['class'])) {
+            $this->actionButtons['create']['class'] .= " create_vtram";
+        }
+    }
+
     public function createHook()
     {
+        if (isset($_GET['template'])) {
+            $template = Template::findOrFail($_GET['template']);
+            if ($template->company_id != $this->args[0]) {
+                abort(404);
+            }
+            $this->customValues['name'] = $template['name'];
+            $this->customValues['reference'] = $template['reference'];
+            $this->customValues['logo'] = $template['logo'];
+            // not sure if the page is complete, so leaving these commented out for now.
+            // $this->customValues['key_points'] = $template['key_points']; //  not on blade???
+            // $this->customValues['havs_noise_assessment'] = $template['havs_noise_assessment']; //  not on blade???
+            // $this->customValues['coshh_assessment'] = $template['coshh_assessment']; // not on blade ??
+            // $this->customValues['responsible_person'] = $template['responsible_person'];
+            // $this->customValues['show_responsible_person'] = $template['show_responsible_person'];
+        }
+
         $company = Company::findOrFail($this->args[0]);
         $this->customValues['main_description'] = $company['main_description'];
         $this->customValues['post_risk_assessment_text'] = $company['post_risk_assessment_text'];
@@ -48,6 +82,9 @@ class CompanyVtramController extends Controller
                 'value' => true,
             ];
         }
+        $company = $this->args[0];
+        $project = $this->args[1];
+        $this->customValues['path'] = '/company/'.$company.'/project/'.$project.'/vtram/create';
     }
 
     public function viewHook()

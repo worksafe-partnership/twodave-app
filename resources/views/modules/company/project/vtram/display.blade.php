@@ -5,7 +5,7 @@
                 <div class="field">
                     {{ EGForm::text('name', [
                         'label' => 'Name',
-                        'value' => $record["name"],
+                        'value' => isset($name) ? $name : $record['name'],
                         'type' => $pageType
                     ]) }}
                 </div>
@@ -68,7 +68,7 @@
                 <div class="field">
                     {{ EGForm::file('logo', [
                         'label' => 'Logo (Company Logo used if blank)',
-                        'value' => $record["logo"],
+                        'value' => isset($logo) ? $logo : $record['logo'],
                         'type' => $pageType,
                         'show_image' => true,
                     ]) }}
@@ -343,3 +343,5 @@
         });
     </script>
 @endpush
+
+@include('modules.company.project.vtram.create-modal')
