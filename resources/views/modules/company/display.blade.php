@@ -216,9 +216,9 @@
             </div>
             <div class="column is-6">
                 <div class="field">
-                    {{ EGForm::ckeditor('post_risk_assessment_test', [
+                    {{ EGForm::ckeditor('post_risk_assessment_text', [
                         'label' => 'Post Risk Assessment Text',
-                        'value' => $record['post_risk_assessment_test'],
+                        'value' => $record['post_risk_assessment_text'],
                         'type' => $pageType
                     ]) }}
                 </div>

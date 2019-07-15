@@ -18,6 +18,21 @@ class CompanyVtramController extends Controller
 {
     protected $identifierPath = 'company.project.vtram';
 
+    public function createHook()
+    {
+        $company = Company::findOrFail($this->args[0]);
+        $this->customValues['main_description'] = $company['main_description'];
+        $this->customValues['post_risk_assessment_text'] = $company['post_risk_assessment_text'];
+        $this->customValues['task_description'] = $company['task_description'];
+        $this->customValues['plant_and_equipment'] = $company['plant_and_equipment'];
+        $this->customValues['disposing_of_waste'] = $company['disposing_of_waste'];
+        $this->customValues['first_aid'] = $company['first_aid'];
+        $this->customValues['noise'] = $company['noise'];
+        $this->customValues['working_at_height'] = $company['working_at_height'];
+        $this->customValues['manual_handling'] = $company['manual_handling'];
+        $this->customValues['accident_reporting'] = $company['accident_reporting'];
+    }
+
     public function postEditHook()
     {
         if (in_array($this->record->status, ['REJECTED','EXTERNAL_REJECT','NEW'])) {
@@ -28,7 +43,7 @@ class CompanyVtramController extends Controller
                     'is-primary',
                 ],
                 'name' => 'send_for_approval',
-                'label' => 'Update and Submit for Approval',       
+                'label' => 'Update and Submit for Approval',
                 'order' => 300,
                 'value' => true,
             ];
@@ -190,11 +205,11 @@ class CompanyVtramController extends Controller
         $this->parentId = $vtramId;
         $this->customValues['whoList'] = config('egc.hazard_who_risk');
         $this->customValues['riskList'] = [
-            0 => $company->no_risk_character, 
+            0 => $company->no_risk_character,
             1 => $company->low_risk_character,
             2 => $company->med_risk_character,
             3 => $company->high_risk_character,
-        ]; 
+        ];
         $this->customValues['hazards'] = Hazard::where('entity', '=', 'VTRAM')
             ->where('entity_id', '=', $vtramId)
             ->orderBy('list_order')

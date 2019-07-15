@@ -38,8 +38,17 @@ class Vtram extends Model
         'approved_by',
         'date_replaced',
         'resubmit_by',
+        'main_description',
         'post_risk_assessment_text',
+        'task_description',
+        'plant_and_equipment',
+        'disposing_of_waste',
+        'first_aid',
         'dynamic_risk',
+        'noise',
+        'working_at_height',
+        'manual_handling',
+        'accident_reporting',
         'pdf',
         'pages_in_pdf',
         'created_from_entity',
@@ -48,6 +57,9 @@ class Vtram extends Model
         'responsible_person',
         'number'
     ];
+
+
+
 
     public static function scopeDatatableAll($query, $parent, $identifier)
     {

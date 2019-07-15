@@ -6,11 +6,27 @@ use Auth;
 use Controller;
 use App\Vtram;
 use App\Project;
+use App\Company;
 use App\Http\Requests\VtramRequest;
 
 class VtramController extends CompanyVtramController
 {
     protected $identifierPath = 'project.vtram';
+
+    public function createHook()
+    {
+        $company = Company::findOrFail($this->user->company_id);
+        $this->customValues['main_description'] = $company['main_description'];
+        $this->customValues['post_risk_assessment_text'] = $company['post_risk_assessment_text'];
+        $this->customValues['task_description'] = $company['task_description'];
+        $this->customValues['plant_and_equipment'] = $company['plant_and_equipment'];
+        $this->customValues['disposing_of_waste'] = $company['disposing_of_waste'];
+        $this->customValues['first_aid'] = $company['first_aid'];
+        $this->customValues['noise'] = $company['noise'];
+        $this->customValues['working_at_height'] = $company['working_at_height'];
+        $this->customValues['manual_handling'] = $company['manual_handling'];
+        $this->customValues['accident_reporting'] = $company['accident_reporting'];
+    }
 
     public function bladeHook()
     {
@@ -22,7 +38,7 @@ class VtramController extends CompanyVtramController
         if ($this->user->inRole('supervisor') && $this->record !== null) {
             if (!$this->record->project->userOnProject($this->user->id)) {
                 abort(404);
-            }        
+            }
         }
     }
 
@@ -70,7 +86,7 @@ class VtramController extends CompanyVtramController
     public function submitForApproval($projectId, $vtramId, $otherId = null)
     {
         return parent::submitForApproval(null, $projectId, $vtramId);
-    } 
+    }
 
     public function viewA3($projectId, $vtramId, $otherId = null, $otherId2 = null)
     {
