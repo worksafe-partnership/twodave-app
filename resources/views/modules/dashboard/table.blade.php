@@ -26,8 +26,8 @@
                             @if(is_null($companyId))
                                 <td> {{ $vtram->companyName() }} </td>
                             @endif
-                            <td>{{ $vtram->number }}</td>
                             <td>{{ $vtram->name }}</td>
+                            <td>{{ $vtram->number }}</td>
                             <td>{{ $vtram->niceStatus() }}</td>
                             <td>{{ $vtram->createdName() }}</td>
                             <td>{{ $vtram->submittedName() }}</td>
@@ -63,7 +63,7 @@
                     @if(is_null($companyId))
                         { data: 'company_name', name: 'company_name' },
                     @endif
-                    // { data: 'plan_name', name: 'plan_name' },
+                    { data: 'number', name: 'number' },
                     { data: 'name', name: 'name' },
                     { data: 'status', name: 'status' },
                     { data: 'created_name', name: 'created_name' },
