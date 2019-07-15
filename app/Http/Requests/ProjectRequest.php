@@ -28,7 +28,7 @@ class ProjectRequest extends FormRequest
             'ref' => 'required|max:100',
             'project_admin' => 'required|exists:users,id',
             'principle_contractor_name' => 'required_if:principle_contractor,1|max:255',
-            'principle_contractor_email' => 'required_if:principle_contractor,1|max:100',
+            'principle_contractor_email' => 'required_if:principle_contractor,1|max:200|csv',
             'client_name' => 'required|max:150',
             'review_timescale' => 'required'
         ];
@@ -47,6 +47,7 @@ class ProjectRequest extends FormRequest
             'principle_contractor_name.max' => 'The Principal Contractor Name cannot be more than 255 characters',
             'principle_contractor_email.required_if' => 'Please fill in the Principal Contractor Email',
             'principle_contractor_email.max' => 'The Principal Contractor Email cannot be more than 100 characters',
+            'principle_contractor_email.csv' => 'Please ensure all emails entered are valid',
             'client_name.required' => 'Please enter the Client Name',
             'client_name.max' => 'The Client Name cannot be more than 150 characters',
             'review_timescale.required' => 'Please select the Review Timescale'
