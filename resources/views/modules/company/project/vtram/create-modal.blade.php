@@ -13,7 +13,7 @@
                                 }
                             @endphp
                             <a class="button is-success" href="{{$path}}">Create New VTRAM (No Template)</a>
-                            @if($templates->isNotEmpty())
+                            @if(isset($templates) && $templates->isNotEmpty())
                                 <hr>
                                     <p>Alternatively, create from a template:</p>
                                     @foreach($templates as $key => $name)
