@@ -1,6 +1,9 @@
 <h2 class="sub-heading">Extra Information</h2>
 <div class="columns">
     <div class="column is-12">
+        <div class="field">
+            <a download="Noise Vibration Assessment.xls" href="/Noise_Vibration_Assessment.xls" class="button">Download Noise Vibration Assessment</a>
+        </div>
     </div>
 </div>
 <hr>
@@ -33,10 +36,10 @@
         @include('modules.company.project.vtram.hazard.display')
         <div class="field is-grouped is-grouped-centered ">
             <p class="control">
-                <button class="button is-primary submitbutton" onclick="submitHazardForm();">Save Hazard</button> 
+                <button class="button is-primary submitbutton" onclick="submitHazardForm();">Save Hazard</button>
             </p>
             <p class="control">
-                <button class="button" onclick="cancelForm('hazard');">Cancel</button> 
+                <button class="button" onclick="cancelForm('hazard');">Cancel</button>
             </p>
         </div>
     </div>
@@ -169,7 +172,7 @@
                             </td>\
                         </tr>';
             }
-            $('#main-hazard-container').html(html);                    
+            $('#main-hazard-container').html(html);
         }
 
         function deleteHazard(id) {
@@ -184,7 +187,7 @@
 
         }
 
-        
+
 
         // Methodology Scripts
         var methodologies = JSON.parse('{!! $methodologies !!}');
@@ -224,7 +227,7 @@
 
         function listMethodologies() {
             // Loop through methodologies and build html
-            
+
         }
 
         function deleteMethodology() {
