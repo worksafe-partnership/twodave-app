@@ -30,10 +30,14 @@ class CompanyVtramController extends Controller
 
     public function postBladeHook()
     {
-        $this->customValues['templates'] = Template::where('company_id', $this->args[0])->pluck('name', 'id');
         if (isset($this->actionButtons['create']['class'])) {
             $this->actionButtons['create']['class'] .= " create_vtram";
         }
+    }
+
+    public function bladeHook()
+    {
+        $this->customValues['templates'] = Template::where('company_id', $this->args[0])->pluck('name', 'id');
     }
 
     public function createHook()

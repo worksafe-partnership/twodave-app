@@ -17,9 +17,6 @@ class CompanyProjectTrackerController extends Controller
     {
         $this->heading = str_replace("VTRAMS Tracker of", "VTRAMS Tracker for", $this->heading);
         $this->customValues['templates'] = Template::where('company_id', $this->args[0])->pluck('name', 'id');
-        if (isset($this->actionButtons['create_vtram']['class'])) {
-            $this->actionButtons['create_vtram']['class'] .= " create_vtram";
-        }
         $this->customValues['path'] = 'vtram/create';
     }
 
@@ -32,7 +29,7 @@ class CompanyProjectTrackerController extends Controller
                 'icon' => 'plus2',
                 'order' => '500',
                 'id' => 'create_vtram',
-                'class' => 'is-success',
+                'class' => 'is-success create_vtram',
             ];
         }
     }

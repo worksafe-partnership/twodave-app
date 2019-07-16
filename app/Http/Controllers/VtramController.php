@@ -7,6 +7,7 @@ use Controller;
 use App\Vtram;
 use App\Project;
 use App\Company;
+use App\Template;
 use App\Http\Requests\VtramRequest;
 
 class VtramController extends CompanyVtramController
@@ -15,6 +16,22 @@ class VtramController extends CompanyVtramController
 
     public function createHook()
     {
+        if (isset($_GET['template'])) {
+            $template = Template::findOrFail($_GET['template']);
+            if ($template->company_id != $this->user->company_id) {
+                abort(404);
+            }
+            $this->customValues['name'] = $template['name'];
+            $this->customValues['reference'] = $template['reference'];
+            $this->customValues['logo'] = $template['logo'];
+            // not sure if the page is complete, so leaving these commented out for now.
+            // $this->customValues['key_points'] = $template['key_points']; //  not on blade???
+            // $this->customValues['havs_noise_assessment'] = $template['havs_noise_assessment']; //  not on blade???
+            // $this->customValues['coshh_assessment'] = $template['coshh_assessment']; // not on blade ??
+            // $this->customValues['responsible_person'] = $template['responsible_person'];
+            // $this->customValues['show_responsible_person'] = $template['show_responsible_person'];
+        }
+
         $company = Company::findOrFail($this->user->company_id);
         $this->customValues['main_description'] = $company['main_description'];
         $this->customValues['post_risk_assessment_text'] = $company['post_risk_assessment_text'];
@@ -26,6 +43,16 @@ class VtramController extends CompanyVtramController
         $this->customValues['working_at_height'] = $company['working_at_height'];
         $this->customValues['manual_handling'] = $company['manual_handling'];
         $this->customValues['accident_reporting'] = $company['accident_reporting'];
+    }
+
+
+    public function postIndexHook()
+    {
+        if (isset($this->actionButtons['create']['class'])) {
+            $this->actionButtons['create']['class'] .= " create_vtram";
+        }
+        $this->customValues['templates'] = Template::where('company_id', $this->user->company_id)->pluck('name', 'id');
+        $this->customValues['path'] = 'vtram/create';
     }
 
     public function bladeHook()
@@ -40,6 +67,8 @@ class VtramController extends CompanyVtramController
                 abort(404);
             }
         }
+        $this->customValues['templates'] = Template::where('company_id', $this->user->company_id)->pluck('name', 'id');
+        $this->customValues['path'] = 'hello';
     }
 
     public function indexHook()
@@ -81,6 +110,12 @@ class VtramController extends CompanyVtramController
             'order' => '500',
             'id' => 'approvalList'
         ];
+    }
+
+    public function postEditHook()
+    {
+        $project = $this->args[0];
+        $this->customValues['path'] = '/project/'.$project.'/vtram/create';
     }
 
     public function submitForApproval($projectId, $vtramId, $otherId = null)
