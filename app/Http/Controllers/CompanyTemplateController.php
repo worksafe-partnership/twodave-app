@@ -3,14 +3,17 @@
 namespace App\Http\Controllers;
 
 use Controller;
-use App\Template;
+use App\Hazard;
 use App\Company;
+use App\Template;
+use App\Methodology;
+use App\Http\Classes\VTLogic;
 use App\Http\Requests\TemplateRequest;
 
 class CompanyTemplateController extends TemplateController
 {
     protected $identifierPath = 'company.template';
-    
+
     public function viewHook()
     {
         $this->actionButtons['methodologies'] = [
@@ -54,7 +57,30 @@ class CompanyTemplateController extends TemplateController
 
     public function editContent($companyId, $templateId = null)
     {
+        $company = Company::findOrFail($companyId);
         $this->view = 'modules.company.project.vtram.editVtram';
+        $this->customValues['whoList'] = config('egc.hazard_who_risk');
+        $this->customValues['riskList'] = [
+            0 => $company->no_risk_character,
+            1 => $company->low_risk_character,
+            2 => $company->med_risk_character,
+            3 => $company->high_risk_character,
+        ];
+
+        $this->customValues['hazards'] = Hazard::where('entity', '=', 'TEMPLATE')
+            ->where('entity_id', '=', $templateId)
+            ->orderBy('list_order')
+            ->get()
+            ->toJson();
+        $this->customValues['methodologies'] = Methodology::where('entity', '=', 'TEMPLATE')
+            ->where('entity_id', '=', $templateId)
+            ->orderBy('list_order')
+            ->get()
+            ->toJson();
+
+        $this->record = Template::findOrFail($templateId);
+        $this->customValues['comments'] = VTLogic::getComments($this->record->id, $this->record->status, "TEMPLATE");
+
         return parent::_custom();
     }
 

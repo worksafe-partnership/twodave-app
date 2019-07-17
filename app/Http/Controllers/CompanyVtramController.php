@@ -274,9 +274,7 @@ class CompanyVtramController extends Controller
             ->get()
             ->toJson();
 
-        // this was broken for templates before I started - might as well add the key points.
         $this->record = Vtram::findOrFail($vtramId);
-
         $this->customValues['comments'] = VTLogic::getComments($this->record->id, $this->record->status, "VTRAM");
 
         return parent::_custom();
