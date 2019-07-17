@@ -168,6 +168,15 @@ class CompanyVtramController extends Controller
                 'id' => 'submit_for_approval',
             ];
         }
+        if ($this->record->status != "NEW") {
+            $this->pillButtons['view_comments'] = [
+                'label' => 'View All Comments',
+                'path' => $this->record->id.'/comment',
+                'icon' => 'comment',
+                'order' => 100,
+                'id' => 'view_comments',
+            ];
+        }
 
         if (strpos($this->identifierPath, 'previous') === false) {
             if ($this->record->created_from_entity == 'TEMPLATE' && $this->record->created_from_id != null) {

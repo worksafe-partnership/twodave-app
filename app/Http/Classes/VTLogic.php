@@ -35,6 +35,13 @@ class VTLogic
 
     public static function getComments($entityId, $status, $entityType = null)
     {
+        //if status is null, show all
+        if (!is_null($entityType) && !$status) {
+            return \App\Approval::where('entity_id', $entityId)
+                                ->where('approvals.entity', $entityType)
+                                ->get(); // returning everything for now, can lock down when I know what to display
+        }
+
         if (!is_null($entityType) && in_array($status, ['REJECTED', 'EXTERNAL_REJECT', 'CURRENT', 'PREVIOUS'])) {
             return \App\Approval::where('entity_id', $entityId)
                                 ->where('approvals.entity', $entityType)
