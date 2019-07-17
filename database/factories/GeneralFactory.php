@@ -75,6 +75,17 @@ $factory->define(App\Project::class, function (Faker $faker) {
 
 $factory->define(App\Vtram::class, function (Faker $faker) {
     $config = Config('egc');
+    $args = func_get_args()[1];
+
+    $nextNumber = \App\NextNumber::where('company_id', $args['company_id'])->first();
+    if ($nextNumber) {
+        $number = $nextNumber->number;
+        $number++;
+        $nextNumber->update(['number' => $number]);
+    } else {
+        $number = 1;
+        \App\NextNumber::insert(['company_id' => $args['company_id'], 'number' => $number]);
+    }
 
     return [
         'company_id' => 1,
@@ -105,6 +116,7 @@ $factory->define(App\Vtram::class, function (Faker $faker) {
         // 'created_from',
         // 'show_responsible_person',
         // 'responsible_person'
+        'number' => $number
     ];
 });
 

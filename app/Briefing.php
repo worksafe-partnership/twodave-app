@@ -11,7 +11,7 @@ class Briefing extends Model
 {
     use SoftDeletes;
     protected $table = 'briefings';
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -22,7 +22,8 @@ class Briefing extends Model
         'vtram_id',
         'briefed_by',
         'name',
-        'notes'
+        'notes',
+        'number'
     ];
 
     public static function scopeDatatableAll($query, $parent, $identifier)
