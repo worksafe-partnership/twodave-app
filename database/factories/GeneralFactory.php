@@ -33,6 +33,16 @@ $factory->define(App\Company::class, function (Faker $faker) {
         'accept_label' => 'Accept Label Test',
         'amend_label' => 'Amend Label Test',
         'reject_label' => 'Reject Label Test',
+        'main_description' => '<p>'.$faker->words(20, true).'</p>',
+        'post_risk_assessment_text' => '<p>'.$faker->words(20, true).'</p>',
+        'task_description' => '<p>'.$faker->words(20, true).'</p>',
+        'plant_and_equipment' => '<p>'.$faker->words(20, true).'</p>',
+        'disposing_of_waste' => '<p>'.$faker->words(20, true).'</p>',
+        'first_aid' => '<p>'.$faker->words(20, true).'</p>',
+        'noise' => '<p>'.$faker->words(20, true).'</p>',
+        'working_at_height' => '<p>'.$faker->words(20, true).'</p>',
+        'manual_handling' => '<p>'.$faker->words(20, true).'</p>',
+        'accident_reporting' => '<p>'.$faker->words(20, true).'</p>',
     ];
 });
 
@@ -80,7 +90,7 @@ $factory->define(App\Vtram::class, function (Faker $faker) {
         // 'approved_date',
         // 'original_id',
         // 'revision_number',
-        'status' => $faker->randomElement(['NEW', 'PENDING', 'REJECTED', 'EXTERNAL_REJECT']),
+        'status' => $faker->randomElement(['NEW', 'PENDING', 'REJECTED', 'EXTERNAL_REJECT', 'CURRENT']),
         // 'created_by',
         // 'updated_by',
         // 'submitted_by',
@@ -95,5 +105,17 @@ $factory->define(App\Vtram::class, function (Faker $faker) {
         // 'created_from',
         // 'show_responsible_person',
         // 'responsible_person'
+    ];
+});
+
+$factory->define(App\Briefing::class, function (Faker $faker) {
+    $config = Config('egc');
+
+    return [
+        'project_id' => 1,
+        'vtram_id' => 1,
+        'briefed_by' => 'seeded name',
+        'name' => 'Briefing '.$faker->numberBetween(0, 100),
+        'notes' => '<p>'.$faker->words(50, true).'</p>'
     ];
 });

@@ -63,21 +63,28 @@ class CompanySeeder extends Seeder
                 ->get(['id'])->first();
 
             foreach ($projects as $project) {
-                factory(App\Vtram::class, 1)->create([
+                factory(App\Vtram::class, 5)->create([
                     'company_id' => $company->id,
                     'project_id' => $project->id,
                     'created_by' => $projectAdmin->id,
                     'submitted_by' => $projectAdmin->id,
                 ]);
-                factory(App\Vtram::class, 1)->create([
+                factory(App\Vtram::class, 5)->create([
                     'company_id' => $company->id,
                     'project_id' => $project->id,
                     'created_by' => $contractManager->id,
                     'submitted_by' => $contractManager->id,
                 ]);
+
+                $companyVTrams = \App\Vtram::where('company_id', $company->id)->get();
+                $currentVTrams = $companyVTrams->where('status', 'CURRENT');
+                if ($currentVTrams->isNotEmpty()) {
+                    factory(App\Briefing::class, 2)->create([
+                        'project_id' => $currentVTrams->first()->project_id,
+                        'vtram_id' => $currentVTrams->first()->id,
+                    ]);
+                }
             }
-
-
         }
 
         // $seededCompanies = factory(App\Company::class, $counts['extraCompanies'])->create();
