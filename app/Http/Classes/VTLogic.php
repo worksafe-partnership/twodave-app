@@ -32,4 +32,17 @@ class VTLogic
             ]);
         }
     }
+
+    public static function getComments($entityId, $status, $entityType = null)
+    {
+        if (!is_null($entityType) && in_array($status, ['REJECTED', 'EXTERNAL_REJECT', 'CURRENT', 'PREVIOUS'])) {
+            return \App\Approval::where('entity_id', $entityId)
+                                ->where('approvals.entity', $entityType)
+                                ->when(in_array($status, ['CURRENT', 'PREVIOUS']), function ($atTime) {
+                                    $atTime->where('status_at_time', 'ACCEPT');
+                                })
+                                ->get(); // returning everything for now, can lock down when I know what to display
+        }
+        return collect([]);
+    }
 }

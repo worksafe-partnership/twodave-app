@@ -217,6 +217,22 @@
             </div>
         </div>
         @if ($pageType == 'view')
+            @if(isset($comments) && $comments->isNotEmpty())
+                <hr>
+                <div class="columns">
+                    <div class="column">
+                        <p class="subtitle">Approval Comments</p>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        @foreach($comments as $comment)
+                            <p>{{$comment->comment}} - <i>{{$comment->completedByName()}} {{$comment->created_at->format('d/m/Y')}}<i></p>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+            <hr>
             <div class="columns">
                 <div class="column is-3">
                     <div class="field">

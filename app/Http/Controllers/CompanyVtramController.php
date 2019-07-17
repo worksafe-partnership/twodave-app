@@ -10,6 +10,7 @@ use App\Hazard;
 use App\Project;
 use App\Company;
 use App\Template;
+use App\Approval;
 use App\NextNumber;
 use App\Methodology;
 use App\Http\Classes\VTLogic;
@@ -116,6 +117,8 @@ class CompanyVtramController extends Controller
             'order' => '500',
             'id' => 'approvalList'
         ];
+
+        $this->customValues['comments'] = VTLogic::getComments($this->record->id, $this->record->status, "VTRAM");
     }
 
     public function postViewHook()
@@ -264,6 +267,8 @@ class CompanyVtramController extends Controller
 
         // this was broken for templates before I started - might as well add the key points.
         $this->record = Vtram::findOrFail($vtramId);
+
+        $this->customValues['comments'] = VTLogic::getComments($this->record->id, $this->record->status, "VTRAM");
 
         return parent::_custom();
     }

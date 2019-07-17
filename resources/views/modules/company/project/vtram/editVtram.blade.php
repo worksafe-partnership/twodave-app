@@ -1,13 +1,16 @@
 <h2 class="sub-heading">Extra Information</h2>
 <div class="columns">
     <div class="column is-12">
-        <div class="field">
             <a download="Noise Vibration Assessment.xls" href="/Noise_Vibration_Assessment.xls" class="button">Download Noise Vibration Assessment</a>
+            <a download="HAVS Calculator.xls" href="/havs.xls" class="button">Download HAVS Calculator</a>
+            <a download="Noise Calculator.xlsx" href="/noise.xlsx" class="button">Download Noise Calculator</a>
         </div>
     </div>
 </div>
+
+
 <div class="columns">
-    <div class="column is-12">
+    <div class="column is-10">
         <div class="field">
             {{ EGForm::ckeditor('key_points', [
                 'label' => 'Key Points',
@@ -16,13 +19,27 @@
             ]) }}
         </div>
     </div>
+    <div class="column is-2">
+        <button class="button is-success is-primary" id="comments-button" style="float:right">Show/Hide Comments</button>
+    </div>
 </div>
 <div class="columns">
-    <div class="column">
+    <div class="column is-6">
         <div class="field">
             {{ EGForm::file('coshh_assessment', [
                 'label' => 'COSHH Assessment Document',
                 'value' => $record["coshh_assessment"],
+                'type' => $pageType
+            ]) }}
+        </div>
+    </div>
+</div>
+<div class="columns">
+    <div class="column is-6">
+        <div class="field">
+            {{ EGForm::file('havs_noise_assessment', [
+                'label' => 'HAVS/Noise Assessment Document',
+                'value' => $record["havs_noise_assessment"],
                 'type' => $pageType
             ]) }}
         </div>
@@ -39,6 +56,35 @@
         </div>
     </div>
 </div>
+<div class="columns">
+    <div class="column">
+        <p class="control">
+            <button class="button is-primary submitbutton">Save (Needs hooking up)</button>
+            <button class="button is-primary submitbutton">Save and Submit for Approval (Needs hooking up)</button>
+        </p>
+    </div>
+</div>
+<div class="comments hidden">
+    <hr>
+    <div class="columns">
+        <div class="column">
+            <p class="sub-heading">Approval Comments - Temporary - can move this depending on how/where PM wants it</p>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column">
+            @if(isset($comments) && $comments->isNotEmpty())
+                @foreach($comments as $comment)
+                    <p>{{$comment->comment}} - <i>{{$comment->completedByName()}} {{$comment->created_at->format('d/m/Y')}}</i></p>
+                @endforeach
+            @else
+                <p>No Comments</p>
+            @endif
+        </div>
+    </div>
+</div>
+
+
 
 <hr>
 <h2 class="sub-heading">Hazards & Methodologies</h2>
@@ -79,17 +125,6 @@
     </div>
 </div>
 
-<div class="bottom-bar">
-    <div class="field is-grouped is-grouped-centered">
-        <p class="control">
-            <button class="button is-primary submitbutton">Save</button>
-        </p>
-        <p class="control">
-            <button class="button is-primary submitbutton">Save and Submit for Approval</button>
-        </p>
-    </div>
-</div>
-
 @push('styles')
     <style>
         .box-container {
@@ -121,6 +156,11 @@
 @endpush
 @push('scripts')
         <script>
+
+        $('#comments-button').on('click', function() {
+            $('.comments').toggleClass('hidden');
+        })
+
         // Both
         function cancelForm(type) {
             if (confirm("Any unsaved changes will be lost, are you sure?")) {
@@ -290,31 +330,6 @@
     </script>
 @endpush
 
-This is example stuff below - to be removed when the files tasks are done
-        <div class="columns">
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::file('havs_noise_assessment', [
-                        'label' => 'HAVS/Noise Assessment Document',
-                        'value' => $record["havs_noise_assessment"],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-        </div>
-        <!-- MB: I've moved the COSHH stuff up, not hooked in yet -->
-        <div class="columns">
-            <div class="column is-6">
-                <div class="field">
-                    <a download="HAVS Calculator.xls" href="/havs.xls" class="button">Download HAVS Calculator</a>
-                </div>
-            </div>
-            <div class="column is-6">
-                <div class="field">
-                    <a download="Noise Calculator.xlsx" href="/noise.xlsx" class="button">Download Noise Calculator</a>
-                </div>
-            </div>
-        </div>
 
 
 

@@ -11,7 +11,7 @@ class Approval extends Model
 {
     use SoftDeletes;
     protected $table = 'approvals';
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -54,11 +54,11 @@ class Approval extends Model
             'project.vtram.approval',
         ])) {
             // VTRAM
-            $query->where('entity', '=' , 'VTRAM')
+            $query->where('entity', '=', 'VTRAM')
                 ->where('entity_id', '=', $parent);
         } else {
             // Template
-            $query->where('entity', '=' , 'TEMPLATE')
+            $query->where('entity', '=', 'TEMPLATE')
                 ->where('entity_id', '=', $parent);
         }
 
@@ -125,5 +125,18 @@ class Approval extends Model
         } else {
             return $this->belongsTo(Template::class, 'entity_id', 'id');
         }
+    }
+
+    public function completedByUser()
+    {
+        return $this->belongsTo(User::class, 'completed_by_id', 'id');
+    }
+
+    public function completedByName()
+    {
+        if (is_null($this->completedByUser)) {
+            return '';
+        }
+        return $this->completedByUser->name;
     }
 }
