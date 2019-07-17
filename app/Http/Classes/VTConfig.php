@@ -9,7 +9,7 @@ class VTConfig
 {
     public $entity = null;
     public $entityId = null;
-    protected $entityType = null;
+    public $entityType = null; // we use this in VTLogic so if it needs to be protected, make a getter function.
 
     public function __construct($e, $type = null)
     {
