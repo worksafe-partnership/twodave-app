@@ -22,7 +22,7 @@ class VTLogic
         $config = new VTConfig($entityId, $entityType);
         if (in_array($config->entity->status, ['NEW', 'REJECTED'])) {
             $newStatus = 'PENDING';
-        } else if (in_array($config->entity->status, ['EXTERNAL_REJECT','AWAITING_EXTERNAL']) && ($this->config->entityType == 'VTRAM' && $this->config->entity->project->principle_contractor)) {
+        } else if (in_array($config->entity->status, ['EXTERNAL_REJECT','AWAITING_EXTERNAL']) && ($config->entityType == 'VTRAM' && $config->entity->project->principle_contractor)) {
             $newStatus = 'AWAITING_EXTERNAL';
             dd("SEND PRINCIPLE CONTRACTOR EMAIL HERE");
         }
