@@ -6,6 +6,40 @@
         </div>
     </div>
 </div>
+<div class="columns">
+    <div class="column is-12">
+        <div class="field">
+            {{ EGForm::ckeditor('key_points', [
+                'label' => 'Key Points',
+                'value' => $record["key_points"],
+                'type' => 'edit'
+            ]) }}
+        </div>
+    </div>
+</div>
+<div class="columns">
+    <div class="column">
+        <div class="field">
+            {{ EGForm::file('coshh_assessment', [
+                'label' => 'COSHH Assessment Document',
+                'value' => $record["coshh_assessment"],
+                'type' => $pageType
+            ]) }}
+        </div>
+    </div>
+</div>
+<div class="columns">
+    <div class="column">
+        <div class="field">
+            {{ EGForm::checkbox('dynamic_risk', [
+                'label' => 'Dynamic Risk (Adds Dynamic Risk boxes to the Risk Assessment)',
+                'value' => $record['dynamic_risk'] ?? false,
+                'type' => $pageType
+            ]) }}
+        </div>
+    </div>
+</div>
+
 <hr>
 <h2 class="sub-heading">Hazards & Methodologies</h2>
 <br>
@@ -44,6 +78,18 @@
         </div>
     </div>
 </div>
+
+<div class="bottom-bar">
+    <div class="field is-grouped is-grouped-centered">
+        <p class="control">
+            <button class="button is-primary submitbutton">Save</button>
+        </p>
+        <p class="control">
+            <button class="button is-primary submitbutton">Save and Submit for Approval</button>
+        </p>
+    </div>
+</div>
+
 @push('styles')
     <style>
         .box-container {
@@ -248,23 +294,15 @@ This is example stuff below - to be removed when the files tasks are done
         <div class="columns">
             <div class="column is-6">
                 <div class="field">
-                    {{-- EGForm::file('havs_noise_assessment', [
+                    {{ EGForm::file('havs_noise_assessment', [
                         'label' => 'HAVS/Noise Assessment Document',
                         'value' => $record["havs_noise_assessment"],
                         'type' => $pageType
-                    ]) --}}
-                </div>
-            </div>
-            <div class="column is-6">
-                <div class="field">
-                    {{-- EGForm::file('coshh_assessment', [
-                        'label' => 'COSHH Assessment Document',
-                        'value' => $record["coshh_assessment"],
-                        'type' => $pageType
-                    ]) --}}
+                    ]) }}
                 </div>
             </div>
         </div>
+        <!-- MB: I've moved the COSHH stuff up, not hooked in yet -->
         <div class="columns">
             <div class="column is-6">
                 <div class="field">
@@ -278,10 +316,6 @@ This is example stuff below - to be removed when the files tasks are done
             </div>
         </div>
 
-        <div class="field">
-            {{-- EGForm::checkbox('dynamic_risk', [
-                'label' => 'Dynamic Risk (Adds Dynamic Risk boxes to the Risk Assessment)',
-                'value' => $record->dynamic_risk ?? false,
-                'type' => $pageType
-            ]) --}}
-        </div>
+
+
+

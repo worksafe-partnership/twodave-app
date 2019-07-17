@@ -261,6 +261,10 @@ class CompanyVtramController extends Controller
             ->orderBy('list_order')
             ->get()
             ->toJson();
+
+        // this was broken for templates before I started - might as well add the key points.
+        $this->record = Vtram::findOrFail($vtramId);
+
         return parent::_custom();
     }
 
