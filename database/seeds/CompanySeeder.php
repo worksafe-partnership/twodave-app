@@ -24,7 +24,11 @@ class CompanySeeder extends Seeder
         // require_once base_path().'/vendor/fzaninotto/faker/src/autoload.php';
         // $faker = Faker\Factory::create('en_GB');
 
-        $starterCompanies = ['UK FM Services', 'Woodford Heating and Energy', 'Berkeley Homes'];
+        $starterCompanies = [
+            'UK FM Services',
+            'Woodford Heating and Energy',
+            'Berkeley Homes',
+        ];
         $usersAndRoles = [
             'Company Admin' => 3,
             'Contracts Manager' => 4,
@@ -86,7 +90,14 @@ class CompanySeeder extends Seeder
                         'vtram_id' => $currentVTrams->random(1)->first()->id,
                     ]);
                 }
+
             }
+            // a couple of templates for each company as well
+            factory(App\Template::class, 2)->create([
+                'company_id' => $company->id,
+                'created_by' => $contractManagers->random(1)->first()->id,
+                'submitted_by' => $contractManagers->random(1)->first()->id,
+            ]);
         }
 
         // $seededCompanies = factory(App\Company::class, $counts['extraCompanies'])->create();

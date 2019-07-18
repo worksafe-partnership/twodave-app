@@ -94,7 +94,7 @@ $factory->define(App\Vtram::class, function (Faker $faker) {
         'description' => $faker->words(3, true),
         // 'logo',
         'reference' => $faker->words(2, true),
-        'key_points' => "<p>".$faker->words(3, true)."</p>",
+        'key_points' => "<p>".$faker->words(50, true)."</p>",
         // 'havs_noise_assessment',
         // 'coshh_assessment',
         'review_due' => $faker->dateTimeBetween('now', '+1 months', null),
@@ -131,3 +131,29 @@ $factory->define(App\Briefing::class, function (Faker $faker) {
         'notes' => '<p>'.$faker->words(50, true).'</p>'
     ];
 });
+
+
+$factory->define(App\Template::class, function (Faker $faker) {
+    return [
+        'company_id' => 1,
+        'name' => 'Seeded Template '.$faker->numberBetween(0, 100),
+        'description' => 'Seeded Description',
+        // 'logo',
+        'reference' => 'Seeded Reference',
+        'key_points' => "<p>".$faker->words(50, true)."</p>",
+        // 'havs_noise_assessment',
+        // 'coshh_assessment',
+        // 'review_due',
+        // 'approved_date',
+        // 'original_id',
+        // 'revision_number',
+        'status' => 'NEW',
+        'created_by' => 1,
+        // 'updated_by',
+        // 'submitted_by' => 1,
+        // 'approved_by',
+        // 'date_replaced',
+        // 'resubmit_by'
+    ];
+});
+
