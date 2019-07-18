@@ -3,7 +3,7 @@
 		<div class="field">
             {{ EGForm::ckEditor('description', [
                 'label' => 'Hazard/Risk',
-                'value' => $record["description"],
+                'value' => '',
                 'type' => $pageType
             ]) }}
         </div>
