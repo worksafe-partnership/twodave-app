@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Hazard extends Model
 {
     protected $table = 'hazards';
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -20,7 +20,11 @@ class Hazard extends Model
         'entity_id',
         'control',
         'risk',
+        'risk_probability',
+        'risk_severity',
         'r_risk',
+        'r_risk_probability',
+        'r_risk_severity',
         'list_order',
         'at_risk',
         'other_at_risk'

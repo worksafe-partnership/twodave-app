@@ -83,8 +83,10 @@ class CompanySeeder extends Seeder
                     'submitted_by' => $contractManagers->random(1)->first()->id,
                 ]);
 
-                $companyVTrams = \App\Vtram::where('company_id', $company->id)->get();
-                $currentVTrams = $companyVTrams->where('status', 'CURRENT');
+                $projectVTrams = \App\Vtram::where('company_id', $company->id)
+                                           ->where('project_id', $project->id)
+                                           ->get();
+                $currentVTrams = $projectVTrams->where('status', 'CURRENT');
                 if ($currentVTrams->isNotEmpty()) {
                     factory(App\Briefing::class, 2)->create([
                         'project_id' => $currentVTrams->random(1)->first()->project_id,
@@ -92,9 +94,18 @@ class CompanySeeder extends Seeder
                     ]);
                 }
 
+                foreach ($projectVTrams as $vtram) {
+                    for ($i = 0; $i < 3; $i++) {
+                        factory(App\Hazard::class, 1)->create([
+                            'entity' => 'VTRAM',
+                            'entity_id' => $vtram->id
+                        ]);
+                    }
+                }
+
             }
             // a couple of templates for each company as well
-            factory(App\Template::class, 2)->create([
+            factory(App\Template::class, 1)->create([
                 'company_id' => $company->id,
                 'created_by' => $contractManagers->random(1)->first()->id,
                 'submitted_by' => $contractManagers->random(1)->first()->id,

@@ -157,3 +157,37 @@ $factory->define(App\Template::class, function (Faker $faker) {
     ];
 });
 
+$factory->define(App\Hazard::class, function (Faker $faker) {
+    $config = Config('egc');
+    $args = func_get_args()[1];
+
+    $listOrder = \App\Hazard::where('entity', $args['entity'])
+                          ->where('entity_id', $args['entity_id'])
+                          ->max('list_order');
+
+    if (is_null($listOrder)) {
+        $listOrder = 1;
+    } else {
+        $listOrder++;
+    }
+
+
+    $numberOfWords = $faker->numberBetween(3, 20);
+    return [
+        'description' => $faker->words($numberOfWords, true),
+        // 'entity' => 'VTRAM',
+        // 'entity_id' => 1,
+        'control' => $faker->words($numberOfWords, true),
+        // // 'risk',
+        'risk_probability' => $faker->numberBetween(1, 5),
+        'risk_severity' => $faker->numberBetween(1, 5),
+        // 'r_risk',
+        'r_risk_probability' => $faker->numberBetween(1, 5),
+        'r_risk_severity' => $faker->numberBetween(1, 5),
+        'list_order' => $listOrder,
+        'at_risk' => $faker->randomElement($config['hazard_who_risk']),
+        // 'other_at_risk'
+    ];
+});
+
+
