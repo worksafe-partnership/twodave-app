@@ -28,6 +28,7 @@ class CompanySeeder extends Seeder
             'UK FM Services',
             'Woodford Heating and Energy',
             'Berkeley Homes',
+            'Evergreen Testing'
         ];
         $usersAndRoles = [
             'Company Admin' => 3,
