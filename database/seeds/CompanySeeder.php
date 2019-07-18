@@ -104,12 +104,23 @@ class CompanySeeder extends Seeder
                 }
 
             }
+
             // a couple of templates for each company as well
             factory(App\Template::class, 1)->create([
                 'company_id' => $company->id,
                 'created_by' => $contractManagers->random(1)->first()->id,
                 'submitted_by' => $contractManagers->random(1)->first()->id,
             ]);
+
+            $templates = App\Template::where('company_id', $company->id)->get(['id']);
+            foreach ($templates as $template) {
+                for ($i = 0; $i < 3; $i++) {
+                    factory(App\Hazard::class, 1)->create([
+                        'entity' => 'TEMPLATE',
+                        'entity_id' => $template->id
+                    ]);
+                }
+            }
         }
 
         // $seededCompanies = factory(App\Company::class, $counts['extraCompanies'])->create();
