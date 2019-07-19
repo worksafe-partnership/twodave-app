@@ -205,6 +205,7 @@
                 success: function (result) {
                     // add to hazards list
                     hazards.push({
+                        // id: data.id,
                         description: data.description,
                         control: data.control,
                         risk: data.risk,
@@ -245,7 +246,7 @@
                                 <th></th>\
                             </tr>';
             for (let i = 0; i < hazards.length; i++) {
-                html += '<tr>\
+                html += '<tr id="hazard-'+hazards[i].id+'">\
                             <td class="has-text-centered">' + hazards[i].list_order + '</td>\
                             <td class="hazard-desc">' + hazards[i].description + '</td>\
                             <td class="has-text-centered">' + hazards[i].risk + '</td>\
@@ -262,7 +263,39 @@
         }
 
         function deleteHazard(id) {
+            if (confirm("Are you sure you want delete this hazard?")) {
+                var data = {
+                    _token: '{{ csrf_token() }}',
+                    hazard_id: id,
+                };
+                $.ajax({
+                    url: '/hazard/'+id+'/deleteHazard',
+                    type: 'POST',
+                    data: data,
+                    success: function (response) {
+                        if (response != "disallow") {
+                            hazards = response;
+                            listHazards();
+                            toastr.success('Hazard was deleted');
+                        } else {
+                            toastr.error('An error has occured when deleting the hazard');
+                        }
+                    },
+                    error: function (data) {
+                        if (data.status == 422) {
+                            var errors = '';
+                            $.each(data.responseJSON.errors, function(key,val) {
+                                toastr.error(val);
+                            });
+                        } else if (data.status == 401) {
+                            toastr.error('Your sesson has expired, please refresh the page and login to proceed');
+                        } else {
+                            toastr.error('An error has occured when deleting the hazard');
+                        }
+                    }
+                });
 
+            }
         }
 
         function moveHazardUp(id) {
@@ -272,8 +305,6 @@
         function moveHazardDown(id) {
 
         }
-
-
 
         // Methodology Scripts
         var methodologies = JSON.parse('{!! $methodologies !!}');

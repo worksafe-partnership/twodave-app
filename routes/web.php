@@ -83,27 +83,32 @@ Route::get('/project/{project_id}/vtram/{vtram_id}/previous/{previous_id}/view_a
 
 // Template Actions
 Route::get('/company/{company_id}/template/{template_id}/view_a3', [
-    'middleware' => 'can:view-company.template',   
+    'middleware' => 'can:view-company.template',
     'uses' => 'CompanyTemplateController@viewA3'
 ]);
 Route::get('/company/{company_id}/template/{template_id}/submit', [
-    'middleware' => 'can:edit-company.template',   
+    'middleware' => 'can:edit-company.template',
     'uses' => 'CompanyTemplateController@submitForApproval'
 ]);
 Route::get('/company/{company_id}/template/{template_id}/previous/{previous_id}/view_a3', [
-    'middleware' => 'can:view-company.template.previous',   
+    'middleware' => 'can:view-company.template.previous',
     'uses' => 'PreviousCompanyTemplateController@viewA3'
 ]);
 Route::get('/template/{template_id}/previous/{previous_id}/view_a3', [
-    'middleware' => 'can:view-template.previous',   
+    'middleware' => 'can:view-template.previous',
     'uses' => 'PreviousTemplateController@viewA3'
 ]);
 Route::get('/template/{template_id}/submit', [
-    'middleware' => 'can:edit-template',   
+    'middleware' => 'can:edit-template',
     'uses' => 'TemplateController@submitForApproval'
 ]);
 Route::get('/template/{template_id}/view_a3', [
-    'middleware' => 'can:view-template',   
+    'middleware' => 'can:view-template',
     'uses' => 'TemplateController@viewA3'
 ]);
 
+// Temporary Delete Action for Hazards until I figure out the correct way:
+Route::post('/hazard/{id}/deleteHazard', [
+    // 'middleware' => 'can:permanentlyDelete-hazard', // permissions were off when I picked this up, put this back in when they are on.
+    'uses' => 'HazardController@delete'
+]);

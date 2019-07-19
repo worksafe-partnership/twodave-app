@@ -12,8 +12,8 @@ return [
     ],
     'icon' => 'warning',
     'controller' => 'HazardController',
-        'datatable' => [
-            "columns" => [
+    'datatable' => [
+        "columns" => [
             'id' => ['visible' => false, 'searchable' => false, 'label' => 'Id'],
             'description' => ['label' => 'Description'],
             'entity' => ['label' => 'entity'],
@@ -27,11 +27,11 @@ return [
         ]
     ],
     'sidebar' => [],
-    'permissions' => false,
+    'permissions' => false, // when permissions are sorted, check the route permissions in web.php
     'exclude_routes' => [
         'list',
         'restore',
-        'permanentlyDelete',
+        // 'permanentlyDelete',
         'datatable_all',
         'view',
     ],
