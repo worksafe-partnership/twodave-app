@@ -108,7 +108,18 @@ Route::get('/template/{template_id}/view_a3', [
 ]);
 
 // Temporary Delete Action for Hazards until I figure out the correct way:
-Route::post('/hazard/{id}/deleteHazard', [
+Route::post('/hazard/{id}/delete_hazard', [
     // 'middleware' => 'can:permanentlyDelete-hazard', // permissions were off when I picked this up, put this back in when they are on.
     'uses' => 'HazardController@delete'
 ]);
+
+Route::post('/hazard/{id}/move_up', [
+    // 'middleware' => 'can:permanentlyDelete-hazard', // permissions were off when I picked this up, put this back in when they are on.
+    'uses' => 'HazardController@moveUp'
+]);
+
+Route::post('/hazard/{id}/move_down', [
+    // 'middleware' => 'can:permanentlyDelete-hazard', // permissions were off when I picked this up, put this back in when they are on.
+    'uses' => 'HazardController@moveDown'
+]);
+

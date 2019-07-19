@@ -180,10 +180,28 @@
         }
 
         function editHazard(id) {
+            let hazard = '';
+            for (let i = 0; i < hazards.length; i++) {
+                if (hazards[i]['id'] == id) {
+                    hazard = hazards[i];
+                    break;
+                }
+            }
+            $('#main-hazard-container').html($('#hazard-display-template').html());
+            $('#main-hazard-container [name="description"]').val(hazard['description']);
+            $('#main-hazard-container [name="at_risk"]').val(hazard['at_risk']);
+            $('#main-hazard-container [name="other_at_risk"]').val(hazard['other_at_risk']);
+            $('#main-hazard-container [name="risk_severity"]').val(hazard['risk_severity']);
+            $('#main-hazard-container [name="risk_probability"]').val(hazard['risk_probability']);
+            $('#main-hazard-container [name="control"]').val(hazard['control']);
+            $('#main-hazard-container [name="r_risk_severity"]').val(hazard['r_risk_severity']);
+            $('#main-hazard-container [name="r_risk_probability"]').val(hazard['r_risk_probability']);
 
+            $("#main-hazard-container .submitbutton").attr("onclick","submitHazardForm("+id+","+hazard['list_order']+")");
         }
 
-        function submitHazardForm() {
+        function submitHazardForm(editId=null, listOrder=null) {
+
             var data = {
                 _token: '{{ csrf_token() }}',
                 description: $('#main-hazard-container #description').val(),
@@ -198,26 +216,52 @@
                 at_risk: $('#main-hazard-container #at_risk').val(),
                 other_at_risk: $('#main-hazard-container #other_at_risk').val()
             };
+
+            let url = 'hazard/create';
+            if (editId) {
+                url = 'hazard/'+editId+'/edit';
+                data['list_order'] = listOrder;
+            }
+
             $.ajax({
-                url: 'hazard/create',
+                url: url,
                 type: 'POST',
                 data: data,
-                success: function (result) {
-                    // add to hazards list
-                    hazards.push({
-                        // id: data.id,
-                        description: data.description,
-                        control: data.control,
-                        risk: data.risk,
-                        risk_probability: data.risk_probability,
-                        risk_severity: data.risk_severity,
-                        r_risk: data.r_risk,
-                        r_risk_probability: data.r_risk_probability,
-                        r_risk_severity: data.r_risk_severity,
-                        list_order: data.list_order,
-                        at_risk: data.at_risk,
-                        other_at_risk: data.other_at_risk
-                    });
+                success: function (id) {
+                    if (!editId) {
+                        // add to hazards list
+                        hazards.push({
+                            id: id,
+                            description: data.description,
+                            control: data.control,
+                            risk: data.risk,
+                            risk_probability: data.risk_probability,
+                            risk_severity: data.risk_severity,
+                            r_risk: data.r_risk,
+                            r_risk_probability: data.r_risk_probability,
+                            r_risk_severity: data.r_risk_severity,
+                            list_order: data.list_order,
+                            at_risk: data.at_risk,
+                            other_at_risk: data.other_at_risk
+                        });
+                    } else {
+                        for (let i = 0; i < hazards.length; i++) {
+                            if (hazards[i]['id'] == editId) {
+                                hazards[i]['description'] = data.description,
+                                hazards[i]['control'] = data.control,
+                                hazards[i]['risk'] = data.risk,
+                                hazards[i]['risk_probability'] = data.risk_probability,
+                                hazards[i]['risk_severity'] = data.risk_severity,
+                                hazards[i]['r_risk'] = data.r_risk,
+                                hazards[i]['r_risk_probability'] = data.r_risk_probability,
+                                hazards[i]['r_risk_severity'] = data.r_risk_severity,
+                                hazards[i]['list_order'] = data.list_order,
+                                hazards[i]['at_risk'] = data.at_risk,
+                                hazards[i]['other_at_risk'] = data.other_at_risk
+                                break;
+                            }
+                        }
+                    }
                     listHazards();
                 },
                 error: function (data) {
@@ -269,7 +313,7 @@
                     hazard_id: id,
                 };
                 $.ajax({
-                    url: '/hazard/'+id+'/deleteHazard',
+                    url: '/hazard/'+id+'/delete_hazard',
                     type: 'POST',
                     data: data,
                     success: function (response) {
@@ -294,16 +338,48 @@
                         }
                     }
                 });
-
             }
         }
 
         function moveHazardUp(id) {
-
+            moveHazard(id, "move_up")
         }
 
         function moveHazardDown(id) {
+            moveHazard(id, "move_down")
+        }
 
+        function moveHazard(id, slug) {
+            var data = {
+                _token: '{{ csrf_token() }}',
+                hazard_id: id,
+            };
+            $.ajax({
+                url: '/hazard/'+id+'/'+slug,
+                type: 'POST',
+                data: data,
+                success: function (response) {
+                    if (response != "disallow") {
+                        hazards = response;
+                        listHazards();
+                        toastr.success('Hazard was deleted');
+                    } else {
+                        toastr.error('An error has occured when moving the hazard');
+                    }
+                },
+                error: function (data) {
+                    if (data.status == 422) {
+                        var errors = '';
+                        $.each(data.responseJSON.errors, function(key,val) {
+                            toastr.error(val);
+                        });
+                    } else if (data.status == 401) {
+                        toastr.error('Your sesson has expired, please refresh the page and login to proceed');
+                    } else {
+                        toastr.error('An error has occured when moving the hazard');
+                    }
+                }
+            });
         }
 
         // Methodology Scripts

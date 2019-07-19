@@ -171,7 +171,6 @@ $factory->define(App\Hazard::class, function (Faker $faker) {
         $listOrder++;
     }
 
-
     $numberOfWords = $faker->numberBetween(3, 20);
     return [
         'description' => $faker->words($numberOfWords, true),
@@ -185,7 +184,7 @@ $factory->define(App\Hazard::class, function (Faker $faker) {
         'r_risk_probability' => $faker->numberBetween(1, 5),
         'r_risk_severity' => $faker->numberBetween(1, 5),
         'list_order' => $listOrder,
-        'at_risk' => $faker->randomElement($config['hazard_who_risk']),
+        'at_risk' => $faker->randomElement(array_flip($config['hazard_who_risk'])),
         // 'other_at_risk'
     ];
 });
