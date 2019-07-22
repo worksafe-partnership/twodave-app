@@ -115,14 +115,10 @@ class HazardController extends Controller
                     }
                     break;
                 }
-            }
-
-            // reorder based on list order then reset the collection's keys, otherwise it falls over.
-            return $existingHazards->sortBy('list_order')->values();
+            }           
         }
-        //else {
-            // only has one - no action required?
-        //}
+        // reorder based on list order then reset the collection's keys, otherwise it falls over.
+        return $existingHazards->sortBy('list_order')->values();
     }
 
 }
