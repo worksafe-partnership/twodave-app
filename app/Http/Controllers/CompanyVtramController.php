@@ -336,6 +336,8 @@ class CompanyVtramController extends Controller
         }
 
         $nextNumber->increment('number');
+
+        VTLogic::createDefaultMethodologies($insert, "VTRAM");
     }
 
     public function unsetItems($record)

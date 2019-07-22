@@ -209,4 +209,9 @@ class TemplateController extends Controller
             toast()->success("Template submitted for Approval");
         }
     }
+
+    public function created($insert, $request, $args)
+    {
+        VTLogic::createDefaultMethodologies($insert, "TEMPLATE");
+    }
 }

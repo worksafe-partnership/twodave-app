@@ -104,137 +104,161 @@
                 </div>
             </div>
         </div>
-        @if ($pageType != 'create')
+        @if (strpos($identifierPath, 'vtram') !== false)
             <div class="columns">
-                <div class="column is-12">
+                <div class="column is-6">
                     <div class="field">
-                        {{ EGForm::ckeditor('description', [
+                        {{ EGForm::radio('name_on_pdf', [
+                            'label' => 'Name on PDF',
+                            'value' => $record['name_on_pdf'],
+                            'list' => [
+                                'Client' => 'Client',
+                                'Principle Contractor' => 'Principle Contractor',
+                            ],
+                            'type' => $pageType,
+                        ]) }}
+                    </div>
+                </div>
+            </div>
+        @endif
+        @if ($pageType != 'create')
+        </div>
+    </div>
+    <hr>
+    <div class="columns">
+        <div class="column is-8 is-offset-2">
+            <h2 class="sub-heading">Configuration</h2>
+            <div class="columns">
+                <div class="column is-6">
+                    <div class="field">
+                        {{ EGForm::ckeditor('main_description', [
                             'label' => 'Company Description',
                             'value' => $record["description"],
                             'type' => $pageType
                         ]) }}
                     </div>
                 </div>
-            </div>
-        @endif
-        <hr>
-        <div class="columns">
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::ckeditor('main_description', [
-                        'label' => 'Main Description',
-                        'value' => isset($main_description) ? $main_description : $record['main_description'],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::ckeditor('post_risk_assessment_text', [
-                        'label' => 'Post Risk Assessment Text (Duplicated - need to remove one)',
-                        'value' => isset($post_risk_assessment_text) ? $post_risk_assessment_text : $record['post_risk_assessment_text'],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-        </div>
-        <div class="columns">
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::ckeditor('task_description', [
-                        'label' => 'Task Description',
-                        'value' => isset($task_description) ? $task_description : $record['task_description'],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::ckeditor('plant_and_equipment', [
-                        'label' => 'Plant and Equipment',
-                        'value' => isset($plant_and_equipment) ? $plant_and_equipment : $record['plant_and_equipment'],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-        </div>
-        <div class="columns">
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::ckeditor('disposing_of_waste', [
-                        'label' => 'Disposing of Waste',
-                        'value' => isset($disposing_of_waste) ? $disposing_of_waste : $record['disposing_of_waste'],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::ckeditor('first_aid', [
-                        'label' => 'First Aid',
-                        'value' => isset($first_aid) ? $first_aid : $record['first_aid'],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-        </div>
-        <div class="columns">
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::ckeditor('noise', [
-                        'label' => 'Noise',
-                        'value' => isset($noise) ? $noise : $record['noise'],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::ckeditor('working_at_height', [
-                        'label' => 'Working at Height',
-                        'value' => isset($working_at_height) ? $working_at_height : $record['working_at_height'],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-        </div>
-        <div class="columns">
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::ckeditor('manual_handling', [
-                        'label' => 'Manual Handling',
-                        'value' => isset($manual_handling) ? $manual_handling : $record['manual_handling'],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::ckeditor('accident_reporting', [
-                        'label' => 'Accident Reporting',
-                        'value' => isset($accident_reporting) ? $accident_reporting : $record['accident_reporting'],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-        </div>
-        @if ($pageType == 'view')
-            @if(isset($comments) && $comments->isNotEmpty())
-                <hr>
-                <div class="columns">
-                    <div class="column">
-                        <p class="subtitle">Approval Comments</p>
+                <div class="column is-6">
+                    <div class="field">
+                        {{ EGForm::ckeditor('post_risk_assessment_text', [
+                            'label' => 'Post Risk Assessment Text',
+                            'value' => isset($post_risk_assessment_text) ? $post_risk_assessment_text : $record['post_risk_assessment_text'],
+                            'type' => $pageType
+                        ]) }}
                     </div>
                 </div>
+            </div>
+        @endif
+        @if ($pageType == 'create')
+        </div>
+    </div>
+    <hr>
+    <div class="columns">
+        <div class="column is-8 is-offset-2">
+            <h2 class="sub-heading">Configuration</h2>
+            <div class="columns">
+                <div class="column is-6">
+                    <div class="field">
+                        {{ EGForm::ckeditor('task_description', [
+                            'label' => 'Task Description',
+                            'value' => isset($task_description) ? $task_description : $record['task_description'],
+                            'type' => $pageType
+                        ]) }}
+                    </div>
+                </div>
+                <div class="column is-6">
+                    <div class="field">
+                        {{ EGForm::ckeditor('plant_and_equipment', [
+                            'label' => 'Plant and Equipment',
+                            'value' => isset($plant_and_equipment) ? $plant_and_equipment : $record['plant_and_equipment'],
+                            'type' => $pageType
+                        ]) }}
+                    </div>
+                </div>
+            </div>
+            <div class="columns">
+                <div class="column is-6">
+                    <div class="field">
+                        {{ EGForm::ckeditor('disposing_of_waste', [
+                            'label' => 'Disposing of Waste',
+                            'value' => isset($disposing_of_waste) ? $disposing_of_waste : $record['disposing_of_waste'],
+                            'type' => $pageType
+                        ]) }}
+                    </div>
+                </div>
+                <div class="column is-6">
+                    <div class="field">
+                        {{ EGForm::ckeditor('first_aid', [
+                            'label' => 'First Aid',
+                            'value' => isset($first_aid) ? $first_aid : $record['first_aid'],
+                            'type' => $pageType
+                        ]) }}
+                    </div>
+                </div>
+            </div>
+            <div class="columns">
+                <div class="column is-6">
+                    <div class="field">
+                        {{ EGForm::ckeditor('noise', [
+                            'label' => 'Noise',
+                            'value' => isset($noise) ? $noise : $record['noise'],
+                            'type' => $pageType
+                        ]) }}
+                    </div>
+                </div>
+                <div class="column is-6">
+                    <div class="field">
+                        {{ EGForm::ckeditor('working_at_height', [
+                            'label' => 'Working at Height',
+                            'value' => isset($working_at_height) ? $working_at_height : $record['working_at_height'],
+                            'type' => $pageType
+                        ]) }}
+                    </div>
+                </div>
+            </div>
+            <div class="columns">
+                <div class="column is-6">
+                    <div class="field">
+                        {{ EGForm::ckeditor('manual_handling', [
+                            'label' => 'Manual Handling',
+                            'value' => isset($manual_handling) ? $manual_handling : $record['manual_handling'],
+                            'type' => $pageType
+                        ]) }}
+                    </div>
+                </div>
+                <div class="column is-6">
+                    <div class="field">
+                        {{ EGForm::ckeditor('accident_reporting', [
+                            'label' => 'Accident Reporting',
+                            'value' => isset($accident_reporting) ? $accident_reporting : $record['accident_reporting'],
+                            'type' => $pageType
+                        ]) }}
+                    </div>
+                </div>
+            </div>
+        @endif
+        @if ($pageType == 'view')
+            @if(isset($comments) && $comments->isNotEmpty())
+            </div>
+        </div>
+        <hr>
+        <div class="columns">
+            <div class="column is-8 is-offset-2">
+                <h2 class="sub-heading">Comments</h2>
                 <div class="columns">
                     <div class="column">
                         @foreach($comments as $comment)
-                            <p>{{$comment->comment}} - <i>{{$comment->completedByName()}} {{$comment->created_at->format('d/m/Y')}}<i></p>
+                            <p>{{$comment->comment}} - <i>{{$comment->completedByName()}} {{$comment->created_at->format('d/m/Y')}}</i></p>
                         @endforeach
                     </div>
                 </div>
             @endif
-            <hr>
+        </div>
+    </div>
+    <hr>
+    <div class="columns">
+        <div class="column is-8 is-offset-2">
+            <h2 class="sub-heading">Approval Information</h2>
             <div class="columns">
                 <div class="column is-3">
                     <div class="field">
@@ -348,6 +372,11 @@
             </style>
         @endpush
     @endif
+    <style>
+        .radio-inline {
+            padding-right: 15px;
+        }
+    </style>
 @endpush
 @push('scripts')
     <script>

@@ -27,12 +27,6 @@ class VtramController extends CompanyVtramController
             $this->customValues['name'] = $template['name'];
             $this->customValues['reference'] = $template['reference'];
             $this->customValues['logo'] = $template['logo'];
-            // not sure if the page is complete, so leaving these commented out for now.
-            // $this->customValues['key_points'] = $template['key_points']; //  not on blade???
-            // $this->customValues['havs_noise_assessment'] = $template['havs_noise_assessment']; //  not on blade???
-            // $this->customValues['coshh_assessment'] = $template['coshh_assessment']; // not on blade ??
-            // $this->customValues['responsible_person'] = $template['responsible_person'];
-            // $this->customValues['show_responsible_person'] = $template['show_responsible_person'];
         }
 
         $company = Company::findOrFail($this->user->company_id);

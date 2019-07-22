@@ -43,6 +43,16 @@ class CreateTemplateTable extends Migration
             $table->foreign('approved_by')->references('id')->on('users')->onDelete('NO ACTION')->onUpdate('NO ACTION');
             $table->date('date_replaced')->nullable();
             $table->date('resubmit_by')->nullable();
+            $table->text('main_description')->nullable();
+            $table->text('post_risk_assessment_text')->nullable();
+            $table->text('task_description')->nullable();
+            $table->text('plant_and_equipment')->nullable();
+            $table->text('disposing_of_waste')->nullable();
+            $table->text('first_aid')->nullable();
+            $table->text('noise')->nullable();
+            $table->text('working_at_height')->nullable();
+            $table->text('manual_handling')->nullable();
+            $table->text('accident_reporting')->nullable();
             $table->integer('pdf')->nullable()->unsigned();
             $table->foreign('pdf')->references('id')->on('files')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->integer('pages_in_pdf')->nullable();
