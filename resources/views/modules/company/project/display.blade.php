@@ -62,6 +62,12 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+<hr>
+<div class="columns">
+    <div class="column is-8 is-offset-2">
+        <h2 class="sub-heading">Principle Contractor</h2>
         <div class="columns">
             <div class="column is-4">
                 <div class="field pc-check">
@@ -91,6 +97,12 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+<hr>
+<div class="columns">
+    <div class="column is-8 is-offset-2">
+        <h2 class="sub-heading">Users</h2>
         <div class="columns">
             <div class="column is-12">
                 <div class="field">

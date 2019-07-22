@@ -121,7 +121,7 @@ class CompanyVtramController extends Controller
         if ($this->record->pages_in_pdf == 4) {
             $this->pillButtons['view_pdf_a3'] = [
                 'label' => 'View PDF A3',
-                'path' => '',//$this->record->id.'/view_a3',
+                'path' => $this->record->id.'/view_a3',
                 'icon' => 'file-pdf',
                 'order' => 100,
                 'id' => 'view_pdf_a3',
@@ -129,7 +129,7 @@ class CompanyVtramController extends Controller
             ];
             $this->pillButtons['print_pdf_a3'] = [
                 'label' => 'Print PDF A3',
-                'path' => '',//"javascript: var wnd = window.open('".$this->record->id."/view_a3', '_blank');wnd.print();",
+                'path' => "javascript: var wnd = window.open('".$this->record->id."/view_a3', '_blank');wnd.print();",
                 'icon' => 'print',
                 'order' => 100,
                 'id' => 'print_pdf_a3',

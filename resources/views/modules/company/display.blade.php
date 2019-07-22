@@ -62,7 +62,12 @@
                 </div>
             </div>
         @endif
-
+    </div>
+</div>
+<hr>
+<div class="columns">
+    <div class="column is-8 is-offset-2">
+        <h2 class="sub-heading">Contact Information</h2>
         <div class="columns">
             <div class="column is-4">
                 <div class="field">
@@ -92,6 +97,12 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+<hr>
+<div class="columns">
+    <div class="column is-8 is-offset-2">
+        <h2 class="sub-heading">Colours, Labels and Logo</h2>
         <div class="columns">
             <div class="column is-3">
                 <div class="field">

@@ -54,6 +54,12 @@
         </div>
         @if (isset($userPage) && $userPage)
             @can('edit-role')
+            </div>
+        </div>
+        <hr>
+        <div class="columns">
+            <div class="column is-8 is-offset-2">
+                <h2 class="sub-heading">Roles</h2>
                 <div class="columns">
                     <div class="column is-6">
                         @if (Auth::user()->company_id == null)
