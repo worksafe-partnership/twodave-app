@@ -6,6 +6,7 @@ use Auth;
 use Controller;
 use App\Template;
 use App\Company;
+use App\Methodology;
 use App\Http\Classes\VTLogic;
 use App\Http\Requests\TemplateRequest;
 
@@ -178,5 +179,10 @@ class TemplateController extends Controller
             VTLogic::submitForApproval($update);
             toast()->success("Template submitted for Approval");
         }
+    }
+
+    public function created($insert, $request, $args)
+    {
+        VTLogic::createDefaultMethodologies($insert, "TEMPLATE");
     }
 }

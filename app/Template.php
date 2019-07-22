@@ -37,7 +37,15 @@ class Template extends Model
         'submitted_by',
         'approved_by',
         'date_replaced',
-        'resubmit_by'
+        'resubmit_by',
+        'task_description',
+        'plant_and_equipment',
+        'disposing_of_waste',
+        'first_aid',
+        'noise',
+        'working_at_height',
+        'manual_handling',
+        'accident_reporting',
     ];
 
     public static function scopeDatatableAll($query, $parent, $identifier)

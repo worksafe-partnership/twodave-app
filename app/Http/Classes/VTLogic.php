@@ -3,6 +3,7 @@
 namespace App\Http\Classes;
 
 use App\Approval;
+use App\Methodology;
 
 class VTLogic
 {
@@ -68,5 +69,58 @@ class VTLogic
         }
 
         return false;
+    }
+
+    public static function createDefaultMethodologies($entityId, $entityType)
+    {
+        $config = new VTConfig($entityId, $entityType);
+
+        $list = [
+            [
+                'type' => 'TEXT',
+                'name' => 'task_description',
+            ],
+            [
+                'type' => 'SIMPLE_TABLE',
+                'name' => 'plant_and_equipment',
+            ],
+            [
+                'type' => 'TEXT',
+                'name' => 'disposing_of_waste',
+            ],
+            [
+                'type' => 'TEXT',
+                'name' => 'accident_reporting',
+            ],
+            [
+                'type' => 'TEXT_IMAGE',
+                'name' => 'first_aid',
+            ],
+            [
+                'type' => 'TEXT',
+                'name' => 'noise',
+            ],
+            [
+                'type' => 'TEXT',
+                'name' => 'working_at_height',
+            ],
+            [
+                'type' => 'TEXT',
+                'name' => 'manual_handling',
+            ],
+        ];
+        $order = 1;
+        foreach ($list as $item) {
+            if (strlen($config->entity->{$item['name']}) > 0) {
+                Methodology::create([
+                    'category' => $item['type'],
+                    'entity' => $config->entityType,
+                    'entity_id' => $config->entityId,
+                    'text_before' => $config->entity->{$item['name']},
+                    'list_order' => $order,
+                ]);
+                $order++;
+            }
+        }
     }
 }

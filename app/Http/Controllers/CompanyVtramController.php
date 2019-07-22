@@ -288,6 +288,8 @@ class CompanyVtramController extends Controller
            'number' => $nextNumber->number,
         ]);
         $nextNumber->increment('number');
+
+        VTLogic::createDefaultMethodologies($insert, "VTRAM");
     }
 
     public function updated($update, $orig, $request, $args)
