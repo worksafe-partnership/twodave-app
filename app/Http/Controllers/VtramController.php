@@ -155,31 +155,6 @@ class VtramController extends CompanyVtramController
 
     public function editContent($projectId, $vtramId, $otherId = null)
     {
-        $company = Company::findOrFail(Auth::User()->company_id);
-        $this->view = 'modules.company.project.vtram.editVtram';
-        $this->customValues['whoList'] = config('egc.hazard_who_risk');
-        $this->customValues['riskList'] = [
-            0 => $company->no_risk_character,
-            1 => $company->low_risk_character,
-            2 => $company->med_risk_character,
-            3 => $company->high_risk_character,
-        ];
-
-        $this->customValues['hazards'] = Hazard::where('entity', '=', 'VTRAM')
-            ->where('entity_id', '=', $vtramId)
-            ->orderBy('list_order')
-            ->get()
-            ->toJson();
-        $this->customValues['methodologies'] = Methodology::where('entity', '=', 'VTRAM')
-            ->where('entity_id', '=', $vtramId)
-            ->orderBy('list_order')
-            ->get()
-            ->toJson();
-
-        $this->record = Vtram::findOrFail($vtramId);
-        $this->customValues['comments'] = VTLogic::getComments($this->record->id, $this->record->status, "VTRAM");
-
-
-        return parent::_custom();
+        return parent::editContent(Auth::User()->company_id, $projectId, $vtramId);
     }
 }

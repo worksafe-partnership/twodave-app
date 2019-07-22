@@ -100,9 +100,13 @@ class CompanySeeder extends Seeder
                             'entity' => 'VTRAM',
                             'entity_id' => $vtram->id
                         ]);
+
+                        factory(App\Methodology::class, 1)->create([
+                            'entity' => 'VTRAM',
+                            'entity_id' => $vtram->id
+                        ]);
                     }
                 }
-
             }
 
             // a couple of templates for each company as well
@@ -116,6 +120,11 @@ class CompanySeeder extends Seeder
             foreach ($templates as $template) {
                 for ($i = 0; $i < 3; $i++) {
                     factory(App\Hazard::class, 1)->create([
+                        'entity' => 'TEMPLATE',
+                        'entity_id' => $template->id
+                    ]);
+
+                    factory(App\Methodology::class, 1)->create([
                         'entity' => 'TEMPLATE',
                         'entity_id' => $template->id
                     ]);

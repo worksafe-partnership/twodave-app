@@ -189,4 +189,30 @@ $factory->define(App\Hazard::class, function (Faker $faker) {
     ];
 });
 
+$factory->define(App\Methodology::class, function (Faker $faker) {
+    $config = Config('egc');
+    $categories = array_keys($config['methodology_categories']);
+    $args = func_get_args()[1];
+    $numberOfWords = $faker->numberBetween(3, 20);
 
+    $listOrder = \App\Methodology::where('entity', $args['entity'])
+                          ->where('entity_id', $args['entity_id'])
+                          ->max('list_order');
+
+    if (is_null($listOrder)) {
+        $listOrder = 1;
+    } else {
+        $listOrder++;
+    }
+
+    return [
+        'category' => $faker->randomElement($categories),
+        'entity' => 'TEST',
+        'entity_id' => 1,
+        'text_before' => $faker->words($numberOfWords, true),
+        'text_after' => $faker->words($numberOfWords, true),
+        // 'image' => 1,
+        // 'image_on' => 1,
+        'list_order' => $listOrder
+    ];
+});
