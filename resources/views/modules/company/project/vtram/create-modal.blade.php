@@ -2,7 +2,7 @@
         <div class="modal-background" style="background-color: rgba(10, 10, 10, 0.4)"></div>
         <div class="modal-card" style="width:500px">
             <header class="modal-card-head">
-                <p class="modal-card-title">Creation Options</p>
+                <p class="modal-card-title">Would you like to use a Template?</p>
             </header>
                 <section class="modal-card-body">
                     <div class="columns">
@@ -12,19 +12,17 @@
                                     $path = "create";
                                 }
                             @endphp
-                            <a class="button is-success" href="{{$path}}">Create New VTRAM (No Template)</a>
+                            <a class="button is-success" href="{{$path}}">Create New VTRAM (No Template)</a><br><br>
                             @if(isset($templates) && $templates->isNotEmpty())
-                                <hr>
-                                    <p>Alternatively, create from a template:</p>
-                                    @foreach($templates as $key => $name)
-                                        <a class="button is-success" href="{{$path}}?template={{$key}}">{{$name}}</a>
-                                    @endforeach
+                                @foreach($templates as $key => $name)
+                                    <a class="button is-success" href="{{$path}}?template={{$key}}">{{$name}}</a>
+                                @endforeach
                             @endif
                         </div>
                     </div>
                 </section>
             <footer class="modal-card-foot">
-                <button class="button" id="close_modal">Return to Page</button>
+                <button class="button" id="close_modal">Cancel</button>
             </footer>
         </div>
     </div>

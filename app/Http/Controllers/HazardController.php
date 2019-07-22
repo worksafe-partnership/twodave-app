@@ -23,8 +23,6 @@ class HazardController extends Controller
         return end($returnId);
     }
 
-    // MB: Andy said to put it in this way - Instead of returning the full url it's only returning <APP_URL>/hazard_id
-    // which is apparently "less of a hack" - Andy's words, not mine.
     public function created($record, $args)
     {
         return $record->id;
@@ -37,8 +35,6 @@ class HazardController extends Controller
         return end($returnId);
     }
 
-    // MB: Andy said to put it in this way - Instead of returning the full url it's only returning <APP_URL>/hazard_id
-    // which is apparently "less of a hack" - Andy's words, not mine.
     public function updated($record, $args)
     {
         return $record->id;
@@ -46,21 +42,8 @@ class HazardController extends Controller
 
     public function delete($id)
     {
-        $user = Auth::User();
         $hazard = Hazard::findOrFail($id);
-        if (is_null($user->company_id)) {
-            $allow = true;
-        } else {
-            $type = strtolower($hazard->entity);
-            $type = ucfirst($type);
-            $class = "\App\\".$type;
-            $parent = $class::findOrFail($hazard->entity_id);
-            if ($parent->company_id == $user->company_id) {
-                $allow = true;
-            }
-        }
-
-        if (isset($allow)) {
+        if (VTLogic::canUseItem($hazard->entity_id, $hazard->entity)) {
             $hazard->delete();
             return $this->reOrderHazards($hazard); // no need for ->toJson, laravel already does this.
         }
@@ -69,17 +52,14 @@ class HazardController extends Controller
 
     public function reOrderHazards($hazard)
     {
-        $existingHazards = Hazard::where('entity', $hazard->entity)
+        Hazard::where('entity', $hazard->entity)
+            ->where('entity_id', $hazard->entity_id)
+            ->where('list_order', '>', $hazard->list_order)
+            ->decrement('list_order');
+        return Hazard::where('entity', $hazard->entity)
                                  ->where('entity_id', $hazard->entity_id)
                                  ->orderBy('list_order', 'ASC')
                                  ->get();
-
-        $newOrder = 1;
-        foreach ($existingHazards as $record) {
-            $record['list_order'] = $newOrder++;
-            $record->save();
-        }
-        return $existingHazards;
     }
 
     public function moveUp($id)
@@ -99,30 +79,20 @@ class HazardController extends Controller
                                  ->where('entity_id', $hazard->entity_id)
                                  ->orderBy('list_order', 'ASC')
                                  ->get();
-
-        $count = $existingHazards->count();
-
-        if ($count > 1) {
-            foreach ($existingHazards as $key => $item) {
-                if ($item->id == $id) {
-                    $tempItem = $item->replicate();
-                    if ($direction == "up" && $item->list_order != 1) { // only allow if it's not already top.
-                        $item->update(['list_order' => $existingHazards[$key-1]->list_order]);
-                        $existingHazards[$key-1]->update(['list_order' => $tempItem->list_order]);
-                    } else if ($direction == "down" && $item->list_order != $count) { // only allow if it's not already bottom.
-                        $item->update(['list_order' => $existingHazards[$key+1]->list_order]);
-                        $existingHazards[$key+1]->update(['list_order' => $tempItem->list_order]);
-                    }
-                    break;
-                }
-            }
-
-            // reorder based on list order then reset the collection's keys, otherwise it falls over.
-            return $existingHazards->sortBy('list_order')->values();
+        if ($direction == 'down') {
+            $decrement = $existingHazards->where('list_order', $hazard->list_order + 1)->first();
+            $increment = $existingHazards->where('list_order', $hazard->list_order)->first();
+        } else {
+            $increment = $existingHazards->where('list_order', $hazard->list_order - 1)->first();
+            $decrement = $existingHazards->where('list_order', $hazard->list_order)->first();
         }
-        //else {
-            // only has one - no action required?
-        //}
+        if (!is_null($increment) & !is_null($decrement)) {
+            $increment->increment('list_order');
+            $decrement->decrement('list_order');
+        } else {
+            toastr()->error('Cannot move this Hazard');
+        }
+        return $existingHazards->sortBy('list_order')->values();
     }
 
 }

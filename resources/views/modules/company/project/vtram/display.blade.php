@@ -95,20 +95,11 @@
         </div>
         @if ($pageType != 'create')
             <div class="columns">
-                <div class="column is-6">
+                <div class="column is-12">
                     <div class="field">
                         {{ EGForm::ckeditor('description', [
                             'label' => 'Company Description',
                             'value' => $record["description"],
-                            'type' => $pageType
-                        ]) }}
-                    </div>
-                </div>
-                <div class="column is-6">
-                    <div class="field">
-                        {{ EGForm::ckeditor('post_risk_assessment_text', [
-                            'label' => 'Post Risk Assessment Text (Duplicated - need to remove one)',
-                            'value' => isset($post_risk_assessment_text) ? $post_risk_assessment_text : $record['post_risk_assessment_text'],
                             'type' => $pageType
                         ]) }}
                     </div>
