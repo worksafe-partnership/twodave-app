@@ -2,6 +2,8 @@
 
 namespace App\Http\Classes;
 
+use App\Approval;
+
 class VTLogic
 {
     protected $config = null;
@@ -35,21 +37,36 @@ class VTLogic
 
     public static function getComments($entityId, $status, $entityType = null)
     {
+        $config = new VTConfig($entityId, $entityType);
         //if status is null, show all
         if (!is_null($entityType) && !$status) {
-            return \App\Approval::where('entity_id', $entityId)
-                                ->where('approvals.entity', $entityType)
+            return Approval::where('entity_id', $config->entityId)
+                                ->where('approvals.entity', $config->entityType)
                                 ->get(); // returning everything for now, can lock down when I know what to display
         }
 
         if (!is_null($entityType) && in_array($status, ['REJECTED', 'EXTERNAL_REJECT', 'CURRENT', 'PREVIOUS'])) {
-            return \App\Approval::where('entity_id', $entityId)
-                                ->where('approvals.entity', $entityType)
+            return Approval::where('entity_id', $config->entityId)
+                                ->where('approvals.entity', $config->entityType)
                                 ->when(in_array($status, ['CURRENT', 'PREVIOUS']), function ($atTime) {
                                     $atTime->where('status_at_time', 'ACCEPT');
                                 })
                                 ->get(); // returning everything for now, can lock down when I know what to display
         }
         return collect([]);
+    }
+
+    public static function canUseItem($entityId, $entityType)
+    {
+        $config = new VTConfig($entityId, $entityType);
+        $user = Auth::user();
+        if (is_null($user->company_id)) {
+            return true;
+        }
+        if ($config->entity->company_id == $user->company_id) {
+            return true;
+        }
+
+        return false;
     }
 }
