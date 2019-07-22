@@ -1,30 +1,9 @@
 <h2 class="sub-heading">Extra Information</h2>
 <div class="columns">
-    <div class="column is-12">
-            <a download="Noise Vibration Assessment.xls" href="/Noise_Vibration_Assessment.xls" class="button">Download Noise Vibration Assessment</a>
-            <a download="HAVS Calculator.xls" href="/havs.xls" class="button">Download HAVS Calculator</a>
-            <a download="Noise Calculator.xlsx" href="/noise.xlsx" class="button">Download Noise Calculator</a>
-        </div>
-    </div>
-</div>
-
-
-<div class="columns">
-    <div class="column is-10">
-        <div class="field">
-            {{ EGForm::ckeditor('key_points', [
-                'label' => 'Key Points',
-                'value' => $record["key_points"],
-                'type' => 'edit'
-            ]) }}
-        </div>
+    <div class="column is-3">
+        <a download="Noise Vibration Assessment.xls" href="/Noise_Vibration_Assessment.xls" class="button">Download Noise Vibration Assessment</a>
     </div>
     <div class="column is-2">
-        <button class="button is-success is-primary" id="comments-button" style="float:right">Show/Hide Comments</button>
-    </div>
-</div>
-<div class="columns">
-    <div class="column is-6">
         <div class="field">
             {{ EGForm::file('coshh_assessment', [
                 'label' => 'COSHH Assessment Document',
@@ -33,9 +12,7 @@
             ]) }}
         </div>
     </div>
-</div>
-<div class="columns">
-    <div class="column is-6">
+    <div class="column is-2">
         <div class="field">
             {{ EGForm::file('havs_noise_assessment', [
                 'label' => 'HAVS/Noise Assessment Document',
@@ -44,9 +21,7 @@
             ]) }}
         </div>
     </div>
-</div>
-<div class="columns">
-    <div class="column">
+    <div class="column is-4">
         <div class="field">
             {{ EGForm::checkbox('dynamic_risk', [
                 'label' => 'Dynamic Risk (Adds Dynamic Risk boxes to the Risk Assessment)',
@@ -58,34 +33,26 @@
 </div>
 <div class="columns">
     <div class="column">
+        <div class="field">
+            {{ EGForm::ckeditor('key_points', [
+                'label' => 'Key Points',
+                'value' => $record["key_points"],
+                'type' => 'edit'
+            ]) }}
+        </div>
+    </div>
+    <div class="column is-2" id="comments-button-div">
+        <button class="button is-success is-primary" id="comments-button" style="float:right">Show/Hide Comments</button>
+    </div>
+</div>
+<div class="columns">
+    <div class="column">
         <p class="control">
-            <button class="button is-primary submitbutton">Save (Needs hooking up)</button>
-            <button class="button is-primary submitbutton">Save and Submit for Approval (Needs hooking up)</button>
+            <button class="button is-primary submitbutton">Save</button>
+            <button class="button is-primary submitbutton" name="approvalButton">Save and Submit for Approval</button>
         </p>
     </div>
 </div>
-<div class="comments hidden">
-    <hr>
-    <div class="columns">
-        <div class="column">
-            <p class="sub-heading">Approval Comments - Temporary - can move this depending on how/where PM wants it</p>
-        </div>
-    </div>
-    <div class="columns">
-        <div class="column">
-            @if(isset($comments) && $comments->isNotEmpty())
-                @foreach($comments as $comment)
-                    <p>{{$comment->comment}} - <i>{{$comment->completedByName()}} {{$comment->created_at->format('d/m/Y')}}</i></p>
-                @endforeach
-            @else
-                <p>No Comments</p>
-            @endif
-        </div>
-    </div>
-</div>
-
-
-
 <hr>
 <h2 class="sub-heading">Hazards & Methodologies</h2>
 <br>
@@ -125,8 +92,35 @@
     </div>
 </div>
 
+<div id="comments-sidebar" class="column hidden">
+    <p class="sub-heading">Comments
+        <button class="button is-success is-small" style="float:right" id="close-comments">Close</button>
+    </p>
+
+    @if(isset($comments) && $comments->isNotEmpty())
+        @foreach($comments as $comment)
+            <p>{{$comment->comment}}</i></p>
+            <p><i>{{$comment->completedByName()}} {{$comment->created_at->format('d/m/Y')}}</i></p>
+            <hr>
+        @endforeach
+    @else
+        <p>No Comments</p>
+    @endif
+</div>
+
 @push('styles')
     <style>
+        #comments-sidebar {
+            border: 1px solid #404040;
+            overflow-y: scroll;
+            width: 400px;
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: white;
+            height: 100%;
+        }
+
         .box-container {
             border: 2px solid #404040;
         }
@@ -158,8 +152,14 @@
         <script>
 
         $('#comments-button').on('click', function() {
-            $('.comments').toggleClass('hidden');
+            $('#comments-sidebar').removeClass('hidden');
+            $('#comments-button-div').addClass('hidden');
         })
+
+        $('#close-comments').on('click', function() {
+          $('#comments-sidebar').addClass('hidden');
+          $('#comments-button-div').removeClass('hidden');
+        });
 
         // Both
         function cancelForm(type) {
