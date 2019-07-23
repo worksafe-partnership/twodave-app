@@ -39,6 +39,16 @@ class CompanySeeder extends Seeder
 
         foreach ($starterCompanies as $companyName) {
             $company = factory(App\Company::class)->create(['name' => $companyName]);
+
+            if ($companyName == "Evergreen Testing") {
+                $evergreenUsers = User::whereIn('email', [
+                    "company@evergreen.co",
+                    "contract@evergreen.co",
+                    "project@evergreen.co",
+                    "supervisor@evergreen.co"
+                ])->update(['company_id' => $company->id]);
+            }
+
             foreach ($usersAndRoles as $role => $roleId) {
                 $users = factory(User::class, 2)->create([
                     'name' => $company->name." - ".$role,
