@@ -12,7 +12,7 @@ class HazardController extends Controller
 {
     protected $identifierPath = 'hazard';
 
-    public function store(HazardRequest $request, $companyId, $projectId, $vtramId)
+    public function store(HazardRequest $request, $companyId = null, $projectId = null, $vtramId = null)
     {
         $request->merge([
             'entity' => 'VTRAM',
@@ -29,7 +29,7 @@ class HazardController extends Controller
         return $record->id;
     }
 
-    public function update(HazardRequest $request, $companyId, $projectId, $vtramId, $hazard)
+    public function update(HazardRequest $request, $companyId = null, $projectId = null, $vtramId = null, $hazard = null)
     {
         $response = parent::_update(func_get_args());
         $returnId = explode("/", $response->getTargetUrl());

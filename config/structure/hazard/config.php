@@ -28,6 +28,9 @@ return [
     ],
     'permissions' => true,
     'exclude_routes' => [
+        'create',
+        'edit',
+        'delete',
         'list',
         'restore',
         'datatable_all',

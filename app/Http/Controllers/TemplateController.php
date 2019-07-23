@@ -107,13 +107,11 @@ class TemplateController extends Controller
         $this->customValues['hazards'] = Hazard::where('entity', '=', 'TEMPLATE')
             ->where('entity_id', '=', $templateId)
             ->orderBy('list_order')
-            ->get()
-            ->toJson();
+            ->get();
         $this->customValues['methodologies'] = Methodology::where('entity', '=', 'TEMPLATE')
             ->where('entity_id', '=', $templateId)
             ->orderBy('list_order')
-            ->get()
-            ->toJson();
+            ->get();
 
         $this->record = Template::findOrFail($templateId);
         $this->customValues['comments'] = VTLogic::getComments($this->record->id, $this->record->status, 'TEMPLATE');
