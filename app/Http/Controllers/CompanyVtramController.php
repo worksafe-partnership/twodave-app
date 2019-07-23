@@ -280,13 +280,11 @@ class CompanyVtramController extends Controller
         $this->customValues['hazards'] = Hazard::where('entity', '=', 'VTRAM')
             ->where('entity_id', '=', $vtramId)
             ->orderBy('list_order')
-            ->get()
-            ->toJson();
+            ->get();
         $this->customValues['methodologies'] = Methodology::where('entity', '=', 'VTRAM')
             ->where('entity_id', '=', $vtramId)
             ->orderBy('list_order')
-            ->get()
-            ->toJson();
+            ->get();
 
         $this->record = Vtram::findOrFail($vtramId);
         $this->customValues['comments'] = VTLogic::getComments($this->record->id, $this->record->status, "VTRAM");

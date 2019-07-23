@@ -46,10 +46,10 @@
         <tr>
             <th class="center small-pad">4</th>
             <th class="small-pad">PROBABLE</th>
-            <td class="green center risk-rating" data-type="{{ $hazardType }}" data-prob="4" data-severity="1">{{ $riskList[0] }}</td>
-            <td class="orange center risk-rating" data-type="{{ $hazardType }}" data-prob="4" data-severity="2">{{ $riskList[2] }}</td>
-            <td class="red center risk-rating" data-type="{{ $hazardType }}" data-prob="4" data-severity="3">{{ $riskList[3] }}</td>
-            <td class="red center risk-rating" data-type="{{ $hazardType }}" data-prob="4" data-severity="4">{{ $riskList[3] }}</td>
+            <td class="green center risk-rating" data-value="0" data-type="{{ $hazardType }}" data-prob="4" data-severity="1">{{ $riskList[0] }}</td>
+            <td class="orange center risk-rating" data-value="2" data-type="{{ $hazardType }}" data-prob="4" data-severity="2">{{ $riskList[2] }}</td>
+            <td class="red center risk-rating" data-value="3" data-type="{{ $hazardType }}" data-prob="4" data-severity="3">{{ $riskList[3] }}</td>
+            <td class="red center risk-rating" data-value="3" data-type="{{ $hazardType }}" data-prob="4" data-severity="4">{{ $riskList[3] }}</td>
         </tr>
     </tbody>
 </table>

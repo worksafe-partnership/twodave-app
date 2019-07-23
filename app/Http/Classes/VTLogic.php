@@ -2,6 +2,7 @@
 
 namespace App\Http\Classes;
 
+use Auth;
 use App\Approval;
 use App\Methodology;
 

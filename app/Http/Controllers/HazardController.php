@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Controller;
 use Auth;
 use App\Hazard;
+use App\Http\Classes\VTLogic;
 use App\Http\Requests\HazardRequest;
 
 class HazardController extends Controller
@@ -45,7 +46,8 @@ class HazardController extends Controller
         $hazard = Hazard::findOrFail($id);
         if (VTLogic::canUseItem($hazard->entity_id, $hazard->entity)) {
             $hazard->delete();
-            return $this->reOrderHazards($hazard); // no need for ->toJson, laravel already does this.
+            $this->reOrderHazards($hazard);
+            return 'allow';
         }
         return "disallow";
     }
@@ -89,9 +91,10 @@ class HazardController extends Controller
         if (!is_null($increment) & !is_null($decrement)) {
             $increment->increment('list_order');
             $decrement->decrement('list_order');
+            return 'allow';
         } else {
-            toastr()->error('Cannot move this Hazard');
+            toast()->error('Cannot move this Hazard');
+            return 'disallow';
         }
-        return $existingHazards->sortBy('list_order')->values();
     }
 }
