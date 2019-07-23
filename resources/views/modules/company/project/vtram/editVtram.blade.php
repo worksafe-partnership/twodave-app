@@ -436,8 +436,3 @@
         }
     </script>
 @endpush
-
-
-
-
-

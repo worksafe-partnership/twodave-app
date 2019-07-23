@@ -26,10 +26,10 @@ class HazardRequest extends FormRequest
         return [
             'description' => 'required',
             'control' => 'required',
-//            'risk' => 'required',
+            'risk' => 'required',
             'risk_severity' => 'required|max:4|min:1',
             'risk_probability' => 'required|max:4|min:1',
-//            'r_risk' => 'required',
+            'r_risk' => 'required',
             'r_risk_severity' => 'required|max:4|min:1',
             'r_risk_probability' => 'required|max:4|min:1',
             'at_risk' => 'required',
