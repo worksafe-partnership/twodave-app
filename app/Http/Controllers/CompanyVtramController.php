@@ -370,4 +370,23 @@ class CompanyVtramController extends Controller
             return $request['return_path'];
         }
     }
+
+    public function commentsList()
+    {
+        $args = func_get_args();
+        $id = end($args);
+        $userCompany = Auth::User()->company_id;
+        $record = Vtram::findOrFail($id);
+
+        if (!is_null($userCompany)) {
+            if ($userCompany != $record->company_id) {
+                abort(404);
+            }
+        }
+
+        $this->view = 'modules.company.project.vtram.comment.display';
+        $this->heading = 'Viewing All Comments';
+        $this->customValues['comments'] = VTLogic::getComments($record, null, "VTRAM");
+        return parent::_custom();
+    }
 }
