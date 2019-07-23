@@ -58,13 +58,125 @@
 <br>
 <div class="columns">
     <div class="column is-6 box-container">
-        <h2 class="sub-heading inline-block">Methodologies</h2>
-        <a href="javascript:createMethodology()" class="button is-success is-pulled-right" title="Add Methodology">
-            {{ icon('plus2') }}&nbsp;<span class="action-text is-hidden-touch">Add Methodology</span>
-        </a>
-        <hr>
-        <div id="main-methodology-container">
-
+        <div class="columns">
+            <div class="column is-12">
+                <h2 class="sub-heading inline-block">Methodologies</h2>
+                <div class="is-pulled-right">
+                    <div class="meth-type-selector">
+                        {{ EGForm::select('meth_type', [
+                            'label' => 'Select Type',
+                            'list' => $methTypeList,
+                            'value' => '',
+                            'type' => 'create',
+                            'selector' => true,
+                        ]) }}
+                    </div>
+                    <a href="javascript:createMethodology()" class="button is-success is-pulled-right" title="Add Methodology">
+                        {{ icon('plus2') }}&nbsp;<span class="action-text is-hidden-touch">Add Methodology</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column is-12 nopad">
+                <div id="main-methodology-container">
+                    <div id="methodoogy-list-container">
+                        <table class="methodology-list-table">
+                            <tr>
+                                <th>No</th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th></th>
+                            </tr>
+                            @foreach ($methodologies as $meth)
+                                <tr id="methodology-{{ $meth->id }}">
+                                    <td class="has-text-centered methodology-order">{{ $meth->list_order }}</td>
+                                    <td class="methodology-title">{{ $meth->title }}</td>
+                                    <td class="methodology-category">{{ $methTypeList[$meth->category] }}</td>
+                                    <td class="handms-actions">
+                                        <a class="handms-icons" onclick="editMethodology({{ $meth->id }})">{{ icon('mode_edit') }}</a>
+                                        <a class="handms-icons" onclick="deleteMethodology({{ $meth->id }})">{{ icon('delete') }}</a>
+                                        <a class="handms-icons" onclick="moveMethodologyUp({{ $meth->id }})">{{ icon('keyboard_arrow_up') }}</a>
+                                        <a class="handms-icons" onclick="moveMethodologyDown({{ $meth->id }})">{{ icon('keyboard_arrow_down') }}</a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </table>
+                    </div>
+                    <div id="methodology-text-form-container">
+                        @include('modules.company.project.methodology.text')
+                        <div class="field is-grouped is-grouped-centered">
+                            <p class="control">
+                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm();">Save Methodology</button> 
+                            </p>
+                            <p class="control">
+                                <button class="button" onclick="cancelForm('methodology');">Cancel</button> 
+                            </p>
+                        </div>
+                        <br>
+                    </div>                    
+                    <div id="methodology-icon-form-container">
+                        @include('modules.company.project.methodology.icon')
+                        <div class="field is-grouped is-grouped-centered">
+                            <p class="control">
+                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm();">Save Methodology</button> 
+                            </p>
+                            <p class="control">
+                                <button class="button" onclick="cancelForm('methodology');">Cancel</button> 
+                            </p>
+                        </div>
+                        <br>
+                    </div>                    
+                    <div id="methodology-complex-table-form-container">
+                        @include('modules.company.project.methodology.complex_table')
+                        <div class="field is-grouped is-grouped-centered">
+                            <p class="control">
+                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm();">Save Methodology</button> 
+                            </p>
+                            <p class="control">
+                                <button class="button" onclick="cancelForm('methodology');">Cancel</button> 
+                            </p>
+                        </div>
+                        <br>
+                    </div>                    
+                    <div id="methodology-process-form-container">
+                        @include('modules.company.project.methodology.process')
+                        <div class="field is-grouped is-grouped-centered">
+                            <p class="control">
+                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm();">Save Methodology</button> 
+                            </p>
+                            <p class="control">
+                                <button class="button" onclick="cancelForm('methodology');">Cancel</button> 
+                            </p>
+                        </div>
+                        <br>
+                    </div>                    
+                    <div id="methodology-simple-table-form-container">
+                        @include('modules.company.project.methodology.simple_table')
+                        <div class="field is-grouped is-grouped-centered">
+                            <p class="control">
+                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm();">Save Methodology</button> 
+                            </p>
+                            <p class="control">
+                                <button class="button" onclick="cancelForm('methodology');">Cancel</button> 
+                            </p>
+                        </div>
+                        <br>
+                    </div>                    
+                    <div id="methodology-text-image-form-container">
+                        @include('modules.company.project.methodology.text_image')
+                        <div class="field is-grouped is-grouped-centered">
+                            <p class="control">
+                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm();">Save Methodology</button> 
+                            </p>
+                            <p class="control">
+                                <button class="button" onclick="cancelForm('methodology');">Cancel</button> 
+                            </p>
+                        </div>
+                        <br>
+                    </div>                    
+                </div>
+            </div>
         </div>
     </div>
     <div class="column is-6 box-container">
@@ -140,6 +252,11 @@
 
 @push('styles')
     <style>
+        .meth-type-selector {
+            display: inline-block;
+            margin-top: -21px;
+            margin-right: 5px;
+        }
         #comments-sidebar {
             border: 1px solid #404040;
             overflow-y: scroll;
@@ -174,10 +291,12 @@
         .hazard-desc {
             max-width: 260px;
         }
-        #main-hazard-container {
+        #main-hazard-container, #main-methodology-container {
             position: relative;
         }
-        #hazard-form-container {
+        #hazard-form-container, #methodology-form-container, #methodology-icon-form-container, 
+        #methodology-complex-table-form-container, #methodology-simple-table-form-container,
+        #methodology-process-form-container, #methodology-text-form-container, #methodology-text-image-form-container {
             position: absolute;
             top: 0;
             border: 2px solid #404040;
@@ -187,7 +306,7 @@
             z-index: 999;
             background-color: #FFF;
         }
-        #hazard-list-container {
+        #hazard-list-container, #methodology-list-container {
             position: absolute;
             top: 0;
             border: 2px solid #404040;
@@ -201,8 +320,7 @@
     </style>
 @endpush
 @push('scripts')
-        <script>
-
+    <script>
         $('#comments-button').on('click', function() {
             $('#comments-sidebar').removeClass('hidden');
             $('#comments-button-div').addClass('hidden');
@@ -219,7 +337,8 @@
                 if (type == 'hazard') {
                     $('#hazard-form-container').css('display', 'none');
                 } else {
-                    listMethodologies();
+                    $('[id^=methodology-][id$=-form-container]').css('display', 'none');
+                    $('#meth_type').val('');
                 }
             }
         }
@@ -488,7 +607,56 @@
         // Methodology Scripts
         var methodologies = JSON.parse('{!! $methodologies !!}');
         function createMethodology() {
-            $('#main-methodology-container').html($('#methodology-display-template').html());
+            let type = $('#meth_type').val();
+            if (type == '') {
+                toastr.error('Please select a Methodology Type');
+            } else {
+                let title = '';
+                let container = 'methodology-text-form-container';
+                switch (type) {
+                    case 'TASK_DESC':
+                        title = 'Task Description';
+                        break;
+                    case 'PLANT_EQUIP':
+                        title = 'Plant & Equipment';
+                        break;
+                    case 'DISP_WASTE':
+                        title = 'Disposing of Waste';
+                        break;
+                    case 'FIRST_AID':
+                        title = 'First Aid';
+                        break;
+                    case 'NOISE':
+                        title = 'Noise';
+                        break;
+                    case 'WORK_HIGH':
+                        title = 'Working at Height';
+                        break;
+                    case 'MAN_HANDLE':
+                        title = 'Manual Handling';
+                        break;
+                    case 'ACC_REPORT':
+                        title = 'Accident Reporting';
+                        break;
+                    case 'TEXT_IMAGE':
+                        container = 'methodology-text-image-form-container';
+                        break;
+                    case 'SIMPLE_TABLE':
+                        container = 'methodology-simple-table-form-container';
+                        break;
+                    case 'COMPLEX_TABLE':
+                        container = 'methodology-complex-table-form-container';
+                        break;
+                    case 'PROCESS':
+                        container = 'methodology-process-form-container';
+                        break;
+                    case 'ICON':
+                        container = 'methodology-icon-form-container';
+                        break;
+                }
+                $('#' + container + ' #title').val(title);
+                $('#' + container).css('display', 'inherit');
+            }
         }
 
         function editMethodology() {

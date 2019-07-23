@@ -258,6 +258,7 @@ class CompanyVtramController extends Controller
         $this->view = 'modules.company.project.vtram.editVtram';
         $this->parentId = $vtramId;
         $this->customValues['whoList'] = config('egc.hazard_who_risk');
+        $this->customValues['methTypeList'] = config('egc.methodology_list');
         $this->customValues['riskList'] = [
             0 => $company->no_risk_character,
             1 => $company->low_risk_character,

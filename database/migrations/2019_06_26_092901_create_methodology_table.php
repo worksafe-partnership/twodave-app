@@ -15,6 +15,7 @@ class CreateMethodologyTable extends Migration
         Schema::create('methodologies', function (Blueprint $table) {
             $table->increments('id');
             $table->string('category');
+            $table->text('title')->nullable();
             $table->string('entity');
             $table->integer('entity_id');
             $table->text('text_before')->nullable();
