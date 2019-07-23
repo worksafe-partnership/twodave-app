@@ -110,74 +110,74 @@
                         @include('modules.company.project.methodology.text')
                         <div class="field is-grouped is-grouped-centered">
                             <p class="control">
-                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm();">Save Methodology</button> 
+                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm();">Save Methodology</button>
                             </p>
                             <p class="control">
-                                <button class="button" onclick="cancelForm('methodology');">Cancel</button> 
+                                <button class="button" onclick="cancelForm('methodology');">Cancel</button>
                             </p>
                         </div>
                         <br>
-                    </div>                    
+                    </div>
                     <div id="methodology-icon-form-container">
                         @include('modules.company.project.methodology.icon')
                         <div class="field is-grouped is-grouped-centered">
                             <p class="control">
-                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm();">Save Methodology</button> 
+                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm();">Save Methodology</button>
                             </p>
                             <p class="control">
-                                <button class="button" onclick="cancelForm('methodology');">Cancel</button> 
+                                <button class="button" onclick="cancelForm('methodology');">Cancel</button>
                             </p>
                         </div>
                         <br>
-                    </div>                    
+                    </div>
                     <div id="methodology-complex-table-form-container">
                         @include('modules.company.project.methodology.complex_table')
                         <div class="field is-grouped is-grouped-centered">
                             <p class="control">
-                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm();">Save Methodology</button> 
+                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm();">Save Methodology</button>
                             </p>
                             <p class="control">
-                                <button class="button" onclick="cancelForm('methodology');">Cancel</button> 
+                                <button class="button" onclick="cancelForm('methodology');">Cancel</button>
                             </p>
                         </div>
                         <br>
-                    </div>                    
+                    </div>
                     <div id="methodology-process-form-container">
                         @include('modules.company.project.methodology.process')
                         <div class="field is-grouped is-grouped-centered">
                             <p class="control">
-                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm();">Save Methodology</button> 
+                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm();">Save Methodology</button>
                             </p>
                             <p class="control">
-                                <button class="button" onclick="cancelForm('methodology');">Cancel</button> 
+                                <button class="button" onclick="cancelForm('methodology');">Cancel</button>
                             </p>
                         </div>
                         <br>
-                    </div>                    
+                    </div>
                     <div id="methodology-simple-table-form-container">
                         @include('modules.company.project.methodology.simple_table')
                         <div class="field is-grouped is-grouped-centered">
                             <p class="control">
-                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm();">Save Methodology</button> 
+                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm();">Save Methodology</button>
                             </p>
                             <p class="control">
-                                <button class="button" onclick="cancelForm('methodology');">Cancel</button> 
+                                <button class="button" onclick="cancelForm('methodology');">Cancel</button>
                             </p>
                         </div>
                         <br>
-                    </div>                    
+                    </div>
                     <div id="methodology-text-image-form-container">
                         @include('modules.company.project.methodology.text_image')
                         <div class="field is-grouped is-grouped-centered">
                             <p class="control">
-                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm();">Save Methodology</button> 
+                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm();">Save Methodology</button>
                             </p>
                             <p class="control">
-                                <button class="button" onclick="cancelForm('methodology');">Cancel</button> 
+                                <button class="button" onclick="cancelForm('methodology');">Cancel</button>
                             </p>
                         </div>
                         <br>
-                    </div>                    
+                    </div>
                 </div>
             </div>
         </div>
@@ -223,10 +223,10 @@
                         @include('modules.company.project.vtram.hazard.display')
                         <div class="field is-grouped is-grouped-centered">
                             <p class="control">
-                                <button class="button is-primary submitbutton" onclick="submitHazardForm();">Save Hazard</button> 
+                                <button class="button is-primary submitbutton" onclick="submitHazardForm();">Save Hazard</button>
                             </p>
                             <p class="control">
-                                <button class="button" onclick="cancelForm('hazard');">Cancel</button> 
+                                <button class="button" onclick="cancelForm('hazard');">Cancel</button>
                             </p>
                         </div>
                         <br>
@@ -297,7 +297,7 @@
         #main-hazard-container, #main-methodology-container {
             position: relative;
         }
-        #hazard-form-container, #methodology-form-container, #methodology-icon-form-container, 
+        #hazard-form-container, #methodology-form-container, #methodology-icon-form-container,
         #methodology-complex-table-form-container, #methodology-simple-table-form-container,
         #methodology-process-form-container, #methodology-text-form-container, #methodology-text-image-form-container {
             position: absolute;
@@ -447,7 +447,7 @@
                                 hazards[i]['list_order'] = data.list_order,
                                 hazards[i]['at_risk'] = data.at_risk,
                                 hazards[i]['other_at_risk'] = data.other_at_risk
-                                 
+
                                 // need to edit hazard table
                                 $('tr#hazard-' + editId + ' .hazard-order').html(data.list_order);
                                 $('tr#hazard-' + editId + ' .hazard-desc').html(data.description);
@@ -690,11 +690,6 @@
                     }
                 }
             });
-        }
-
-        function listMethodologies() {
-            // Loop through methodologies and build html
-
         }
 
         function deleteMethodology() {
