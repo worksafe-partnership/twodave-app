@@ -3,7 +3,7 @@
 return [
     'singular' => 'Hazard',
     'plural' => 'Hazards',
-    'identifier_path' => 'company.project.vtram.hazard',
+    'identifier_path' => 'hazard',
     'route_type' => 'resource',
     'db' => [
         'model' => 'Hazard',
@@ -26,12 +26,10 @@ return [
             'other_at_risk' => ['label' => 'Please Specify']
         ]
     ],
-    'sidebar' => [],
-    'permissions' => false, // when permissions are sorted, check the route permissions in web.php
+    'permissions' => true,
     'exclude_routes' => [
         'list',
         'restore',
-        // 'permanentlyDelete',
         'datatable_all',
         'view',
     ],

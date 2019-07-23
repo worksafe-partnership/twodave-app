@@ -9,7 +9,7 @@ use App\Http\Requests\HazardRequest;
 
 class HazardController extends Controller
 {
-    protected $identifierPath = 'company.project.vtram.hazard';
+    protected $identifierPath = 'hazard';
 
     public function store(HazardRequest $request, $companyId, $projectId, $vtramId)
     {
@@ -94,5 +94,4 @@ class HazardController extends Controller
         }
         return $existingHazards->sortBy('list_order')->values();
     }
-
 }
