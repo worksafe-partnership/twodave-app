@@ -68,26 +68,56 @@
         </div>
     </div>
     <div class="column is-6 box-container">
-        <h2 class="sub-heading inline-block">Hazards</h2>
-        <a href="javascript:createHazard()" class="button is-success is-pulled-right" title="Add Hazard">
-            {{ icon('plus2') }}&nbsp;<span class="action-text is-hidden-touch">Add Hazard</span>
-        </a>
-        <hr>
-        <div id="main-hazard-container">
-
+        <div class="columns">
+            <div class="column is-12">
+                <h2 class="sub-heading inline-block">Hazards</h2>
+                <a href="javascript:createHazard()" class="button is-success is-pulled-right" title="Add Hazard">
+                    {{ icon('plus2') }}&nbsp;<span class="action-text is-hidden-touch">Add Hazard</span>
+                </a>
+            </div>
         </div>
-    </div>
-</div>
-<div class="view-templates">
-    <div id="hazard-display-template">
-        @include('modules.company.project.vtram.hazard.display')
-        <div class="field is-grouped is-grouped-centered ">
-            <p class="control">
-                <button class="button is-primary submitbutton" onclick="submitHazardForm();">Save Hazard</button>
-            </p>
-            <p class="control">
-                <button class="button" onclick="cancelForm('hazard');">Cancel</button>
-            </p>
+        <div class="columns">
+            <div class="column is-12 nopad">
+                <div id="main-hazard-container">
+                    <div id="hazard-list-container">
+                        <table class="hazard-list-table">
+                            <tr>
+                                <th class="has-text-centered">No</th>
+                                <th class="hazard-desc">Hazard/Risk</th>
+                                <th class="has-text-centered">Initial<br>Risk</th>
+                                <th class="has-text-centered">Residual<br>Risk</th>
+                                <th></th>
+                            </tr>
+                            @foreach ($hazards as $hazard)
+                                <tr id="hazard-{{ $hazard->id }}">
+                                    <td class="has-text-centered hazard-order">{{ $hazard->list_order }}</td>
+                                    <td class="hazard-desc">{{ $hazard->description }}</td>
+                                    <td class="has-text-centered hazard-risk">{{ $riskList[$hazard->risk] ?? '' }}</td>
+                                    <td class="has-text-centered hazard-r-risk">{{ $riskList[$hazard->r_risk] ?? '' }}</td>
+                                    <td class="handms-actions">
+                                        <a class="handms-icons" onclick="editHazard({{ $hazard->id }})">{{ icon('mode_edit') }}</a>
+                                        <a class="handms-icons" onclick="deleteHazard({{ $hazard->id }})">{{ icon('delete') }}</a>
+                                        <a class="handms-icons" onclick="moveHazardUp({{ $hazard->id }})">{{ icon('keyboard_arrow_up') }}</a>
+                                        <a class="handms-icons" onclick="moveHazardDown({{ $hazard->id }})">{{ icon('keyboard_arrow_down') }}</a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </table>
+                    </div>
+                    <div id="hazard-form-container">
+                        @include('modules.company.project.vtram.hazard.display')
+                        <div class="field is-grouped is-grouped-centered">
+                            <p class="control">
+                                <button class="button is-primary submitbutton" onclick="submitHazardForm();">Save Hazard</button> 
+                            </p>
+                            <p class="control">
+                                <button class="button" onclick="cancelForm('hazard');">Cancel</button> 
+                            </p>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -113,22 +143,20 @@
         #comments-sidebar {
             border: 1px solid #404040;
             overflow-y: scroll;
-            width: 400px;
-            position: absolute;
+            min-width: 300px;
+            max-width: 400px;
+            position: fixed;
             top: 0;
             right: 0;
             background-color: white;
             height: 100%;
+            z-index: 999;
         }
 
         .box-container {
-            border: 2px solid #404040;
         }
         .inline-block {
             display: inline-block;
-        }
-        .view-templates {
-            display: none;
         }
         .handms-icons {
             border: 1px solid #404040;
@@ -145,6 +173,30 @@
         }
         .hazard-desc {
             max-width: 260px;
+        }
+        #main-hazard-container {
+            position: relative;
+        }
+        #hazard-form-container {
+            position: absolute;
+            top: 0;
+            border: 2px solid #404040;
+            border-top: none;
+            width: 100%;
+            display: none;
+            z-index: 999;
+            background-color: #FFF;
+        }
+        #hazard-list-container {
+            position: absolute;
+            top: 0;
+            border: 2px solid #404040;
+            border-top: none;
+            width: 100%;
+            background-color: #FFF;
+        }
+        .nopad {
+            padding: 0px;
         }
     </style>
 @endpush
@@ -165,7 +217,7 @@
         function cancelForm(type) {
             if (confirm("Any unsaved changes will be lost, are you sure?")) {
                 if (type == 'hazard') {
-                    listHazards();
+                    $('#hazard-form-container').css('display', 'none');
                 } else {
                     listMethodologies();
                 }
@@ -173,10 +225,10 @@
         }
 
         // Hazard Scripts
-        var hazards = JSON.parse('{!! str_replace('\'', '\\\'', $hazards) !!}');
-        listHazards();
+        var hazards = JSON.parse('{!! str_replace('\'', '\\\'', $hazards->toJson()) !!}');
+        var riskLabels = JSON.parse('{!! json_encode($riskList) !!}');
         function createHazard() {
-            $('#main-hazard-container').html($('#hazard-display-template').html());
+            $('#hazard-form-container').css('display', 'inherit');
         }
 
         function editHazard(id) {
@@ -187,17 +239,19 @@
                     break;
                 }
             }
-            $('#main-hazard-container').html($('#hazard-display-template').html());
-            $('#main-hazard-container [name="description"]').val(hazard['description']);
-            $('#main-hazard-container [name="at_risk"]').val(hazard['at_risk']);
-            $('#main-hazard-container [name="other_at_risk"]').val(hazard['other_at_risk']);
-            $('#main-hazard-container [name="risk_severity"]').val(hazard['risk_severity']);
-            $('#main-hazard-container [name="risk_probability"]').val(hazard['risk_probability']);
-            $('#main-hazard-container [name="control"]').val(hazard['control']);
-            $('#main-hazard-container [name="r_risk_severity"]').val(hazard['r_risk_severity']);
-            $('#main-hazard-container [name="r_risk_probability"]').val(hazard['r_risk_probability']);
+            $('#hazard-form-container [name="description"]').val(hazard['description']);
+            $('#hazard-form-container [name="at_risk"]').val(hazard['at_risk']);
+            $('#hazard-form-container [name="other_at_risk"]').val(hazard['other_at_risk']);
+            $('#hazard-form-container [name="risk"]').val(hazard['risk']);
+            $('#hazard-form-container [name="risk_severity"]').val(hazard['risk_severity']);
+            $('#hazard-form-container [name="risk_probability"]').val(hazard['risk_probability']);
+            $('#hazard-form-container [name="control"]').val(hazard['control']);
+            $('#hazard-form-container [name="r_risk"]').val(hazard['r_risk']);
+            $('#hazard-form-container [name="r_risk_severity"]').val(hazard['r_risk_severity']);
+            $('#hazard-form-container [name="r_risk_probability"]').val(hazard['r_risk_probability']);
 
-            $("#main-hazard-container .submitbutton").attr("onclick","submitHazardForm("+id+","+hazard['list_order']+")");
+            $("#hazard-form-container .submitbutton").attr("onclick","submitHazardForm("+id+","+hazard['list_order']+")");
+            $('#hazard-form-container').css('display', 'inherit');
         }
 
         function submitHazardForm(editId=null, listOrder=null) {
@@ -244,6 +298,19 @@
                             at_risk: data.at_risk,
                             other_at_risk: data.other_at_risk
                         });
+                        // Add hazards to table
+                        $('.hazard-list-table').append('<tr id="hazard-' + id + '">\
+                                <td class="has-text-centered hazard-order">' + data.list_order + '</td>\
+                                <td class="hazard-desc">' + data.description + '</td>\
+                                <td class="has-text-centered hazard-risk">' + riskLabels[data.risk] + '</td>\
+                                <td class="has-text-centered hazard-r-risk">' + riskLabels[data.r_risk] + '</td>\
+                                <td class="handms-actions">\
+                                    <a class="handms-icons" onclick="editHazard(' + id + ')">{{ icon('mode_edit') }}</a>\
+                                    <a class="handms-icons" onclick="deleteHazard(' + id + ')">{{ icon('delete') }}</a>\
+                                    <a class="handms-icons" onclick="moveHazardUp(' + id + ')">{{ icon('keyboard_arrow_up') }}</a>\
+                                    <a class="handms-icons" onclick="moveHazardDown(' + id + ')">{{ icon('keyboard_arrow_down') }}</a>\
+                                </td>\
+                            </tr>');
                     } else {
                         for (let i = 0; i < hazards.length; i++) {
                             if (hazards[i]['id'] == editId) {
@@ -258,11 +325,27 @@
                                 hazards[i]['list_order'] = data.list_order,
                                 hazards[i]['at_risk'] = data.at_risk,
                                 hazards[i]['other_at_risk'] = data.other_at_risk
+                                 
+                                // need to edit hazard table
+                                $('tr#hazard-' + editId + ' .hazard-order').html(data.list_order);
+                                $('tr#hazard-' + editId + ' .hazard-desc').html(data.description);
+                                $('tr#hazard-' + editId + ' .hazard-risk').html(riskLabels[data.risk]);
+                                $('tr#hazard-' + editId + ' .hazard-r-risk').html(riskLabels[data.r_risk]);
                                 break;
                             }
                         }
                     }
-                    listHazards();
+                    $('#hazard-form-container').css('display', 'none');
+                    $('#hazard-form-container #description').val('');
+                    $('#hazard-form-container #control').val('');
+                    $('#hazard-form-container #risk').val('');
+                    $('#hazard-form-container #risk_probability').val('');
+                    $('#hazard-form-container #risk_severity').val('');
+                    $('#hazard-form-container #r_risk').val('');
+                    $('#hazard-form-container #r_risk_probability').val('');
+                    $('#hazard-form-container #r_risk_severity').val('');
+                    $('#hazard-form-container #at_risk').val('');
+                    $('#hazard-form-container #other_at_risk').val('');
                 },
                 error: function (data) {
                     if (data.status == 422) {
@@ -279,33 +362,6 @@
             });
         }
 
-        function listHazards() {
-            // Loop through hazards and build html
-            var html = '<table>\
-                            <tr>\
-                                <th class="has-text-centered">No</th>\
-                                <th class="hazard-desc">Hazard/Risk</th>\
-                                <th class="has-text-centered">Initial<br>Risk</th>\
-                                <th class="has-text-centered">Residual<br>Risk</th>\
-                                <th></th>\
-                            </tr>';
-            for (let i = 0; i < hazards.length; i++) {
-                html += '<tr id="hazard-'+hazards[i].id+'">\
-                            <td class="has-text-centered">' + hazards[i].list_order + '</td>\
-                            <td class="hazard-desc">' + hazards[i].description + '</td>\
-                            <td class="has-text-centered">' + hazards[i].risk + '</td>\
-                            <td class="has-text-centered">' + hazards[i].r_risk + '</td>\
-                            <td class="handms-actions">\
-                                <a class="handms-icons" onclick="editHazard(' + hazards[i].id + ')">{{ icon('mode_edit') }}</a>\
-                                <a class="handms-icons" onclick="deleteHazard(' + hazards[i].id + ')">{{ icon('delete') }}</a>\
-                                <a class="handms-icons" onclick="moveHazardUp(' + hazards[i].id + ')">{{ icon('keyboard_arrow_up') }}</a>\
-                                <a class="handms-icons" onclick="moveHazardDown(' + hazards[i].id + ')">{{ icon('keyboard_arrow_down') }}</a>\
-                            </td>\
-                        </tr>';
-            }
-            $('#main-hazard-container').html(html);
-        }
-
         function deleteHazard(id) {
             if (confirm("Are you sure you want delete this hazard?")) {
                 var data = {
@@ -318,8 +374,21 @@
                     data: data,
                     success: function (response) {
                         if (response != "disallow") {
-                            hazards = response;
-                            listHazards();
+                            for (let i = 0; i < hazards.length; i++) {
+                                if (hazards[i]['id'] == id) {
+                                    // remove
+                                    $('tr#hazard-' + id).remove();
+                                    delete hazards[i];
+                                } else if (hazards[i]['id'] > id) {
+                                    // decrement order
+                                    let newOrder = hazards[i]['list_order'] - 1;
+                                    $('tr#hazard-' + hazards[i]['id'] + ' .hazard-order').html(newOrder);
+                                    hazards[i]['list_order'] = newOrder;
+                                }
+                            }
+                            hazards = hazards.filter(function (item) {
+                                return item !== undefined;
+                            });
                             toastr.success('Hazard was deleted');
                         } else {
                             toastr.error('An error has occured when deleting the hazard');
@@ -360,8 +429,26 @@
                 data: data,
                 success: function (response) {
                     if (response != "disallow") {
-                        hazards = response;
-                        listHazards();
+                        for (let i = 0; i < hazards.length; i++) {
+                            if (slug == 'move_down' && hazards[i]['id'] == id) {
+                                let firstOrder = hazards[i]['list_order'];
+                                let lastOrder = hazards[i + 1]['list_order'];
+                                $('tr#hazard-' + hazards[i + 1]['id'] + ' .hazard-order').html(firstOrder);
+                                $('tr#hazard-' + hazards[i]['id'] + ' .hazard-order').html(lastOrder);
+                                hazards[i + 1]['list_order'] = firstOrder;
+                                hazards[i]['list_order'] = lastOrder;
+                                $('tr#hazard-' + hazards[i + 1]['id']).after($('tr#hazard-' + hazards[i]['id']));
+                            } else if (slug == 'move_up' && hazards[i]['id'] == id) {
+                                let firstOrder = hazards[i]['list_order'];
+                                let lastOrder = hazards[i - 1]['list_order'];
+                                $('tr#hazard-' + hazards[i - 1]['id'] + ' .hazard-order').html(firstOrder);
+                                $('tr#hazard-' + hazards[i]['id'] + ' .hazard-order').html(lastOrder);
+                                hazards[i - 1]['list_order'] = firstOrder;
+                                hazards[i]['list_order'] = lastOrder;
+                                $('tr#hazard-' + hazards[i]['id']).after($('tr#hazard-' + hazards[i - 1]['id']));
+                            }
+                        }
+                        hazards = bubbleSort(hazards, 'list_order');
                         toastr.success('Hazard was deleted');
                     } else {
                         toastr.error('An error has occured when moving the hazard');
@@ -380,6 +467,22 @@
                     }
                 }
             });
+        }
+
+        function bubbleSort(arr, field){
+            var len = arr.length;
+
+            for (var i = 0; i < len ; i++) {
+                for(var j = 0 ; j < len - i - 1; j++){ // this was missing
+                    if (arr[j][field] > arr[j + 1][field]) {
+                        // swap
+                        var temp = arr[j];
+                        arr[j] = arr[j + 1];
+                        arr[j + 1] = temp;
+                    }
+                }
+            }
+            return arr;
         }
 
         // Methodology Scripts
