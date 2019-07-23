@@ -390,7 +390,8 @@
                 r_risk_severity: $('#main-hazard-container #r_risk_severity').val(),
                 list_order: hazards.length + 1,
                 at_risk: $('#main-hazard-container #at_risk').val(),
-                other_at_risk: $('#main-hazard-container #other_at_risk').val()
+                other_at_risk: $('#main-hazard-container #other_at_risk').val(),
+                entityType: '{{ $entityType }}'
             };
 
             let url = 'hazard/create';
@@ -496,12 +497,14 @@
                     data: data,
                     success: function (response) {
                         if (response != "disallow") {
+                            let listOrder = 0;
                             for (let i = 0; i < hazards.length; i++) {
                                 if (hazards[i]['id'] == id) {
                                     // remove
                                     $('tr#hazard-' + id).remove();
+                                    listOrder = hazards[i]['list_order'];
                                     delete hazards[i];
-                                } else if (hazards[i]['id'] > id) {
+                                } else if (listOrder != 0 && hazards[i]['list_order'] > listOrder) {
                                     // decrement order
                                     let newOrder = hazards[i]['list_order'] - 1;
                                     $('tr#hazard-' + hazards[i]['id'] + ' .hazard-order').html(newOrder);

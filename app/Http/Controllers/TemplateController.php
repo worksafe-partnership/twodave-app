@@ -89,22 +89,37 @@ class TemplateController extends Controller
 
     public function editContent($templateId, $otherId = null)
     {
+        $this->record = Template::findOrFail($templateId);
         $this->user = Auth::user();
+        if ($this->user->company_id !== null && $this->record !== null && $this->record->company_id !== null) {
+            if ($this->user->company_id !== $this->record->company_id) {
+                abort(404);
+            }
+        }
         if (is_null($otherId)) {
             $otherId = $this->user->company_id;
         }
 
-        $company = Company::findOrFail($otherId);
+        $company = Company::find($otherId);
+        if ($company != null) {
+            $this->customValues['riskList'] = [
+                0 => $company->no_risk_character,
+                1 => $company->low_risk_character,
+                2 => $company->med_risk_character,
+                3 => $company->high_risk_character,
+            ];
+        } else {
+            $this->customValues['riskList'] = [
+                0 => '#',
+                1 => 'L',
+                2 => 'M',
+                3 => 'H',
+            ];
+        }
         $this->view = 'modules.company.project.vtram.editVtram';
         $this->parentId = $templateId;
         $this->customValues['whoList'] = config('egc.hazard_who_risk');
         $this->customValues['methTypeList'] = config('egc.methodology_list');
-        $this->customValues['riskList'] = [
-            0 => $company->no_risk_character,
-            1 => $company->low_risk_character,
-            2 => $company->med_risk_character,
-            3 => $company->high_risk_character,
-        ];
         $this->customValues['hazards'] = Hazard::where('entity', '=', 'TEMPLATE')
             ->where('entity_id', '=', $templateId)
             ->orderBy('list_order')
@@ -114,8 +129,8 @@ class TemplateController extends Controller
             ->orderBy('list_order')
             ->get();
 
-        $this->record = Template::findOrFail($templateId);
         $this->customValues['comments'] = VTLogic::getComments($this->record->id, $this->record->status, 'TEMPLATE');
+        $this->customValues['entityType'] = 'TEMPLATE';
 
         return parent::_custom();
     }

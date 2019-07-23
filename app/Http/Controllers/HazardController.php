@@ -6,17 +6,26 @@ use Controller;
 use Auth;
 use App\Hazard;
 use App\Http\Classes\VTLogic;
+use App\Http\Classes\VTConfig;
 use App\Http\Requests\HazardRequest;
 
 class HazardController extends Controller
 {
     protected $identifierPath = 'hazard';
 
-    public function store(HazardRequest $request, $companyId = null, $projectId = null, $vtramId = null)
+    public function store(HazardRequest $request)
     {
+        $this->args = func_get_args();
+        $vtconfig = new VTConfig((int)end($this->args), $request->entityType);
+        $this->user = Auth::user();
+        if ($this->user->company_id !== null && $vtconfig->entity !== null && $vtconfig->entity->company_id !== null) {
+            if ($this->user->company_id !== $vtconfig->entity->company_id) {
+                abort(404);
+            }
+        }
         $request->merge([
-            'entity' => 'VTRAM',
-            'entity_id' => $vtramId,
+            'entity' => $request->entityType,
+            'entity_id' => end($this->args),
         ]);
 
         $response = parent::_store(func_get_args());
@@ -29,8 +38,17 @@ class HazardController extends Controller
         return $record->id;
     }
 
-    public function update(HazardRequest $request, $companyId = null, $projectId = null, $vtramId = null, $hazard = null)
+    public function update(HazardRequest $request)
     {
+        $this->args = func_get_args();
+        $hazard = Hazard::findOrFail(end($this->args));
+        $vtconfig = new VTConfig($hazard->entity_id, $hazard->entity);
+        $this->user = Auth::user();
+        if ($this->user->company_id !== null && $vtconfig->entity !== null && $vtconfig->entity->company_id !== null) {
+            if ($this->user->company_id !== $vtconfig->entity->company_id) {
+                abort(404);
+            }
+        }
         $response = parent::_update(func_get_args());
         $returnId = explode("/", $response->getTargetUrl());
         return end($returnId);
@@ -44,6 +62,13 @@ class HazardController extends Controller
     public function delete($id)
     {
         $hazard = Hazard::findOrFail($id);
+        $vtconfig = new VTConfig($hazard->entity_id, $hazard->entity);
+        $this->user = Auth::user();
+        if ($this->user->company_id !== null && $vtconfig->entity !== null && $vtconfig->entity->company_id !== null) {
+            if ($this->user->company_id !== $vtconfig->entity->company_id) {
+                abort(404);
+            }
+        }
         if (VTLogic::canUseItem($hazard->entity_id, $hazard->entity)) {
             $hazard->delete();
             $this->reOrderHazards($hazard);
@@ -77,6 +102,13 @@ class HazardController extends Controller
     public function move($id, $direction)
     {
         $hazard = Hazard::findOrFail($id);
+        $vtconfig = new VTConfig($hazard->entity_id, $hazard->entity);
+        $this->user = Auth::user();
+        if ($this->user->company_id !== null && $vtconfig->entity !== null && $vtconfig->entity->company_id !== null) {
+            if ($this->user->company_id !== $vtconfig->entity->company_id) {
+                abort(404);
+            }
+        }
         $existingHazards = Hazard::where('entity', $hazard->entity)
                                  ->where('entity_id', $hazard->entity_id)
                                  ->orderBy('list_order', 'ASC')
