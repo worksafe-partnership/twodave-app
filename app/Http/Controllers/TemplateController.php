@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Auth;
 use Controller;
-use App\Template;
+use App\Hazard;
 use App\Company;
+use App\Template;
 use App\Methodology;
 use App\Http\Classes\VTLogic;
 use App\Http\Requests\TemplateRequest;
@@ -24,7 +25,7 @@ class TemplateController extends Controller
                     'is-primary',
                 ],
                 'name' => 'send_for_approval',
-                'label' => 'Update and Submit for Approval',       
+                'label' => 'Update and Submit for Approval',
                 'order' => 300,
                 'value' => true,
             ];
@@ -63,7 +64,7 @@ class TemplateController extends Controller
     {
         $this->customValues['companies'] = Company::pluck('name', 'id');
     }
-    
+
     public function store(TemplateRequest $request)
     {
         return parent::_store(func_get_args());
@@ -76,7 +77,35 @@ class TemplateController extends Controller
 
     public function editContent($templateId, $otherId = null)
     {
+        $this->user = Auth::user();
+        if (is_null($otherId)) {
+            $otherId = $this->user->company_id;
+        }
+
+        $company = Company::findOrFail($otherId);
         $this->view = 'modules.company.project.vtram.editVtram';
+        $this->parentId = $templateId;
+        $this->customValues['whoList'] = config('egc.hazard_who_risk');
+        $this->customValues['riskList'] = [
+            0 => $company->no_risk_character,
+            1 => $company->low_risk_character,
+            2 => $company->med_risk_character,
+            3 => $company->high_risk_character,
+        ];
+        $this->customValues['hazards'] = Hazard::where('entity', '=', 'TEMPLATE')
+            ->where('entity_id', '=', $templateId)
+            ->orderBy('list_order')
+            ->get()
+            ->toJson();
+        $this->customValues['methodologies'] = Methodology::where('entity', '=', 'TEMPLATE')
+            ->where('entity_id', '=', $templateId)
+            ->orderBy('list_order')
+            ->get()
+            ->toJson();
+
+        $this->record = Template::findOrFail($templateId);
+        $this->customValues['comments'] = VTLogic::getComments($this->record->id, $this->record->status, 'TEMPLATE');
+
         return parent::_custom();
     }
 

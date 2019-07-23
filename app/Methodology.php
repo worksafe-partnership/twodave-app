@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Methodology extends Model
 {
     protected $table = 'methodologies';
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -40,5 +40,20 @@ class Methodology extends Model
             ]);
 
         return Datatables::of($query)->make(true);
+    }
+
+    public function icons()
+    {
+        return $this->hasMany(Icon::class, 'methodology_id', 'id');
+    }
+
+    public function instructions()
+    {
+        return $this->hasMany(Instruction::class, 'methodology_id', 'id');
+    }
+
+    public function tableRows()
+    {
+        return $this->hasMany(TableRow::class, 'methodology_id', 'id');
     }
 }

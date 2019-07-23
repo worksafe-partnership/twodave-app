@@ -1,4 +1,15 @@
+
 <div class="columns">
+    @if(isset($createdFromId))
+        {{ EGForm::hidden('created_from_id', [
+            'value' => isset($createdFromId) ? $createdFromId : null,
+            'type' => $pageType
+        ]) }}
+        {{ EGForm::hidden('created_from_entity', [
+            'value' => isset($createdFromEntity) ? $createdFromEntity : null,
+            'type' => $pageType
+        ]) }}
+    @endif
     <div class="column is-8 is-offset-2">
         <div class="columns">
             <div class="column is-3">

@@ -5,13 +5,16 @@ namespace App\Http\Controllers;
 use Auth;
 use EGFiles;
 use Controller;
+use App\Icon;
 use App\Vtram;
 use App\Hazard;
 use App\Project;
 use App\Company;
 use App\Template;
 use App\Approval;
+use App\TableRow;
 use App\NextNumber;
+use App\Instruction;
 use App\Methodology;
 use App\Http\Classes\VTLogic;
 use App\Http\Requests\VtramRequest;
@@ -45,6 +48,9 @@ class CompanyVtramController extends Controller
     {
         if (isset($_GET['template'])) {
             $template = Template::findOrFail($_GET['template']);
+            $this->customValues['createdFromEntity'] = "TEMPLATE";
+            $this->customValues['createdFromId'] = $_GET['template'];
+
             if ($template->company_id != $this->args[0]) {
                 abort(404);
             }
@@ -208,7 +214,7 @@ class CompanyVtramController extends Controller
         } else {
             $url = '/project/'.$projectId.'/vtram/'.$vtramId;
         }
-        toast()->success("Template submitted for Approval");
+        toast()->success("VTRAMS submitted for Approval");
         return redirect($url);
     }
 
@@ -234,6 +240,7 @@ class CompanyVtramController extends Controller
             'company_id' => $companyId,
             'created_by' => Auth::id(),
         ]);
+
         return parent::_store(func_get_args());
     }
 
@@ -287,9 +294,58 @@ class CompanyVtramController extends Controller
         $insert->update([
            'number' => $nextNumber->number,
         ]);
+
+        if (isset($insert['created_from_id'])) {
+            $templateid = $insert['created_from_id'];
+            $selects = ['entity' => 'TEMPLATE', 'entity_id' => $templateid];
+
+            $original = Template::findOrFail($templateid);
+
+            // copy everything!
+            $hazards = Hazard::where($selects)->get();
+            $methodologies = Methodology::where($selects)
+                                        ->with(['icons', 'instructions', 'tableRows'])
+                                        ->get();
+
+            foreach ($hazards as $hazard) {
+                $hazardArray = $this->unsetItems($hazard->toArray());
+                $hazardArray['entity'] = 'VTRAM';
+                $clonedHazard = Hazard::create($hazardArray);
+            }
+
+            foreach ($methodologies as $methodology) {
+                $methodologyArray = $this->unsetItems($methodology->toArray());
+                $methodologyArray['entity'] = 'VTRAM';
+                $clonedMethodology = Methodology::create($methodologyArray);
+                foreach ($methodology->icons as $icon) {
+                    $iconArray = $this->unsetItems($icon->toArray());
+                    $iconArray['methodology_id'] = $clonedMethodology->id;
+                    Icon::create($iconArray);
+                }
+                foreach ($methodology->instructions as $instruction) {
+                    $instructionArray = $this->unsetItems($instruction->toArray());
+                    $instructionArray['methodology_id'] = $clonedMethodology->id;
+                    Instruction::create($instructionArray);
+                }
+                foreach ($methodology->tableRows as $row) {
+                    $rowArray = $this->unsetItems($row->toArray());
+                    $rowArray['methodology_id'] = $clonedMethodology->id;
+                    TableRow::create($rowArray);
+                }
+            }
+        }
+
         $nextNumber->increment('number');
 
         VTLogic::createDefaultMethodologies($insert, "VTRAM");
+    }
+
+    public function unsetItems($record)
+    {
+        unset($record['id']);
+        unset($record['created_at']);
+        unset($record['updated_at']);
+        return $record;
     }
 
     public function updated($update, $orig, $request, $args)
