@@ -267,6 +267,13 @@ class CompanyVtramController extends Controller
 
     public function editContent($companyId, $projectId, $vtramId)
     {
+        $this->record = Vtram::findOrFail($vtramId);
+        $this->user = Auth::user();
+        if ($this->user->company_id !== null && $this->record !== null) {
+            if ($this->user->company_id !== $this->record->project->company_id) {
+                abort(404);
+            }
+        }
         $company = Company::findOrFail($companyId);
         $this->view = 'modules.company.project.vtram.editVtram';
         $this->parentId = $vtramId;
@@ -287,8 +294,8 @@ class CompanyVtramController extends Controller
             ->orderBy('list_order')
             ->get();
 
-        $this->record = Vtram::findOrFail($vtramId);
         $this->customValues['comments'] = VTLogic::getComments($this->record->id, $this->record->status, "VTRAM");
+        $this->customValues['entityType'] = 'VTRAM';
 
         return parent::_custom();
     }
