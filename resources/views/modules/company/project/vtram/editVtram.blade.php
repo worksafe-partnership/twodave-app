@@ -83,7 +83,7 @@
         <div class="columns">
             <div class="column is-12 nopad">
                 <div id="main-methodology-container">
-                    <div id="methodoogy-list-container">
+                    <div id="methodology-list-container">
                         <table class="methodology-list-table">
                             <tr>
                                 <th>No</th>
