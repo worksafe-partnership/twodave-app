@@ -107,19 +107,80 @@ Route::get('/template/{template_id}/view_a3', [
     'uses' => 'TemplateController@viewA3'
 ]);
 
-// Temporary Delete Action for Hazards until I figure out the correct way:
 Route::post('/hazard/{id}/delete_hazard', [
-    // 'middleware' => 'can:permanentlyDelete-hazard', // permissions were off when I picked this up, put this back in when they are on.
+    'middleware' => 'can:delete-hazard',
     'uses' => 'HazardController@delete'
 ]);
 
 Route::post('/hazard/{id}/move_up', [
-    // 'middleware' => 'can:permanentlyDelete-hazard', // permissions were off when I picked this up, put this back in when they are on.
+    'middleware' => 'can:edit-hazard',
     'uses' => 'HazardController@moveUp'
 ]);
 
 Route::post('/hazard/{id}/move_down', [
-    // 'middleware' => 'can:permanentlyDelete-hazard', // permissions were off when I picked this up, put this back in when they are on.
+    'middleware' => 'can:edit-hazard',
     'uses' => 'HazardController@moveDown'
 ]);
 
+// create
+Route::post('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/hazard/create', [
+    'middleware' => 'can:create-hazard',
+    'uses' => 'HazardController@store'
+]);
+
+Route::post('/project/{project_id}/vtram/{vtram_id}/hazard/create', [
+    'middleware' => 'can:create-hazard',
+    'uses' => 'HazardController@store'
+]);
+
+Route::post('/company/{company_id}/template/{template_id}/hazard/create', [
+    'middleware' => 'can:create-hazard',
+    'uses' => 'HazardController@store'
+]);
+
+Route::post('/template/{template_id}/hazard/create', [
+    'middleware' => 'can:create-hazard',
+    'uses' => 'HazardController@store'
+]);
+
+// edit
+Route::post('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/hazard/{hazard_id}/edit', [
+    'middleware' => 'can:edit-hazard',
+    'uses' => 'HazardController@update'
+]);
+
+Route::post('/project/{project_id}/vtram/{vtram_id}/hazard/{hazard_id}/edit', [
+    'middleware' => 'can:edit-hazard',
+    'uses' => 'HazardController@update'
+]);
+
+Route::post('/company/{company_id}/template/{template_id}/hazard/{hazard_id}/edit', [
+    'middleware' => 'can:edit-hazard',
+    'uses' => 'HazardController@update'
+]);
+
+Route::post('/template/{template_id}/hazard/{hazard_id}/edit', [
+    'middleware' => 'can:edit-hazard',
+    'uses' => 'HazardController@update'
+]);
+
+// update methodologies page - routes
+Route::post('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/edit_extra', [
+    'middleware' => 'can:edit-company.project.vtram',
+    'uses' => 'CompanyVtramController@updateFromMethodology'
+]);
+
+Route::post('/project/{project_id}/vtram/{vtram_id}/edit_extra', [
+    'middleware' => 'can:edit-project.vtram',
+    'uses' => 'VtramController@updateFromMethodology'
+]);
+
+Route::post('/company/{company_id}/template/{template_id}/edit_extra', [
+    'middleware' => 'can:edit-company.template',
+    'uses' => 'CompanyTemplateController@updateFromMethodology'
+]);
+
+Route::post('/template/{template_id}/edit_extra', [
+    'middleware' => 'can:edit-template',
+    'uses' => 'TemplateController@updateFromMethodology'
+]);

@@ -8,6 +8,7 @@ use App\Hazard;
 use App\Company;
 use App\Template;
 use App\Methodology;
+use Illuminate\Http\Request;
 use App\Http\Classes\VTLogic;
 use App\Http\Requests\TemplateRequest;
 
@@ -75,6 +76,17 @@ class TemplateController extends Controller
         return parent::_update(func_get_args());
     }
 
+    public function updateFromMethodology(Request $request)
+    {
+        $request->merge([
+            'updated_by' => Auth::id(),
+            'from_methodology' => true, // used for override in update function.
+            'return_path' => str_replace("edit_extra", "methodology", $request->path())
+        ]);
+
+        return parent::_update(func_get_args());
+    }
+
     public function editContent($templateId, $otherId = null)
     {
         $this->user = Auth::user();
@@ -96,13 +108,11 @@ class TemplateController extends Controller
         $this->customValues['hazards'] = Hazard::where('entity', '=', 'TEMPLATE')
             ->where('entity_id', '=', $templateId)
             ->orderBy('list_order')
-            ->get()
-            ->toJson();
+            ->get();
         $this->customValues['methodologies'] = Methodology::where('entity', '=', 'TEMPLATE')
             ->where('entity_id', '=', $templateId)
             ->orderBy('list_order')
-            ->get()
-            ->toJson();
+            ->get();
 
         $this->record = Template::findOrFail($templateId);
         $this->customValues['comments'] = VTLogic::getComments($this->record->id, $this->record->status, 'TEMPLATE');
@@ -208,6 +218,10 @@ class TemplateController extends Controller
         if (isset($request['send_for_approval'])) {
             VTLogic::submitForApproval($update);
             toast()->success("Template submitted for Approval");
+        }
+
+        if (isset($request['from_methodology'])) {
+            return $request['return_path'];
         }
     }
 

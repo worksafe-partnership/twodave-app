@@ -1,58 +1,61 @@
 <h2 class="sub-heading">Extra Information</h2>
-<div class="columns">
-    <div class="column is-3">
-        <a download="Noise Vibration Assessment.xls" href="/Noise_Vibration_Assessment.xls" class="button">Download Noise Vibration Assessment</a>
-    </div>
-    <div class="column is-2">
-        <div class="field">
-            {{ EGForm::file('coshh_assessment', [
-                'label' => 'COSHH Assessment Document',
-                'value' => $record["coshh_assessment"],
-                'type' => $pageType
-            ]) }}
+<form method="POST" action="edit_extra" enctype="multipart/form-data">
+    {{ csrf_field() }}
+    <div class="columns">
+        <div class="column is-3">
+            <a download="Noise Vibration Assessment.xls" href="/Noise_Vibration_Assessment.xls" class="button">Download Noise Vibration Assessment</a>
+        </div>
+        <div class="column is-2">
+            <div class="field">
+                {{ EGForm::file('coshh_assessment', [
+                    'label' => 'COSHH Assessment Document',
+                    'value' => $record["coshh_assessment"],
+                    'type' => $pageType
+                ]) }}
+            </div>
+        </div>
+        <div class="column is-2">
+            <div class="field">
+                {{ EGForm::file('havs_noise_assessment', [
+                    'label' => 'HAVS/Noise Assessment Document',
+                    'value' => $record["havs_noise_assessment"],
+                    'type' => $pageType
+                ]) }}
+            </div>
+        </div>
+        <div class="column is-4">
+            <div class="field">
+                {{ EGForm::checkbox('dynamic_risk', [
+                    'label' => 'Dynamic Risk (Adds Dynamic Risk boxes to the Risk Assessment)',
+                    'value' => $record['dynamic_risk'] ?? false,
+                    'type' => $pageType
+                ]) }}
+            </div>
         </div>
     </div>
-    <div class="column is-2">
-        <div class="field">
-            {{ EGForm::file('havs_noise_assessment', [
-                'label' => 'HAVS/Noise Assessment Document',
-                'value' => $record["havs_noise_assessment"],
-                'type' => $pageType
-            ]) }}
+    <div class="columns">
+        <div class="column">
+            <div class="field">
+                {{ EGForm::ckeditor('key_points', [
+                    'label' => 'Key Points',
+                    'value' => $record["key_points"],
+                    'type' => 'edit'
+                ]) }}
+            </div>
+        </div>
+        <div class="column is-2" id="comments-button-div">
+            <button class="button is-success is-primary" id="comments-button" type="button" style="float:right">Show/Hide Comments</button>
         </div>
     </div>
-    <div class="column is-4">
-        <div class="field">
-            {{ EGForm::checkbox('dynamic_risk', [
-                'label' => 'Dynamic Risk (Adds Dynamic Risk boxes to the Risk Assessment)',
-                'value' => $record['dynamic_risk'] ?? false,
-                'type' => $pageType
-            ]) }}
+    <div class="columns">
+        <div class="column">
+            <p class="control">
+                <button class="button is-primary submitbutton">Save</button>
+                <button class="button is-primary submitbutton" name="send_for_approval" value="1">Save and Submit for Approval</button>
+            </p>
         </div>
     </div>
-</div>
-<div class="columns">
-    <div class="column">
-        <div class="field">
-            {{ EGForm::ckeditor('key_points', [
-                'label' => 'Key Points',
-                'value' => $record["key_points"],
-                'type' => 'edit'
-            ]) }}
-        </div>
-    </div>
-    <div class="column is-2" id="comments-button-div">
-        <button class="button is-success is-primary" id="comments-button" style="float:right">Show/Hide Comments</button>
-    </div>
-</div>
-<div class="columns">
-    <div class="column">
-        <p class="control">
-            <button class="button is-primary submitbutton">Save</button>
-            <button class="button is-primary submitbutton" name="approvalButton">Save and Submit for Approval</button>
-        </p>
-    </div>
-</div>
+</form>
 <hr>
 <h2 class="sub-heading">Hazards & Methodologies</h2>
 <br>

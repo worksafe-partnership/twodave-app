@@ -73,6 +73,14 @@ class EGLRolesTableSeeder extends Seeder
                 // Supervisor can view vtram approvals
             }
 
+            if (strpos($perm, "hazard") !== false) {
+                $companyAdminPermissions[$perm] = 1;
+                $contractsManagerPermissions[$perm] = 1;
+                $projectAdminPermissions[$perm] = 1;
+                $evergreenPermissions[$perm] = 1;
+                $adminPermissions[$perm] = 1;
+            }
+
             if (strpos($perm, "role") !== false) {
                 $evergreenPermissions[$perm] = 1;
             }
