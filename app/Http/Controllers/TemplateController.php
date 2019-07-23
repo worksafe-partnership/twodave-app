@@ -192,6 +192,16 @@ class TemplateController extends Controller
                 'id' => 'view_created_from',
             ];
         }
+
+        if ($this->record->status != "NEW") {
+            $this->pillButtons['view_comments'] = [
+                'label' => 'View All Comments',
+                'path' => $this->record->id.'/comment',
+                'icon' => 'comment',
+                'order' => 100,
+                'id' => 'view_comments',
+            ];
+        }
     }
 
     public function submitForApproval($templateId, $otherId = null)
@@ -243,5 +253,24 @@ class TemplateController extends Controller
     public function created($insert, $request, $args)
     {
         VTLogic::createDefaultMethodologies($insert, "TEMPLATE");
+    }
+
+    public function commentsList()
+    {
+        $args = func_get_args();
+        $id = end($args);
+        $userCompany = Auth::User()->company_id;
+        $record = Template::findOrFail($id);
+
+        if (!is_null($userCompany)) {
+            if ($userCompany != $record->company_id) {
+                abort(404);
+            }
+        }
+
+        $this->view = 'modules.company.project.vtram.comment.display';
+        $this->heading = 'Viewing All Comments';
+        $this->customValues['comments'] = VTLogic::getComments($record, null, "TEMPLATE");
+        return parent::_custom();
     }
 }

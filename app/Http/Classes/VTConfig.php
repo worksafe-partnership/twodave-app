@@ -32,7 +32,7 @@ class VTConfig
                     $this->entity = Template::findOrFail($e);
                     $this->entityType = 'TEMPLATE';
                 }
-                
+
                 $this->entityId = $e;
                 break;
             default:

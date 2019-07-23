@@ -184,3 +184,25 @@ Route::post('/template/{template_id}/edit_extra', [
     'middleware' => 'can:edit-template',
     'uses' => 'TemplateController@updateFromMethodology'
 ]);
+
+// comments
+
+Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/comment', [
+    'middleware' => 'can:view-company.project.vtram',
+    'uses' => 'CompanyVtramController@commentsList'
+]);
+
+Route::get('/project/{project_id}/vtram/{vtram_id}/comment', [
+    'middleware' => 'can:view-project.vtram',
+    'uses' => 'VtramController@commentsList'
+]);
+
+Route::get('/company/{company_id}/template/{template_id}/comment', [
+    'middleware' => 'can:view-company.template',
+    'uses' => 'CompanyTemplateController@commentsList'
+]);
+
+Route::get('/template/{template_id}/comment', [
+    'middleware' => 'can:view-template',
+    'uses' => 'TemplateController@commentsList'
+]);
