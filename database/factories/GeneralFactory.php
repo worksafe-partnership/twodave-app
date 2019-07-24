@@ -35,14 +35,14 @@ $factory->define(App\Company::class, function (Faker $faker) {
         'reject_label' => 'Reject Label Test',
         'main_description' => '<p>'.$faker->words(20, true).'</p>',
         'post_risk_assessment_text' => '<p>'.$faker->words(20, true).'</p>',
-        'task_description' => '<p>'.$faker->words(20, true).'</p>',
-        'plant_and_equipment' => '<p>'.$faker->words(20, true).'</p>',
-        'disposing_of_waste' => '<p>'.$faker->words(20, true).'</p>',
-        'first_aid' => '<p>'.$faker->words(20, true).'</p>',
-        'noise' => '<p>'.$faker->words(20, true).'</p>',
-        'working_at_height' => '<p>'.$faker->words(20, true).'</p>',
-        'manual_handling' => '<p>'.$faker->words(20, true).'</p>',
-        'accident_reporting' => '<p>'.$faker->words(20, true).'</p>',
+        'task_description' => '<p>task_description text content (company)</p>',
+        'plant_and_equipment' => '<p>plant_and_equipment text content (company)</p>',
+        'disposing_of_waste' => '<p>disposing_of_waste text content (company)</p>',
+        'first_aid' => '<p>first_aid text content (company)</p>',
+        'noise' => '<p>noise text content (company)</p>',
+        'working_at_height' => '<p>working_at_height text content (company)</p>',
+        'manual_handling' => '<p>manual_handling text content (company)</p>',
+        'accident_reporting' => '<p>accident_reporting text content (company)</p>',
     ];
 });
 

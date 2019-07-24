@@ -611,38 +611,49 @@
         }
 
         // Methodology Scripts
-        var methodologies = JSON.parse('{!! $methodologies !!}');
+        var methodologies = JSON.parse('{!! str_replace('\'', '\\\'', $methodologies->toJson()) !!}');
+        var company = JSON.parse('{!! str_replace('\'', '\\\'', $company->toJson()) !!}');
+        console.log(company);
         function createMethodology() {
             let type = $('#meth_type').val();
             if (type == '') {
                 toastr.error('Please select a Methodology Type');
             } else {
                 let title = '';
+                let content = '';
                 let container = 'methodology-text-form-container';
                 switch (type) {
                     case 'TASK_DESC':
                         title = 'Task Description';
+                        content = company.task_description;
                         break;
                     case 'PLANT_EQUIP':
                         title = 'Plant & Equipment';
+                        content = company.plant_and_equipment;
                         break;
                     case 'DISP_WASTE':
                         title = 'Disposing of Waste';
+                        content = company.disposing_of_waste;
                         break;
                     case 'FIRST_AID':
                         title = 'First Aid';
+                        content = company.first_aid;
                         break;
                     case 'NOISE':
                         title = 'Noise';
+                        content = company.noise;
                         break;
                     case 'WORK_HIGH':
                         title = 'Working at Height';
+                        content = company.working_at_height;
                         break;
                     case 'MAN_HANDLE':
                         title = 'Manual Handling';
+                        content = company.manual_handling;
                         break;
                     case 'ACC_REPORT':
                         title = 'Accident Reporting';
+                        content = company.accident_reporting;
                         break;
                     case 'TEXT_IMAGE':
                         container = 'methodology-text-image-form-container';
@@ -660,7 +671,11 @@
                         container = 'methodology-icon-form-container';
                         break;
                 }
+                $('[id^=methodology-][id$=-form-container]').css('display', 'none');
                 $('#' + container + ' #title').val(title);
+                if ($('#' + container + ' #content')) {
+                    $('#' + container + ' #content').val(content);
+                }
                 $('#' + container).css('display', 'inherit');
             }
         }

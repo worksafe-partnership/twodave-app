@@ -1,5 +1,5 @@
 <div class="columns">
-    <div class="column">
+    <div class="column is-10 is-offset-1">
         <p class="sub-heading">Details</p>
         <div class="field">
             {{ EGForm::text('title', [
@@ -11,7 +11,7 @@
     </div>
 </div>
 <div class="columns">
-    <div class="column">
+    <div class="column is-10 is-offset-1">
         <div class="field">
             {{ EGForm::ckeditor('content', [
                 'label' => 'Content',
