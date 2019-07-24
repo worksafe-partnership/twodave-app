@@ -29,12 +29,12 @@
 </div>
 
 <div class="columns">
-    <div class="column is-10 is-offset-1 create-div">
+    <div class="column is-10 is-offset-1">
         <p class="sub-heading">New Row</p>
         <div class="columns">
             <div class="column is-6">
                 <div class="field">
-                    {{ EGForm::text('col_1', [
+                    {{ EGForm::text('simple_col_1', [
                         'label' => 'Cell 1 (Heading)',
                         'value' => '',
                         'type' => $pageType
@@ -43,7 +43,7 @@
             </div>
             <div class="column is-6">
                 <div class="field">
-                    {{ EGForm::text('col_2', [
+                    {{ EGForm::text('simple_col_2', [
                         'label' => 'Cell 2',
                         'value' => '',
                         'type' => $pageType
@@ -54,11 +54,11 @@
     </div>
 </div>
 <div class="columns">
-    <div class="column is-10 is-offset-1 create-div">
+    <div class="column is-10 is-offset-1">
         <div class="columns">
             <div class="column is-6">
                 <div class="field">
-                    {{ EGForm::text('col_3', [
+                    {{ EGForm::text('simple_col_3', [
                         'label' => 'Cell 3',
                         'value' => '',
                         'type' => $pageType
@@ -67,7 +67,7 @@
             </div>
             <div class="column is-6">
                 <div class="field">
-                    {{ EGForm::text('col_4', [
+                    {{ EGForm::text('simple_col_4', [
                         'label' => 'Cell 4',
                         'value' => '',
                         'type' => $pageType
@@ -79,7 +79,7 @@
 </div>
 
 <div class="columns">
-    <div class="column is-10 is-offset-1 create-div">
+    <div class="column is-10 is-offset-1">
         <div class="columns">
             <div class="column is-6">
                 <div class="field">
@@ -108,20 +108,20 @@
     $('#add-row-simple').on('click', function() {
         let table = $('#simple-table');
         let row_id = table.data('next_row');
-        if ($(col_1).val() != "" && $(col_2).val() != "") {
+        if ($('#simple_col_1').val() != "" && $('#simple_col_2').val() != "") {
             let row = "<tr data-row='"+row_id+"'>";
-                row += "<th><input type='text' name="+row_id+"-1 value='"+$(col_1).val()+"'></input></th>";
-                row += "<th><input type='text' name="+row_id+"-2 value='"+$(col_2).val()+"'></input></th>";
-                row += "<th><input type='text' name="+row_id+"-3 value='"+$(col_3).val()+"'></input></th>";
-                row += "<th><input type='text' name="+row_id+"-4 value='"+$(col_4).val()+"'></input></th>";
+                row += "<th><input type='text' name="+row_id+"-1 value='"+$('#simple_col_1').val()+"'></input></th>";
+                row += "<td><input type='text' name="+row_id+"-2 value='"+$('#simple_col_2').val()+"'></input></td>";
+                row += "<td><input type='text' name="+row_id+"-3 value='"+$('#simple_col_3').val()+"'></input></td>";
+                row += "<td><input type='text' name="+row_id+"-4 value='"+$('#simple_col_4').val()+"'></input></td>";
             row += "</tr>"
             table.append(row);
             row_id++;
             table.data('next_row', row_id);
-            $(col_1).val('');
-            $(col_2).val('');
-            $(col_3).val('');
-            $(col_4).val('');
+            $('#simple_col_1').val('');
+            $('#simple_col_2').val('');
+            $('#simple_col_3').val('');
+            $('#simple_col_4').val('');
         } else {
             alert("Please ensure your row is populated");
         }
