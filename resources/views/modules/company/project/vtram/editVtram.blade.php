@@ -613,7 +613,6 @@
         // Methodology Scripts
         var methodologies = JSON.parse('{!! str_replace('\'', '\\\'', $methodologies->toJson()) !!}');
         var company = JSON.parse('{!! str_replace('\'', '\\\'', $company->toJson()) !!}');
-        console.log(company);
         function createMethodology() {
             let type = $('#meth_type').val();
             if (type == '') {

@@ -137,7 +137,7 @@ return [
         'LAST' => 'Last',
     ],
     'icons' => [
-        'hard-hat' => 'Hard Hat',
+        'no-image' => 'No Image',
         'action-sign' => 'Action Sign',
         'refer_to_manual' => 'Refer to Manual',
         'ear_protection' => 'Ear Protection',
@@ -161,11 +161,11 @@ return [
         'apron' => 'Apron',
         'check_guard' => 'Check Guard',
         'saw_guard' => 'Saw Guard',
-        'anti-static footwear' => 'Anti-static Footwear',
+        'anti-static_footwear' => 'Anti-static Footwear',
     ],
     'icon_images' => [
+        'no-image' => 'gfx/icons/no_image.png',
         'action-sign' => 'gfx/icons/action_sign.png',
-        'hard-hat' => 'gfx/icons/hard-hat.png',
         'refer_to_manual' => 'gfx/icons/refer_to_manual.png',
         'ear_protection' => 'gfx/icons/ear_protection.png',
         'eye_protection' => 'gfx/icons/eye_protection.png',
@@ -188,7 +188,7 @@ return [
         'apron' => 'gfx/icons/apron.png',
         'check_guard' => 'gfx/icons/check_guard.png',
         'saw_guard' => 'gfx/icons/saw_guard.png',
-        'anti-static footwear' => 'gfx/icons/anti-static footwear.png',
+        'anti-static_footwear' => 'gfx/icons/anti-static_footwear.png',
     ],
     'icon_types' => [
         'MAIN' => 'Main',

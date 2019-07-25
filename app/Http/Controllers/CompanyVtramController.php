@@ -296,6 +296,7 @@ class CompanyVtramController extends Controller
 
         $this->customValues['comments'] = VTLogic::getComments($this->record->id, $this->record->status, "VTRAM");
         $this->customValues['entityType'] = 'VTRAM';
+        $this->customValues['iconImages'] = json_encode(config('egc.icon_images'));
         $this->customValues['company'] = $company;
 
         return parent::_custom();
