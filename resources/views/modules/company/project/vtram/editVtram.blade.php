@@ -110,7 +110,7 @@
                         @include('modules.company.project.methodology.text')
                         <div class="field is-grouped is-grouped-centered">
                             <p class="control">
-                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm();">Save Methodology</button>
+                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm('TEXT');">Save Methodology</button>
                             </p>
                             <p class="control">
                                 <button class="button" onclick="cancelForm('methodology');">Cancel</button>
@@ -122,7 +122,7 @@
                         @include('modules.company.project.methodology.icon')
                         <div class="field is-grouped is-grouped-centered">
                             <p class="control">
-                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm();">Save Methodology</button>
+                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm('ICON');">Save Methodology</button>
                             </p>
                             <p class="control">
                                 <button class="button" onclick="cancelForm('methodology');">Cancel</button>
@@ -134,7 +134,7 @@
                         @include('modules.company.project.methodology.complex_table')
                         <div class="field is-grouped is-grouped-centered">
                             <p class="control">
-                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm();">Save Methodology</button>
+                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm('COMPLEX_TABLE');">Save Methodology</button>
                             </p>
                             <p class="control">
                                 <button class="button" onclick="cancelForm('methodology');">Cancel</button>
@@ -146,7 +146,7 @@
                         @include('modules.company.project.methodology.process')
                         <div class="field is-grouped is-grouped-centered">
                             <p class="control">
-                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm();">Save Methodology</button>
+                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm('PROCESS');">Save Methodology</button>
                             </p>
                             <p class="control">
                                 <button class="button" onclick="cancelForm('methodology');">Cancel</button>
@@ -158,7 +158,7 @@
                         @include('modules.company.project.methodology.simple_table')
                         <div class="field is-grouped is-grouped-centered">
                             <p class="control">
-                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm();">Save Methodology</button>
+                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm('SIMPLE_TABLE');">Save Methodology</button>
                             </p>
                             <p class="control">
                                 <button class="button" onclick="cancelForm('methodology');">Cancel</button>
@@ -170,7 +170,7 @@
                         @include('modules.company.project.methodology.text_image')
                         <div class="field is-grouped is-grouped-centered">
                             <p class="control">
-                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm();">Save Methodology</button>
+                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm('TEXT_IMAGE');">Save Methodology</button>
                             </p>
                             <p class="control">
                                 <button class="button" onclick="cancelForm('methodology');">Cancel</button>
@@ -350,6 +350,7 @@
         var hazards = JSON.parse('{!! str_replace('\'', '\\\'', $hazards->toJson()) !!}');
         var riskLabels = JSON.parse('{!! json_encode($riskList) !!}');
         function createHazard() {
+            $("#hazard-form-container .submitbutton").attr("onclick","submitHazardForm()");
             $('#hazard-form-container').css('display', 'inherit');
         }
 
@@ -613,6 +614,7 @@
         // Methodology Scripts
         var methodologies = JSON.parse('{!! str_replace('\'', '\\\'', $methodologies->toJson()) !!}');
         var company = JSON.parse('{!! str_replace('\'', '\\\'', $company->toJson()) !!}');
+        var methTypeList = JSON.parse('{!! json_encode($methTypeList) !!}');
         function createMethodology() {
             let type = $('#meth_type').val();
             if (type == '') {
@@ -621,6 +623,7 @@
                 let title = '';
                 let content = '';
                 let container = 'methodology-text-form-container';
+                let cat = "TEXT";
                 switch (type) {
                     case 'TASK_DESC':
                         title = 'Task Description';
@@ -656,6 +659,52 @@
                         break;
                     case 'TEXT_IMAGE':
                         container = 'methodology-text-image-form-container';
+                        cat = 'TEXT_IMAGE';
+                        break;
+                    case 'SIMPLE_TABLE':
+                        container = 'methodology-simple-table-form-container';
+                        cat = 'SIMPLE_TABLE';
+                        break;
+                    case 'COMPLEX_TABLE':
+                        container = 'methodology-complex-table-form-container';
+                        cat = 'COMPLEX_TABLE';
+                        break;
+                    case 'PROCESS':
+                        container = 'methodology-process-form-container';
+                        cat = 'PROCESS';
+                        break;
+                    case 'ICON':
+                        container = 'methodology-icon-form-container';
+                        cat = 'ICON';
+                        break;
+                }
+                $('[id^=methodology-][id$=-form-container]').css('display', 'none');
+                $('#methodology-list-container').hide();
+                $('#' + container + ' #title').val(title);
+                if ($('#' + container + ' #content')) {
+                    $('#' + container + ' #content').val(content);
+                }
+                $('#' + container).css('display', 'inherit');
+                $('#' + container + ' .submitbutton').attr("onclick","submitMethodologyForm('"+cat+"')");
+            }
+        }
+
+        function editMethodology(id) {
+            let methodology = methodologies.filter(methodologies => methodologies.id === id)
+            if (methodology.length) {
+                methodology = methodology[0];
+                console.log(methodology);
+
+                let title = '';
+                let content = '';
+                let container = 'methodology-text-form-container';
+                switch (methodology.category) {
+                    case 'TEXT':
+                        title = methodology.title;
+                        content = methodology.text_before;
+                        break;
+                    case 'TEXT_IMAGE':
+                        container = 'methodology-text-image-form-container';
                         break;
                     case 'SIMPLE_TABLE':
                         container = 'methodology-simple-table-form-container';
@@ -676,23 +725,82 @@
                     $('#' + container + ' #content').val(content);
                 }
                 $('#' + container).css('display', 'inherit');
+                $('#' + container + ' .submitbutton').attr("onclick","submitMethodologyForm('"+methodology.category+"',"+id+","+methodology.list_order+")");
             }
         }
 
-        function editMethodology() {
+        function submitMethodologyForm(category, editId=null, listOrder=null) {
+            let postData = {
+                _token: '{{ csrf_token() }}',
+                entityType: '{{ $entityType }}',
+                list_order: methodologies.length +1,
+                category: category,
+            };
 
-        }
+            switch (category) {
+                case 'TEXT':
+                    postData['title'] = $('#methodology-text-form-container #title').val();
+                    postData['text_before'] = $('#methodology-text-form-container #content').val();
+                    break;
+            }
 
-        function submitMethodologyForm() {
+            let url = 'methodology/create';
+            if (editId) {
+                url = 'methodology/'+editId+'/edit';
+                postData['list_order'] = listOrder;
+            }
+
             $.ajax({
-                url: '',
+                url: url,
                 type: 'POST',
-                data: {
+                data: postData,
+                success: function (id) {
+                    if (!editId) {// create
+                        // adjust when we've got more types going in.
+                        methodologies.push({
+                            id: parseInt(id),
+                            title: postData.title,
+                            text_before: postData.text_before,
+                            list_order: postData.list_order,
+                            category: category,
+                            entity: '{{$entityType}}',
+                            image: null,
+                            image_on: null,
+                            text_after: null
+                        });
+                        $('.methodology-list-table').append('<tr id="methodology' + id + '">\
+                                <td class="has-text-centered methodology-order">' + postData.list_order+ '</td>\
+                                <td class="methodology-title">' + postData.title + '</td>\
+                                <td class="methodology-category">' +  methTypeList[category] + '</td>\
+                                <td class="handms-actions">\
+                                    <a class="handms-icons" onclick="editMethodology('+ id +')">{{ icon('mode_edit') }}</a>\
+                                    <a class="handms-icons" onclick="deleteMethodology('+id+')">{{ icon('delete') }}</a>\
+                                    <a class="handms-icons" onclick="moveMethodologyUp('+id+')">{{ icon('keyboard_arrow_up') }}</a>\
+                                    <a class="handms-icons" onclick="moveMethodologyDown('+id+')">{{ icon('keyboard_arrow_down') }}</a>\
+                                </td>\
+                            </tr>');
+                    } else { // edit
+                        for (let i = 0; i < methodologies.length; i++) {
+                            if (methodologies[i]['id'] === editId) {
+                                methodologies[i]['title'] = postData.title,
+                                methodologies[i]['text_before'] = postData.text_before,
+                                methodologies[i]['list_order'] = postData.list_order,
+                                methodologies[i]['category'] = category,
+                                methodologies[i]['entity'] = postData.entity,
+                                methodologies[i]['image'] = postData.image,
+                                methodologies[i]['image_on'] = postData.image_on,
+                                methodologies[i]['text_after'] = postData.text_after,
 
-                },
-                success: function (data) {
-                    // Add to methodologies list then...
-                    listMethodologies();
+                                // need to edit hazard table
+                                $('tr#methodology-' + editId + ' .methodology-order').html(postData.list_order);
+                                $('tr#methodology-' + editId + ' .methodology-title').html(postData.title);
+                                $('tr#methodology-' + editId + ' .methodology-category').html(methTypeList[category]);
+                                break;
+                            }
+                        }
+                    }
+                    $('#methodology-list-container').show();
+                    $('[id^=methodology-][id$=-form-container]').css('display', 'none');
                 },
                 error: function (data) {
                     if (data.status == 422) {

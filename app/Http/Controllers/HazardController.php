@@ -33,7 +33,7 @@ class HazardController extends Controller
         return end($returnId);
     }
 
-    public function created($record, $args)
+    public function created($record, $request, $args)
     {
         return $record->id;
     }
@@ -54,7 +54,7 @@ class HazardController extends Controller
         return end($returnId);
     }
 
-    public function updated($record, $args)
+    public function updated($record, $request, $args)
     {
         return $record->id;
     }

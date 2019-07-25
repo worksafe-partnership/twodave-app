@@ -206,3 +206,48 @@ Route::get('/template/{template_id}/comment', [
     'middleware' => 'can:view-template',
     'uses' => 'TemplateController@commentsList'
 ]);
+
+
+// Methodologies
+
+// create
+Route::post('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/methodology/create', [
+    'middleware' => 'can:create-methodology',
+    'uses' => 'MethodologyController@store'
+]);
+
+Route::post('/project/{project_id}/vtram/{vtram_id}/methodology/create', [
+    'middleware' => 'can:create-methodology',
+    'uses' => 'MethodologyController@store'
+]);
+
+Route::post('/company/{company_id}/template/{template_id}/methodology/create', [
+    'middleware' => 'can:create-methodology',
+    'uses' => 'MethodologyController@store'
+]);
+
+Route::post('/template/{template_id}/methodology/create', [
+    'middleware' => 'can:create-methodology',
+    'uses' => 'MethodologyController@store'
+]);
+
+// edit
+Route::post('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/methodology/{methodology_id}/edit', [
+    'middleware' => 'can:edit-methodology',
+    'uses' => 'MethodologyController@update'
+]);
+
+Route::post('/project/{project_id}/vtram/{vtram_id}/methodology/{methodology_id}/edit', [
+    'middleware' => 'can:edit-methodology',
+    'uses' => 'MethodologyController@update'
+]);
+
+Route::post('/company/{company_id}/template/{template_id}/methodology/{methodology_id}/edit', [
+    'middleware' => 'can:edit-methodology',
+    'uses' => 'MethodologyController@update'
+]);
+
+Route::post('/template/{template_id}/methodology/{methodology_id}/edit', [
+    'middleware' => 'can:edit-methodology',
+    'uses' => 'MethodologyController@update'
+]);

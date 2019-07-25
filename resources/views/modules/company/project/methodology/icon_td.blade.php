@@ -20,8 +20,8 @@
     </div>
     <div class="field">
         <a class="handms-icons" onclick="">{{ icon('tick') }}</a>
-        <a class="handms-icons" onclick="">{{ icon('keyboard_arrow_up') }}</a>
-        <a class="handms-icons" onclick="">{{ icon('keyboard_arrow_down') }}</a>
+        <a class="handms-icons" onclick="">{{ icon('keyboard_arrow_left') }}</a>
+        <a class="handms-icons" onclick="">{{ icon('keyboard_arrow_right') }}</a>
         <a class="handms-icons" onclick="">{{ icon('delete') }}</a>
     </div>
 </td>

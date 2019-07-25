@@ -16,6 +16,7 @@ class Methodology extends Model
      */
     protected $fillable = [
         'category',
+        'title',
         'entity',
         'entity_id',
         'text_before',

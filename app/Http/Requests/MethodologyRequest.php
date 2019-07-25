@@ -23,17 +23,33 @@ class MethodologyRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'category' => 'required',
-            'image' => 'mimes:jpg,jpeg,png,bmp,tiff'
+        $category = $this->category;
+        $rules = [
+            'category' => 'required'
         ];
+
+        switch ($category) {
+            case "TEXT":
+                $rules['text_before'] = 'required';
+                break;
+        }
+
+        return $rules;
     }
 
     public function messages()
     {
-        return [
+        $category = $this->category;
+        $messages = [
             'category.required' => 'Please select a Category',
-            'image.mimes' => 'Only images are allowed to be uploaded'
         ];
+
+        switch ($category) {
+            case "TEXT":
+                $messages['text_before.required'] = 'Please enter content';
+                break;
+        }
+
+        return $messages;
     }
 }
