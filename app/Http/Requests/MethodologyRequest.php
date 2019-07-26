@@ -23,17 +23,49 @@ class MethodologyRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'category' => 'required',
-            'image' => 'mimes:jpg,jpeg,png,bmp,tiff'
+        $category = $this->category;
+        $rules = [
+            'category' => 'required'
         ];
+
+        switch ($category) {
+            case "TEXT":
+                $rules['text_before'] = 'required';
+                break;
+            case "TEXT_IMAGE":
+                $rules['image'] = 'required';
+                $rules['image_on'] = 'required';
+                if ($this->image_on != "undefined") {
+                    if ($this->image_on == "LEFT") {
+                        $rules['text_before'] = 'required';
+                    } else {
+                        $rules['text_after'] = 'required';
+                    }
+                }
+                break;
+        }
+
+        return $rules;
     }
 
     public function messages()
     {
-        return [
+        $category = $this->category;
+        $messages = [
             'category.required' => 'Please select a Category',
-            'image.mimes' => 'Only images are allowed to be uploaded'
         ];
+
+        switch ($category) {
+            case "TEXT":
+                $messages['text_before.required'] = 'Please enter content';
+                break;
+            case "TEXT_IMAGE":
+                $messages['image.required'] = 'Please select an image';
+                $messages['image_on.required'] = 'Please confirm text location';
+                $messages['text_before.required'] = 'Please enter the "Before Text"';
+                $messages['text_after.required'] = 'Please enter the "After Text"';
+        }
+
+        return $messages;
     }
 }
