@@ -290,3 +290,19 @@ Route::post('/template/{template_id}/methodology/{methodology_id}/edit', [
     'middleware' => 'can:edit-methodology',
     'uses' => 'MethodologyController@update'
 ]);
+
+Route::post('/methodology/{id}/delete_methodology', [
+    'middleware' => 'can:delete-methodology',
+    'uses' => 'MethodologyController@delete'
+]);
+
+Route::post('/methodology/{id}/move_up', [
+    'middleware' => 'can:edit-methodology',
+    'uses' => 'MethodologyController@moveUp'
+]);
+
+Route::post('/methodology/{id}/move_down', [
+    'middleware' => 'can:edit-methodology',
+    'uses' => 'MethodologyController@moveDown'
+]);
+

@@ -873,8 +873,54 @@
             });
         }
 
-        function deleteMethodology() {
-
+        function deleteMethodology(id) {
+            if (confirm("Are you sure you want delete this methodology?")) {
+                var data = {
+                    _token: '{{ csrf_token() }}',
+                    methodology_id: id,
+                };
+                $.ajax({
+                    url: '/methodology/'+id+'/delete_methodology',
+                    type: 'POST',
+                    data: data,
+                    success: function (response) {
+                        if (response != "disallow") {
+                            let listOrder = 0;
+                            for (let i = 0; i < methodologies.length; i++) {
+                                if (methodologies[i]['id'] == id) {
+                                    // remove
+                                    $('tr#methodology-' + id).remove();
+                                    listOrder = methodologies[i]['list_order'];
+                                    delete methodologies[i];
+                                } else if (listOrder != 0 && methodologies[i]['list_order'] > listOrder) {
+                                    // decrement order
+                                    let newOrder = methodologies[i]['list_order'] - 1;
+                                    $('tr#methodology-' + methodologies[i]['id'] + ' .methodology-order').html(newOrder);
+                                    methodologies[i]['list_order'] = newOrder;
+                                }
+                            }
+                            methodologies = methodologies.filter(function (item) {
+                                return item !== undefined;
+                            });
+                            toastr.success('Methodology was deleted');
+                        } else {
+                            toastr.error('An error has occured when deleting the hazard');
+                        }
+                    },
+                    error: function (data) {
+                        if (data.status == 422) {
+                            var errors = '';
+                            $.each(data.responseJSON.errors, function(key,val) {
+                                toastr.error(val);
+                            });
+                        } else if (data.status == 401) {
+                            toastr.error('Your sesson has expired, please refresh the page and login to proceed');
+                        } else {
+                            toastr.error('An error has occured when deleting the methodology');
+                        }
+                    }
+                });
+            }
         }
 
         function moveMethodologyUp() {
