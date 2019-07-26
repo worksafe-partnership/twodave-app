@@ -14,7 +14,7 @@
 <div class="columns">
     <div class="column is-10 is-offset-1">
         <div class="field">
-            {{ EGForm::text('main_text', [
+            {{ EGForm::text('text_before', [
                 'label' => 'Main Text',
                 'value' => '',
                 'type' => $pageType
@@ -25,7 +25,7 @@
 <div class="columns">
     <div class="column is-10 is-offset-1">
         <div class="field">
-            {{ EGForm::text('sub_text', [
+            {{ EGForm::text('text_after', [
                 'label' => 'Sub Text',
                 'value' => '',
                 'type' => $pageType
@@ -36,10 +36,9 @@
 
 <div class="columns">
     <div class="column is-10 is-offset-1">
-        first table
         <table class="table is-bordered">
             <thead>
-                <th colspan="5" id="top_heading">Mandatory</th>
+                <th colspan="5" id="top_heading">Main Table</th>
             </thead>
             <tbody>
                 <tr>
@@ -56,10 +55,9 @@
 
 <div class="columns">
     <div class="column is-10 is-offset-1">
-        second table
         <table class="table is-bordered">
             <thead>
-                <th colspan="5" id="sub_heading">Additional - to be worn as identified in Method of Work</th>
+                <th colspan="5" id="sub_heading">Sub Table</th>
             </thead>
             <tbody>
                 <tr>

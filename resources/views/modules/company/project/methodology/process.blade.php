@@ -92,9 +92,9 @@
         let row_id = table.data('next_row');
         if ($('#new_description').val() != "") {
             let row = "<tr data-row='"+row_id+"'>";
-                row += "<td><input type='checkbox' "+checked+"></input></td>";
-                row += "<td><input type='text' name="+row_id+"-1 value='"+$('#new_label').val()+"'></input></td>";
-                row += "<td><input type='text' name="+row_id+"-2 value='"+$('#new_description').val()+"'></input></td>";
+                row += "<td><input type='checkbox' name='row_"+row_id+"_heading' "+checked+"></input></td>";
+                row += "<td><input type='text' name='row_"+row_id+"_label' value='"+$('#new_label').val()+"'></input></td>";
+                row += "<td><input type='text' name='row_"+row_id+"_description' value='"+$('#new_description').val()+"'></input></td>";
             row += "</tr>"
             table.append(row);
             row_id++;

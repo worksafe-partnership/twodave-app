@@ -292,7 +292,20 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'MethodologyController@update'
     ]);
 });
+Route::post('/methodology/{id}/delete_methodology', [
+    'middleware' => 'can:delete-methodology',
+    'uses' => 'MethodologyController@delete'
+]);
 
+Route::post('/methodology/{id}/move_up', [
+    'middleware' => 'can:edit-methodology',
+    'uses' => 'MethodologyController@moveUp'
+]);
+
+Route::post('/methodology/{id}/move_down', [
+    'middleware' => 'can:edit-methodology',
+    'uses' => 'MethodologyController@moveDown'
+]);
 // Principle Contractor Approval Routes
 Route::group(['prefix' => '{unique_link}/vtrams', 'middleware' => ['validate_link']], function () {
     Route::get('', 'PrincipleContractorController@vtramsList');

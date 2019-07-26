@@ -14,8 +14,8 @@
 <div class="columns">
     <div class="column is-10 is-offset-1">
         <div class="field">
-            {{ EGForm::ckeditor('first_text', [
-                'label' => 'First Text',
+            {{ EGForm::ckeditor('text_before', [
+                'label' => 'Text Before',
                 'value' => '',
                 'type' => $pageType
             ]) }}
@@ -107,8 +107,8 @@
 <div class="columns">
     <div class="column is-10 is-offset-1">
         <div class="field">
-            {{ EGForm::ckeditor('last_text', [
-                'label' => 'Last Text',
+            {{ EGForm::ckeditor('text_after', [
+                'label' => 'Text After',
                 'value' => '',
                 'type' => $pageType
             ]) }}
@@ -126,10 +126,10 @@
         }
         if ($('#complex_col_1').val() != "") {
             let row = "<tr data-row='"+row_id+"'>";
-                row += "<"+type+"><input type='text' name="+row_id+"-1 value='"+$('#complex_col_1').val()+"'></input></"+type+">";
-                row += "<"+type+"><input type='text' name="+row_id+"-2 value='"+$('#complex_col_2').val()+"'></input></"+type+">";
-                row += "<"+type+"><input type='text' name="+row_id+"-3 value='"+$('#complex_col_3').val()+"'></input></"+type+">";
-                row += "<"+type+"><input type='text' name="+row_id+"-4 value='"+$('#complex_col_4').val()+"'></input></"+type+">";
+                row += "<"+type+"><input type='text' name='row_"+row_id+"_col_1' value='"+$('#complex_col_1').val()+"'></input></"+type+">";
+                row += "<"+type+"><input type='text' name='row_"+row_id+"_col_2' value='"+$('#complex_col_2').val()+"'></input></"+type+">";
+                row += "<"+type+"><input type='text' name='row_"+row_id+"_col_3' value='"+$('#complex_col_3').val()+"'></input></"+type+">";
+                row += "<"+type+"><input type='text' name='row_"+row_id+"_col_4' value='"+$('#complex_col_4').val()+"'></input></"+type+">";
             row += "</tr>"
             table.append(row);
             row_id++;

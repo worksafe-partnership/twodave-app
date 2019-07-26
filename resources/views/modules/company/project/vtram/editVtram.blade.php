@@ -340,6 +340,7 @@
                 if (type == 'hazard') {
                     $('#hazard-form-container').css('display', 'none');
                 } else {
+                    $('#methodology-list-container').show();
                     $('[id^=methodology-][id$=-form-container]').css('display', 'none');
                     $('#meth_type').val('');
                 }
@@ -575,7 +576,7 @@
                             }
                         }
                         hazards = bubbleSort(hazards, 'list_order');
-                        toastr.success('Hazard was deleted');
+                        toastr.success('Hazard was moved');
                     } else {
                         toastr.error('An error has occured when moving the hazard');
                     }
@@ -615,6 +616,9 @@
         var methodologies = JSON.parse('{!! str_replace('\'', '\\\'', $methodologies->toJson()) !!}');
         var company = JSON.parse('{!! str_replace('\'', '\\\'', $company->toJson()) !!}');
         var methTypeList = JSON.parse('{!! json_encode($methTypeList) !!}');
+        var processes = JSON.parse('{!! json_encode($processes) !!}');
+        var tableRows = JSON.parse('{!! json_encode($tableRows) !!}');
+        var icons = JSON.parse('{!! json_encode($icons) !!}');
 
         function createMethodology() {
             let type = $('#meth_type').val();
@@ -665,14 +669,20 @@
                     case 'SIMPLE_TABLE':
                         container = 'methodology-simple-table-form-container';
                         cat = 'SIMPLE_TABLE';
+                        $('#simple-table tbody tr').remove();
+                        $('#simple-table').attr('data-next_row', 1);
                         break;
                     case 'COMPLEX_TABLE':
                         container = 'methodology-complex-table-form-container';
                         cat = 'COMPLEX_TABLE';
+                        $('#complex-table tbody tr').remove();
+                        $('#complex-table').attr('data-next_row', 1);
                         break;
                     case 'PROCESS':
                         container = 'methodology-process-form-container';
                         cat = 'PROCESS';
+                        $('#process-table tbody tr').remove();
+                        $('#process-table').attr('data-next_row', 1);
                         break;
                     case 'ICON':
                         container = 'methodology-icon-form-container';
@@ -723,15 +733,67 @@
                         break;
                     case 'SIMPLE_TABLE':
                         container = 'methodology-simple-table-form-container';
+                        if (tableRows[methodology.id] !== 'undefined') {
+                            let rows = tableRows[methodology.id];
+                            $('#simple-table tbody').html('');
+                            $.each(rows, function(key, row) {
+                                let newRow = "<tr data-row='"+key+"'>";
+                                    newRow += "<th><input type='text' name='row_"+key+"_col_1' value='"+row.col_1+"'></input></th>";
+                                    newRow += "<td><input type='text' name='row_"+key+"_col_2' value='"+row.col_2+"'></input></td>";
+                                    newRow += "<td><input type='text' name='row_"+key+"_col_3' value='"+row.col_3+"'></input></td>";
+                                    newRow += "<td><input type='text' name='row_"+key+"_col_4' value='"+row.col_4+"'></input></td>";
+                                newRow += "</tr>";
+                                $('#simple-table tbody').append(newRow);
+                                $('#simple-table').attr('data-next_row', row.id+1);
+                            });
+                        }
+                        var before = methodology.text_before;
+                        var after = methodology.text_after;
                         break;
                     case 'COMPLEX_TABLE':
                         container = 'methodology-complex-table-form-container';
+                        if (tableRows[methodology.id] !== 'undefined') {
+                            let rows = tableRows[methodology.id];
+                            $('#complex-table tbody').html('');
+                            $.each(rows, function(key, row) {
+                                let newRow = "<tr data-row='"+key+"'>";
+                                    newRow += "<th><input type='text' name='row_"+key+"_col_1' value='"+row.col_1+"'></input></th>";
+                                    newRow += "<td><input type='text' name='row_"+key+"_col_2' value='"+row.col_2+"'></input></td>";
+                                    newRow += "<td><input type='text' name='row_"+key+"_col_3' value='"+row.col_3+"'></input></td>";
+                                    newRow += "<td><input type='text' name='row_"+key+"_col_4' value='"+row.col_4+"'></input></td>";
+                                newRow += "</tr>";
+                                $('#complex-table tbody').append(newRow);
+                                $('#complex-table').attr('data-next_row', row.id+1);
+                            });
+                        }
+                        var before = methodology.text_before;
+                        var after = methodology.text_after;
                         break;
                     case 'PROCESS':
                         container = 'methodology-process-form-container';
+                        if (processes[methodology.id] !== 'undefined') {
+                            let rows = processes[methodology.id];
+                            $('#process-table tbody tr').remove();
+                            $.each(rows, function(key, row) {
+                                console.log(row);
+                                let checked = '';
+                                if (row.heading == 1) {
+                                    checked = 'checked';
+                                }
+                                let newRow = "<tr data-row='"+key+"'>";
+                                    newRow += "<td><input type='checkbox' name='row_"+key+"_heading' "+checked+"></input></td>";
+                                    newRow += "<td><input type='text' name='row_"+key+"_label' value='"+row.label+"'></input></td>";
+                                    newRow += "<td><input type='text' name='row_"+key+"_description' value='"+row.description+"'></input></td>";
+                                newRow += "</tr>"
+                                $('#process-table tbody').append(newRow);
+                                $('#process-table').attr('data-next_row', row.id+1);
+                            });
+                        }
                         break;
                     case 'ICON':
                         container = 'methodology-icon-form-container';
+                        var before = methodology.text_before;
+                        var after = methodology.text_after;
                         break;
                 }
                 $('[id^=methodology-][id$=-form-container]').css('display', 'none');
@@ -743,12 +805,12 @@
                 }
 
 
-                // text + image
+                // text + image, simple table, complex table, icon
                 if ($('#' + container + ' #text_before')) {
                     $('#' + container + ' #text_before').val(before);
                 }
 
-                // text + image
+                // text + image, simple table, complex table, icon
                 if ($('#' + container + ' #text_after')) {
                     $('#' + container + ' #text_after').val(after);
                 }
@@ -795,6 +857,31 @@
                     form_data.append('text_before', $('#methodology-text-image-form-container #text_before').val());
                     form_data.append('text_after', $('#methodology-text-image-form-container #text_after').val());
                     break;
+                case 'SIMPLE_TABLE':
+                    form_data.append('title', $('#methodology-simple-table-form-container #title').val());
+
+                    // get all inputs within the $('#simple-table') element and attach them?
+                    let simple_inputs = $('#simple-table input[name^=row_]');
+                    $.each(simple_inputs, function(key, input) {
+                        form_data.append(input.name, input.value);
+                    })
+
+                    form_data.append('text_before', $('#methodology-simple-table-form-container #text_before').val());
+                    form_data.append('text_after', $('#methodology-simple-table-form-container #text_after').val());
+                    break;
+                case 'COMPLEX_TABLE':
+                    form_data.append('title', $('#methodology-complex-table-form-container #title').val());
+
+                    // get all inputs within the $('#simple-table') element and attach them?
+                    let complex_inputs = $('#complex-table input[name^=row_]');
+                    $.each(complex_inputs, function(key, input) {
+                        form_data.append(input.name, input.value);
+                    })
+
+                    form_data.append('text_before', $('#methodology-complex-table-form-container #text_before').val());
+                    form_data.append('text_after', $('#methodology-complex-table-form-container #text_after').val());
+                    break;
+
             }
 
             let url = 'methodology/create';
@@ -873,16 +960,115 @@
             });
         }
 
-        function deleteMethodology() {
-
+        function deleteMethodology(id) {
+            if (confirm("Are you sure you want delete this methodology?")) {
+                var data = {
+                    _token: '{{ csrf_token() }}',
+                    methodology_id: id,
+                };
+                $.ajax({
+                    url: '/methodology/'+id+'/delete_methodology',
+                    type: 'POST',
+                    data: data,
+                    success: function (response) {
+                        if (response != "disallow") {
+                            let listOrder = 0;
+                            for (let i = 0; i < methodologies.length; i++) {
+                                if (methodologies[i]['id'] == id) {
+                                    // remove
+                                    $('tr#methodology-' + id).remove();
+                                    listOrder = methodologies[i]['list_order'];
+                                    delete methodologies[i];
+                                } else if (listOrder != 0 && methodologies[i]['list_order'] > listOrder) {
+                                    // decrement order
+                                    let newOrder = methodologies[i]['list_order'] - 1;
+                                    $('tr#methodology-' + methodologies[i]['id'] + ' .methodology-order').html(newOrder);
+                                    methodologies[i]['list_order'] = newOrder;
+                                }
+                            }
+                            methodologies = methodologies.filter(function (item) {
+                                return item !== undefined;
+                            });
+                            toastr.success('Methodology was deleted');
+                        } else {
+                            toastr.error('An error has occured when deleting the hazard');
+                        }
+                    },
+                    error: function (data) {
+                        if (data.status == 422) {
+                            var errors = '';
+                            $.each(data.responseJSON.errors, function(key,val) {
+                                toastr.error(val);
+                            });
+                        } else if (data.status == 401) {
+                            toastr.error('Your sesson has expired, please refresh the page and login to proceed');
+                        } else {
+                            toastr.error('An error has occured when deleting the methodology');
+                        }
+                    }
+                });
+            }
         }
 
-        function moveMethodologyUp() {
-
+        function moveMethodologyUp(id) {
+            moveMethodology(id, "move_up")
         }
 
-        function moveMethodologyDown() {
-
+        function moveMethodologyDown(id) {
+            moveMethodology(id, "move_down")
         }
+
+        function moveMethodology(id, slug) {
+            var data = {
+                _token: '{{ csrf_token() }}',
+                methodology_id: id,
+            };
+            $.ajax({
+                url: '/methodology/'+id+'/'+slug,
+                type: 'POST',
+                data: data,
+                success: function (response) {
+                    if (response != "disallow") {
+                        for (let i = 0; i < methodologies.length; i++) {
+                            if (slug == 'move_down' && methodologies[i]['id'] == id) {
+                                let firstOrder = methodologies[i]['list_order'];
+                                let lastOrder = methodologies[i + 1]['list_order'];
+                                $('tr#methodology-' + methodologies[i + 1]['id'] + ' .methodology-order').html(firstOrder);
+                                $('tr#methodology-' + methodologies[i]['id'] + ' .methodology-order').html(lastOrder);
+                                methodologies[i + 1]['list_order'] = firstOrder;
+                                methodologies[i]['list_order'] = lastOrder;
+                                $('tr#methodology-' + methodologies[i + 1]['id']).after($('tr#methodology-' + methodologies[i]['id']));
+                            } else if (slug == 'move_up' && methodologies[i]['id'] == id) {
+                                let firstOrder = methodologies[i]['list_order'];
+                                let lastOrder = methodologies[i - 1]['list_order'];
+                                $('tr#methodology-' + methodologies[i - 1]['id'] + ' .methodology-order').html(firstOrder);
+                                $('tr#methodology-' + methodologies[i]['id'] + ' .methodology-order').html(lastOrder);
+                                methodologies[i - 1]['list_order'] = firstOrder;
+                                methodologies[i]['list_order'] = lastOrder;
+                                $('tr#methodology-' + methodologies[i]['id']).after($('tr#methodology-' + methodologies[i - 1]['id']));
+                            }
+                        }
+                        methodologies = bubbleSort(methodologies, 'list_order');
+                        toastr.success('Methodology was moved');
+                    } else {
+                        toastr.error('An error has occured when moving the methodology');
+                    }
+                },
+                error: function (data) {
+                    if (data.status == 422) {
+                        var errors = '';
+                        $.each(data.responseJSON.errors, function(key,val) {
+                            toastr.error(val);
+                        });
+                    } else if (data.status == 401) {
+                        toastr.error('Your sesson has expired, please refresh the page and login to proceed');
+                    } else {
+                        toastr.error('An error has occured when moving the methodology');
+                    }
+                }
+            });
+        }
+
+
     </script>
 @endpush
