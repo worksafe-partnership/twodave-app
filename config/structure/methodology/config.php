@@ -4,7 +4,7 @@ return [
     'singular' => 'Methodology',
     'plural' => 'Methodologies',
     'identifier_path' => 'methodology',
-    'route_type' => 'index',
+    'route_type' => 'resource',
     'db' => [
         'model' => 'Methodology',
         'id' => 'id',
@@ -25,7 +25,6 @@ return [
             'list_order' => ['label' => 'list_order']
         ]
     ],
-    'sidebar' => [],
     'permissions' => true,
     'exclude_routes' => [
         'create',
