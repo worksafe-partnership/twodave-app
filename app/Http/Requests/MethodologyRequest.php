@@ -25,7 +25,8 @@ class MethodologyRequest extends FormRequest
     {
         $category = $this->category;
         $rules = [
-            'category' => 'required'
+            'category' => 'required',
+            'title' => 'required'
         ];
 
         switch ($category) {
