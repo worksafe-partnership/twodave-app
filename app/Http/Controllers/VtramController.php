@@ -107,6 +107,9 @@ class VtramController extends CompanyVtramController
             'order' => '500',
             'id' => 'approvalList'
         ];
+        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECT'])) {
+            $this->disableEdit = true;
+        }
     }
 
     public function postEditHook()

@@ -35,6 +35,7 @@ class Vtram extends Model
         'created_by',
         'updated_by',
         'submitted_by',
+        'submitted_date',
         'approved_by',
         'date_replaced',
         'resubmit_by',
@@ -82,6 +83,7 @@ class Vtram extends Model
                 'created_by',
                 'updated_by',
                 'submitted_by',
+                'submitted_date',
                 'approved_by',
                 'date_replaced',
                 'resubmit_by',
@@ -180,6 +182,14 @@ class Vtram extends Model
         return "";
     }
 
+    public function niceSubmittedDate() // for custom datatables
+    {
+        if (!is_null($this->submitted_date)) {
+            return Carbon::createFromFormat("Y-m-d", $this->submitted_date)->format('d/m/Y');
+        }
+        return "";
+    }
+
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by', 'id');
@@ -243,6 +253,15 @@ class Vtram extends Model
         }
         return "";
     }
+
+    public function niceResubmitByDate() // for custom datatables
+    {
+        if (!is_null($this->resubmit_by)) {
+            return Carbon::createFromFormat("Y-m-d", $this->resubmit_by)->format('d/m/Y');
+        }
+        return "";
+    }
+
     public function adminUrl()
     {
         if (!is_null($this->company_id) && !is_null($this->project_id) && !is_null($this->id)) {

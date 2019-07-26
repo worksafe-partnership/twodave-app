@@ -59,6 +59,9 @@ class TemplateController extends Controller
             'order' => '500',
             'id' => 'approvalList'
         ];
+        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
+            $this->disableEdit = true;
+        }
     }
 
     public function bladeHook()
@@ -202,6 +205,31 @@ class TemplateController extends Controller
                 'id' => 'view_comments',
             ];
         }
+
+        if (VTLogic::canReview($this->record)) { 
+            if ($this->record->pages_in_pdf == 4) {
+                $path = 'javascript: window.open("'.$this->record->id.'/view_a3", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
+            } else {
+                $path = 'javascript: window.open("/image/'.$this->record->pdf.'", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
+            }
+            $this->pillButtons['approve_template'] = [
+                'label' => 'Approve Template',
+                'path' => $path,
+                'icon' => 'playlist_add_check',
+                'id' => 'approve_template',
+            ];
+        }
+    }
+
+    public function edit()
+    {
+        $this->args = func_get_args();
+        $id = end($this->args);
+        $this->record = Template::findOrFail($id);
+        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
+            abort(404);
+        }
+        return parent::_edit(func_get_args());
     }
 
     public function submitForApproval($templateId, $otherId = null)

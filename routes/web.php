@@ -13,6 +13,8 @@
 Route::get('/', function () {
     return redirect('/dashboard');
 });
+
+// Edits
 Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/methodology', [
     'middleware' => 'can:edit-company.project.vtram',
     'uses' => 'CompanyVtramController@editContent'
@@ -29,6 +31,42 @@ Route::get('/project/{project_id}/vtram/{vtram_id}/methodology', [
     'middleware' => 'can:edit-project.vtram',
     'uses' => 'VtramController@editContent'
 ]);
+
+// Approvals
+Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/approve', [
+    'middleware' => 'can:create-company.project.vtram.approval',
+    'uses' => 'CompanyApprovalController@viewApproval'
+]);
+Route::get('/company/{company_id}/template/{template_id}/approve', [
+    'middleware' => 'can:create-company.template.approval',
+    'uses' => 'CompanyTemplateApprovalController@viewApproval'
+]);
+Route::get('/template/{template_id}/approve', [
+    'middleware' => 'can:create-template.approval',
+    'uses' => 'TemplateApprovalController@viewApproval'
+]);
+Route::get('/project/{project_id}/vtram/{vtram_id}/approve', [
+    'middleware' => 'can:create-project.vtram.approval',
+    'uses' => 'ApprovalController@viewApproval'
+]);
+Route::post('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/approve', [
+    'middleware' => 'can:create-company.project.vtram.approval',
+    'uses' => 'CompanyApprovalController@store'
+]);
+Route::post('/company/{company_id}/template/{template_id}/approve', [
+    'middleware' => 'can:create-company.template.approval',
+    'uses' => 'CompanyTemplateApprovalController@store'
+]);
+Route::post('/template/{template_id}/approve', [
+    'middleware' => 'can:create-template.approval',
+    'uses' => 'TemplateApprovalController@store'
+]);
+Route::post('/project/{project_id}/vtram/{vtram_id}/approve', [
+    'middleware' => 'can:create-project.vtram.approval',
+    'uses' => 'ApprovalController@store'
+]);
+
+// Clone
 Route::get('/company/{company_id}/clone', [
     'middleware' => 'can:create-company',
     'uses' => 'CompanyController@clone',
@@ -107,6 +145,7 @@ Route::get('/template/{template_id}/view_a3', [
     'uses' => 'TemplateController@viewA3'
 ]);
 
+// Hazards
 Route::post('/hazard/{id}/delete_hazard', [
     'middleware' => 'can:delete-hazard',
     'uses' => 'HazardController@delete'

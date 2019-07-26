@@ -169,11 +169,27 @@ class Template extends Model
         return "";
     }
 
+    public function niceResubmitByDate() // for custom datatables
+    {
+        if (!is_null($this->resubmit_by)) {
+            return Carbon::createFromFormat("Y-m-d", $this->resubmit_by)->format('d/m/Y');
+        }
+        return "";
+    }
+
     public function approvedName()
     {
         if (!is_null($this->approved)) {
             return $this->approved->name;
         }
         return 'Not Approved';
+    }
+
+    public function niceSubmittedDate() // for custom datatables
+    {
+        if (!is_null($this->submitted_date)) {
+            return Carbon::createFromFormat("Y-m-d", $this->submitted_date)->format('d/m/Y');
+        }
+        return "";
     }
 }

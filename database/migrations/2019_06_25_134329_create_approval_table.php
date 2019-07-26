@@ -16,7 +16,7 @@ class CreateApprovalTable extends Migration
             $table->increments('id');
             $table->string('entity');
             $table->integer('entity_id')->unsigned();
-            $table->text('comment');
+            $table->text('comment')->nullable();
             $table->string('type');
             $table->string('completed_by');
             $table->integer('completed_by_id')->nullable()->unsigned();

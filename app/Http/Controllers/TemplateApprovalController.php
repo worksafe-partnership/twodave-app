@@ -19,14 +19,4 @@ class TemplateApprovalController extends ApprovalController
         $this->disablePermanetlyDelete = true;
         parent::__construct();
     }
-    
-    public function store(ApprovalRequest $request)
-    {
-        return parent::_store(func_get_args());
-    }
-
-    public function update(ApprovalRequest $request)
-    {
-        return parent::_update(func_get_args());
-    }
 }
