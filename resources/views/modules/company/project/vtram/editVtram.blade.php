@@ -686,15 +686,15 @@
                     $('#' + container + ' #content').val(content);
                 }
 
-                if ($('#' + container + ' #text_before')) {
+                if ($('#' + container + ' #text_before').length) {
                     $('#' + container + ' #text_before').val('');
                 }
 
-                if ($('#' + container + ' #text_after')) {
+                if ($('#' + container + ' #text_after').length) {
                     $('#' + container + ' #text_after').val('');
                 }
 
-                if ($('#' + container + ' input[name=image_on]') !== "undefined") {
+                if ($('#' + container + ' input[name=image_on]').length) {
                     $('#' + container + ' input[name=image_on]')[0].checked = false;
                     $('#' + container + ' input[name=image_on]')[1].checked = false;
                 }
@@ -708,13 +708,11 @@
             let methodology = methodologies.filter(methodologies => methodologies.id === id)
             if (methodology.length) {
                 methodology = methodology[0];
-
-                let title = '';
+                let title = methodology.title;
                 let content = '';
                 let container = 'methodology-text-form-container';
                 switch (methodology.category) {
                     case 'TEXT':
-                        title = methodology.title;
                         content = methodology.text_before;
                         break;
                     case 'TEXT_IMAGE':
@@ -737,6 +735,7 @@
                         break;
                 }
                 $('[id^=methodology-][id$=-form-container]').css('display', 'none');
+
                 $('#' + container + ' #title').val(title);
 
                 if ($('#' + container + ' #content')) {
@@ -773,7 +772,7 @@
 
             form_data.append('_token', '{{ csrf_token() }}');
             form_data.append('entityType', '{{ $entityType }}');
-            if(!listOrder) {
+            if(listOrder === null) {
                 listOrder = methodologies.length +1; // create only.
             }
             form_data.append('list_order', listOrder);
@@ -785,7 +784,10 @@
                     form_data.append('text_before', $('#methodology-text-form-container #content').val());
                     break;
                 case 'TEXT_IMAGE':
-                    form_data.append('image', $('#methodology-text-image-form-container #image').prop('files')[0]);
+                form_data.append('title', $('#methodology-text-image-form-container #title').val());
+                    if ($('#methodology-text-image-form-container #image').prop('files')[0] !== undefined){
+                        form_data.append('image', $('#methodology-text-image-form-container #image').prop('files')[0]);
+                    }
                     let checked = $('input[name=image_on]:checked').val();
                     if (checked && checked !== "undefined") {
                         form_data.append('image_on', checked);
@@ -815,14 +817,14 @@
                             id: parseInt(id),
                             title: form_data.get('title'),
                             text_before: form_data.get('text_before'),
-                            list_order: form_data.get('text_after'),
+                            list_order: form_data.get('list_order'),
                             category: category,
                             entity: '{{$entityType}}',
                             image: form_data.get('image'),
                             image_on: form_data.get('image_on'),
                             text_after: form_data.get('text_after')
                         });
-                        $('.methodology-list-table').append('<tr id="methodology' + id + '">\
+                        $('.methodology-list-table').append('<tr id="methodology-' + id + '">\
                                 <td class="has-text-centered methodology-order">' + form_data.get('list_order')+ '</td>\
                                 <td class="methodology-title">' + form_data.get('title') + '</td>\
                                 <td class="methodology-category">' +  methTypeList[category] + '</td>\
