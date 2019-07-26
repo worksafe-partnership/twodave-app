@@ -122,10 +122,10 @@
         let row_id = table.data('next_row');
         if ($('#simple_col_1').val() != "" && $('#simple_col_2').val() != "") {
             let row = "<tr data-row='"+row_id+"'>";
-                row += "<th><input type='text' name="+row_id+"-1 value='"+$('#simple_col_1').val()+"'></input></th>";
-                row += "<td><input type='text' name="+row_id+"-2 value='"+$('#simple_col_2').val()+"'></input></td>";
-                row += "<td><input type='text' name="+row_id+"-3 value='"+$('#simple_col_3').val()+"'></input></td>";
-                row += "<td><input type='text' name="+row_id+"-4 value='"+$('#simple_col_4').val()+"'></input></td>";
+                row += "<th><input type='text' name='row_"+row_id+"_col_1' value='"+$('#simple_col_1').val()+"'></input></th>";
+                row += "<td><input type='text' name='row_"+row_id+"_col_2' value='"+$('#simple_col_2').val()+"'></input></td>";
+                row += "<td><input type='text' name='row_"+row_id+"_col_3' value='"+$('#simple_col_3').val()+"'></input></td>";
+                row += "<td><input type='text' name='row_"+row_id+"_col_4' value='"+$('#simple_col_4').val()+"'></input></td>";
             row += "</tr>"
             table.append(row);
             row_id++;

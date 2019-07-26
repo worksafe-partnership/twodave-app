@@ -738,10 +738,10 @@
                             $('#simple-table tbody').html('');
                             $.each(rows, function(key, row) {
                                 let newRow = "<tr data-row='"+key+"'>";
-                                    newRow += "<th><input type='text' name="+key+"-1 value='"+row.col_1+"'></input></th>";
-                                    newRow += "<td><input type='text' name="+key+"-2 value='"+row.col_2+"'></input></td>";
-                                    newRow += "<td><input type='text' name="+key+"-3 value='"+row.col_3+"'></input></td>";
-                                    newRow += "<td><input type='text' name="+key+"-4 value='"+row.col_4+"'></input></td>";
+                                    newRow += "<th><input type='text' name='row_"+key+"_col_1' value='"+row.col_1+"'></input></th>";
+                                    newRow += "<td><input type='text' name='row_"+key+"_col_2' value='"+row.col_2+"'></input></td>";
+                                    newRow += "<td><input type='text' name='row_"+key+"_col_3' value='"+row.col_3+"'></input></td>";
+                                    newRow += "<td><input type='text' name='row_"+key+"_col_4' value='"+row.col_4+"'></input></td>";
                                 newRow += "</tr>";
                                 $('#simple-table tbody').append(newRow);
                                 $('#simple-table').attr('data-next_row', row.id+1);
@@ -757,10 +757,10 @@
                             $('#complex-table tbody').html('');
                             $.each(rows, function(key, row) {
                                 let newRow = "<tr data-row='"+key+"'>";
-                                    newRow += "<th><input type='text' name="+key+"-1 value='"+row.col_1+"'></input></th>";
-                                    newRow += "<td><input type='text' name="+key+"-2 value='"+row.col_2+"'></input></td>";
-                                    newRow += "<td><input type='text' name="+key+"-3 value='"+row.col_3+"'></input></td>";
-                                    newRow += "<td><input type='text' name="+key+"-4 value='"+row.col_4+"'></input></td>";
+                                    newRow += "<th><input type='text' name='row_"+key+"_col_1' value='"+row.col_1+"'></input></th>";
+                                    newRow += "<td><input type='text' name='row_"+key+"_col_2' value='"+row.col_2+"'></input></td>";
+                                    newRow += "<td><input type='text' name='row_"+key+"_col_3' value='"+row.col_3+"'></input></td>";
+                                    newRow += "<td><input type='text' name='row_"+key+"_col_4' value='"+row.col_4+"'></input></td>";
                                 newRow += "</tr>";
                                 $('#complex-table tbody').append(newRow);
                                 $('#complex-table').attr('data-next_row', row.id+1);
@@ -781,9 +781,9 @@
                                     checked = 'checked';
                                 }
                                 let newRow = "<tr data-row='"+key+"'>";
-                                    newRow += "<td><input type='checkbox' name='"+key+"-heading' "+checked+"></input></td>";
-                                    newRow += "<td><input type='text' name="+key+"-label value='"+row.label+"'></input></td>";
-                                    newRow += "<td><input type='text' name="+key+"-description value='"+row.description+"'></input></td>";
+                                    newRow += "<td><input type='checkbox' name='row_"+key+"_heading' "+checked+"></input></td>";
+                                    newRow += "<td><input type='text' name='row_"+key+"_label' value='"+row.label+"'></input></td>";
+                                    newRow += "<td><input type='text' name='row_"+key+"_description' value='"+row.description+"'></input></td>";
                                 newRow += "</tr>"
                                 $('#process-table tbody').append(newRow);
                                 $('#process-table').attr('data-next_row', row.id+1);
@@ -857,6 +857,31 @@
                     form_data.append('text_before', $('#methodology-text-image-form-container #text_before').val());
                     form_data.append('text_after', $('#methodology-text-image-form-container #text_after').val());
                     break;
+                case 'SIMPLE_TABLE':
+                    form_data.append('title', $('#methodology-simple-table-form-container #title').val());
+
+                    // get all inputs within the $('#simple-table') element and attach them?
+                    let simple_inputs = $('#simple-table input[name^=row_]');
+                    $.each(simple_inputs, function(key, input) {
+                        form_data.append(input.name, input.value);
+                    })
+
+                    form_data.append('text_before', $('#methodology-simple-table-form-container #text_before').val());
+                    form_data.append('text_after', $('#methodology-simple-table-form-container #text_after').val());
+                    break;
+                case 'COMPLEX_TABLE':
+                    form_data.append('title', $('#methodology-complex-table-form-container #title').val());
+
+                    // get all inputs within the $('#simple-table') element and attach them?
+                    let complex_inputs = $('#complex-table input[name^=row_]');
+                    $.each(complex_inputs, function(key, input) {
+                        form_data.append(input.name, input.value);
+                    })
+
+                    form_data.append('text_before', $('#methodology-complex-table-form-container #text_before').val());
+                    form_data.append('text_after', $('#methodology-complex-table-form-container #text_after').val());
+                    break;
+
             }
 
             let url = 'methodology/create';
