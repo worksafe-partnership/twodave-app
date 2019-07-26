@@ -773,7 +773,10 @@
 
             form_data.append('_token', '{{ csrf_token() }}');
             form_data.append('entityType', '{{ $entityType }}');
-            form_data.append('list_order', methodologies.length +1);
+            if(!listOrder) {
+                listOrder = methodologies.length +1; // create only.
+            }
+            form_data.append('list_order', listOrder);
             form_data.append('category', category);
 
             switch (category) {
@@ -795,7 +798,6 @@
             let url = 'methodology/create';
             if (editId) {
                 url = 'methodology/'+editId+'/edit';
-                form_data.append('list_order', listOrder);
             }
 
             $.ajax({
