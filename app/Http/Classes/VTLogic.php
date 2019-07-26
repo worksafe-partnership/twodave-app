@@ -26,15 +26,21 @@ class VTLogic
         $config = new VTConfig($entityId, $entityType);
         if (in_array($config->entity->status, ['NEW', 'REJECTED'])) {
             $newStatus = 'PENDING';
-        } else if (in_array($config->entity->status, ['EXTERNAL_REJECT','AWAITING_EXTERNAL']) && ($config->entityType == 'VTRAM' && $config->entity->project->principle_contractor)) {
+        } else if (in_array($config->entity->status, ['EXTERNAL_REJECT']) && ($config->entityType == 'VTRAM' && $config->entity->project->principle_contractor)) {
             $newStatus = 'AWAITING_EXTERNAL';
-            dd("SEND PRINCIPLE CONTRACTOR EMAIL HERE");
+            self::sendPCApprovalEmail($config);
         }
         if (isset($newStatus)) {
             $config->entity->update([
                 'status' => $newStatus,
             ]);
         }
+    }
+
+    public static function sendPcApprovalEmail($config)
+    {
+        dd("SEND EMAIL WITH UNIQUE LINK TO PRINCIPLE CONTRACTOR");
+        dd("SEND PRINCIPLE CONTRACTOR EMAIL HERE");
     }
 
     public static function getComments($entityId, $status, $entityType = null)
@@ -123,5 +129,48 @@ class VTLogic
                 $order++;
             }
         }
+    }
+
+    public static function canReview($entityId, $entityType = null, $status = ['PENDING'])
+    {
+        $user = Auth::user();
+        $config = new VTConfig($entityId, $entityType);
+        if (!in_array($config->entity->status, $status)) {
+            return false;
+        }
+        if ($user->id == $config->entity->submitted_by) {
+            return false;
+        }
+        //user roles based
+        $subRole = $config->entity->submitted->roles->first();
+        $userRole = $user->roles->first();
+        switch ($userRole) {
+            case 'supervisor':
+                return false;
+                break;
+            case 'project_admin':
+                if (in_array($subRole, ['supervisor'])) {
+                    return true;
+                }
+                break;
+            case 'contract_manager':
+                if (in_array($subRole, ['supervisor','project_admin'])) {
+                    return true;
+                }
+                break;
+            case 'company_admin':
+                if (in_array($subRole, ['supervisor','project_admin','contract_manager','company_admin'])) {
+                    return true;
+                }
+                break;
+            case 'admin':
+                return true;
+                break;
+            case 'evergreen':
+                return true;
+                break;
+        }
+        
+        return false;
     }
 }

@@ -24,7 +24,7 @@ class VTConfig
                 $this->entityId = $e->id;
                 $this->entityType = 'TEMPLATE';
                 break;
-            case is_int($e) && $type != null && in_array($type, ['VTRAM', 'TEMPLATE']):
+            case is_int((int)$e) && $type != null && in_array($type, ['VTRAM', 'TEMPLATE']):
                 if ($type == 'VTRAM') {
                     $this->entity = Vtram::findOrFail($e);
                     $this->entityType = 'VTRAM';

@@ -40,6 +40,9 @@ class CompanyTemplateController extends TemplateController
             'order' => '500',
             'id' => 'approvalList'
         ];
+        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECT'])) {
+            $this->disableEdit = true;
+        }
     }
 
     public function store(TemplateRequest $request, $companyId = null)

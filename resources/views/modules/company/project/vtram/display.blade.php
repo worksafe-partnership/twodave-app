@@ -1,4 +1,3 @@
-
 <div class="columns">
     @if(isset($createdFromId))
         {{ EGForm::hidden('created_from_id', [

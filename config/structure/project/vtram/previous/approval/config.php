@@ -30,12 +30,11 @@ return [
     ],
     'sidebar' => [],
     'permissions' => true,
-    'exclude_route' => [
+    'exclude_routes' => [
         'create',
         'edit',
         'delete',
         'permanentlyDelete',
         'restore',
-        'datatable_all',
     ],
 ];
