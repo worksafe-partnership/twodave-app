@@ -340,6 +340,7 @@
                 if (type == 'hazard') {
                     $('#hazard-form-container').css('display', 'none');
                 } else {
+                    $('#methodology-list-container').show();
                     $('[id^=methodology-][id$=-form-container]').css('display', 'none');
                     $('#meth_type').val('');
                 }
