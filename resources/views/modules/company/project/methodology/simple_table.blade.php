@@ -14,8 +14,8 @@
 <div class="columns">
     <div class="column is-10 is-offset-1">
         <div class="field">
-            {{ EGForm::ckeditor('first_text', [
-                'label' => 'First Text',
+            {{ EGForm::ckeditor('text_before', [
+                'label' => 'Text Before',
                 'value' => '',
                 'type' => $pageType
             ]) }}
@@ -107,8 +107,8 @@
 <div class="columns">
     <div class="column is-10 is-offset-1">
         <div class="field">
-            {{ EGForm::ckeditor('last_text', [
-                'label' => 'Last Text',
+            {{ EGForm::ckeditor('text_after', [
+                'label' => 'Text After',
                 'value' => '',
                 'type' => $pageType
             ]) }}

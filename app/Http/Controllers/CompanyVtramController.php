@@ -203,7 +203,7 @@ class CompanyVtramController extends Controller
             }
         }
 
-        if (VTLogic::canReview($this->record)) { 
+        if (VTLogic::canReview($this->record)) {
             if ($this->record->pages_in_pdf == 4) {
                 $path = 'javascript: window.open("'.$this->record->id.'/view_a3", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
             } else {
@@ -326,6 +326,26 @@ class CompanyVtramController extends Controller
         $this->customValues['entityType'] = 'VTRAM';
         $this->customValues['iconImages'] = json_encode(config('egc.icon_images'));
         $this->customValues['company'] = $company;
+
+        $methodologyIds = $this->customValues['methodologies']->pluck('id');
+
+        $this->customValues['processes'] = [];
+        $instructions = Instruction::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
+        foreach ($instructions as $instruction) {
+            $this->customValues['processes'][$instruction->methodology_id][$instruction->id] = $instruction;
+        }
+
+        $this->customValues['tableRows'] = [];
+        $tableRows = TableRow::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
+        foreach ($tableRows as $row) {
+            $this->customValues['tableRows'][$row->methodology_id][$row->id] = $row;
+        }
+
+        $this->customValues['icons'] = [];
+        $icons = Icon::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
+        foreach ($icons as $icon) {
+            $this->customValues['icons'][$row->methodology_id][$icon->type][$icon->id] = $icon;
+        }
 
         return parent::_custom();
     }
