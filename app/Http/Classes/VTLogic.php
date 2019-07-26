@@ -144,22 +144,22 @@ class VTLogic
         //user roles based
         $subRole = $config->entity->submitted->roles->first();
         $userRole = $user->roles->first();
-        switch ($userRole) {
+        switch ($userRole->slug) {
             case 'supervisor':
                 return false;
                 break;
             case 'project_admin':
-                if (in_array($subRole, ['supervisor'])) {
+                if (in_array($subRole->slug, ['supervisor'])) {
                     return true;
                 }
                 break;
             case 'contract_manager':
-                if (in_array($subRole, ['supervisor','project_admin'])) {
+                if (in_array($subRole->slug, ['supervisor','project_admin'])) {
                     return true;
                 }
                 break;
             case 'company_admin':
-                if (in_array($subRole, ['supervisor','project_admin','contract_manager','company_admin'])) {
+                if (in_array($subRole->slug, ['supervisor','project_admin','contract_manager','company_admin'])) {
                     return true;
                 }
                 break;
