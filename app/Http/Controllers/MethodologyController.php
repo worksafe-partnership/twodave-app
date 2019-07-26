@@ -88,4 +88,45 @@ class MethodologyController extends Controller
                                  ->orderBy('list_order', 'ASC')
                                  ->get();
     }
+
+    public function moveUp($id)
+    {
+        return $this->move($id, "up");
+    }
+
+    public function moveDown($id)
+    {
+        return $this->move($id, "down");
+    }
+
+    public function move($id, $direction)
+    {
+        $methodology = Methodology::findOrFail($id);
+        $vtconfig = new VTConfig($methodology->entity_id, $methodology->entity);
+        $this->user = Auth::user();
+        if ($this->user->company_id !== null && $vtconfig->entity !== null && $vtconfig->entity->company_id !== null) {
+            if ($this->user->company_id !== $vtconfig->entity->company_id) {
+                abort(404);
+            }
+        }
+        $existingMethodologies = Methodology::where('entity', $methodology->entity)
+                                 ->where('entity_id', $methodology->entity_id)
+                                 ->orderBy('list_order', 'ASC')
+                                 ->get();
+        if ($direction == 'down') {
+            $decrement = $existingMethodologies->where('list_order', $methodology->list_order + 1)->first();
+            $increment = $existingMethodologies->where('list_order', $methodology->list_order)->first();
+        } else {
+            $increment = $existingMethodologies->where('list_order', $methodology->list_order - 1)->first();
+            $decrement = $existingMethodologies->where('list_order', $methodology->list_order)->first();
+        }
+        if (!is_null($increment) & !is_null($decrement)) {
+            $increment->increment('list_order');
+            $decrement->decrement('list_order');
+            return 'allow';
+        } else {
+            toast()->error('Cannot move this Methodology');
+            return 'disallow';
+        }
+    }
 }

@@ -575,7 +575,7 @@
                             }
                         }
                         hazards = bubbleSort(hazards, 'list_order');
-                        toastr.success('Hazard was deleted');
+                        toastr.success('Hazard was moved');
                     } else {
                         toastr.error('An error has occured when moving the hazard');
                     }
@@ -923,12 +923,65 @@
             }
         }
 
-        function moveMethodologyUp() {
-
+        function moveMethodologyUp(id) {
+            moveMethodology(id, "move_up")
         }
 
-        function moveMethodologyDown() {
-
+        function moveMethodologyDown(id) {
+            moveMethodology(id, "move_down")
         }
+
+        function moveMethodology(id, slug) {
+            var data = {
+                _token: '{{ csrf_token() }}',
+                methodology_id: id,
+            };
+            $.ajax({
+                url: '/methodology/'+id+'/'+slug,
+                type: 'POST',
+                data: data,
+                success: function (response) {
+                    if (response != "disallow") {
+                        for (let i = 0; i < methodologies.length; i++) {
+                            if (slug == 'move_down' && methodologies[i]['id'] == id) {
+                                let firstOrder = methodologies[i]['list_order'];
+                                let lastOrder = methodologies[i + 1]['list_order'];
+                                $('tr#methodology-' + methodologies[i + 1]['id'] + ' .methodology-order').html(firstOrder);
+                                $('tr#methodology-' + methodologies[i]['id'] + ' .methodology-order').html(lastOrder);
+                                methodologies[i + 1]['list_order'] = firstOrder;
+                                methodologies[i]['list_order'] = lastOrder;
+                                $('tr#methodology-' + methodologies[i + 1]['id']).after($('tr#methodology-' + methodologies[i]['id']));
+                            } else if (slug == 'move_up' && methodologies[i]['id'] == id) {
+                                let firstOrder = methodologies[i]['list_order'];
+                                let lastOrder = methodologies[i - 1]['list_order'];
+                                $('tr#methodology-' + methodologies[i - 1]['id'] + ' .methodology-order').html(firstOrder);
+                                $('tr#methodology-' + methodologies[i]['id'] + ' .methodology-order').html(lastOrder);
+                                methodologies[i - 1]['list_order'] = firstOrder;
+                                methodologies[i]['list_order'] = lastOrder;
+                                $('tr#methodology-' + methodologies[i]['id']).after($('tr#methodology-' + methodologies[i - 1]['id']));
+                            }
+                        }
+                        methodologies = bubbleSort(methodologies, 'list_order');
+                        toastr.success('Methodology was moved');
+                    } else {
+                        toastr.error('An error has occured when moving the methodology');
+                    }
+                },
+                error: function (data) {
+                    if (data.status == 422) {
+                        var errors = '';
+                        $.each(data.responseJSON.errors, function(key,val) {
+                            toastr.error(val);
+                        });
+                    } else if (data.status == 401) {
+                        toastr.error('Your sesson has expired, please refresh the page and login to proceed');
+                    } else {
+                        toastr.error('An error has occured when moving the methodology');
+                    }
+                }
+            });
+        }
+
+
     </script>
 @endpush
