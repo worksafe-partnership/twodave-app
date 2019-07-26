@@ -39,6 +39,22 @@ class MethodologyController extends Controller
 
     public function update(MethodologyRequest $request)
     {
-        return parent::_update(func_get_args());
+        $this->args = func_get_args();
+        $methodology = Methodology::findOrFail(end($this->args));
+        $vtconfig = new VTConfig($methodology->entity_id, $methodology->entity);
+        $this->user = Auth::user();
+        if ($this->user->company_id !== null && $vtconfig->entity !== null && $vtconfig->entity->company_id !== null) {
+            if ($this->user->company_id !== $vtconfig->entity->company_id) {
+                abort(404);
+            }
+        }
+        $response = parent::_update(func_get_args());
+        $returnId = explode("/", $response->getTargetUrl());
+        return end($returnId);
+    }
+
+    public function updated($record, $request, $args)
+    {
+        return $record->id;
     }
 }

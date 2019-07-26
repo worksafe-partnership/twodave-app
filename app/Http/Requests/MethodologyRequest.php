@@ -32,6 +32,17 @@ class MethodologyRequest extends FormRequest
             case "TEXT":
                 $rules['text_before'] = 'required';
                 break;
+            case "TEXT_IMAGE":
+                $rules['image'] = 'required';
+                $rules['image_on'] = 'required';
+                if ($this->image_on != "undefined") {
+                    if ($this->image_on == "LEFT") {
+                        $rules['text_before'] = 'required';
+                    } else {
+                        $rules['text_after'] = 'required';
+                    }
+                }
+                break;
         }
 
         return $rules;
@@ -48,6 +59,11 @@ class MethodologyRequest extends FormRequest
             case "TEXT":
                 $messages['text_before.required'] = 'Please enter content';
                 break;
+            case "TEXT_IMAGE":
+                $messages['image.required'] = 'Please select an image';
+                $messages['image_on.required'] = 'Please confirm text location';
+                $messages['text_before.required'] = 'Please enter the "Before Text"';
+                $messages['text_after.required'] = 'Please enter the "After Text"';
         }
 
         return $messages;

@@ -615,6 +615,7 @@
         var methodologies = JSON.parse('{!! str_replace('\'', '\\\'', $methodologies->toJson()) !!}');
         var company = JSON.parse('{!! str_replace('\'', '\\\'', $company->toJson()) !!}');
         var methTypeList = JSON.parse('{!! json_encode($methTypeList) !!}');
+
         function createMethodology() {
             let type = $('#meth_type').val();
             if (type == '') {
@@ -684,6 +685,20 @@
                 if ($('#' + container + ' #content')) {
                     $('#' + container + ' #content').val(content);
                 }
+
+                if ($('#' + container + ' #text_before')) {
+                    $('#' + container + ' #text_before').val('');
+                }
+
+                if ($('#' + container + ' #text_after')) {
+                    $('#' + container + ' #text_after').val('');
+                }
+
+                if ($('#' + container + ' input[name=image_on]') !== "undefined") {
+                    $('#' + container + ' input[name=image_on]')[0].checked = false;
+                    $('#' + container + ' input[name=image_on]')[1].checked = false;
+                }
+
                 $('#' + container).css('display', 'inherit');
                 $('#' + container + ' .submitbutton').attr("onclick","submitMethodologyForm('"+cat+"')");
             }
@@ -693,7 +708,6 @@
             let methodology = methodologies.filter(methodologies => methodologies.id === id)
             if (methodology.length) {
                 methodology = methodology[0];
-                console.log(methodology);
 
                 let title = '';
                 let content = '';
@@ -705,6 +719,9 @@
                         break;
                     case 'TEXT_IMAGE':
                         container = 'methodology-text-image-form-container';
+                        var image_on = methodology.image_on;
+                        var before = methodology.text_before;
+                        var after = methodology.text_after;
                         break;
                     case 'SIMPLE_TABLE':
                         container = 'methodology-simple-table-form-container';
@@ -721,56 +738,91 @@
                 }
                 $('[id^=methodology-][id$=-form-container]').css('display', 'none');
                 $('#' + container + ' #title').val(title);
+
                 if ($('#' + container + ' #content')) {
                     $('#' + container + ' #content').val(content);
                 }
+
+
+                // text + image
+                if ($('#' + container + ' #text_before')) {
+                    $('#' + container + ' #text_before').val(before);
+                }
+
+                // text + image
+                if ($('#' + container + ' #text_after')) {
+                    $('#' + container + ' #text_after').val(after);
+                }
+
+                // text + image
+                if ($('#' + container + ' input[name=image_on]')) {
+                    if (image_on == "LEFT") {
+                        $('input:radio[name=image_on]')[0].checked = true;
+                    } else if (image_on == "RIGHT") {
+                        $('input:radio[name=image_on]')[1].checked = true;
+                    }
+                }
+
                 $('#' + container).css('display', 'inherit');
                 $('#' + container + ' .submitbutton').attr("onclick","submitMethodologyForm('"+methodology.category+"',"+id+","+methodology.list_order+")");
             }
         }
 
         function submitMethodologyForm(category, editId=null, listOrder=null) {
-            let postData = {
-                _token: '{{ csrf_token() }}',
-                entityType: '{{ $entityType }}',
-                list_order: methodologies.length +1,
-                category: category,
-            };
+            var form_data = new FormData();
+
+            form_data.append('_token', '{{ csrf_token() }}');
+            form_data.append('entityType', '{{ $entityType }}');
+            form_data.append('list_order', methodologies.length +1);
+            form_data.append('category', category);
 
             switch (category) {
                 case 'TEXT':
-                    postData['title'] = $('#methodology-text-form-container #title').val();
-                    postData['text_before'] = $('#methodology-text-form-container #content').val();
+                    form_data.append('title', $('#methodology-text-form-container #title').val());
+                    form_data.append('text_before', $('#methodology-text-form-container #content').val());
+                    break;
+                case 'TEXT_IMAGE':
+                    form_data.append('image', $('#methodology-text-image-form-container #image').prop('files')[0]);
+                    let checked = $('input[name=image_on]:checked').val();
+                    if (checked && checked !== "undefined") {
+                        form_data.append('image_on', checked);
+                    }
+                    form_data.append('text_before', $('#methodology-text-image-form-container #text_before').val());
+                    form_data.append('text_after', $('#methodology-text-image-form-container #text_after').val());
                     break;
             }
 
             let url = 'methodology/create';
             if (editId) {
                 url = 'methodology/'+editId+'/edit';
-                postData['list_order'] = listOrder;
+                form_data.append('list_order', listOrder);
             }
 
             $.ajax({
                 url: url,
                 type: 'POST',
-                data: postData,
+                data: form_data,
+                dataType    : 'text',
+                cache       : false,
+                contentType : false,
+                processData : false,
                 success: function (id) {
                     if (!editId) {// create
                         // adjust when we've got more types going in.
                         methodologies.push({
                             id: parseInt(id),
-                            title: postData.title,
-                            text_before: postData.text_before,
-                            list_order: postData.list_order,
+                            title: form_data.get('title'),
+                            text_before: form_data.get('text_before'),
+                            list_order: form_data.get('text_after'),
                             category: category,
                             entity: '{{$entityType}}',
-                            image: null,
-                            image_on: null,
-                            text_after: null
+                            image: form_data.get('image'),
+                            image_on: form_data.get('image_on'),
+                            text_after: form_data.get('text_after')
                         });
                         $('.methodology-list-table').append('<tr id="methodology' + id + '">\
-                                <td class="has-text-centered methodology-order">' + postData.list_order+ '</td>\
-                                <td class="methodology-title">' + postData.title + '</td>\
+                                <td class="has-text-centered methodology-order">' + form_data.get('list_order')+ '</td>\
+                                <td class="methodology-title">' + form_data.get('title') + '</td>\
                                 <td class="methodology-category">' +  methTypeList[category] + '</td>\
                                 <td class="handms-actions">\
                                     <a class="handms-icons" onclick="editMethodology('+ id +')">{{ icon('mode_edit') }}</a>\
@@ -782,18 +834,18 @@
                     } else { // edit
                         for (let i = 0; i < methodologies.length; i++) {
                             if (methodologies[i]['id'] === editId) {
-                                methodologies[i]['title'] = postData.title,
-                                methodologies[i]['text_before'] = postData.text_before,
-                                methodologies[i]['list_order'] = postData.list_order,
+                                methodologies[i]['title'] = form_data.get('title'),
+                                methodologies[i]['text_before'] = form_data.get('text_before'),
+                                methodologies[i]['list_order'] = form_data.get('list_order'),
                                 methodologies[i]['category'] = category,
-                                methodologies[i]['entity'] = postData.entity,
-                                methodologies[i]['image'] = postData.image,
-                                methodologies[i]['image_on'] = postData.image_on,
-                                methodologies[i]['text_after'] = postData.text_after,
+                                methodologies[i]['entity'] = form_data.get('entity'),
+                                methodologies[i]['image'] = form_data.get('image'),
+                                methodologies[i]['image_on'] = form_data.get('image_on'),
+                                methodologies[i]['text_after'] = form_data.get('text_after'),
 
-                                // need to edit hazard table
-                                $('tr#methodology-' + editId + ' .methodology-order').html(postData.list_order);
-                                $('tr#methodology-' + editId + ' .methodology-title').html(postData.title);
+                                // need to edit methodology table
+                                $('tr#methodology-' + editId + ' .methodology-order').html(form_data.get('list_order'));
+                                $('tr#methodology-' + editId + ' .methodology-title').html(form_data.get('title'));
                                 $('tr#methodology-' + editId + ' .methodology-category').html(methTypeList[category]);
                                 break;
                             }
