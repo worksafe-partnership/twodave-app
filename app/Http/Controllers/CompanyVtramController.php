@@ -329,16 +329,16 @@ class CompanyVtramController extends Controller
 
         $methodologyIds = $this->customValues['methodologies']->pluck('id');
 
-        $this->customValues['processes'] = [];
-        $instructions = Instruction::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
-        foreach ($instructions as $instruction) {
-            $this->customValues['processes'][$instruction->methodology_id][$instruction->id] = $instruction;
-        }
-
         $this->customValues['tableRows'] = [];
         $tableRows = TableRow::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
         foreach ($tableRows as $row) {
             $this->customValues['tableRows'][$row->methodology_id][] = $row;
+        }
+
+        $this->customValues['processes'] = [];
+        $instructions = Instruction::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
+        foreach ($instructions as $instruction) {
+            $this->customValues['processes'][$instruction->methodology_id][] = $instruction;
         }
 
         $this->customValues['icons'] = [];

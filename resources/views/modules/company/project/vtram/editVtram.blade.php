@@ -785,9 +785,11 @@
                                         checked = 'checked';
                                     }
                                     let newRow = "<tr data-row='"+key+"'>";
-                                        newRow += "<td><input type='checkbox' name='row_"+key+"_heading' "+checked+"></input></td>";
-                                        newRow += "<td><input type='text' name='row_"+key+"_label' value='"+row.label+"'></input></td>";
-                                        newRow += "<td><input type='text' name='row_"+key+"_description' value='"+row.description+"'></input></td>";
+                                        newRow += "<td><input type='checkbox' name='row_"+key+"__heading' "+checked+"></input></td>";
+                                        newRow += "<td><input type='text' name='row_"+key+"__label' value='"+row.label+"'></input></td>";
+                                        newRow += "<td><input type='text' name='row_"+key+"__description' value='"+row.description+"'></input></td>";
+                                        newRow += "<td>[Image details]</td>";
+                                        // newRow += "<td><input type='text' name='row_"+key+"_description' value='"+row.description+"'></input></td>";
                                     newRow += "</tr>"
                                     $('#process-table tbody').append(newRow);
                                     $('#process-table').attr('data-next_row', Object.keys(rows).length);
@@ -877,7 +879,6 @@
                 case 'COMPLEX_TABLE':
                     form_data.append('title', $('#methodology-complex-table-form-container #title').val());
 
-                    // get all inputs within the $('#simple-table') element and attach them?
                     let complex_inputs = $('#complex-table input[name^=row_]');
                     $.each(complex_inputs, function(key, input) {
                         form_data.append(input.name, input.value);
@@ -886,7 +887,18 @@
                     form_data.append('text_before', $('#methodology-complex-table-form-container #text_before').val());
                     form_data.append('text_after', $('#methodology-complex-table-form-container #text_after').val());
                     break;
+                case 'PROCESS':
+                    form_data.append('title', $('#methodology-process-form-container #title').val());
 
+                    let process_lines = $('#process-table input[name^=row_]');
+                    $.each(process_lines, function(key, input) {
+                        if (input.type == "text") {
+                            form_data.append(input.name, input.value);
+                        } else {
+                            form_data.append(input.name, input.checked)
+                        }
+                    })
+                    break;
             }
 
             let url = 'methodology/create';
@@ -948,7 +960,7 @@
                         }
                     }
 
-
+                    // write them to the local array to display when you hit Edit.
                     switch (category) {
                         case 'SIMPLE_TABLE':
                             delete tableRows[id];
@@ -979,6 +991,27 @@
                                 };
                                 $(row).remove();
                             });
+                            break;
+                        case "PROCESS":
+                            delete processes[id];
+                            let processRows = $('#process-table tbody tr');
+                            processes[id] = [];
+                            $.each(processRows, function(key, row) {
+                                let inputs = $(row).find("input[name^=row_]");
+                                let checked = 0;
+
+                                if(inputs[0].checked) {
+                                    checked = 1;
+                                }
+
+                                processes[id][key] = {
+                                    heading: checked,
+                                    label: inputs[1].value,
+                                    description: inputs[2].value,
+                                }
+                                $(row).remove();
+                            });
+
                             break;
                         default: // text, all others not listed above
                             break;

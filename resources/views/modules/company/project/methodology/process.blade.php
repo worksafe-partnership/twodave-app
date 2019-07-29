@@ -22,6 +22,7 @@
                             <th>Heading</th>
                             <th>No</th>
                             <th>Description</th>
+                            <th>Image</th>
                         </thead>
                         <tbody>
                         </tbody>
@@ -36,19 +37,28 @@
     <div class="column is-10 is-offset-1">
         <p class="sub-heading">Add Row</p>
         <div class="columns">
-            <div class="column is-2">
+            <div class="column is-4">
+                <div class="field">
+                    {{ EGForm::checkbox('is_heading', [
+                        'label' => 'This Row is a Heading',
+                        'value' => false,
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+            <div class="column is-4">
                 <div class="field">
                     {{ EGForm::text('new_label', [
-                        'label' => 'Label',
+                        'label' => 'Label/No',
                         'value' => '',
                         'type' => $pageType
                     ]) }}
                 </div>
             </div>
-            <div class="column is-10">
+            <div class="column is-4">
                 <div class="field">
-                    {{ EGForm::ckeditor('new_description', [
-                        'label' => 'Description',
+                    {{ EGForm::file('image_id', [
+                        'label' => 'Image',
                         'value' => '',
                         'type' => $pageType
                     ]) }}
@@ -58,9 +68,9 @@
         <div class="columns">
             <div class="column is-12">
                 <div class="field">
-                    {{ EGForm::checkbox('is_heading', [
-                        'label' => 'This Row is a Heading',
-                        'value' => false,
+                    {{ EGForm::ckeditor('new_description', [
+                        'label' => 'Description',
+                        'value' => '',
                         'type' => $pageType
                     ]) }}
                 </div>
@@ -68,7 +78,6 @@
         </div>
     </div>
 </div>
-
 <div class="columns">
     <div class="column is-10 is-offset-1">
         <div class="columns">
@@ -79,8 +88,8 @@
             </div>
         </div>
     </div>
-    <hr>
 </div>
+<hr>
 
 <script>
     $('#add-row-process').on('click', function() {
@@ -92,9 +101,10 @@
         let row_id = table.data('next_row');
         if ($('#new_description').val() != "") {
             let row = "<tr data-row='"+row_id+"'>";
-                row += "<td><input type='checkbox' name='row_"+row_id+"_heading' "+checked+"></input></td>";
-                row += "<td><input type='text' name='row_"+row_id+"_label' value='"+$('#new_label').val()+"'></input></td>";
-                row += "<td><input type='text' name='row_"+row_id+"_description' value='"+$('#new_description').val()+"'></input></td>";
+                row += "<td><input type='checkbox' name='row_"+row_id+"__heading' "+checked+"></input></td>";
+                row += "<td><input type='text' name='row_"+row_id+"__label' value='"+$('#new_label').val()+"'></input></td>";
+                row += "<td><input type='text' name='row_"+row_id+"__description' value='"+$('#new_description').val()+"'></input></td>";
+                row += "<td>[Image details]</input></td>";
             row += "</tr>"
             table.append(row);
             row_id++;

@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Auth;
 use Controller;
-use App\Methodology;
 use App\TableRow;
+use App\Methodology;
+use App\Instruction;
 use App\Http\Classes\VTLogic;
 use App\Http\Classes\VTConfig;
 use App\Http\Requests\MethodologyRequest;
@@ -38,11 +39,13 @@ class MethodologyController extends Controller
     {
         switch ($record->category) {
             case "SIMPLE_TABLE":
-                $this->sortOutTableRows($record, $request);
-                break;
             case "COMPLEX_TABLE":
                 $this->sortOutTableRows($record, $request);
                 break;
+            case "PROCESS":
+                $this->sortOutInstructions($record, $request);
+                break;
+
         }
         return $record->id;
     }
@@ -72,6 +75,9 @@ class MethodologyController extends Controller
             case "COMPLEX_TABLE":
                 $this->sortOutTableRows($record, $request);
                 break;
+            case "PROCESS":
+                $this->sortOutInstructions($record, $request);
+                break;
         }
         return $record->id;
     }
@@ -96,6 +102,37 @@ class MethodologyController extends Controller
             $order++;
         }
         TableRow::insert($rows);
+    }
+
+    public function sortOutInstructions($record, $request)
+    {
+        Instruction::where('methodology_id', $record->id)->delete();
+
+        // checkbox translate
+        $checks['true'] = 1;
+        $checks['false'] = 0;
+
+        // build up rows
+        $rows = [];
+        foreach ($request as $key => $value) {
+            if (strpos($key, "row_") !== false) {
+                $rowCol = explode("__", $key);
+                if ($rowCol[1] == "heading") { // "heading" checkbox
+                    $value = $checks[$value];
+                }
+                $rows[$rowCol[0]][$rowCol[1]] = $value;
+            }
+        }
+
+        // bolt in the rest of the information per row:
+        $order = 1;
+        foreach ($rows as $key => $row) {
+            $rows[$key]['list_order'] = $order;
+            $rows[$key]['methodology_id'] = $record->id;
+            $order++;
+        }
+
+        Instruction::insert($rows);
     }
 
     public function delete($id)
