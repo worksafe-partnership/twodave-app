@@ -18,7 +18,7 @@
     @php
         $authUser = Auth::user();
     @endphp
-    @if (!is_null($authUser->company_id) && file_exists(public_path('/css/company/'.$authUser->company_id.'_colour.css')))
+    @if (!is_null($authUser) && !is_null($authUser->company_id) && file_exists(public_path('/css/company/'.$authUser->company_id.'_colour.css')))
         <link href="{{ asset('css/company/'.$authUser->company_id.'_colour.css') }}?<?php echo filemtime(public_path('/css/company/'.$authUser->company_id.'_colour.css')); ?>" rel="stylesheet">
     @endif
     @stack('styles')
