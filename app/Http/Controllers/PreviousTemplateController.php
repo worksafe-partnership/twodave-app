@@ -47,4 +47,9 @@ class PreviousTemplateController extends TemplateController
     {
         return parent::viewA3($templateId); 
     }
+
+    public function viewA4($parentTemplateId, $templateId = null, $companyId = null)
+    {
+        return parent::viewA4($templateId); 
+    }
 }

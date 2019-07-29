@@ -263,7 +263,25 @@ class TemplateController extends Controller
                 abort(404);
             }
         }
-        return VTLogic::createA3Pdf($template);
+        if ($templates->pages_in_pdf == 4) {
+            return VTLogic::createA3Pdf($template);
+        }
+        return VTLogic::createPdf($template);
+    }
+
+    public function viewA4($templateId, $companyId = null, $otherId = null)
+    {
+        $user = Auth::user();
+        if ($companyId == null) {
+            $companyId = $user->companyId;
+        }
+        $template = Template::findOrFail($templateId);
+        if ($user->company_id !== null) {
+            if ($user->company_id !== $template->company_id && $template->company_id !== null) {
+                abort(404);
+            }
+        }
+        return VTLogic::createPdf($template);
     }
 
     public function updated($update, $orig, $request, $args)

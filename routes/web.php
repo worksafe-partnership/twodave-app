@@ -107,6 +107,15 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => 'can:view-company.project.vtram',
         'uses' => 'CompanyVtramController@viewA3'
     ]);
+
+    Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/previous/{previous_id}/view_ar43', [
+        'middleware' => 'can:view-company.project.vtram.previous',
+        'uses' => 'CompanyPreviousVtramController@viewA4'
+    ]);
+    Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/view_a4', [
+        'middleware' => 'can:view-company.project.vtram',
+        'uses' => 'CompanyVtramController@viewA4'
+    ]);
     Route::get('/project/{project_id}/vtram/{vtram_id}/submit', [
         'middleware' => 'can:edit-project.vtram',
         'uses' => 'VtramController@submitForApproval'
@@ -119,11 +128,23 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => 'can:view-project.vtram.previous',
         'uses' => 'PreviousVtramController@viewA3'
     ]);
+    Route::get('/project/{project_id}/vtram/{vtram_id}/view_a4', [
+        'middleware' => 'can:view-project.vtram',
+        'uses' => 'VtramController@viewA3'
+    ]);
+    Route::get('/project/{project_id}/vtram/{vtram_id}/previous/{previous_id}/view_a4', [
+        'middleware' => 'can:view-project.vtram.previous',
+        'uses' => 'PreviousVtramController@viewA4'
+    ]);
 
     // Template Actions
     Route::get('/company/{company_id}/template/{template_id}/view_a3', [
         'middleware' => 'can:view-company.template',
         'uses' => 'CompanyTemplateController@viewA3'
+    ]);
+    Route::get('/company/{company_id}/template/{template_id}/view_a4', [
+        'middleware' => 'can:view-company.template',
+        'uses' => 'CompanyTemplateController@viewA4'
     ]);
     Route::get('/company/{company_id}/template/{template_id}/submit', [
         'middleware' => 'can:edit-company.template',
@@ -133,9 +154,17 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => 'can:view-company.template.previous',
         'uses' => 'PreviousCompanyTemplateController@viewA3'
     ]);
+    Route::get('/company/{company_id}/template/{template_id}/previous/{previous_id}/view_a4', [
+        'middleware' => 'can:view-company.template.previous',
+        'uses' => 'PreviousCompanyTemplateController@viewA4'
+    ]);
     Route::get('/template/{template_id}/previous/{previous_id}/view_a3', [
         'middleware' => 'can:view-template.previous',
         'uses' => 'PreviousTemplateController@viewA3'
+    ]);
+    Route::get('/template/{template_id}/previous/{previous_id}/view_a4', [
+        'middleware' => 'can:view-template.previous',
+        'uses' => 'PreviousTemplateController@viewA4'
     ]);
     Route::get('/template/{template_id}/submit', [
         'middleware' => 'can:edit-template',
@@ -144,6 +173,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/template/{template_id}/view_a3', [
         'middleware' => 'can:view-template',
         'uses' => 'TemplateController@viewA3'
+    ]);
+    Route::get('/template/{template_id}/view_a4', [
+        'middleware' => 'can:view-template',
+        'uses' => 'TemplateController@viewA4'
     ]);
 
     // Hazards
@@ -310,7 +343,7 @@ Route::post('/methodology/{id}/move_down', [
 Route::group(['prefix' => '{unique_link}/vtrams', 'middleware' => ['validate_link']], function () {
     Route::get('', 'PrincipleContractorController@vtramsList');
     Route::get('{vtrams_id}', 'PrincipleContractorController@viewVtrams');
-    Route::get('{vtrams_id}/view_a3', 'PrincipleContractorController@viewA3');
+    Route::get('{vtrams_id}/view_a3', 'PrincipleContractorController@view');
     Route::get('{vtrams_id}/approve', 'PrincipleContractorController@viewApproval');
     Route::post('{vtrams_id}/approve', 'PrincipleContractorController@store');
 });

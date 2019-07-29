@@ -128,6 +128,11 @@ class VtramController extends CompanyVtramController
         return parent::viewA3($otherId, $projectId, $vtramId);
     }
 
+    public function viewA4($projectId, $vtramId, $otherId = null, $otherId2 = null)
+    {
+        return parent::viewA4($otherId, $projectId, $vtramId);
+    }
+
     public function store(VtramRequest $request, $projectId, $otherId = null)
     {
         $user = Auth::user();

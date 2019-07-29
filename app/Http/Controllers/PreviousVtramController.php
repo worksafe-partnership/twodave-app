@@ -62,4 +62,9 @@ class PreviousVtramController extends CompanyPreviousVtramController
     {
         return parent::viewA3(null, $projectId, $parentVtramId, $vtramId);
     }
+
+    public function viewA4($projectId, $parentVtramId, $vtramId = null, $otherId = null)
+    {
+        return parent::viewA4(null, $projectId, $parentVtramId, $vtramId);
+    }
 }

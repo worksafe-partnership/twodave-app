@@ -18,6 +18,12 @@ class VTLogic
     public static function createA3Pdf($entityId, $entityType = null)
     {
         $config = new VTConfig($entityId, $entityType);
+        dd('Now do PDF with $config->entity and return as stream, see teamwork (this route handles print and view) make sure it is a3');
+    }
+
+    public static function createPdf($entityId, $entityType = null)
+    {
+        $config = new VTConfig($entityId, $entityType);
         dd('Now do PDF with $config->entity and return as stream, see teamwork (this route handles print and view)');
     }
 
