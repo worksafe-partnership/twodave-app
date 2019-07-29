@@ -72,4 +72,9 @@ class CompanyTemplateController extends TemplateController
     {
         return parent::viewA3($templateId, $companyId);
     }
+
+    public function viewA4($companyId, $templateId = null, $otherId = null)
+    {
+        return parent::viewA4($templateId, $companyId);
+    }
 }

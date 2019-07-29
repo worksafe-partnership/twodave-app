@@ -150,7 +150,7 @@ class CompanyVtramController extends Controller
 
         $this->pillButtons['view_pdf'] = [
             'label' => 'View PDF',
-            'path' => '/image/'.$this->record->pdf,
+            'path' => $this->record->pdf.'/view_a4',
             'icon' => 'file-pdf',
             'order' => 100,
             'id' => 'view_pdf',
@@ -158,7 +158,7 @@ class CompanyVtramController extends Controller
         ];
         $this->pillButtons['print_pdf'] = [
             'label' => 'Print PDF',
-            'path' => "javascript:var wnd = window.open('/image/".$this->record->pdf."', '_blank');wnd.print();",
+            'path' => "javascript:var wnd = window.open('".$this->record->pdf."/view_a4', '_blank');wnd.print();",
             'icon' => 'print',
             'order' => 100,
             'id' => 'print_pdf',
@@ -207,7 +207,7 @@ class CompanyVtramController extends Controller
             if ($this->record->pages_in_pdf == 4) {
                 $path = 'javascript: window.open("'.$this->record->id.'/view_a3", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
             } else {
-                $path = 'javascript: window.open("/image/'.$this->record->pdf.'", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
+                $path = 'javascript: window.open("'.$this->record->pdf.'/view_a4", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
             }
             $this->pillButtons['approve_vtrams'] = [
                 'label' => 'Approve VTRAMS',
@@ -260,7 +260,25 @@ class CompanyVtramController extends Controller
                 abort(404);
             }
         }
-        return VTLogic::createA3Pdf($vtram);
+        if ($vtram->pages_in_pdf == 4) {
+            return VTLogic::createA3Pdf($vtram);
+        }
+        return VTLogic::createPdf($vtram);
+    }
+
+    public function viewA4($companyId, $projectId, $vtramId, $otherId = null)
+    {
+        $user = Auth::user();
+        if ($companyId == null) {
+            $companyId = $user->companyId;
+        }
+        $vtram = Vtram::findOrFail($vtramId);
+        if ($user->company_id !== null) {
+            if ($user->company_id !== $vtram->company_id) {
+                abort(404);
+            }
+        }
+        return VTLogic::createPdf($vtram);
     }
 
     public function store(VtramRequest $request, $companyId, $projectId)
