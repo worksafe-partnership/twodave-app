@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Auth;
 use Controller;
 use App\Methodology;
+use App\TableRow;
 use App\Http\Classes\VTLogic;
 use App\Http\Classes\VTConfig;
 use App\Http\Requests\MethodologyRequest;
@@ -35,6 +36,14 @@ class MethodologyController extends Controller
 
     public function created($record, $request, $args)
     {
+        switch ($record->category) {
+            case "SIMPLE_TABLE":
+                $this->sortOutTableRows($record, $request);
+                break;
+            case "COMPLEX_TABLE":
+                $this->sortOutTableRows($record, $request);
+                break;
+        }
         return $record->id;
     }
 
@@ -54,9 +63,39 @@ class MethodologyController extends Controller
         return end($returnId);
     }
 
-    public function updated($record, $request, $args)
+    public function updated($record, $updated, $request)
     {
+        switch ($record->category) {
+            case "SIMPLE_TABLE":
+                $this->sortOutTableRows($record, $request);
+                break;
+            case "COMPLEX_TABLE":
+                $this->sortOutTableRows($record, $request);
+                break;
+        }
         return $record->id;
+    }
+
+    public function sortOutTableRows($record, $request)
+    {
+        TableRow::where('methodology_id', $record->id)->delete();
+        // build up your rows
+        $rows = [];
+        foreach ($request as $key => $value) {
+            if (strpos($key, "row_") !== false) {
+                $rowCol = explode("__", $key);
+                $rows[$rowCol[0]][$rowCol[1]] = $value;
+            }
+        }
+
+        $order = 1;
+        foreach ($rows as $key => $row) {
+            $rows[$key]['cols_filled'] = sizeof(array_filter($row));
+            $rows[$key]['list_order'] = $order;
+            $rows[$key]['methodology_id'] = $record->id;
+            $order++;
+        }
+        TableRow::insert($rows);
     }
 
     public function delete($id)

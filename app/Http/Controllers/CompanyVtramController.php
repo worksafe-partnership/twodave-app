@@ -356,7 +356,7 @@ class CompanyVtramController extends Controller
         $this->customValues['tableRows'] = [];
         $tableRows = TableRow::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
         foreach ($tableRows as $row) {
-            $this->customValues['tableRows'][$row->methodology_id][$row->id] = $row;
+            $this->customValues['tableRows'][$row->methodology_id][] = $row;
         }
 
         $this->customValues['icons'] = [];
