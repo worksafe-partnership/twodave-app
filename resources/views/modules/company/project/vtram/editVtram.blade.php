@@ -670,19 +670,19 @@
                         container = 'methodology-simple-table-form-container';
                         cat = 'SIMPLE_TABLE';
                         $('#simple-table tbody tr').remove();
-                        $('#simple-table').attr('data-next_row', 1);
+                        $('#simple-table').attr('data-next_row', 0);
                         break;
                     case 'COMPLEX_TABLE':
                         container = 'methodology-complex-table-form-container';
                         cat = 'COMPLEX_TABLE';
                         $('#complex-table tbody tr').remove();
-                        $('#complex-table').attr('data-next_row', 1);
+                        $('#complex-table').attr('data-next_row', 0);
                         break;
                     case 'PROCESS':
                         container = 'methodology-process-form-container';
                         cat = 'PROCESS';
                         $('#process-table tbody tr').remove();
-                        $('#process-table').attr('data-next_row', 1);
+                        $('#process-table').attr('data-next_row', 0);
                         break;
                     case 'ICON':
                         container = 'methodology-icon-form-container';
@@ -736,16 +736,18 @@
                         if (tableRows[methodology.id] !== 'undefined') {
                             let rows = tableRows[methodology.id];
                             $('#simple-table tbody').html('');
-                            $.each(rows, function(key, row) {
-                                let newRow = "<tr data-row='"+key+"'>";
-                                    newRow += "<th><input type='text' name='row_"+key+"_col_1' value='"+row.col_1+"'></input></th>";
-                                    newRow += "<td><input type='text' name='row_"+key+"_col_2' value='"+row.col_2+"'></input></td>";
-                                    newRow += "<td><input type='text' name='row_"+key+"_col_3' value='"+row.col_3+"'></input></td>";
-                                    newRow += "<td><input type='text' name='row_"+key+"_col_4' value='"+row.col_4+"'></input></td>";
-                                newRow += "</tr>";
-                                $('#simple-table tbody').append(newRow);
-                                $('#simple-table').attr('data-next_row', row.id+1);
-                            });
+                            if (rows !== 'undefined') {
+                                $.each(rows, function(key, row) {
+                                    let newRow = "<tr data-row='"+key+"'>";
+                                        newRow += "<th><input type='text' name='row_"+key+"__col_1' value='"+row.col_1+"'></input></th>";
+                                        newRow += "<td><input type='text' name='row_"+key+"__col_2' value='"+row.col_2+"'></input></td>";
+                                        newRow += "<td><input type='text' name='row_"+key+"__col_3' value='"+row.col_3+"'></input></td>";
+                                        newRow += "<td><input type='text' name='row_"+key+"__col_4' value='"+row.col_4+"'></input></td>";
+                                    newRow += "</tr>";
+                                    $('#simple-table tbody').append(newRow);
+                                });
+                                $('#simple-table').attr('data-next_row', Object.keys(rows).length);
+                            }
                         }
                         var before = methodology.text_before;
                         var after = methodology.text_after;
@@ -775,7 +777,6 @@
                             let rows = processes[methodology.id];
                             $('#process-table tbody tr').remove();
                             $.each(rows, function(key, row) {
-                                console.log(row);
                                 let checked = '';
                                 if (row.heading == 1) {
                                     checked = 'checked';
@@ -934,6 +935,8 @@
                                 methodologies[i]['image_on'] = form_data.get('image_on'),
                                 methodologies[i]['text_after'] = form_data.get('text_after'),
 
+
+
                                 // need to edit methodology table
                                 $('tr#methodology-' + editId + ' .methodology-order').html(form_data.get('list_order'));
                                 $('tr#methodology-' + editId + ' .methodology-title').html(form_data.get('title'));
@@ -942,6 +945,23 @@
                             }
                         }
                     }
+
+                    // SIMPLE TABLE TO START
+                    // update your table rows and other related bits regardless of whether it's create or edit.
+                    delete tableRows[id];
+                    let simple_rows = $('#simple-table tr');
+                    tableRows[id] = [];
+                    $.each(simple_rows, function(key, row) {
+                        let inputs = $(row).find("input[name^=row_]");
+                        tableRows[id][key] = {
+                            col_1: inputs[0].value,
+                            col_2: inputs[1].value,
+                            col_3: inputs[2].value,
+                            col_4: inputs[3].value
+                        };
+                        $(row).remove();
+                    });
+
                     $('#methodology-list-container').show();
                     $('[id^=methodology-][id$=-form-container]').css('display', 'none');
                 },
