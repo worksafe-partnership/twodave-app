@@ -36,8 +36,13 @@ class MethodologyController extends Controller
 
     public function created($record, $request, $args)
     {
-        if ($record->category == "SIMPLE_TABLE") {
-            $this->sortOutSimpleTable($record, $request);
+        switch ($record->category) {
+            case "SIMPLE_TABLE":
+                $this->sortOutTableRows($record, $request);
+                break;
+            case "COMPLEX_TABLE":
+                $this->sortOutTableRows($record, $request);
+                break;
         }
         return $record->id;
     }
@@ -60,13 +65,18 @@ class MethodologyController extends Controller
 
     public function updated($record, $updated, $request)
     {
-        if ($record->category == "SIMPLE_TABLE") {
-            $this->sortOutSimpleTable($record, $request);
+        switch ($record->category) {
+            case "SIMPLE_TABLE":
+                $this->sortOutTableRows($record, $request);
+                break;
+            case "COMPLEX_TABLE":
+                $this->sortOutTableRows($record, $request);
+                break;
         }
         return $record->id;
     }
 
-    public function sortOutSimpleTable($record, $request)
+    public function sortOutTableRows($record, $request)
     {
         TableRow::where('methodology_id', $record->id)->delete();
         // build up your rows
