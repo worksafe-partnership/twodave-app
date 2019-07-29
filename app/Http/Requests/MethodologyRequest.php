@@ -45,6 +45,7 @@ class MethodologyRequest extends FormRequest
                 }
                 break;
             case "SIMPLE_TABLE":
+            case "COMPLEX_TABLE":
                 $rules['row_0__col_1'] = 'required';
                 break;
         }
@@ -70,6 +71,7 @@ class MethodologyRequest extends FormRequest
                 $messages['text_after.required'] = 'Please enter the "After Text"';
                 break;
             case "SIMPLE_TABLE":
+            case "COMPLEX_TABLE":
                 $messages['row_0__col_1.required'] = 'Please add rows to your table';
                 break;
         }
