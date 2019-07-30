@@ -61,7 +61,81 @@ class Vtram extends Model
     ];
 
 
+    public static function scopePcDatatableAll($query, $parent, $identifier, $email)
+    {
+        $query->select([
+                'id',
+                'project_id',
+                'name',
+                'description',
+                'logo',
+                'reference',
+                'key_points',
+                'havs_noise_assessment',
+                'coshh_assessment',
+                'review_due',
+                'approved_date',
+                'original_id',
+                'revision_number',
+                'status',
+                'created_by',
+                'updated_by',
+                'submitted_by',
+                'submitted_date',
+                'approved_by',
+                'date_replaced',
+                'resubmit_by',
+                'post_risk_assessment_text',
+                'dynamic_risk',
+                'pdf',
+                'pages_in_pdf',
+                'show_responsible_person',
+                'responsible_person',
+                'deleted_at',
+                'number'
+            ]);
 
+        $query->whereHas('project', function ($q) use ($email) {
+            return $q->where('principle_contractor_email', '=' , $email);
+        })
+            ->where('status', '=', 'AWAITING_EXTERNAL');
+
+        return app('datatables')->of($query)
+            ->editColumn('project_id', function ($item) {
+                $project = $item->project;
+                if (!is_null($project)) {
+                    return $item->project->name;
+                }
+                return 'None Selected';
+            })
+            ->editColumn('submitted_by', function ($item) {
+                $submitted = $item->submitted;
+                if (!is_null($submitted)) {
+                    return $item->submitted->name;
+                }
+                return 'Not Submitted';
+            })
+            ->editColumn('approved_by', function ($item) {
+                $approved = $item->approved;
+                if (!is_null($approved)) {
+                    return $item->approved->name;
+                }
+                return 'Not Approved';
+            })
+            ->editColumn('status', function ($item) {
+                return $item->niceStatus();
+            })
+            ->editColumn('approved_date', function ($item) {
+                return $item->approvedDateTimestamp();
+            })
+            ->editColumn('review_due', function ($item) {
+                return $item->nextReviewDateTimestamp();
+            })
+            ->editColumn('resubmit_by', function ($item) {
+                return $item->resubmitByDateTimestamp();
+            })
+            ->make('query');
+    }
 
     public static function scopeDatatableAll($query, $parent, $identifier)
     {

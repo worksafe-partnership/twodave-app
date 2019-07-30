@@ -103,7 +103,7 @@
                         <button class="button is-primary" onclick="$('#approval-form').submit();">Create Approval</button>
                     </p>
                     <p class="control">
-                        <a href="" class="button">Cancel</a>
+                        <a href="{{ $cancelPath }}" class="button">Cancel</a>
                     </p>
                 </div>
             </div>

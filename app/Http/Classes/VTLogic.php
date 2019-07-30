@@ -2,9 +2,13 @@
 
 namespace App\Http\Classes;
 
+use Mail;
 use Auth;
+use Bhash;
 use App\Approval;
+use App\UniqueLink;
 use App\Methodology;
+use App\Mail\PrincipleContractorEmail;
 
 class VTLogic
 {
@@ -45,8 +49,19 @@ class VTLogic
 
     public static function sendPcApprovalEmail($config)
     {
-        dd("SEND EMAIL WITH UNIQUE LINK TO PRINCIPLE CONTRACTOR");
-        dd("SEND PRINCIPLE CONTRACTOR EMAIL HERE");
+        $links = UniqueLink::where('email', '=', $config->entity->project->principle_contractor_email)
+            ->first();
+        if ($links == null) {
+            // CREATE NEW ONE
+            $hash = new Bhash();
+            $key = str_replace(['.', '/'], ['$DOT$', '$FS$'], $hash->make($config->entity->name.$config->entity->reference.$config->entity->status.rand(0, 100000)));
+            $links = UniqueLink::create([
+                'email' => $config->entity->project->principle_contractor_email,
+                'unique_link' => $key,
+            ]);
+        }
+        Mail::to(env('MAIL_LIVE') ? $config->entity->project->principle_contractor_email : env('DEV_EMAIL'))
+            ->send(new PrincipleContractorEmail($links->unique_link, $config->entity->project));
     }
 
     public static function getComments($entityId, $status, $entityType = null)
