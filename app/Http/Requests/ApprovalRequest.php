@@ -24,7 +24,8 @@ class ApprovalRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'review_document' => 'mimes:jpg,jpeg,png,bmp,tiff,pdf'
+            'review_document' => 'mimes:jpg,jpeg,png,bmp,tiff,pdf',
+            'type' => 'required',
         ];
 
         if (isset($this->resubmit_date) && strlen($this->resubmit_date) > 0) {
@@ -42,6 +43,7 @@ class ApprovalRequest extends FormRequest
             'review_document.mimes' => 'Only images and PDFs are allowed to be uploaded for the Review Document',
             'resubmit_date.after' => 'Please enter a Resubmit Date after today',
             'comment.required' => 'Please enter a Comment',
+            'type.required' => 'Please select an Approval Type',
         ];
     }
 }

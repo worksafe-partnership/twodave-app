@@ -342,8 +342,10 @@ Route::post('/methodology/{id}/move_down', [
 // Principle Contractor Approval Routes
 Route::group(['prefix' => '{unique_link}/vtrams', 'middleware' => ['validate_link']], function () {
     Route::get('', 'PrincipleContractorController@vtramsList');
+    Route::get('vtrams.datatable.json', 'PrincipleContractorController@_datatableAll');
     Route::get('{vtrams_id}', 'PrincipleContractorController@viewVtrams');
     Route::get('{vtrams_id}/view_a3', 'PrincipleContractorController@view');
+    Route::get('{vtrams_id}/view_a4', 'PrincipleContractorController@viewA4');
     Route::get('{vtrams_id}/approve', 'PrincipleContractorController@viewApproval');
     Route::post('{vtrams_id}/approve', 'PrincipleContractorController@store');
 });
