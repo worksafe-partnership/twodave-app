@@ -801,6 +801,32 @@
                         break;
                     case 'ICON':
                         container = 'methodology-icon-form-container';
+                        if (icons[methodology.id] !== 'undefined') {
+                            let tables = icons[methodology.id];
+                            $('#top-body td').remove();
+                            $('#bottom-body td').remove();
+                            if (tables !== 'undefined') {
+                                $.each(tables, function(table, tds) {
+                                    if (table == "MAIN") {
+                                        var tr = $('#top-body tr');
+                                        var location = 'top';
+                                    } else {
+                                        var tr = $('#bottom-body tr');
+                                        var location = 'bottom';
+                                    }
+
+                                    for (let index = 0; index < Object.keys(tds).length; index++) {
+                                        tr.append(renderTableData(tr, index, location, tds[index]));
+
+                                        // correct selection of select field after rendering
+                                        let selectName = 'icon_list_'+location+"_"+index;
+                                        $('[name='+selectName+']').val(tds[index]['image']);
+                                    }
+                                })
+                                $('#top_heading').html(methodology.text_before);
+                                $('#sub_heading').html(methodology.text_after);
+                            }
+                        }
                         var before = methodology.text_before;
                         var after = methodology.text_after;
                         break;
@@ -900,6 +926,19 @@
                             form_data.append(input.name, input.checked)
                         }
                     })
+                    break;
+                case 'ICON':
+                    form_data.append('title', $('#methodology-icon-form-container #title').val());
+                    form_data.append('text_before', $('#methodology-icon-form-container #text_before').val());
+                    form_data.append('text_after', $('#methodology-icon-form-container #text_after').val());
+
+                    $.each($('#methodology-icon-form-container table td input'), function(key, input) {
+                        form_data.append(input.name, input.value)
+                    });
+
+                    $.each($('#methodology-icon-form-container table td select'), function(key, select) {
+                        form_data.append(select.name, select.value);
+                    });
                     break;
             }
 
@@ -1013,7 +1052,35 @@
                                 }
                                 $(row).remove();
                             });
+                            break;
+                        case "ICON":
+                            delete icons[id];
 
+                            let top = [];
+                            let topData = $('#top-body td');
+                            $.each(topData, function(key, cell) {
+                                var td = $(cell);
+                                top[key] = {
+                                    id: key,
+                                    text: td.find('.wording').val(),
+                                    image: td.find('.td_icon_list').val(),
+                                    list_order: key
+                                }
+                            })
+
+                            let bottom = [];
+                            let bottomData = $('#bottom-body td');
+                            $.each(bottomData, function(key, cell) {
+                                var td = $(cell);
+                                bottom[key] = {
+                                    id: key,
+                                    text: td.find('.wording').val(),
+                                    image: td.find('.td_icon_list').val(),
+                                    list_order: key
+                                }
+                            })
+
+                            icons[id] = { MAIN: top, SUB: bottom };
                             break;
                         default: // text, all others not listed above
                             break;

@@ -363,7 +363,7 @@ class CompanyVtramController extends Controller
         $this->customValues['icons'] = [];
         $icons = Icon::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
         foreach ($icons as $icon) {
-            $this->customValues['icons'][$row->methodology_id][$icon->type][$icon->id] = $icon;
+            $this->customValues['icons'][$icon->methodology_id][$icon->type][] = $icon;
         }
 
         return parent::_custom();

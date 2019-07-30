@@ -146,11 +146,11 @@
         }
     })
 
-    $('#main_text').on('change keyup', function() {
+    $('#methodology-icon-form-container #text_before').on('change keyup', function() {
         $('#top_heading').html($(this).val());
     })
 
-    $('#sub_text').on('change keyup', function() {
+    $('#methodology-icon-form-container #text_after').on('change keyup', function() {
         $('#sub_heading').html($(this).val());
     })
 
@@ -167,7 +167,7 @@
             let table_row = $('#' + table_location + '-body tr');
             let list_order = $('#' + table_location + '-body td').length;
 
-            let td = '<td data-table="'+table_location+'" data-order="'+list_order+'" class="column is-3">\
+            let td = '<td data-order="'+list_order+'" class="column is-3">\
                 <div class="field">';
 
             let selectedImage = $('#icon_list').children("option:selected").val();
@@ -178,7 +178,7 @@
                 <image class="logo-img" src="/'+src+'"></image>\
             </div>'
 
-            select = '<label for="icon_list_">Select Icon:</label>\
+            let select = '<label for="icon_list_">Select Icon:</label>\
             <div class="control">\
                 <div class="select">\
                     <select name="icon_list_'+table_location+'_'+list_order+'" class="form-control td_icon_list">\
@@ -194,18 +194,18 @@
             td += select;
 
             let wording = '<div class="field">\
-                            <label for="wording">Wording:</label>\
+                            <label for="wording_'+table_location+'_'+list_order+'">Wording:</label>\
                             <div class="control">\
-                                <input type="text" name="wording_'+table_location+'_'+list_order+'" class="form-control input" value="'+$('#words').val()+'">\
+                                <input type="text" name="wording_'+table_location+'_'+list_order+'" class="form-control input wording" value="'+$('#words').val()+'">\
                             </div>\
                           </div>'
 
             td += wording;
 
             let buttons = '<div class="field">\
-                            <a class="handms-icons" onclick="moveIconLeft()"><svg class="eg-keyboard_arrow_left"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/eg-icons.svg#eg-keyboard_arrow_left"></use></svg></a>\
-                            <a class="handms-icons" onclick="moveIconRight()"><svg class="eg-keyboard_arrow_right"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/eg-icons.svg#eg-keyboard_arrow_right"></use></svg></a>\
-                            <a class="handms-icons" onclick="deleteIcon()"><svg class="eg-delete"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/eg-icons.svg#eg-delete"></use></svg></a>\
+                            <a class="handms-icons" onclick="moveIconLeft('+list_order+')"><svg class="eg-keyboard_arrow_left"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/eg-icons.svg#eg-keyboard_arrow_left"></use></svg></a>\
+                            <a class="handms-icons" onclick="moveIconRight('+list_order+')"><svg class="eg-keyboard_arrow_right"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/eg-icons.svg#eg-keyboard_arrow_right"></use></svg></a>\
+                            <a class="handms-icons" onclick="deleteIcon('+list_order+')"><svg class="eg-delete"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/eg-icons.svg#eg-delete"></use></svg></a>\
                           </div>'
 
             td += buttons;
@@ -231,7 +231,59 @@
             toastr.warning('Please select a table!');
 
         }
-    })
+    });
+
+    function renderTableData(row, list_order, location, tdData) {
+
+        let td = '<td data-order="'+list_order+'" class="column is-3">\
+            <div class="field">';
+
+            let src = images[tdData['image']];
+
+            // add image box
+            td += '<div class="image-box">\
+                <image class="logo-img" src="/'+src+'"></image>\
+            </div>'
+
+
+        let select = '<label for="icon_list_">Select Icon:</label>\
+        <div class="control">\
+            <div class="select">\
+                <select name="icon_list_'+location+'_'+list_order+'" class="form-control td_icon_list">\
+                    @foreach($iconSelect as $value => $label)
+                        <option value="{{$value}}">{{$label}}</option>\
+                    @endforeach
+                    ';
+
+        select += '</select>\
+            </div>\
+        </div>';
+
+        td += select;
+
+        let wording = '<div class="field">\
+                        <label for="wording">Wording:</label>\
+                        <div class="control">\
+                            <input type="text" name="wording_'+location+'_'+list_order+'" class="form-control input wording" value="'+tdData['text']+'">\
+                        </div>\
+                      </div>'
+
+        td += wording;
+
+        let buttons = '<div class="field">\
+                        <a class="handms-icons" onclick="moveIconLeft('+list_order+')"><svg class="eg-keyboard_arrow_left"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/eg-icons.svg#eg-keyboard_arrow_left"></use></svg></a>\
+                        <a class="handms-icons" onclick="moveIconRight('+list_order+')"><svg class="eg-keyboard_arrow_right"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/eg-icons.svg#eg-keyboard_arrow_right"></use></svg></a>\
+                        <a class="handms-icons" onclick="deleteIcon('+list_order+')"><svg class="eg-delete"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/eg-icons.svg#eg-delete"></use></svg></a>\
+                      </div>'
+
+        td += buttons;
+
+        td += '</field>\
+            </div>\
+        </div>';
+
+        return td;
+    }
 
 </script>
 

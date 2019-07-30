@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Auth;
 use Controller;
+use App\Icon;
 use App\TableRow;
 use App\Methodology;
 use App\Instruction;
@@ -45,7 +46,9 @@ class MethodologyController extends Controller
             case "PROCESS":
                 $this->sortOutInstructions($record, $request);
                 break;
-
+            case "ICON":
+                $this->sortOutIcons($record, $request);
+                break;
         }
         return $record->id;
     }
@@ -77,6 +80,9 @@ class MethodologyController extends Controller
                 break;
             case "PROCESS":
                 $this->sortOutInstructions($record, $request);
+                break;
+            case "ICON":
+                $this->sortOutIcons($record, $request);
                 break;
         }
         return $record->id;
@@ -133,6 +139,39 @@ class MethodologyController extends Controller
         }
 
         Instruction::insert($rows);
+    }
+
+    public function sortOutIcons($record, $request)
+    {
+        Icon::where('methodology_id', $record->id)->delete();
+        $tables = [];
+
+        $tableTranslate = ['top' => 'MAIN', 'bottom' => 'SUB'];
+
+        // build up your tables
+        foreach ($request as $key => $value) {
+            if (strpos($key, "icon_list_") !== false) {
+                $iconField = explode("_", $key); // icon_list_top_0 = ['icon', 'list', 'top', 0]
+                $type = $tableTranslate[$iconField[2]];
+                $id = $iconField[3];
+                $tables[$type][$id]['image'] = $value;
+            } else if (strpos($key, "wording") !== false) {
+                $wordingField = explode("_", $key); // wording_top_0 = ['wording', 'top', 0]
+                $id = $wordingField[2];
+                $type = $tableTranslate[$wordingField[1]];
+                $tables[$type][$id]['text'] = $value;
+            }
+        }
+
+        // bolt in the rest and save
+        foreach ($tables as $type => $table) {
+            foreach ($table as $listOrder => $row) {
+                $table[$listOrder]['list_order'] = $listOrder;
+                $table[$listOrder]['type'] = $type;
+                $table[$listOrder]['methodology_id'] = $record->id;
+            }
+            Icon::insert($table);
+        }
     }
 
     public function delete($id)

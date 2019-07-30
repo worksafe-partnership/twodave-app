@@ -1,4 +1,4 @@
-<td data-table="{{$table}}" data-order="{{$order}}" class="is-4>
+<td data-order="{{$order}}" class="is-4">
     <div class="field">
         <div class="image-box">
             <image class="logo-img" src="/gfx/icons/no_image.png"></image>
