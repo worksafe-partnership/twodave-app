@@ -686,6 +686,8 @@
                         break;
                     case 'ICON':
                         container = 'methodology-icon-form-container';
+                        $('#top-body td').remove();
+                        $('#bottom-body td').remove();
                         cat = 'ICON';
                         break;
                 }

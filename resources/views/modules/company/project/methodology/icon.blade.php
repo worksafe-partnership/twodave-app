@@ -40,13 +40,8 @@
             <thead>
                 <th colspan="5" id="top_heading">Main Table</th>
             </thead>
-            <tbody>
-                <tr>
-                    @include('modules.company.project.methodology.icon_td', ['table' => 'top', 'row' => 1, 'col' => 1])
-                    @include('modules.company.project.methodology.icon_td', ['table' => 'top', 'row' => 1, 'col' => 2])
-                    @include('modules.company.project.methodology.icon_td', ['table' => 'top', 'row' => 1, 'col' => 3])
-                    @include('modules.company.project.methodology.icon_td', ['table' => 'top', 'row' => 1, 'col' => 4])
-                    @include('modules.company.project.methodology.icon_td', ['table' => 'top', 'row' => 1, 'col' => 5])
+            <tbody id="top-body">
+                <tr class="columns is-multiline" style="margin:0">
                 </tr>
             </tbody>
         </table>
@@ -59,13 +54,8 @@
             <thead>
                 <th colspan="5" id="sub_heading">Sub Table</th>
             </thead>
-            <tbody>
-                <tr>
-                    @include('modules.company.project.methodology.icon_td', ['table' => 'bottom', 'row' => 1, 'col' => 1])
-                    @include('modules.company.project.methodology.icon_td', ['table' => 'bottom', 'row' => 1, 'col' => 2])
-                    @include('modules.company.project.methodology.icon_td', ['table' => 'bottom', 'row' => 1, 'col' => 3])
-                    @include('modules.company.project.methodology.icon_td', ['table' => 'bottom', 'row' => 1, 'col' => 4])
-                    @include('modules.company.project.methodology.icon_td', ['table' => 'bottom', 'row' => 1, 'col' => 5])
+            <tbody id="bottom-body">
+                <tr class="columns is-multiline" style="margin:0">
                 </tr>
             </tbody>
         </table>
@@ -113,8 +103,26 @@
     </div>
 </div>
 
+
+
+<div class="columns">
+    <div class="column is-10 is-offset-1">
+        <div class="columns">
+            <div class="column is-6">
+                <div class="field">
+                    <button type="button" class="button is-primary" id="add-icon">Add Icon</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+</div>
+
+
 <script>
     let images = JSON.parse('{!! str_replace('\'', '\\\'', $iconImages) !!}');
+    let iconSelect = JSON.parse('{!! str_replace('\'', '\\\'', json_encode($iconSelect)) !!}');
+
     function getImageSrc(key) {
         if (images[key]) {
             return images[key];
@@ -130,6 +138,14 @@
         }
     })
 
+    $(document).on('change', '.td_icon_list', function() {
+        let src = getImageSrc( $(this).val() );
+        if (src != "") {
+            let field = $(this).closest('.field');
+            let image = $(field).find('.logo-img').attr("src", "/"+src);
+        }
+    })
+
     $('#main_text').on('change keyup', function() {
         $('#top_heading').html($(this).val());
     })
@@ -137,7 +153,88 @@
     $('#sub_text').on('change keyup', function() {
         $('#sub_heading').html($(this).val());
     })
+
+    $('#add-icon').on('click', function() {
+        let checked = $('input[name=type]:checked').val();
+
+        if (checked && checked !== "undefined") {
+            let table_location = '';
+            if (checked == "MAIN") {
+                table_location = 'top';
+            } else {
+                table_location = 'bottom';
+            }
+            let table_row = $('#' + table_location + '-body tr');
+            let list_order = $('#' + table_location + '-body td').length;
+
+            let td = '<td data-table="'+table_location+'" data-order="'+list_order+'" class="column is-3">\
+                <div class="field">';
+
+            let selectedImage = $('#icon_list').children("option:selected").val();
+            let src = images[selectedImage];
+
+            // add image box
+            td += '<div class="image-box">\
+                <image class="logo-img" src="/'+src+'"></image>\
+            </div>'
+
+            select = '<label for="icon_list_">Select Icon:</label>\
+            <div class="control">\
+                <div class="select">\
+                    <select name="icon_list_'+table_location+'_'+list_order+'" class="form-control td_icon_list">\
+                        @foreach($iconSelect as $value => $label)
+                            <option value="{{$value}}">{{$label}}</option>\
+                        @endforeach
+                        ';
+
+            select += '</select>\
+                </div>\
+            </div>';
+
+            td += select;
+
+            let wording = '<div class="field">\
+                            <label for="wording">Wording:</label>\
+                            <div class="control">\
+                                <input type="text" name="wording_'+table_location+'_'+list_order+'" class="form-control input" value="'+$('#words').val()+'">\
+                            </div>\
+                          </div>'
+
+            td += wording;
+
+            let buttons = '<div class="field">\
+                            <a class="handms-icons" onclick="moveIconLeft()"><svg class="eg-keyboard_arrow_left"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/eg-icons.svg#eg-keyboard_arrow_left"></use></svg></a>\
+                            <a class="handms-icons" onclick="moveIconRight()"><svg class="eg-keyboard_arrow_right"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/eg-icons.svg#eg-keyboard_arrow_right"></use></svg></a>\
+                            <a class="handms-icons" onclick="deleteIcon()"><svg class="eg-delete"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/eg-icons.svg#eg-delete"></use></svg></a>\
+                          </div>'
+
+            td += buttons;
+
+            // close td and field class
+            td += '</div>\
+            </td>';
+
+            $(table_row).append(td);
+
+            // correct selection of select field after rendering
+            let selectName = 'icon_list_'+table_location+"_"+list_order;
+            $('[name='+selectName+']').val($('#icon_list').val());
+
+            // wipe out the select fields
+            $('input[name=type]')[0].checked = false;
+            $('input[name=type]')[1].checked = false;
+            $('#icon_list').prop('selectedIndex',0);
+
+            $('#image_preview').attr("src", "/gfx/icons/no_image.png");
+            $('#words').val('');
+        } else {
+            toastr.warning('Please select a table!');
+
+        }
+    })
+
 </script>
+
 
 @push('styles')
     <style>
