@@ -146,7 +146,7 @@ return [
         'safety_footwear' => 'Safety Footwear',
         'protective_gloves' => 'Protective Gloves',
         'protective_clothing' => 'Protective Clothing',
-        'wear_your_hands' => 'Wear Your Hands',
+        'wash_your_hands' => 'Wash Your Hands',
         'use_handrail' => 'Use Handrail',
         'face_shield' => 'Face Shield',
         'head_protection' => 'Head Protection',
