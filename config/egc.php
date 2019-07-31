@@ -173,7 +173,7 @@ return [
         'safety_footwear' => 'gfx/icons/safety_footwear.png',
         'protective_gloves' => 'gfx/icons/protective_gloves.png',
         'protective_clothing' => 'gfx/icons/protective_clothing.png',
-        'wear_your_hands' => 'gfx/icons/wear_your_hands.png',
+        'wash_your_hands' => 'gfx/icons/wear_your_hands.png',
         'use_handrail' => 'gfx/icons/use_handrail.png',
         'face_shield' => 'gfx/icons/face_shield.png',
         'head_protection' => 'gfx/icons/head_protection.png',
