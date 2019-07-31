@@ -113,7 +113,7 @@
             $('#new_description').val('');
             $('#is_heading').prop('checked', false);
         } else {
-            alert("Please ensure your row is populated");
+            toastr.error('Please ensure your row is populated');
         }
     })
 </script>

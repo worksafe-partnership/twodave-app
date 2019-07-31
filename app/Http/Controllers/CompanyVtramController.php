@@ -342,6 +342,8 @@ class CompanyVtramController extends Controller
 
         $this->customValues['comments'] = VTLogic::getComments($this->record->id, $this->record->status, "VTRAM");
         $this->customValues['entityType'] = 'VTRAM';
+
+        // Start of Methodology Specific Items
         $this->customValues['iconSelect'] = config('egc.icons');
         $this->customValues['iconImages'] = json_encode(config('egc.icon_images'));
         $this->customValues['company'] = $company;
@@ -365,6 +367,7 @@ class CompanyVtramController extends Controller
         foreach ($icons as $icon) {
             $this->customValues['icons'][$icon->methodology_id][$icon->type][] = $icon;
         }
+        // End of Methodology Specific Items //
 
         return parent::_custom();
     }

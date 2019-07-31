@@ -135,7 +135,7 @@
             $('#simple_col_3').val('');
             $('#simple_col_4').val('');
         } else {
-            alert("Please ensure your row is populated");
+            toastr.error('Please ensure your row is populated');
         }
     })
 </script>
