@@ -24,6 +24,8 @@ class CreateMethodologyTable extends Migration
             $table->foreign('image')->references('id')->on('files')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->string('image_on', 5)->nullable();
             $table->integer('list_order')->nullable()->unsigned();
+            $table->text('icon_main_heading')->nullable();
+            $table->text('icon_sub_heading')->nullable();
             $table->timestamps();
         });
     }

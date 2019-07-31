@@ -14,19 +14,8 @@
 <div class="columns">
     <div class="column is-10 is-offset-1">
         <div class="field">
-            {{ EGForm::text('text_before', [
-                'label' => 'Main Text',
-                'value' => '',
-                'type' => $pageType
-            ]) }}
-        </div>
-    </div>
-</div>
-<div class="columns">
-    <div class="column is-10 is-offset-1">
-        <div class="field">
-            {{ EGForm::text('text_after', [
-                'label' => 'Sub Text',
+            {{ EGForm::text('icon_main_heading', [
+                'label' => 'Main Table Heading',
                 'value' => '',
                 'type' => $pageType
             ]) }}
@@ -50,6 +39,18 @@
 
 <div class="columns">
     <div class="column is-10 is-offset-1">
+        <div class="field">
+            {{ EGForm::text('icon_sub_heading', [
+                'label' => 'Sub Table Heading',
+                'value' => '',
+                'type' => $pageType
+            ]) }}
+        </div>
+    </div>
+</div>
+
+<div class="columns">
+    <div class="column is-10 is-offset-1">
         <table class="table is-bordered">
             <thead>
                 <th colspan="5" id="sub_heading">Sub Table</th>
@@ -59,6 +60,18 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+</div>
+
+<div class="columns">
+    <div class="column is-10 is-offset-1">
+        <div class="field">
+            {{ EGForm::ckeditor('text_after', [
+                'label' => 'Text After',
+                'value' => '',
+                'type' => $pageType
+            ]) }}
+        </div>
     </div>
 </div>
 
@@ -146,11 +159,12 @@
         }
     })
 
-    $('#methodology-icon-form-container #text_before').on('change keyup', function() {
+    $('#methodology-icon-form-container #icon_main_heading').on('change keyup', function() {
         $('#top_heading').html($(this).val());
     })
 
-    $('#methodology-icon-form-container #text_after').on('change keyup', function() {
+
+    $('#methodology-icon-form-container #icon_sub_heading').on('change keyup', function() {
         $('#sub_heading').html($(this).val());
     })
 
@@ -378,7 +392,6 @@
             height: 100px;
             width: 100px;
             border: 1px solid black;
-
         }
     </style>
 @endpush

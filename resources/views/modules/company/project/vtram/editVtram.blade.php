@@ -793,7 +793,6 @@
                                         newRow += "<td><input type='text' name='row_"+key+"__label' value='"+row.label+"'></input></td>";
                                         newRow += "<td><input type='text' name='row_"+key+"__description' value='"+row.description+"'></input></td>";
                                         newRow += "<td>[Image details]</td>";
-                                        // newRow += "<td><input type='text' name='row_"+key+"_description' value='"+row.description+"'></input></td>";
                                     newRow += "</tr>"
                                     $('#process-table tbody').append(newRow);
                                     $('#process-table').attr('data-next_row', Object.keys(rows).length);
@@ -825,11 +824,12 @@
                                         $('[name='+selectName+']').val(tds[index]['image']);
                                     }
                                 })
-                                $('#top_heading').html(methodology.text_before);
-                                $('#sub_heading').html(methodology.text_after);
+                                $('#icon_main_heading').val(methodology.icon_main_heading);
+                                $('#icon_sub_heading').val(methodology.icon_sub_heading);
+                                $('#top_heading').html(methodology.icon_main_heading);
+                                $('#sub_heading').html(methodology.icon_sub_heading);
                             }
                         }
-                        var before = methodology.text_before;
                         var after = methodology.text_after;
                         break;
                 }
@@ -931,8 +931,10 @@
                     break;
                 case 'ICON':
                     form_data.append('title', $('#methodology-icon-form-container #title').val());
-                    form_data.append('text_before', $('#methodology-icon-form-container #text_before').val());
                     form_data.append('text_after', $('#methodology-icon-form-container #text_after').val());
+
+                    form_data.append('icon_main_heading', $('#methodology-icon-form-container #icon_main_heading').val());
+                    form_data.append('icon_sub_heading', $('#methodology-icon-form-container #icon_sub_heading').val());
 
                     $.each($('#methodology-icon-form-container table td input'), function(key, input) {
                         form_data.append(input.name, input.value)

@@ -23,7 +23,9 @@ class Methodology extends Model
         'text_after',
         'image',
         'image_on',
-        'list_order'
+        'list_order',
+        'icon_main_heading',
+        'icon_sub_heading'
     ];
 
     public static function scopeDatatableAll($query, $parent, $identifier)
