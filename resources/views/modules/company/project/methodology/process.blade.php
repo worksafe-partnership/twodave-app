@@ -22,7 +22,7 @@
                             <th>Heading</th>
                             <th>No</th>
                             <th>Description</th>
-                            <th>Image</th>
+                            <th>Thumbnail</th>
                         </thead>
                         <tbody>
                         </tbody>

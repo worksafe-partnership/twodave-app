@@ -51,6 +51,15 @@ class MethodologyRequest extends FormRequest
             case "PROCESS":
                 $rules['row_0__description'] = 'required';
                 break;
+            case "ICON":
+                $rules['text_before'] = 'required';
+                $rules['icon_list_top_0'] = 'required';
+
+                // MB: After - I assume these aren't required, but will leave commented for now.
+                // $rules['text_after'] = 'required';
+                // $rules['wording_bottom_0'] = 'required';
+                // $rules['icon_list_bottom_0'] = 'required';
+                break;
         }
 
         return $rules;
@@ -79,6 +88,13 @@ class MethodologyRequest extends FormRequest
                 break;
             case "PROCESS":
                 $messages['row_0__description.required'] = 'Please add rows to your table';
+                break;
+            case "ICON":
+                $messages['text_before.required'] = 'Please enter Main Table heading';
+                $messages['icon_list_top_0.required'] = 'Please add rows to your Main table';
+                // $messages['text_after.required'] = 'Please enter Main Table heading';
+                // $messages['icon_list_bottom_0.required'] = 'Please add rows to your Sub table';
+                // $messages['icon_list_bottom_0.required'] = 'Please add rows to your Sub table';
                 break;
         }
 
