@@ -688,6 +688,8 @@
                         container = 'methodology-icon-form-container';
                         $('#top-body td').remove();
                         $('#bottom-body td').remove();
+                        $('#top_heading').html("Main Table");
+                        $('#sub_heading').html("Sub Table");
                         cat = 'ICON';
                         break;
                 }

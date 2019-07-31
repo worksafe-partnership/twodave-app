@@ -20,8 +20,8 @@
         ]) }}
     </div>
     <div class="field">
-        <a class="handms-icons" onclick="moveIconLeft()">{{ icon('keyboard_arrow_left') }}</a>
-        <a class="handms-icons" onclick="moveIconRight()">{{ icon('keyboard_arrow_right') }}</a>
-        <a class="handms-icons" onclick="deleteIcon()">{{ icon('delete') }}</a>
+        <a class="handms-icons move_left" onclick="moveIconLeft()">{{ icon('keyboard_arrow_left') }}</a>
+        <a class="handms-icons move_right" onclick="moveIconRight()">{{ icon('keyboard_arrow_right') }}</a>
+        <a class="handms-icons delete_icon" onclick="deleteIcon()">{{ icon('delete') }}</a>
     </div>
 </td>
