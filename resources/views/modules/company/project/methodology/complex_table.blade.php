@@ -143,3 +143,13 @@
         }
     })
 </script>
+
+<style>
+    #complex-table input{
+        width: 100%;
+    }
+
+    #complex-table * {
+        box-sizing: border-box;
+    }
+</style>
