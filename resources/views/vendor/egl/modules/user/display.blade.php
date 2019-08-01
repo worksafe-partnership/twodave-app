@@ -3,9 +3,9 @@
     "type" => $pageType
 ])}}
 <div class="columns">
-    <div class="column is-6 is-offset-3">
+    <div class="column is-8 is-offset-2">
         <div class="columns">
-            <div class="column is-6">
+            <div class="column is-4">
                 <div class="field">
                     {{ EGForm::email("email", [
                         "label" => "Email",
@@ -15,11 +15,20 @@
                 </div>
             </div>
 
-            <div class="column is-6">
+            <div class="column is-4">
                 <div class="field">
                     {{ EGForm::text("name", [
                         "label" => "Name",
                         "value"  => $record['name'],
+                        "type" => $pageType
+                    ]) }}
+                </div>
+            </div>
+            <div class="column is-4">
+                <div class="field">
+                    {{ EGForm::text("position", [
+                        "label" => "Position",
+                        "value"  => $record['position'],
                         "type" => $pageType
                     ]) }}
                 </div>

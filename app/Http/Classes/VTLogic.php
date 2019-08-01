@@ -2,12 +2,20 @@
 
 namespace App\Http\Classes;
 
+use DB;
 use Mail;
 use Auth;
 use Bhash;
+use App\Icon;
+use App\Vtram;
+use App\Hazard;
 use App\Approval;
+use App\TableRow;
+use App\Template;
 use App\UniqueLink;
+use app\Instruction;
 use App\Methodology;
+use App\NextNumber;
 use App\Mail\PrincipleContractorEmail;
 
 class VTLogic
@@ -22,12 +30,21 @@ class VTLogic
     public static function createA3Pdf($entityId, $entityType = null)
     {
         $config = new VTConfig($entityId, $entityType);
+        $pdf = self::createPdf($entityId, $entityType); // MAYBE?
+         
         dd('Now do PDF with $config->entity and return as stream, see teamwork (this route handles print and view) make sure it is a3');
     }
 
     public static function createPdf($entityId, $entityType = null)
     {
         $config = new VTConfig($entityId, $entityType);
+        $data = [
+            'entity' => $config->entity,
+        ];
+//        return view('pdf.main_report', $data);
+        return \PDF::loadView('pdf.main_report', $data)
+            //->save()
+            ->stream();
         dd('Now do PDF with $config->entity and return as stream, see teamwork (this route handles print and view)');
     }
 
@@ -193,5 +210,78 @@ class VTLogic
         }
         
         return false;
+    }
+
+    public static function copyEntity($original, $cloned = null)
+    {
+        return DB::transaction(function () use ($original, $cloned) {
+            if ($cloned == null) {
+                $cloned = $original->replicate();
+                if ($original->original_id == null) {
+                    $cloned->original_id = $original->id;
+                }
+                if ($cloned instanceof Vtram) {
+                    $cloned->created_from_entity = $original instanceof Vtram ? 'VTRAM' : 'TEMPLATE';
+                    $cloned->created_from_id = $original->id;
+                    $nextNumber = NextNumber::where('company_id', '=', $cloned->company_id)
+                        ->first();
+                    if (is_null($nextNumber)) {
+                        $nextNumber = NextNumber::create([
+                            'company_id' => $cloned->company_id,
+                            'number' => 1,
+                        ]);
+                    }
+                    $cloned->number = $nextNumber->number;
+                    $nextNumber->increment('number');
+                } else {
+                    $cloned->created_from = $original->id;
+                }
+                $cloned->status = 'NEW';
+                $cloned->revision_number = null;
+                $cloned->save();
+            }
+            $insertHazards = [];
+            foreach ($original->hazards as $hazard) {
+                $newHazard = $hazard->toArray();
+                unset($newHazard['id']);
+                $newHazard['entity'] = $cloned instanceof Vtram ? 'VTRAM' : 'TEMPLATE';
+                $newHazard['entity_id'] = $cloned->id;
+                $insertHazards[] = $newHazard;
+            }
+            Hazard::insert($insertHazards);
+
+            $insertIcons = [];
+            $insertTableRows = [];
+            $insertInstructions = [];
+            foreach ($original->methodologies as $methodology) {
+                $newMeth = $methodology->toArray();
+                unset($newMeth['id']);
+                $newMeth['entity'] = $cloned instanceof Vtram ? 'VTRAM' : 'TEMPLATE';
+                $newMeth['entity_id'] = $cloned->id;
+                $meth = Methodology::create($newMeth);
+                foreach ($methodology->icons as $icon) {
+                    $newIcon = $icon->toArray();
+                    unset($newIcon['id']);
+                    $newIcon['methodology_id'] = $meth->id;
+                    $insertIcons[] = $newIcon; 
+                }
+                foreach ($methodology->instructions as $instruction) {
+                    $newInstruction = $instruction->toArray();
+                    unset($newInstruction['id']);
+                    $newInstruction['methodology_id'] = $meth->id;
+                    $insertInstructions[] = $newInstruction; 
+                }
+                foreach ($methodology->tableRows as $row) {
+                    $newRow = $row->toArray();
+                    unset($newRow['id']);
+                    $newRow['methodology_id'] = $meth->id;
+                    $insertTableRows[] = $newRow; 
+                }
+            }
+            Icon::insert($insertIcons);
+            TableRow::insert($insertTableRows);
+            Instruction::insert($insertInstructions);
+            return $cloned;
+        });
     }
 }

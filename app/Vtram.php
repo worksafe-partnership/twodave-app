@@ -248,7 +248,7 @@ class Vtram extends Model
         return 'Not Submitted';
     }
 
-    public function submittedDateTimestamp() // for custom datatables
+    public function submittedDateTimestamp()
     {
         if (!is_null($this->submitted_date)) {
             return Carbon::createFromFormat("Y-m-d", $this->submitted_date)->timestamp;
@@ -256,7 +256,7 @@ class Vtram extends Model
         return "";
     }
 
-    public function niceSubmittedDate() // for custom datatables
+    public function niceSubmittedDate()
     {
         if (!is_null($this->submitted_date)) {
             return Carbon::createFromFormat("Y-m-d", $this->submitted_date)->format('d/m/Y');
@@ -274,7 +274,7 @@ class Vtram extends Model
         if (!is_null($this->createdBy)) {
             return $this->createdBy->name;
         }
-        return ""; // shouldn't happen
+        return "";
     }
 
     public function updatedBy()
@@ -288,7 +288,7 @@ class Vtram extends Model
         if (!is_null($updated)) {
             return $updated->name;
         }
-        return ""; // shouldn't happen
+        return "";
     }
 
     public function approved()
@@ -304,7 +304,7 @@ class Vtram extends Model
         return 'Not Approved';
     }
 
-    public function approvedDateTimestamp() // for custom datatables
+    public function approvedDateTimestamp()
     {
         if (!is_null($this->approved_date)) {
             return Carbon::createFromFormat("Y-m-d", $this->approved_date)->timestamp;
@@ -312,7 +312,15 @@ class Vtram extends Model
         return "";
     }
 
-    public function nextReviewDateTimestamp() // for custom datatables
+    public function niceApprovedDate()
+    {
+        if (!is_null($this->approved_date)) {
+            return Carbon::createFromFormat("Y-m-d", $this->approved_date)->format('d/m/Y');
+        }
+        return "";
+    }
+
+    public function nextReviewDateTimestamp()
     {
         if (!is_null($this->review_due)) {
             return Carbon::createFromFormat("Y-m-d", $this->review_due)->timestamp;
@@ -320,7 +328,7 @@ class Vtram extends Model
         return "";
     }
 
-    public function resubmitByDateTimestamp() // for custom datatables
+    public function resubmitByDateTimestamp()
     {
         if (!is_null($this->resubmit_by)) {
             return Carbon::createFromFormat("Y-m-d", $this->resubmit_by)->timestamp;
@@ -328,7 +336,7 @@ class Vtram extends Model
         return "";
     }
 
-    public function niceResubmitByDate() // for custom datatables
+    public function niceResubmitByDate()
     {
         if (!is_null($this->resubmit_by)) {
             return Carbon::createFromFormat("Y-m-d", $this->resubmit_by)->format('d/m/Y');
@@ -341,16 +349,16 @@ class Vtram extends Model
         if (!is_null($this->company_id) && !is_null($this->project_id) && !is_null($this->id)) {
             return "/company/".$this->company_id."/project/".$this->project_id."/vtram/".$this->id;
         }
-        return '/'; // Assuming this should never be hit, but placeholder to be safe.
+        return '/';
     }
 
 
-    public function url() // for custom datatables
+    public function url()
     {
         if (!is_null($this->project_id) && !is_null($this->id)) {
             return "/project/".$this->project_id."/vtram/".$this->id;
         }
-        return '/'; // Assuming this should never be hit, but placeholder to be safe.
+        return '/';
     }
 
     public function companyName()
@@ -373,5 +381,17 @@ class Vtram extends Model
             }
         }
         return "review-okay";
+    }
+
+    public function hazards()
+    {
+        return $this->hasMany(Hazard::class, 'entity_id', 'id')
+            ->where('entity', '=', 'VTRAM');
+    }
+
+    public function methodologies()
+    {
+        return $this->hasMany(Methodology::class, 'entity_id', 'id')
+            ->where('entity', '=', 'VTRAM');
     }
 }

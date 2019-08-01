@@ -16,13 +16,15 @@ class CompanyTemplateController extends TemplateController
 
     public function viewHook()
     {
-        $this->actionButtons['methodologies'] = [
-            'label' => 'Edit Hazards & Methodologies',
-            'path' => '/company/'.$this->parentId.'/template/'.$this->id.'/methodology',
-            'icon' => 'receipt',
-            'order' => '500',
-            'id' => 'methodologyEdit',
-        ];
+        if (in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
+            $this->actionButtons['methodologies'] = [
+                'label' => 'Edit Hazards & Methodologies',
+                'path' => '/company/'.$this->parentId.'/template/'.$this->id.'/methodology',
+                'icon' => 'receipt',
+                'order' => '500',
+                'id' => 'methodologyEdit',
+            ];
+        }
 
         $prevConfig = config('structure.company.template.previous.config');
         $this->actionButtons['previous'] = [

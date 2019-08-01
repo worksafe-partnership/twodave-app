@@ -33,6 +33,24 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'VtramController@editContent'
     ]);
 
+    // Revisions
+    Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/revision', [
+        'middleware' => 'can:create-company.project.vtram',
+        'uses' => 'CompanyVtramController@createRevision'
+    ]);
+    Route::get('/company/{company_id}/template/{template_id}/revision', [
+        'middleware' => 'can:create-company.template',
+        'uses' => 'CompanyTemplateController@createRevision'
+    ]);
+    Route::get('/template/{template_id}/revision', [
+        'middleware' => 'can:create-template',
+        'uses' => 'TemplateController@createRevision'
+    ]);
+    Route::get('/project/{project_id}/vtram/{vtram_id}/revision', [
+        'middleware' => 'can:create-project.vtram',
+        'uses' => 'VtramController@createRevision'
+    ]);
+
     // Approvals
     Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/approve', [
         'middleware' => 'can:create-company.project.vtram.approval',
