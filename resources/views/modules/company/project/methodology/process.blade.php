@@ -94,6 +94,7 @@
 </div>
 <hr>
 
+@push('scripts')
 <script>
     $('#add-row-process').on('click', function() {
         let checked = '';
@@ -144,22 +145,77 @@
         }
     }
 
-    function moveProcessUp(index) {
-        alert('move up');
+    function moveProcessUp(key) {
+        moveProcess(key, 'up');
     }
 
     function moveProcessDown(key) {
-        alert('move down');
+        moveProcess(key, 'down');
     }
 
     function moveProcess(key, direction) {
-        alert('move '+direction);
+        let trs = $('#process-table tr');
+        if (trs.length == 1) {
+            toastr.warning('Cannot move if only process icon!');
+        } else {
+            if (direction == "up") {
+                if (key != 0) {
+                    let upperKey = key-1;
+                    let upperTr = $('#process-table tr[data-row='+upperKey+']')
+                    let tr = $('#process-table tr[data-row='+key+']');
+                    tr.after(upperTr);
+
+                    upperTr.attr('data-row', key);
+                    upperTr.find('[name*="heading"]').attr('name', 'row_'+key+'__heading');
+                    upperTr.find('[name*="label"]').attr('name', 'row_'+key+'__label');
+                    upperTr.find('[name*="description"]').attr('name', 'row_'+key+'__description');
+                    upperTr.find('.delete_process').attr("onclick", "deleteProcess("+key+")");
+                    upperTr.find('.move_process_up').attr("onclick", "moveProcessUp("+key+")");
+                    upperTr.find('.move_process_down').attr('onclick', "moveProcessDown("+key+")");
+
+                    tr.attr('data-row', upperKey);
+                    tr.find('[name*="heading"]').attr('name', 'row_'+upperKey+'__heading');
+                    tr.find('[name*="label"]').attr('name', 'row_'+upperKey+'__label');
+                    tr.find('[name*="description"]').attr('name', 'row_'+upperKey+'__description');
+                    tr.find('.delete_process').attr("onclick", "deleteProcess("+upperKey+")");
+                    tr.find('.move_process_up').attr("onclick", "moveProcessUp("+upperKey+")");
+                    tr.find('.move_process_down').attr('onclick', "moveProcessDown("+upperKey+")");
+
+                } else {
+                    toastr.warning('Cannot move first icon left!');
+                }
+            } else { // down
+                if (key < trs.length-1) {
+                    let lowerKey = parseInt(key)+1;
+                    let lowerTr = $('#process-table tr[data-row='+lowerKey+']')
+                    let tr = $('#process-table tr[data-row='+key+']');
+                    lowerTr.after(tr);
+
+                    lowerTr.attr('data-row', key);
+                    lowerTr.find('[name*="heading"]').attr('name', 'row_'+key+'__heading');
+                    lowerTr.find('[name*="label"]').attr('name', 'row_'+key+'__label');
+                    lowerTr.find('[name*="description"]').attr('name', 'row_'+key+'__description');
+                    lowerTr.find('.delete_process').attr("onclick", "deleteProcess("+key+")");
+                    lowerTr.find('.move_process_up').attr("onclick", "moveProcessUp("+key+")");
+                    lowerTr.find('.move_process_down').attr('onclick', "moveProcessDown("+key+")");
+
+                    tr.attr('data-row', lowerKey);
+                    tr.find('[name*="heading"]').attr('name', 'row_'+lowerKey+'__heading');
+                    tr.find('[name*="label"]').attr('name', 'row_'+lowerKey+'__label');
+                    tr.find('[name*="description"]').attr('name', 'row_'+lowerKey+'__description');
+                    tr.find('.delete_process').attr("onclick", "deleteProcess("+lowerKey+")");
+                    tr.find('.move_process_up').attr("onclick", "moveProcessUp("+lowerKey+")");
+                    tr.find('.move_process_down').attr('onclick', "moveProcessDown("+lowerKey+")");
+                } else {
+                    toastr.warning('Cannot move last icon right!');
+                }
+            }
+        }
     }
-
-
 </script>
+@endpush
 
-
+@push('styles')
 <style>
     #process-table input{
         width: 100%;
@@ -169,3 +225,4 @@
         box-sizing: border-box;
     }
 </style>
+@endpush
