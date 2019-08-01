@@ -686,6 +686,10 @@
                         break;
                     case 'ICON':
                         container = 'methodology-icon-form-container';
+                        $('#top-body td').remove();
+                        $('#bottom-body td').remove();
+                        $('#top_heading').html("Main Table");
+                        $('#sub_heading').html("Sub Table");
                         cat = 'ICON';
                         break;
                 }
@@ -784,10 +788,16 @@
                                     if (row.heading == 1) {
                                         checked = 'checked';
                                     }
-                                    let newRow = "<tr data-row='"+key+"'>";
-                                        newRow += "<td><input type='checkbox' name='row_"+key+"_heading' "+checked+"></input></td>";
-                                        newRow += "<td><input type='text' name='row_"+key+"_label' value='"+row.label+"'></input></td>";
-                                        newRow += "<td><input type='text' name='row_"+key+"_description' value='"+row.description+"'></input></td>";
+                                    let newRow = "<tr class='columns' data-row='"+key+"' style='margin:0'>";
+                                        newRow += "<td class='column is-2'><input type='checkbox' name='row_"+key+"__heading' "+checked+"></input></td>";
+                                        newRow += "<td class='column is-1'><input  type='text' name='row_"+key+"__label' value='"+row.label+"'></input></td>";
+                                        newRow += "<td class='column is-3'><input type='text' name='row_"+key+"__description' value='"+row.description+"'></input></td>";
+                                        newRow += "<td class='column is-3'>[Image]</td>";
+                                        newRow += '<td class="column is-3 handms-actions" style="height:38px">\
+                                                    <a class="handms-icons delete_process" onclick="deleteProcess('+key+')">{{ icon("delete") }}</a>\
+                                                    <a class="handms-icons move_process_up" onclick="moveProcessUp('+key+')">{{ icon("keyboard_arrow_up") }}</a>\
+                                                    <a class="handms-icons move_process_down" onclick="moveProcessDown('+key+')">{{ icon("keyboard_arrow_down") }}</a>\
+                                                   </td>';
                                     newRow += "</tr>"
                                     $('#process-table tbody').append(newRow);
                                     $('#process-table').attr('data-next_row', Object.keys(rows).length);
@@ -797,7 +807,34 @@
                         break;
                     case 'ICON':
                         container = 'methodology-icon-form-container';
-                        var before = methodology.text_before;
+                        if (icons[methodology.id] !== 'undefined') {
+                            let tables = icons[methodology.id];
+                            $('#top-body td').remove();
+                            $('#bottom-body td').remove();
+                            if (tables !== 'undefined') {
+                                $.each(tables, function(table, tds) {
+                                    if (table == "MAIN") {
+                                        var tr = $('#top-body tr');
+                                        var location = 'top';
+                                    } else {
+                                        var tr = $('#bottom-body tr');
+                                        var location = 'bottom';
+                                    }
+
+                                    for (let index = 0; index < Object.keys(tds).length; index++) {
+                                        tr.append(renderTableData(tr, index, location, tds[index]));
+
+                                        // correct selection of select field after rendering
+                                        let selectName = 'icon_list_'+location+"_"+index;
+                                        $('[name='+selectName+']').val(tds[index]['image']);
+                                    }
+                                })
+                                $('#icon_main_heading').val(methodology.icon_main_heading);
+                                $('#icon_sub_heading').val(methodology.icon_sub_heading);
+                                $('#top_heading').html(methodology.icon_main_heading);
+                                $('#sub_heading').html(methodology.icon_sub_heading);
+                            }
+                        }
                         var after = methodology.text_after;
                         break;
                 }
@@ -877,7 +914,6 @@
                 case 'COMPLEX_TABLE':
                     form_data.append('title', $('#methodology-complex-table-form-container #title').val());
 
-                    // get all inputs within the $('#simple-table') element and attach them?
                     let complex_inputs = $('#complex-table input[name^=row_]');
                     $.each(complex_inputs, function(key, input) {
                         form_data.append(input.name, input.value);
@@ -886,7 +922,33 @@
                     form_data.append('text_before', $('#methodology-complex-table-form-container #text_before').val());
                     form_data.append('text_after', $('#methodology-complex-table-form-container #text_after').val());
                     break;
+                case 'PROCESS':
+                    form_data.append('title', $('#methodology-process-form-container #title').val());
 
+                    let process_lines = $('#process-table input[name^=row_]');
+                    $.each(process_lines, function(key, input) {
+                        if (input.type == "text") {
+                            form_data.append(input.name, input.value);
+                        } else {
+                            form_data.append(input.name, input.checked)
+                        }
+                    })
+                    break;
+                case 'ICON':
+                    form_data.append('title', $('#methodology-icon-form-container #title').val());
+                    form_data.append('text_after', $('#methodology-icon-form-container #text_after').val());
+
+                    form_data.append('icon_main_heading', $('#methodology-icon-form-container #icon_main_heading').val());
+                    form_data.append('icon_sub_heading', $('#methodology-icon-form-container #icon_sub_heading').val());
+
+                    $.each($('#methodology-icon-form-container table td input'), function(key, input) {
+                        form_data.append(input.name, input.value)
+                    });
+
+                    $.each($('#methodology-icon-form-container table td select'), function(key, select) {
+                        form_data.append(select.name, select.value);
+                    });
+                    break;
             }
 
             let url = 'methodology/create';
@@ -948,7 +1010,7 @@
                         }
                     }
 
-
+                    // write them to the local array to display when you hit Edit.
                     switch (category) {
                         case 'SIMPLE_TABLE':
                             delete tableRows[id];
@@ -979,6 +1041,55 @@
                                 };
                                 $(row).remove();
                             });
+                            break;
+                        case "PROCESS":
+                            delete processes[id];
+                            let processRows = $('#process-table tbody tr');
+                            processes[id] = [];
+                            $.each(processRows, function(key, row) {
+                                let inputs = $(row).find("input[name^=row_]");
+                                let checked = 0;
+
+                                if(inputs[0].checked) {
+                                    checked = 1;
+                                }
+
+                                processes[id][key] = {
+                                    heading: checked,
+                                    label: inputs[1].value,
+                                    description: inputs[2].value,
+                                }
+                                $(row).remove();
+                            });
+                            break;
+                        case "ICON":
+                            delete icons[id];
+
+                            let top = [];
+                            let topData = $('#top-body td');
+                            $.each(topData, function(key, cell) {
+                                var td = $(cell);
+                                top[key] = {
+                                    id: key,
+                                    text: td.find('.wording').val(),
+                                    image: td.find('.td_icon_list').val(),
+                                    list_order: key
+                                }
+                            })
+
+                            let bottom = [];
+                            let bottomData = $('#bottom-body td');
+                            $.each(bottomData, function(key, cell) {
+                                var td = $(cell);
+                                bottom[key] = {
+                                    id: key,
+                                    text: td.find('.wording').val(),
+                                    image: td.find('.td_icon_list').val(),
+                                    list_order: key
+                                }
+                            })
+
+                            icons[id] = { MAIN: top, SUB: bottom };
                             break;
                         default: // text, all others not listed above
                             break;

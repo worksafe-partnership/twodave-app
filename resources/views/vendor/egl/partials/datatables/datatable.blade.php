@@ -99,7 +99,6 @@ table.on("draw.dt", function (e, settings, json, xhr) {
 @if(isset($datatable["href"]))
     $('#{{$datatable["name"]}} tbody').on( 'click', 'tr', function (e) {
         var row = table.row(this);
-        console.log(row.responsive.hasHidden());
         if (!row.responsive.hasHidden()) {
             if (e.currentTarget.classList.contains("multiselect")) {
                 var checkbox = $(e.currentTarget).find(".b-checkbox input[type=checkbox]");

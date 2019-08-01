@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Auth;
 use Bhash;
+use Route;
 use Controller;
 use App\User;
 use App\Company;
@@ -19,6 +20,14 @@ class WorksafeUserController extends Controller
     {
         if ($this->user->company_id !== null && $this->record !== null) {
             if ($this->user->company_id !== $this->record->company_id) {
+                abort(404);
+            }
+        }
+
+        // if viewing company/{id}/user/{id} check that the user belongs to the viewed company
+        $route = Route::getFacadeRoot()->current()->uri();
+        if (strpos($route, "company") !== false) {
+            if ($this->record->company_id != $this->parentId) {
                 abort(404);
             }
         }

@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use App\Icon;
 use Controller;
 use App\Hazard;
 use App\Company;
+use App\TableRow;
 use App\Template;
+use App\Instruction;
 use App\Methodology;
 use Illuminate\Http\Request;
 use App\Http\Classes\VTLogic;
@@ -123,6 +126,7 @@ class TemplateController extends Controller
                 2 => 'M',
                 3 => 'H',
             ];
+            $company = collect([]); // blade requires a company for the TEXT methodology company defaults
         }
         $this->view = 'modules.company.project.vtram.editVtram';
         $this->parentId = $templateId;
@@ -139,6 +143,32 @@ class TemplateController extends Controller
 
         $this->customValues['comments'] = VTLogic::getComments($this->record->id, $this->record->status, 'TEMPLATE');
         $this->customValues['entityType'] = 'TEMPLATE';
+
+        // Start of Methodology Specific Items //
+        $this->customValues['iconSelect'] = config('egc.icons');
+        $this->customValues['iconImages'] = json_encode(config('egc.icon_images'));
+        $this->customValues['company'] = $company;
+
+        $methodologyIds = $this->customValues['methodologies']->pluck('id');
+
+        $this->customValues['tableRows'] = [];
+        $tableRows = TableRow::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
+        foreach ($tableRows as $row) {
+            $this->customValues['tableRows'][$row->methodology_id][] = $row;
+        }
+
+        $this->customValues['processes'] = [];
+        $instructions = Instruction::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
+        foreach ($instructions as $instruction) {
+            $this->customValues['processes'][$instruction->methodology_id][] = $instruction;
+        }
+
+        $this->customValues['icons'] = [];
+        $icons = Icon::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
+        foreach ($icons as $icon) {
+            $this->customValues['icons'][$icon->methodology_id][$icon->type][] = $icon;
+        }
+        // End of Methodology Specific Items //
 
         return parent::_custom();
     }
@@ -246,7 +276,7 @@ class TemplateController extends Controller
             ];
         }
 
-        if (VTLogic::canReview($this->record)) { 
+        if (VTLogic::canReview($this->record)) {
             if ($this->record->pages_in_pdf == 4) {
                 $path = 'javascript: window.open("'.$this->record->id.'/view_a3", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
             } else {
