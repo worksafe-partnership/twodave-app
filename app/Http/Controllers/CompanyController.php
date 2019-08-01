@@ -36,11 +36,20 @@ class CompanyController extends Controller
             'id' => 'templatesList'
         ];
 
+        $userConfig = config('structure.company.user.config');
+        $this->actionButtons['users'] = [
+            'label' => ucfirst($this->pageType)." ".$userConfig['plural'],
+            'path' => '/company/'.$this->id.'/user',
+            'icon' => $userConfig['icon'],
+            'order' => '550',
+            'id' => 'templatesList'
+        ];
+
         $this->actionButtons['clone'] = [
             'label' => 'Clone',
             'path' => '/company/'.$this->id.'/clone',
             'icon' => 'copy',
-            'order' => '500',
+            'order' => '600',
             'id' => 'cloneCompany',
         ];
     }

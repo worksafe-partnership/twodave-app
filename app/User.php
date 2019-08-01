@@ -29,7 +29,7 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function scopeDatatableAll($query)
+    public function scopeDatatableAll($query, $parentId, $config)
     {
         $user = Auth::user();
         $data = $query->select(
@@ -38,12 +38,16 @@ class User extends Authenticatable
             "name",
             "email"
         )
+        // parentId is 'false', as opposed to null if there's no parent
+        ->when($parentId, function ($company) use ($parentId) {
+            $company->where('company_id', $parentId);
+        })
         ->with('company');
-        
+
         if ($user->company_id !== null) {
             $data->where('company_id', '=', $user->company_id);
         }
-        
+
         $data = $data->get();
         $result = [];
         foreach ($data as $row) {
