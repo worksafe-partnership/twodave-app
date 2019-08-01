@@ -6,6 +6,7 @@ use DB;
 use Mail;
 use Auth;
 use Bhash;
+use EGFiles;
 use App\Icon;
 use App\Vtram;
 use App\Hazard;
@@ -38,11 +39,24 @@ class VTLogic
     public static function createPdf($entityId, $entityType = null)
     {
         $config = new VTConfig($entityId, $entityType);
+        $logo = null;
+        if ($config->entity->logo !== null) {
+            $logo = $config->entity->logo;
+        } else if ($config->entity->company != null && $config->entity->company->logo != null) {
+            $logo = $config->entity->company->logo;
+        }
+        $file = EGFiles::download($logo)->getFile()->getPathName() ?? null;
         $data = [
             'entity' => $config->entity,
+            'type' => $config->entityType,
+            'logo' => $file,
         ];
 //        return view('pdf.main_report', $data);
         return \PDF::loadView('pdf.main_report', $data)
+            ->setOption('margin-top', 10)
+            ->setOption('margin-left', 5)
+            ->setOption('margin-right', 5)
+            ->setOption('margin-bottom', 5)
             //->save()
             ->stream();
         dd('Now do PDF with $config->entity and return as stream, see teamwork (this route handles print and view)');
@@ -60,6 +74,8 @@ class VTLogic
         if (isset($newStatus)) {
             $config->entity->update([
                 'status' => $newStatus,
+                'submitted_by' => Auth::id(),
+                'submitted_date' => date('Y-m-d')
             ]);
         }
     }
@@ -238,6 +254,14 @@ class VTLogic
                 }
                 $cloned->status = 'NEW';
                 $cloned->revision_number = null;
+                $cloned->review_due = null;
+                $cloned->approved_date = null;
+                $cloned->updated_by = null;
+                $cloned->created_by = Auth::id();
+                $cloned->submitted_by = null;
+                $cloned->submitted_date = null;
+                $cloned->date_replaced = null;
+                $cloned->resubmit_by = null;
                 $cloned->save();
             }
             $insertHazards = [];

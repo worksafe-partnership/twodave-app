@@ -185,6 +185,30 @@ class Template extends Model
         return 'Not Approved';
     }
 
+    public function niceApprovedDate()
+    {
+        if (!is_null($this->approved_date)) {
+            return Carbon::createFromFormat("Y-m-d", $this->approved_date)->format('d/m/Y');
+        }
+        return "";
+    }
+
+    public function niceReviewDueDate()
+    {
+        if (!is_null($this->review_due)) {
+            return Carbon::createFromFormat("Y-m-d", $this->review_due)->format('d/m/Y');
+        }
+        return "";
+    }
+
+    public function niceDateReplaced()
+    {
+        if (!is_null($this->date_replaced)) {
+            return Carbon::createFromFormat("Y-m-d", $this->date_replaced)->format('d/m/Y');
+        }
+        return "";
+    }
+
     public function niceSubmittedDate() // for custom datatables
     {
         if (!is_null($this->submitted_date)) {

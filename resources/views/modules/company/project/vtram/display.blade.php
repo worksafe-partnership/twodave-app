@@ -291,9 +291,9 @@
                 </div>
                 <div class="column is-3">
                     <div class="field">
-                        {{ EGForm::date('resubmit_by', [
+                        {{ EGForm::text('resubmit_by', [
                             'label' => 'Resubmit By',
-                            'value' => $record["resubmit_by"],
+                            'value' => $record->niceResubmitByDate(),
                             'type' => $pageType,
                             'disabled' => 1
                         ]) }}
@@ -313,9 +313,9 @@
                 </div>
                 <div class="column is-3">
                     <div class="field">
-                        {{ EGForm::date('approved_date', [
+                        {{ EGForm::text('approved_date', [
                             'label' => 'Approved Date',
-                            'value' => $record["approved_date"],
+                            'value' => $record->niceApprovedDate(),
                             'type' => $pageType,
                             'disabled' => 1
                         ]) }}
@@ -323,9 +323,9 @@
                 </div>
                 <div class="column is-3">
                     <div class="field">
-                        {{ EGForm::date('review_due', [
+                        {{ EGForm::text('review_due', [
                             'label' => 'Review Due',
-                            'value' => $record["review_due"],
+                            'value' => $record->niceReviewDueDate(),
                             'type' => $pageType,
                             'disabled' => 1
                         ]) }}
@@ -333,9 +333,9 @@
                 </div>
                 <div class="column is-3">
                     <div class="field">
-                        {{ EGForm::date('date_replaced', [
+                        {{ EGForm::text('date_replaced', [
                             'label' => 'Date Replaced',
-                            'value' => $record["date_replaced"],
+                            'value' => $record->niceDateReplaced(),
                             'type' => $pageType,
                             'disabled' => 1
                         ]) }}

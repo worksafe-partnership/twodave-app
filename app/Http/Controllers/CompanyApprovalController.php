@@ -74,6 +74,7 @@ class CompanyApprovalController extends Controller
                             $revisionNumber = $vtram->revision_number + 1;
                             $vtram->update([
                                 'status' => 'PREVIOUS',
+                                'date_replaced' => date('Y-m-d'),
                             ]);
                         } 
                     }
@@ -83,6 +84,7 @@ class CompanyApprovalController extends Controller
                         $revisionNumber = $template->revision_number + 1;
                         $template->update([
                             'status' => 'PREVIOUS',
+                            'date_replaced' => date('Y-m-d'),
                         ]);
                     }
                 }            
@@ -132,6 +134,16 @@ class CompanyApprovalController extends Controller
         $types['R'] = $company->reject_label;
         $this->customValues['approvalTypes'] = $types;
 
-        return parent::_custom();
+        $this->args = func_get_args();
+        $this->id = $id;
+        parent::setup();
+        parent::_buildProperties($this->args);
+        $path = str_replace('/approve', '', \Request::path());
+        $this->backButton = [
+            'path' => '/'.$path,
+            'label' => 'Back to '.$type,
+            'icon' => 'arrow-left',
+        ];
+        return parent::_renderView("layouts.custom");
     }
 }

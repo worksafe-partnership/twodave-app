@@ -344,6 +344,22 @@ class Vtram extends Model
         return "";
     }
 
+    public function niceReviewDueDate()
+    {
+        if (!is_null($this->review_due)) {
+            return Carbon::createFromFormat("Y-m-d", $this->review_due)->format('d/m/Y');
+        }
+        return "";
+    }
+
+    public function niceDateReplaced()
+    {
+        if (!is_null($this->date_replaced)) {
+            return Carbon::createFromFormat("Y-m-d", $this->date_replaced)->format('d/m/Y');
+        }
+        return "";
+    }
+
     public function adminUrl()
     {
         if (!is_null($this->company_id) && !is_null($this->project_id) && !is_null($this->id)) {

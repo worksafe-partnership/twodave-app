@@ -423,8 +423,17 @@ class CompanyVtramController extends Controller
             $this->customValues['icons'][$icon->methodology_id][$icon->type][] = $icon;
         }
         // End of Methodology Specific Items //
-
-        return parent::_custom();
+        $this->args = func_get_args();
+        $this->id = $vtramId;
+        $this->parentId = $projectId;
+        parent::setup();
+        parent::_buildProperties($this->args);
+        $this->backButton = [
+            'path' => $this->parentPath.'/'.$vtramId,
+            'label' => 'Back to VTRAMS',
+            'icon' => 'arrow-left',
+        ];
+        return parent::_renderView("layouts.custom");
     }
 
     public function created($insert, $request, $args)

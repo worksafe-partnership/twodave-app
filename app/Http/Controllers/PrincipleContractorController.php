@@ -230,6 +230,7 @@ class PrincipleContractorController extends Controller
                         $revisionNumber = $vtram->revision_number + 1;
                         $vtram->update([
                             'status' => 'PREVIOUS',
+                            'date_replaced' => date('Y-m-d'),
                         ]);
                     } 
                 }
@@ -239,6 +240,7 @@ class PrincipleContractorController extends Controller
                     $revisionNumber = $template->revision_number + 1;
                     $template->update([
                         'status' => 'PREVIOUS',
+                        'date_replaced' => date('Y-m-d'),
                     ]);
                 }
             }            

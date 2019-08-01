@@ -170,7 +170,20 @@ class TemplateController extends Controller
         }
         // End of Methodology Specific Items //
 
-        return parent::_custom();
+        $this->args = func_get_args();
+        $this->id = $templateId;
+        $this->parentId = $otherId;
+        parent::setup();
+        parent::_buildProperties($this->args);
+        if ($this->parentPath == '') {
+            $this->parentPath = '/template';
+        }
+        $this->backButton = [
+            'path' => $this->parentPath.'/'.$templateId,
+            'label' => 'Back to Template',
+            'icon' => 'arrow-left',
+        ];
+        return parent::_renderView("layouts.custom");
     }
 
     public function createRevision()
