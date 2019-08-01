@@ -788,11 +788,16 @@
                                     if (row.heading == 1) {
                                         checked = 'checked';
                                     }
-                                    let newRow = "<tr data-row='"+key+"'>";
-                                        newRow += "<td><input type='checkbox' name='row_"+key+"__heading' "+checked+"></input></td>";
-                                        newRow += "<td><input type='text' name='row_"+key+"__label' value='"+row.label+"'></input></td>";
-                                        newRow += "<td><input type='text' name='row_"+key+"__description' value='"+row.description+"'></input></td>";
-                                        newRow += "<td>[Image details]</td>";
+                                    let newRow = "<tr class='columns' data-row='"+key+"' style='margin:0'>";
+                                        newRow += "<td class='column is-2'><input type='checkbox' name='row_"+key+"__heading' "+checked+"></input></td>";
+                                        newRow += "<td class='column is-1'><input  type='text' name='row_"+key+"__label' value='"+row.label+"'></input></td>";
+                                        newRow += "<td class='column is-3'><input type='text' name='row_"+key+"__description' value='"+row.description+"'></input></td>";
+                                        newRow += "<td class='column is-3'>[Image]</td>";
+                                        newRow += '<td class="column is-3 handms-actions" style="height:38px">\
+                                                    <a class="handms-icons delete_process" onclick="deleteProcess('+key+')">{{ icon("delete") }}</a>\
+                                                    <a class="handms-icons move_process_up" onclick="moveProcessUp('+key+')">{{ icon("keyboard_arrow_up") }}</a>\
+                                                    <a class="handms-icons move_process_down" onclick="moveProcessDown('+key+')">{{ icon("keyboard_arrow_down") }}</a>\
+                                                   </td>';
                                     newRow += "</tr>"
                                     $('#process-table tbody').append(newRow);
                                     $('#process-table').attr('data-next_row', Object.keys(rows).length);
