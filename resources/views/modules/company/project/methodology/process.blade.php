@@ -13,7 +13,7 @@
 
 <div class="columns">
     <div class="column is-10 is-offset-1">
-        <p class="sub-heading">Table: (needs formatting)</p>
+        <p class="sub-heading">Table:</p>
         <div class="columns">
             <div class="column">
                 <div class="field">
