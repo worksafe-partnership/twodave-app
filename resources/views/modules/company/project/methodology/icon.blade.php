@@ -133,8 +133,8 @@
 
 
 <script>
-    let images = JSON.parse('{!! str_replace('\'', '\\\'', $iconImages) !!}');
-    let iconSelect = JSON.parse('{!! str_replace('\'', '\\\'', json_encode($iconSelect)) !!}');
+    let images = JSON.parse('{!! str_replace(['\'', '\\'], ['\\\'', '\\\\'], $iconImages) !!}');
+    let iconSelect = JSON.parse('{!! str_replace(['\'', '\\'], ['\\\'', '\\\\'], json_encode($iconSelect)) !!}');
 
     function getImageSrc(key) {
         if (images[key]) {

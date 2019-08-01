@@ -29,7 +29,19 @@ class AppServiceProvider extends ServiceProvider
         Validator::extend('companyRequired', function ($attribute, $value, $parameters, $validator) {
             $data = $validator->getData();
             $roles = $data['roles'];
-            if ($roles[1] == 0 && $roles[2] == 0 && strlen($value) == 0) {
+
+            $evergreen = 0;
+            $worksafe = 0;
+
+            if (isset($roles[1])) {
+                $evergreen = $roles[1];
+            }
+
+            if (isset($roles[2])) {
+                $worksafe = $roles[2];
+            }
+
+            if ($evergreen == 0 && $worksafe == 0 && strlen($value) == 0) {
                 return false;
             }
             return true;

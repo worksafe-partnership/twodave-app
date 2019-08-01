@@ -62,7 +62,6 @@
             @endif
         </div>
         @if (isset($userPage) && $userPage)
-            @can('edit-role')
             </div>
         </div>
         <hr>
@@ -70,8 +69,8 @@
             <div class="column is-8 is-offset-2">
                 <h2 class="sub-heading">Roles</h2>
                 <div class="columns">
-                    <div class="column is-6">
-                        @if (Auth::user()->company_id == null)
+                    @if (strpos($identifierPath, "company") === false && Auth::user()->company_id == null)
+                        <div class="column is-6">
                             <div class="field company-field">
                                 {{ EGForm::select('company_id', [
                                     "label" => "Company",
@@ -82,8 +81,8 @@
                                     "display_value" => $record->company->name ?? '',
                                 ]) }}
                             </div>
-                        @endif
-                    </div>
+                        </div>
+                    @endif
                     <div class="column is-6">
                         <div class="field roles">
                             {{ EGForm::multiCheckbox("roles", [
@@ -97,7 +96,6 @@
                         </div>
                     </div>
                 </div>
-            @endcan
         @endif
     </div>
 </div>
