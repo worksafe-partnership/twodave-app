@@ -339,6 +339,7 @@
             if (confirm("Any unsaved changes will be lost, are you sure?")) {
                 if (type == 'hazard') {
                     $('#hazard-form-container').css('display', 'none');
+                    $('#hazard-list-container').show();
                 } else {
                     $('#methodology-list-container').show();
                     $('[id^=methodology-][id$=-form-container]').css('display', 'none');
@@ -353,6 +354,7 @@
         function createHazard() {
             $("#hazard-form-container .submitbutton").attr("onclick","submitHazardForm()");
             $('#hazard-form-container').css('display', 'inherit');
+            $('#hazard-list-container').hide();
         }
 
         function editHazard(id) {
@@ -375,6 +377,7 @@
             $('#hazard-form-container [name="r_risk_probability"]').val(hazard['r_risk_probability']);
 
             $("#hazard-form-container .submitbutton").attr("onclick","submitHazardForm("+id+","+hazard['list_order']+")");
+            $('#hazard-list-container').hide();
             $('#hazard-form-container').css('display', 'inherit');
         }
 
@@ -471,6 +474,7 @@
                     $('#hazard-form-container #r_risk_severity').val('');
                     $('#hazard-form-container #at_risk').val('');
                     $('#hazard-form-container #other_at_risk').val('');
+                    $('#hazard-list-container').show();
                 },
                 error: function (data) {
                     if (data.status == 422) {
@@ -838,6 +842,7 @@
                         var after = methodology.text_after;
                         break;
                 }
+                $('#methodology-list-container').hide();
                 $('[id^=methodology-][id$=-form-container]').css('display', 'none');
 
                 $('#' + container + ' #title').val(title);
