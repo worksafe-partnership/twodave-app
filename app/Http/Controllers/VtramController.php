@@ -80,7 +80,7 @@ class VtramController extends CompanyVtramController
 
     public function viewHook()
     {
-        if (can('edit', $this->identifierPath)) {
+        if (can('edit', $this->identifierPath) && in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
             $this->actionButtons['methodologies'] = [
                 'label' => 'Edit Hazards & Methodologies',
                 'path' => '/project/'.$this->parentId.'/vtram/'.$this->id.'/methodology',

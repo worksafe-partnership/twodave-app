@@ -66,10 +66,31 @@ class CompanyApprovalController extends Controller
                 ]);
                 VTLogic::sendPcApprovalEmail($this->vtconfig);
             } else {
+                $revisionNumber = 1;
+                if ($this->vtconfig->entityType == 'VTRAM') {
+                    if ($this->vtconfig->entity->created_from_entity == 'VTRAM') {
+                        $vtram = Vtram::find($this->vtconfig->entity->created_from_id);
+                        if ($vtram != null && $vtram->revision_number != null) {
+                            $revisionNumber = $vtram->revision_number + 1;
+                            $vtram->update([
+                                'status' => 'PREVIOUS',
+                            ]);
+                        } 
+                    }
+                } else {
+                    $template = Template::find($this->vtconfig->entity->created_from);
+                    if ($template != null && $template->revision_number != null) {
+                        $revisionNumber = $template->revision_number + 1;
+                        $template->update([
+                            'status' => 'PREVIOUS',
+                        ]);
+                    }
+                }            
                 $this->vtconfig->entity->update([
                     'status' => 'CURRENT',
                     'approved_date' => date('Y-m-d'),
                     'approved_by' => $this->user->id,
+                    'revision_number' => $revisionNumber,
                 ]);
             }
         } else if ($approval->type == 'R') {

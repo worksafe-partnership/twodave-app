@@ -192,4 +192,16 @@ class Template extends Model
         }
         return "";
     }
+
+    public function hazards()
+    {
+        return $this->hasMany(Hazard::class, 'entity_id', 'id')
+            ->where('entity', '=', 'TEMPLATE');
+    }
+
+    public function methodologies()
+    {
+        return $this->hasMany(Methodology::class, 'entity_id', 'id')
+            ->where('entity', '=', 'TEMPLATE');
+    }
 }

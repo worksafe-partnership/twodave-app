@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Auth;
 use EGFiles;
 use Controller;
@@ -96,13 +97,15 @@ class CompanyVtramController extends Controller
 
     public function viewHook()
     {
-        $this->actionButtons['methodologies'] = [
-            'label' => 'Edit Hazards & Methodologies',
-            'path' => '/company/'.$this->args[0].'/project/'.$this->parentId.'/vtram/'.$this->id.'/methodology',
-            'icon' => 'receipt',
-            'order' => '500',
-            'id' => 'methodologyEdit',
-        ];
+        if (in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECT'])) {
+            $this->actionButtons['methodologies'] = [
+                'label' => 'Edit Hazards & Methodologies',
+                'path' => '/company/'.$this->args[0].'/project/'.$this->parentId.'/vtram/'.$this->id.'/methodology',
+                'icon' => 'receipt',
+                'order' => '500',
+                'id' => 'methodologyEdit',
+            ];
+        }
         $prevConfig = config('structure.company.project.vtram.previous.config');
         $this->actionButtons['previous'] = [
             'label' => ucfirst($this->pageType)." ".$prevConfig['plural'],
@@ -150,7 +153,7 @@ class CompanyVtramController extends Controller
 
         $this->pillButtons['view_pdf'] = [
             'label' => 'View PDF',
-            'path' => $this->record->pdf.'/view_a4',
+            'path' => $this->record->id.'/view_a4',
             'icon' => 'file-pdf',
             'order' => 100,
             'id' => 'view_pdf',
@@ -158,7 +161,7 @@ class CompanyVtramController extends Controller
         ];
         $this->pillButtons['print_pdf'] = [
             'label' => 'Print PDF',
-            'path' => "javascript:var wnd = window.open('".$this->record->pdf."/view_a4', '_blank');wnd.print();",
+            'path' => "javascript:var wnd = window.open('".$this->record->id."/view_a4', '_blank');wnd.print();",
             'icon' => 'print',
             'order' => 100,
             'id' => 'print_pdf',
@@ -207,13 +210,26 @@ class CompanyVtramController extends Controller
             if ($this->record->pages_in_pdf == 4) {
                 $path = 'javascript: window.open("'.$this->record->id.'/view_a3", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
             } else {
-                $path = 'javascript: window.open("'.$this->record->pdf.'/view_a4", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
+                $path = 'javascript: window.open("'.$this->record->id.'/view_a4", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
             }
             $this->pillButtons['approve_vtrams'] = [
                 'label' => 'Approve VTRAMS',
                 'path' => $path,
                 'icon' => 'playlist_add_check',
                 'id' => 'approve_vtrams',
+            ];
+        }
+
+        $vtrams = Vtram::where('created_from_entity', '=', 'VTRAM')
+            ->where('created_from_id', '=', $this->record->id)
+            ->get();
+        if ($this->record->status == 'CURRENT' && $vtrams->count() == 0) {
+            $this->actionButtons[] = [
+                'label' => 'Create New Revision',
+                'path' => $this->record->id.'/revision',
+                'icon' => 'new-tab',
+                'order' => '200',
+                'id' => 'create_new_revision',
             ];
         }
     }
@@ -311,9 +327,48 @@ class CompanyVtramController extends Controller
         return parent::_update(func_get_args());
     }
 
+    public function createRevision()
+    {
+        $this->args = func_get_args();
+        $vtramId = end($this->args);
+        $this->record = Vtram::findOrFail($vtramId);
+        $this->parentId = $this->record->project_id;
+        $this->id = $this->record->id;
+        if ($this->record->status != 'CURRENT') {
+            abort(404);
+        }
+        $this->user = Auth::user();
+        if ($this->user->company_id !== null && $this->record !== null) {
+            if ($this->user->company_id !== $this->record->project->company_id) {
+                abort(404);
+            }
+        }
+
+        // Check there are no existing revisions
+        $vtrams = Vtram::where('created_from_entity', '=', 'VTRAM')
+            ->where('created_from_id', '=', $this->record->id)
+            ->get();
+        if ($vtrams->count() > 0) {
+            abort(404);
+        }
+
+        $result = VTLogic::copyEntity($this->record);
+
+        if ($result instanceof Vtram) {
+            $this->_buildProperties($this->args);
+            toast()->success("Revision Created, you're now viewing the new VTRAMS");
+            return redirect($this->parentPath.'/'.$result->id);
+        }
+        toast()->error('Failed to create new Revision');
+        return back();
+    }
+
     public function editContent($companyId, $projectId, $vtramId)
     {
         $this->record = Vtram::findOrFail($vtramId);
+        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
+            abort(404);
+        }
         $this->user = Auth::user();
         if ($this->user->company_id !== null && $this->record !== null) {
             if ($this->user->company_id !== $this->record->project->company_id) {
@@ -387,43 +442,13 @@ class CompanyVtramController extends Controller
         ]);
 
         if (isset($insert['created_from_id'])) {
-            $templateid = $insert['created_from_id'];
-            $selects = ['entity' => 'TEMPLATE', 'entity_id' => $templateid];
+            $templateId = $insert['created_from_id'];
+            $selects = ['entity' => 'TEMPLATE', 'entity_id' => $templateId];
 
-            $original = Template::findOrFail($templateid);
+            $original = Template::findOrFail($templateId);
 
             // copy everything!
-            $hazards = Hazard::where($selects)->get();
-            $methodologies = Methodology::where($selects)
-                                        ->with(['icons', 'instructions', 'tableRows'])
-                                        ->get();
-
-            foreach ($hazards as $hazard) {
-                $hazardArray = $this->unsetItems($hazard->toArray());
-                $hazardArray['entity'] = 'VTRAM';
-                $clonedHazard = Hazard::create($hazardArray);
-            }
-
-            foreach ($methodologies as $methodology) {
-                $methodologyArray = $this->unsetItems($methodology->toArray());
-                $methodologyArray['entity'] = 'VTRAM';
-                $clonedMethodology = Methodology::create($methodologyArray);
-                foreach ($methodology->icons as $icon) {
-                    $iconArray = $this->unsetItems($icon->toArray());
-                    $iconArray['methodology_id'] = $clonedMethodology->id;
-                    Icon::create($iconArray);
-                }
-                foreach ($methodology->instructions as $instruction) {
-                    $instructionArray = $this->unsetItems($instruction->toArray());
-                    $instructionArray['methodology_id'] = $clonedMethodology->id;
-                    Instruction::create($instructionArray);
-                }
-                foreach ($methodology->tableRows as $row) {
-                    $rowArray = $this->unsetItems($row->toArray());
-                    $rowArray['methodology_id'] = $clonedMethodology->id;
-                    TableRow::create($rowArray);
-                }
-            }
+            VTLogic::copyEntity($original, $insert);
         }
 
         $nextNumber->increment('number');

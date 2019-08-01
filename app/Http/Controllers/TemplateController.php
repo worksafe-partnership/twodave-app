@@ -38,13 +38,15 @@ class TemplateController extends Controller
 
     public function viewHook()
     {
-        $this->actionButtons['methodologies'] = [
-            'label' => 'Edit Hazards & Methodologies',
-            'path' => '/template/'.$this->id.'/methodology',
-            'icon' => 'receipt',
-            'order' => '500',
-            'id' => 'methodologyEdit',
-        ];
+        if (can('edit', $this->identifierPath) && in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
+            $this->actionButtons['methodologies'] = [
+                'label' => 'Edit Hazards & Methodologies',
+                'path' => '/template/'.$this->id.'/methodology',
+                'icon' => 'receipt',
+                'order' => '500',
+                'id' => 'methodologyEdit',
+            ];
+        }
 
         $prevConfig = config('structure.template.previous.config');
         $this->actionButtons['previous'] = [
@@ -96,6 +98,9 @@ class TemplateController extends Controller
     public function editContent($templateId, $otherId = null)
     {
         $this->record = Template::findOrFail($templateId);
+        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
+            abort(404);
+        }
         $this->user = Auth::user();
         if ($this->user->company_id !== null && $this->record !== null && $this->record->company_id !== null) {
             if ($this->user->company_id !== $this->record->company_id) {
@@ -168,6 +173,41 @@ class TemplateController extends Controller
         return parent::_custom();
     }
 
+    public function createRevision()
+    {
+        $this->args = func_get_args();
+        $templateId = end($this->args);
+        $this->record = Template::findOrFail($templateId);
+        if ($this->record->status != 'CURRENT') {
+            abort(404);
+        }
+        $this->parentId = $this->record->project_id;
+        $this->id = $this->record->id;
+        $this->user = Auth::user();
+        if ($this->user->company_id !== null && $this->record !== null) {
+            if ($this->user->company_id !== $this->record->company_id) {
+                abort(404);
+            }
+        }
+
+        // Check there are no existing revisions
+        $template = Template::where('created_from', '=', $this->record->id)
+            ->get();
+        if ($template->count() > 0) {
+            abort(404);
+        }
+
+        $result = VTLogic::copyEntity($this->record);
+
+        if ($result instanceof Template) {
+            $this->_buildProperties($this->args);
+            toast()->success("Revision Created, you're now viewing the new Template");
+            return redirect($this->parentPath.'/'.$result->id);
+        }
+        toast()->error('Failed to create new Revision');
+        return back();
+    }
+
     public function postViewHook()
     {
         // Setup Actions
@@ -192,7 +232,7 @@ class TemplateController extends Controller
 
         $this->pillButtons['view_pdf'] = [
             'label' => 'View PDF',
-            'path' => '/image/'.$this->record->pdf,
+            'path' => $this->record->id.'/view_a4',
             'icon' => 'file-pdf',
             'order' => 100,
             'id' => 'view_pdf',
@@ -200,7 +240,7 @@ class TemplateController extends Controller
         ];
         $this->pillButtons['print_pdf'] = [
             'label' => 'Print PDF',
-            'path' => "javascript:var wnd = window.open('/image/".$this->record->pdf."', '_blank');wnd.print();",
+            'path' => "javascript:var wnd = window.open('".$this->record->id."/view_a4', '_blank');wnd.print();",
             'icon' => 'print',
             'order' => 100,
             'id' => 'print_pdf',
@@ -240,13 +280,25 @@ class TemplateController extends Controller
             if ($this->record->pages_in_pdf == 4) {
                 $path = 'javascript: window.open("'.$this->record->id.'/view_a3", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
             } else {
-                $path = 'javascript: window.open("/image/'.$this->record->pdf.'", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
+                $path = 'javascript: window.open("'.$this->record->id.'/view_a4", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
             }
             $this->pillButtons['approve_template'] = [
                 'label' => 'Approve Template',
                 'path' => $path,
                 'icon' => 'playlist_add_check',
                 'id' => 'approve_template',
+            ];
+        }
+
+        $template = Template::where('created_from', '=', $this->record->id)
+            ->get();
+        if ($this->record->status == 'CURRENT' && $template->count() == 0) {
+            $this->actionButtons[] = [
+                'label' => 'Create New Revision',
+                'path' => $this->record->id.'/revision',
+                'icon' => 'new-tab',
+                'order' => '200',
+                'id' => 'create_new_revision',
             ];
         }
     }
