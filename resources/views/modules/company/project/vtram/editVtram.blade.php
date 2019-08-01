@@ -349,7 +349,8 @@
         }
 
         // Hazard Scripts
-        var hazards = JSON.parse('{!! str_replace('\'', '\\\'', $hazards->toJson()) !!}');
+        var hazards = JSON.parse('{!! str_replace(['\'', '\\'], ['\\\'', '\\\\'], $hazards->toJson()) !!}');
+
         var riskLabels = JSON.parse('{!! json_encode($riskList) !!}');
         function createHazard() {
             $("#hazard-form-container .submitbutton").attr("onclick","submitHazardForm()");
@@ -617,12 +618,12 @@
         }
 
         // Methodology Scripts
-        var methodologies = JSON.parse('{!! str_replace('\'', '\\\'', $methodologies->toJson()) !!}');
-        var company = JSON.parse('{!! str_replace('\'', '\\\'', $company->toJson()) !!}');
-        var methTypeList = JSON.parse('{!! json_encode($methTypeList) !!}');
-        var processes = JSON.parse('{!! json_encode($processes) !!}');
-        var tableRows = JSON.parse('{!! json_encode($tableRows) !!}');
-        var icons = JSON.parse('{!! json_encode($icons) !!}');
+        var methodologies = JSON.parse('{!! str_replace(['\'', '\\'], ['\\\'', '\\\\'], $methodologies->toJson()) !!}');
+        var company = JSON.parse('{!! str_replace(['\'', '\\'], ['\\\'', '\\\\'], $company->toJson()) !!}');
+        var methTypeList = JSON.parse('{!! str_replace(['\'', '\\'], ['\\\'', '\\\\'], json_encode($methTypeList)) !!}');
+        var processes = JSON.parse('{!! str_replace(['\'', '\\'], ['\\\'', '\\\\'], json_encode($processes)) !!}');
+        var tableRows = JSON.parse('{!! str_replace(['\'', '\\'], ['\\\'', '\\\\'],json_encode($tableRows)) !!}');
+        var icons = JSON.parse('{!! str_replace(['\'', '\\'], ['\\\'', '\\\\'], json_encode($icons)) !!}');
 
         function createMethodology() {
             let type = $('#meth_type').val();
