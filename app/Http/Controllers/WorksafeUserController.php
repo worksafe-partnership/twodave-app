@@ -24,23 +24,23 @@ class WorksafeUserController extends Controller
             }
         }
 
-        // if viewing company/{id}/user/{id} check that the user belongs to the viewed company
-        $route = Route::getFacadeRoot()->current()->uri();
-        if (strpos($route, "company") !== false) {
-            if ($this->record->company_id != $this->parentId) {
+        // you can only see users with an equal or lower role than yours
+        $myRoleId = $this->user->roles->first()->id;
+        if (!is_null($this->record)) { // view/edit
+            if ($this->record->roles->first()->id < $myRoleId) {
                 abort(404);
             }
         }
 
+        $this->customValues['roles'] = Role::where('id', '>=', $myRoleId)
+                                           ->when((strpos($this->identifierPath, "company") !== false), function ($companyUsers) {
+                                              $companyUsers->whereNotIn('id', [1,2]);
+                                           })
+                                           ->pluck("name", "id");
         $this->customValues['companies'] = Company::withTrashed()
             ->pluck('name', 'id');
         $this->customValues['userPage'] = true;
 
-        $this->customValues['roles'] = Role::pluck("name", "id");
-        if ($this->user->company_id !== null) {
-            unset($this->customValues['roles'][1]);
-            unset($this->customValues['roles'][2]);
-        }
         $currentRoles = [];
         if (!is_null($this->record)) {
             $roles = $this->record['roles'];
@@ -54,7 +54,7 @@ class WorksafeUserController extends Controller
         $this->customValues['currentRoles'] = $currentRoles;
     }
 
-    public function store(UserRequest $request)
+    public function store(UserRequest $request, $companyId = null)
     {
         $this->user = Auth::user();
         if ((isset($request['roles'][1]) && $request['roles'][1]) || (isset($request['roles'][2]) && $request['roles'][2])) {
@@ -69,7 +69,7 @@ class WorksafeUserController extends Controller
         }
         $hash = new Bhash();
         $request->merge(['password' => $hash->make($request->password)]);
-        return parent::_store([$request->all()]);
+        return parent::_store([$request->all(), $companyId]);
     }
 
     public function created($insert, $request, $args)
@@ -84,7 +84,7 @@ class WorksafeUserController extends Controller
         $insert->roles()->attach($attach);
     }
 
-    public function update(UserRequest $request, $id)
+    public function update(UserRequest $request, $userId, $otherId = null)
     {
         $this->user = Auth::user();
         if ((isset($request['roles'][1]) && $request['roles'][1]) || (isset($request['roles'][2]) && $request['roles'][2])) {
@@ -107,7 +107,8 @@ class WorksafeUserController extends Controller
             unset($r['password']);
             unset($r['password_confirmation']);
         }
-        return parent::_update([$r, $id]);
+
+        return parent::_update([$r, $userId]);
     }
 
     public function updated($update, $original, $request, $args)

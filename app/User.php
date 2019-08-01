@@ -32,23 +32,31 @@ class User extends Authenticatable
     public function scopeDatatableAll($query, $parentId, $config)
     {
         $user = Auth::user();
+        $myRoleId = $user->roles->first()->id;
+
+        // parentId is 'false', as opposed to null if there's no parent (identifierPath is not available in list view)
+        $query->when($parentId, function ($company) use ($parentId) {
+            $company->where('company_id', $parentId);
+        })
+        ->with('company')
+        // only show users with roles equal or higher than your role id
+        ->whereHas('roles', function ($roles) use ($myRoleId) {
+            $roles->where('id', '>=', $myRoleId);
+        });
+
+        if ($user->company_id !== null) {
+            $query->where('company_id', '=', $user->company_id);
+        }
+
         $data = $query->select(
             "id",
             "company_id",
             "name",
             "email"
-        )
-        // parentId is 'false', as opposed to null if there's no parent
-        ->when($parentId, function ($company) use ($parentId) {
-            $company->where('company_id', $parentId);
-        })
-        ->with('company');
-
-        if ($user->company_id !== null) {
-            $data->where('company_id', '=', $user->company_id);
-        }
+        );
 
         $data = $data->get();
+
         $result = [];
         foreach ($data as $row) {
             $result[] = [
