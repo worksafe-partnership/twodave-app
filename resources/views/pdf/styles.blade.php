@@ -34,4 +34,33 @@
         margin-right: -13px;
         height: 120px;
     }
+    .width-50 {
+        width: 50%;
+    }
+    .icon-table {
+        width: 100%;
+    }
+
+    .main-table th {
+        outline: 1px solid black;
+        background-color: #d9d9d9;
+        text-align: left;
+    }
+
+    .main-table td {
+        outline: 1px solid black;
+        width: 20%;
+        text-align:center;
+    }
+
+    .complex-table th{
+        background-color: #d9d9d9;
+        text-align: left;
+    }
+
+    .complex-table th, td{
+        outline: 1px solid black;
+    }
+
+
 </style>

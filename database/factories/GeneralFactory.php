@@ -209,7 +209,7 @@ $factory->define(App\Methodology::class, function (Faker $faker) {
         'category' => $faker->randomElement($categories),
         'entity' => 'TEST',
         'entity_id' => 1,
-        'title' => 'Seeded Title',
+        'title' => 'Seeded Methodology',
         'text_before' => $faker->words($numberOfWords, true),
         'text_after' => $faker->words($numberOfWords, true),
         // 'image' => 1,
