@@ -53,7 +53,11 @@
         text-align:center;
     }
 
-    .complex-table th{
+    .complex-table {
+        width: 100%;
+    }
+
+    .complex-table th {
         background-color: #d9d9d9;
         text-align: left;
     }
@@ -62,5 +66,25 @@
         outline: 1px solid black;
     }
 
+    .process-table th {
+        outline: 1px solid black;
+        background-color: #d9d9d9;
+        text-align: left;
+    }
+
+    .process-table .heading {
+        font-weight: bold;
+    }
+
+    .text-image-wording {
+        display:inline-block;
+        width: 79%;
+        vertical-align: top;
+    }
+
+    .text-image-icon-div {
+        display:inline-block;
+        width: 20%;
+    }
 
 </style>

@@ -119,7 +119,7 @@
 <script>
     $('#add-row-simple').on('click', function() {
         let table = $('#simple-table');
-        let row_id = table.data('next_row');
+        let row_id = table.attr('data-next_row');
         if ($('#simple_col_1').val() != "" && $('#simple_col_2').val() != "") {
             let row = "<tr class='columns' data-row='"+row_id+"'>";
                 row += "<th class='column is-3'><input type='text' name='row_"+row_id+"__col_1' value='"+$('#simple_col_1').val()+"'></input></th>";
@@ -129,7 +129,7 @@
             row += "</tr>"
             table.append(row);
             row_id++;
-            table.data('next_row', row_id);
+            table.attr('data-next_row', row_id);
             $('#simple_col_1').val('');
             $('#simple_col_2').val('');
             $('#simple_col_3').val('');
