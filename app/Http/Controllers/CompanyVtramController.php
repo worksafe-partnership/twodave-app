@@ -433,7 +433,7 @@ class CompanyVtramController extends Controller
             'label' => 'Back to VTRAMS',
             'icon' => 'arrow-left',
         ];
-        $this->pageType = "create";
+        $this->pageType = "custom";
         return parent::_renderView("layouts.custom");
     }
 
