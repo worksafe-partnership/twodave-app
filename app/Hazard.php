@@ -47,4 +47,25 @@ class Hazard extends Model
 
         return Datatables::of($query)->make(true);
     }
+
+    public function riskClass($field = 'risk')
+    {
+        $class = '';
+        switch ($this->{$field}) {
+            case 0:
+                $class = 'green';
+                break;
+            case 1:
+                $class = 'yellow';
+                break;
+            case 2:
+                $class = 'orange';
+                break;
+            case 3:
+                $class = 'red';
+                break;
+        }
+
+        return $class;
+    }
 }
