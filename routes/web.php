@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,7 +13,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/', function () {
         return redirect('/dashboard');
     });
-
     // Edits
     Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/methodology', [
         'middleware' => 'can:edit-company.project.vtram',
@@ -32,7 +30,6 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => 'can:edit-project.vtram',
         'uses' => 'VtramController@editContent'
     ]);
-
     // Revisions
     Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/revision', [
         'middleware' => 'can:create-company.project.vtram',
@@ -50,7 +47,6 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => 'can:create-project.vtram',
         'uses' => 'VtramController@createRevision'
     ]);
-
     // Approvals
     Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/approve', [
         'middleware' => 'can:create-company.project.vtram.approval',
@@ -84,13 +80,11 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => 'can:create-project.vtram.approval',
         'uses' => 'ApprovalController@store'
     ]);
-
     // Clone
     Route::get('/company/{company_id}/clone', [
         'middleware' => 'can:create-company',
         'uses' => 'CompanyController@clone',
     ]);
-
     Route::get('user.datatable.json', 'WorksafeUserController@_datatableAll');
     Route::get('user.json', 'WorksafeUserController@jsonAll');
     Route::group(['prefix' => 'user'], function () {
@@ -111,7 +105,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('edit', 'WorksafeYourDetailsController@_edit');
         Route::post('edit', 'WorksafeYourDetailsController@update');
     });
-
     // VTRAM Actions
     Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/submit', [
         'middleware' => 'can:edit-company.project.vtram',
@@ -125,7 +118,6 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => 'can:view-company.project.vtram',
         'uses' => 'CompanyVtramController@viewA3'
     ]);
-
     Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/previous/{previous_id}/view_ar43', [
         'middleware' => 'can:view-company.project.vtram.previous',
         'uses' => 'CompanyPreviousVtramController@viewA4'
@@ -154,7 +146,6 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => 'can:view-project.vtram.previous',
         'uses' => 'PreviousVtramController@viewA4'
     ]);
-
     // Template Actions
     Route::get('/company/{company_id}/template/{template_id}/view_a3', [
         'middleware' => 'can:view-company.template',
@@ -196,167 +187,135 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => 'can:view-template',
         'uses' => 'TemplateController@viewA4'
     ]);
-
     // Hazards
     Route::post('/hazard/{id}/delete_hazard', [
         'middleware' => 'can:delete-hazard',
         'uses' => 'HazardController@delete'
     ]);
-
     Route::post('/hazard/{id}/move_up', [
         'middleware' => 'can:edit-hazard',
         'uses' => 'HazardController@moveUp'
     ]);
-
     Route::post('/hazard/{id}/move_down', [
         'middleware' => 'can:edit-hazard',
         'uses' => 'HazardController@moveDown'
     ]);
-
     // create
     Route::post('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/hazard/create', [
         'middleware' => 'can:create-hazard',
         'uses' => 'HazardController@store'
     ]);
-
     Route::post('/project/{project_id}/vtram/{vtram_id}/hazard/create', [
         'middleware' => 'can:create-hazard',
         'uses' => 'HazardController@store'
     ]);
-
     Route::post('/company/{company_id}/template/{template_id}/hazard/create', [
         'middleware' => 'can:create-hazard',
         'uses' => 'HazardController@store'
     ]);
-
     Route::post('/template/{template_id}/hazard/create', [
         'middleware' => 'can:create-hazard',
         'uses' => 'HazardController@store'
     ]);
-
     // edit
     Route::post('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/hazard/{hazard_id}/edit', [
         'middleware' => 'can:edit-hazard',
         'uses' => 'HazardController@update'
     ]);
-
     Route::post('/project/{project_id}/vtram/{vtram_id}/hazard/{hazard_id}/edit', [
         'middleware' => 'can:edit-hazard',
         'uses' => 'HazardController@update'
     ]);
-
     Route::post('/company/{company_id}/template/{template_id}/hazard/{hazard_id}/edit', [
         'middleware' => 'can:edit-hazard',
         'uses' => 'HazardController@update'
     ]);
-
     Route::post('/template/{template_id}/hazard/{hazard_id}/edit', [
         'middleware' => 'can:edit-hazard',
         'uses' => 'HazardController@update'
     ]);
-
     // update methodologies page - routes
     Route::post('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/edit_extra', [
         'middleware' => 'can:edit-company.project.vtram',
         'uses' => 'CompanyVtramController@updateFromMethodology'
     ]);
-
     Route::post('/project/{project_id}/vtram/{vtram_id}/edit_extra', [
     'middleware' => 'can:edit-project.vtram',
     'uses' => 'VtramController@updateFromMethodology'
     ]);
-
     Route::post('/company/{company_id}/template/{template_id}/edit_extra', [
         'middleware' => 'can:edit-company.template',
         'uses' => 'CompanyTemplateController@updateFromMethodology'
     ]);
-
     Route::post('/template/{template_id}/edit_extra', [
         'middleware' => 'can:edit-template',
         'uses' => 'TemplateController@updateFromMethodology'
     ]);
-
     // comments
-
     Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/comment', [
         'middleware' => 'can:view-company.project.vtram',
         'uses' => 'CompanyVtramController@commentsList'
     ]);
-
     Route::get('/project/{project_id}/vtram/{vtram_id}/comment', [
         'middleware' => 'can:view-project.vtram',
         'uses' => 'VtramController@commentsList'
     ]);
-
     Route::get('/company/{company_id}/template/{template_id}/comment', [
         'middleware' => 'can:view-company.template',
         'uses' => 'CompanyTemplateController@commentsList'
     ]);
-
     Route::get('/template/{template_id}/comment', [
         'middleware' => 'can:view-template',
         'uses' => 'TemplateController@commentsList'
     ]);
-
-
     // Methodologies
-
     // create
     Route::post('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/methodology/create', [
         'middleware' => 'can:create-methodology',
         'uses' => 'MethodologyController@store'
     ]);
-
     Route::post('/project/{project_id}/vtram/{vtram_id}/methodology/create', [
         'middleware' => 'can:create-methodology',
         'uses' => 'MethodologyController@store'
     ]);
-
     Route::post('/company/{company_id}/template/{template_id}/methodology/create', [
         'middleware' => 'can:create-methodology',
         'uses' => 'MethodologyController@store'
     ]);
-
     Route::post('/template/{template_id}/methodology/create', [
         'middleware' => 'can:create-methodology',
         'uses' => 'MethodologyController@store'
     ]);
-
     // edit
     Route::post('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/methodology/{methodology_id}/edit', [
         'middleware' => 'can:edit-methodology',
         'uses' => 'MethodologyController@update'
     ]);
-
     Route::post('/project/{project_id}/vtram/{vtram_id}/methodology/{methodology_id}/edit', [
         'middleware' => 'can:edit-methodology',
         'uses' => 'MethodologyController@update'
     ]);
-
     Route::post('/company/{company_id}/template/{template_id}/methodology/{methodology_id}/edit', [
         'middleware' => 'can:edit-methodology',
         'uses' => 'MethodologyController@update'
     ]);
-
     Route::post('/template/{template_id}/methodology/{methodology_id}/edit', [
         'middleware' => 'can:edit-methodology',
         'uses' => 'MethodologyController@update'
     ]);
+    Route::post('/methodology/{id}/delete_methodology', [
+        'middleware' => 'can:delete-methodology',
+        'uses' => 'MethodologyController@delete'
+    ]);
+    Route::post('/methodology/{id}/move_up', [
+        'middleware' => 'can:edit-methodology',
+        'uses' => 'MethodologyController@moveUp'
+    ]);
+    Route::post('/methodology/{id}/move_down', [
+        'middleware' => 'can:edit-methodology',
+        'uses' => 'MethodologyController@moveDown'
+    ]);
 });
-Route::post('/methodology/{id}/delete_methodology', [
-    'middleware' => 'can:delete-methodology',
-    'uses' => 'MethodologyController@delete'
-]);
-
-Route::post('/methodology/{id}/move_up', [
-    'middleware' => 'can:edit-methodology',
-    'uses' => 'MethodologyController@moveUp'
-]);
-
-Route::post('/methodology/{id}/move_down', [
-    'middleware' => 'can:edit-methodology',
-    'uses' => 'MethodologyController@moveDown'
-]);
 // Principle Contractor Approval Routes
 Route::group(['prefix' => '{unique_link}/vtrams', 'middleware' => ['validate_link']], function () {
     Route::get('', 'PrincipleContractorController@vtramsList');

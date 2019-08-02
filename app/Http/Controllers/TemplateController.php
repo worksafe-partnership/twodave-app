@@ -183,6 +183,7 @@ class TemplateController extends Controller
             'label' => 'Back to Template',
             'icon' => 'arrow-left',
         ];
+        $this->pageType = 'create';
         return parent::_renderView("layouts.custom");
     }
 

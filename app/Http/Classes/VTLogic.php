@@ -45,11 +45,35 @@ class VTLogic
         } else if ($config->entity->company != null && $config->entity->company->logo != null) {
             $logo = $config->entity->company->logo;
         }
-        $file = EGFiles::download($logo)->getFile()->getPathName() ?? null;
+        if ($logo != null) {
+            $file = EGFiles::download($logo)->getFile()->getPathName() ?? null;
+        } else {
+            $file = null;
+        }
+
+        $company = $config->entity->company;
+        if ($company != null) {
+            $riskList = [
+                0 => $company->no_risk_character,
+                1 => $company->low_risk_character,
+                2 => $company->med_risk_character,
+                3 => $company->high_risk_character,
+            ];
+        } else {
+            $riskList = [
+                0 => '#',
+                1 => 'L',
+                2 => 'M',
+                3 => 'H',
+            ];
+            $company = collect([]); // blade requires a company for the TEXT methodology company defaults
+        }
         $data = [
             'entity' => $config->entity,
             'type' => $config->entityType,
             'logo' => $file,
+            'riskList' => $riskList,
+            'whoIsRisk' => config('egc.hazard_who_risk')
         ];
 //        return view('pdf.main_report', $data);
         return \PDF::loadView('pdf.main_report', $data)
@@ -140,40 +164,49 @@ class VTLogic
             [
                 'type' => 'TEXT',
                 'name' => 'task_description',
+                'title' => 'Task Description',
             ],
             [
                 'type' => 'SIMPLE_TABLE',
                 'name' => 'plant_and_equipment',
+                'title' => 'Plant and Equipment',
             ],
             [
                 'type' => 'TEXT',
                 'name' => 'disposing_of_waste',
+                'title' => 'Disposing of Waste',
             ],
             [
                 'type' => 'TEXT',
                 'name' => 'accident_reporting',
+                'title' => 'Accident Reporting',
             ],
             [
                 'type' => 'TEXT_IMAGE',
                 'name' => 'first_aid',
+                'title' => 'First Aid',
             ],
             [
                 'type' => 'TEXT',
                 'name' => 'noise',
+                'title' => 'Noise',
             ],
             [
                 'type' => 'TEXT',
                 'name' => 'working_at_height',
+                'title' => 'Working at Height',
             ],
             [
                 'type' => 'TEXT',
                 'name' => 'manual_handling',
+                'title' => 'Manual Handling',
             ],
         ];
         $order = 1;
         foreach ($list as $item) {
             if (strlen($config->entity->{$item['name']}) > 0) {
                 Methodology::create([
+                    'title' => $item['title'],
                     'category' => $item['type'],
                     'entity' => $config->entityType,
                     'entity_id' => $config->entityId,
