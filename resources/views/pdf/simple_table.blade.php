@@ -10,7 +10,7 @@
             $maxFilled = $rows->max('cols_filled');
         @endphp
 
-        <table class="complex-table">
+        <table class="simple-table">
         @foreach($rows as $row)
             <tr>
                 @if($row->col_1)

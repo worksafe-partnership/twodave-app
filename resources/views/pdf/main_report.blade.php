@@ -38,7 +38,7 @@
                             <th style="width:90px;">Approved by: </th>
                             @if ($type == 'VTRAM')
                                 <td>{{ $entity->approved->name ?? $entity->project->principle_contractor_name }}</td>
-                            @else 
+                            @else
                                 <td>{{ $entity->approved->name ?? '' }}</td>
                             @endif
                             <th style="width:50px;">Date: </th>
@@ -59,7 +59,7 @@
                         @if ($type == 'VTRAM')
                             <p><b>{{ $entity->name_on_pdf }}:</b> {{ $entity->name_on_pdf == 'Client' ? $entity->project->client_name : $entity->project->principle_contractor_name }}</p>
                             <p><b>Project:</b> {{ $entity->project->name }}</p>
-                            @if ($entity->project->show_contact) 
+                            @if ($entity->project->show_contact)
                                 <p><b>Company: </b><br>Email: {{ $entity->company->email }}<br>Phone: {{ $entity->company->phone }}<br>Fax: {{ $entity->company->fax }}</p>
                                 <p><b>Project Admin: </b>{{ $entity->project->admin->email }}</p>
                             @endif
@@ -67,9 +67,9 @@
                         @if ($entity->show_responsible_person)
                             <p><b>Responsible Person: </b>{{ $entity->responsible_person }}</p>
                         @endif
-                    </div>    
+                    </div>
                     <div class="wide-50">
-                        @if ($logo != null) 
+                        @if ($logo != null)
                             @php
                                 $height = 120;
                                 if ($type == 'VTRAM' && $entity->project->show_contact) {
@@ -113,6 +113,27 @@
                             @break
                     @endswitch
                 @endforeach
+
+
+                @if(!is_null($entity->key_points))
+                    <?php
+                    $keyPointsLogo = public_path('/key_points_logo.png');
+                    ?>
+                    <div class="key-points width-50">
+                        <div class="kp-heading-row">
+                            <div class="kp-image-div">
+                                <img src="{{$keyPointsLogo}}" style="height: 50px; width: 50px;">
+                            </div>
+                            <div class="kp-heading-div">
+                                <h2 style="margin-top: 8px"> Key Points </h2>
+                            </div>
+                        </div>
+                        <div class="kp-content">
+                            {!!$entity->key_points!!}
+                        </div>
+                    </div>
+                @endif
+
             </div>
             <div class="page"></div>
             <div class="risk-assessment">
@@ -124,7 +145,7 @@
                         @include('modules.company.project.vtram.hazard.risk-chart', ['hazardType' => 'risk'])
                     </div>
                     <div class="risk-chart-key">
-                        @include('modules.company.project.vtram.hazard.risk-key') 
+                        @include('modules.company.project.vtram.hazard.risk-key')
                     </div>
                 </div>
                 <br>
@@ -153,7 +174,7 @@
                                 <td class="hazard-width">{{ $hazard->description }}</td>
                                 <td>{{ $whoIsRisk[$hazard->at_risk] }}
                                     @if ($hazard->at_risk == 'O')
-                                        {{ $hazard->other_ar_risk }}    
+                                        {{ $hazard->other_ar_risk }}
                                     @endif
                                 </td>
                                 <td>{{ $hazard->risk_probability }}</td>

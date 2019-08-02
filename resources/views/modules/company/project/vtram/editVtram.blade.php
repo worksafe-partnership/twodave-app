@@ -817,6 +817,7 @@
                                     $('#process-table').attr('data-next_row', Object.keys(rows).length);
                                 });
                             }
+                            var after = methodology.text_after;
                         }
                         break;
                     case 'ICON':

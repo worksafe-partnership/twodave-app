@@ -50,6 +50,5 @@
             @endif
         @endforeach
     </table>
-
-
+    <p>{{$methodology->text_after}}</p>
 </div>
