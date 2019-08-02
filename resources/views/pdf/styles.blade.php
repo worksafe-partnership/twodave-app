@@ -172,6 +172,10 @@
         font-weight: bold;
     }
 
+    .process-table td {
+        vertical-align:top;
+    }
+
     .text-image-wording {
         display:inline-block;
         width: 79%;
