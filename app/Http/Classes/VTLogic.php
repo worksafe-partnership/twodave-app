@@ -38,11 +38,14 @@ class VTLogic
         $file = VTFiles::findOrFail($config->entity->pdf);
         $path = storage_path('app/'.$file->location);
         $merger = new Merger;
-        $merger->addFile($path, new Pages(4));
+        $merger->addFile($path, new Pages(6));
         $merger->addFile($path, new Pages(1));
         $merger->addFile($path, new Pages(2));
         $merger->addFile($path, new Pages(3));
-        return $merger->merge();
+
+        $response = \Response::make($merger->merge(), 200);
+        $response->header('Content-Type', 'application/pdf');
+        return $response;
     }
 
     public static function createPdf($entityId, $entityType = null, $force = false)
@@ -86,30 +89,28 @@ class VTLogic
             'riskList' => $riskList,
             'whoIsRisk' => config('egc.hazard_who_risk')
         ];
-//        return view('pdf.main_report', $data);
         $pdf = \PDF::loadView('pdf.main_report', $data)
             ->setOption('margin-top', 10)
             ->setOption('margin-left', 5)
             ->setOption('margin-right', 5)
             ->setOption('margin-bottom', 5);
         $returnStream = $pdf->stream();
-        /*dd($pdf->download()->getContent());
+        $instances = null;
+        preg_match_all('/Count [0-9]+/', $pdf->download()->getContent(), $instances);
         $count = 0;
-        $regex  = "/\/Count\s+(\d+)/";
-        $regex2 = "/\/Pages\W*(\d+)/";
-        $regex3 = "/\/N\s+(\d+)/";
-        if(preg_match_all($regex3, $returnStream, $matches)) {
-            $count = max($matches);
+        foreach ($instances[0] as $match) {
+            $m = (int)str_replace('Count ', '', $match);
+            if ($m > $count) {
+                $count = $m;
+            }   
         }
-        dd($count);*/
         $file = VTFiles::saveOrUpdate($pdf->download()->getContent(), $config->entity, $config->entityType);
-        $file = null;
         if ($file == null) {
             toast()->error("Failed to save PDF");
         } else {
-            $config->entity->update([
+            $res = $config->entity->update([
                 'pdf' => $file->id,
-                'pages_in_pdf' => null,
+                'pages_in_pdf' => $count,
             ]);
         }
         return $returnStream;
