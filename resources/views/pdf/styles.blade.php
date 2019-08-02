@@ -137,6 +137,18 @@
         text-align:center;
     }
 
+    .simple-table {
+        width: 100%;
+    }
+
+    .simple-table th, td{
+        outline: 1px solid black;
+    }
+
+    .simple-table th{
+        background-color: #d9d9d9;
+    }
+
     .complex-table {
         width: 100%;
     }
