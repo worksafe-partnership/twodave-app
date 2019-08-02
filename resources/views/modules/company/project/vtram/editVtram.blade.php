@@ -768,6 +768,15 @@
                             $('#complex-table tbody').html('');
                             if (rows !== 'undefined') {
                                 $.each(rows, function(key, row) {
+
+                                    if (row.col_3 == "null") {
+                                        row.col_3 = '';
+                                    }
+
+                                    if (row.col_4 == "null") {
+                                        row.col_4 = '';
+                                    }
+
                                     let newRow = "<tr data-row='"+key+"'>";
                                         newRow += "<th><input type='text' name='row_"+key+"__col_1' value='"+row.col_1+"'></input></th>";
                                         newRow += "<td><input type='text' name='row_"+key+"__col_2' value='"+row.col_2+"'></input></td>";

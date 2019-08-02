@@ -32,7 +32,7 @@ class VTLogic
     {
         $config = new VTConfig($entityId, $entityType);
         $pdf = self::createPdf($entityId, $entityType); // MAYBE?
-         
+
         dd('Now do PDF with $config->entity and return as stream, see teamwork (this route handles print and view) make sure it is a3');
     }
 
@@ -257,7 +257,7 @@ class VTLogic
                 return true;
                 break;
         }
-        
+
         return false;
     }
 
@@ -320,19 +320,19 @@ class VTLogic
                     $newIcon = $icon->toArray();
                     unset($newIcon['id']);
                     $newIcon['methodology_id'] = $meth->id;
-                    $insertIcons[] = $newIcon; 
+                    $insertIcons[] = $newIcon;
                 }
                 foreach ($methodology->instructions as $instruction) {
                     $newInstruction = $instruction->toArray();
                     unset($newInstruction['id']);
                     $newInstruction['methodology_id'] = $meth->id;
-                    $insertInstructions[] = $newInstruction; 
+                    $insertInstructions[] = $newInstruction;
                 }
                 foreach ($methodology->tableRows as $row) {
                     $newRow = $row->toArray();
                     unset($newRow['id']);
                     $newRow['methodology_id'] = $meth->id;
-                    $insertTableRows[] = $newRow; 
+                    $insertTableRows[] = $newRow;
                 }
             }
             Icon::insert($insertIcons);

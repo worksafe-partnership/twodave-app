@@ -29,7 +29,7 @@
         <div class="columns">
             <div class="column">
                 <div class="field">
-                    <table class="table is-striped is-bordered" id="complex-table" data-next_row="1">
+                    <table class="table is-striped is-bordered" id="complex-table" data-next_row="0">
                         <tbody>
 
                         </tbody>
@@ -119,7 +119,7 @@
 <script>
     $('#add-row-complex').on('click', function() {
         let table = $('#complex-table');
-        let row_id = table.data('next_row');
+        let row_id = table.attr('data-next_row');
         let type = "td";
         if (row_id == 1) {
             type = "th";
@@ -133,7 +133,7 @@
             row += "</tr>"
             table.append(row);
             row_id++;
-            table.data('next_row', row_id);
+            table.attr('data-next_row', row_id);
             $('#complex_col_1').val('');
             $('#complex_col_2').val('');
             $('#complex_col_3').val('');

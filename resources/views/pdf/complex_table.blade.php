@@ -10,11 +10,17 @@
             $maxFilled = $rows->max('cols_filled');
         @endphp
 
-        <table class="complex-table">
+       <table class="complex-table">
         @foreach($rows as $row)
             <tr>
+                @if($loop->first)
+                    <?php $type = "th"; ?>
+                @else
+                    <?php $type = "td"; ?>
+                @endif
+
                 @if($row->col_1)
-                    <th>{{$row->col_1}}</th>
+                    <{{$type}}>{{$row->col_1}}</{{$type}}>
                 @endif
                 @if($row->col_2)
                     <?php
@@ -23,7 +29,7 @@
                         $colspan = 1+($maxFilled-2);
                     }
                     ?>
-                    <td colspan="{{$colspan}}">{{$row->col_2}}</td>
+                    <{{$type}} colspan="$colspan">{{$row->col_2}}</{{$type}}>
                 @endif
                 @if($row->col_3)
                     <?php
@@ -32,14 +38,16 @@
                         $colspan = 1+($maxFilled-2);
                     }
                     ?>
-                    <td colspan="{{$colspan}}">{{$row->col_3}}</td>
+                    <{{$type}} colspan="$colspan">{{$row->col_3}}</{{$type}}>
                 @endif
                 @if($row->col_4)
-                    <td>{{$row->col_4}}</td>
+                    <{{$type}}>{{$row->col_4}}</{{$type}}>
                 @endif
             </tr>
         @endforeach
         </table>
     @endif
+
     <p>{{$methodology->text_after}}</p>
+
 </div>

@@ -81,7 +81,7 @@
                             @endphp
                             <img src="{{ $logo }}" class="logo" style="height: {{ $height }}px;max-width:100%;">
                         @endif
-                    </div>    
+                    </div>
                 </div>
                 <br>
                 <div class="pdf-heading">
@@ -90,7 +90,29 @@
                 </div>
             </div>
             <div class="method-statements">
-
+                <h2>Method Statement</h2>
+                @foreach($entity->methodologies->sortBy('list_order') as $meth)
+                    @switch($meth->category)
+                        @case('TEXT')
+                            @include('pdf.text', ['methodology' => $meth])
+                            @break
+                        @case('TEXT_IMAGE')
+                            @include('pdf.text_image', ['methodology' => $meth])
+                            @break
+                        @case('SIMPLE_TABLE')
+                            @include('pdf.simple_table', ['methodology' => $meth])
+                            @break
+                        @case('COMPLEX_TABLE')
+                            @include('pdf.complex_table', ['methodology' => $meth])
+                            @break
+                        @case('PROCESS')
+                            @include('pdf.process', ['methodology' => $meth])
+                            @break
+                        @case('ICON')
+                            @include('pdf.icon', ['methodology' => $meth])
+                            @break
+                    @endswitch
+                @endforeach
             </div>
             <div class="page"></div>
             <div class="risk-assessment">
