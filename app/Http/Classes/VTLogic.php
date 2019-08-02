@@ -17,6 +17,9 @@ use App\UniqueLink;
 use app\Instruction;
 use App\Methodology;
 use App\NextNumber;
+use iio\libmergepdf\Merger;
+use iio\libmergepdf\Pages;
+use App\Http\Classes\VTFiles;
 use App\Mail\PrincipleContractorEmail;
 
 class VTLogic
@@ -31,14 +34,23 @@ class VTLogic
     public static function createA3Pdf($entityId, $entityType = null)
     {
         $config = new VTConfig($entityId, $entityType);
-        $pdf = self::createPdf($entityId, $entityType); // MAYBE?
 
-        dd('Now do PDF with $config->entity and return as stream, see teamwork (this route handles print and view) make sure it is a3');
+        $file = VTFiles::findOrFail($config->entity->pdf);
+        $path = storage_path('app/'.$file->location);
+        $merger = new Merger;
+        $merger->addFile($path, new Pages(4));
+        $merger->addFile($path, new Pages(1));
+        $merger->addFile($path, new Pages(2));
+        $merger->addFile($path, new Pages(3));
+        return $merger->merge();
     }
 
-    public static function createPdf($entityId, $entityType = null)
+    public static function createPdf($entityId, $entityType = null, $force = false)
     {
         $config = new VTConfig($entityId, $entityType);
+        if ($config->entity->status == 'PREVIOUS' || ($config->entity->pdf != null && !$force)) {
+            return EGFiles::image($config->entity->pdf);            
+        }
         $logo = null;
         if ($config->entity->logo !== null) {
             $logo = $config->entity->logo;
@@ -66,7 +78,6 @@ class VTLogic
                 2 => 'M',
                 3 => 'H',
             ];
-            $company = collect([]); // blade requires a company for the TEXT methodology company defaults
         }
         $data = [
             'entity' => $config->entity,
@@ -76,19 +87,38 @@ class VTLogic
             'whoIsRisk' => config('egc.hazard_who_risk')
         ];
 //        return view('pdf.main_report', $data);
-        return \PDF::loadView('pdf.main_report', $data)
+        $pdf = \PDF::loadView('pdf.main_report', $data)
             ->setOption('margin-top', 10)
             ->setOption('margin-left', 5)
             ->setOption('margin-right', 5)
-            ->setOption('margin-bottom', 5)
-            //->save()
-            ->stream();
-        dd('Now do PDF with $config->entity and return as stream, see teamwork (this route handles print and view)');
+            ->setOption('margin-bottom', 5);
+        $returnStream = $pdf->stream();
+        /*dd($pdf->download()->getContent());
+        $count = 0;
+        $regex  = "/\/Count\s+(\d+)/";
+        $regex2 = "/\/Pages\W*(\d+)/";
+        $regex3 = "/\/N\s+(\d+)/";
+        if(preg_match_all($regex3, $returnStream, $matches)) {
+            $count = max($matches);
+        }
+        dd($count);*/
+        $file = VTFiles::saveOrUpdate($pdf->download()->getContent(), $config->entity, $config->entityType);
+        $file = null;
+        if ($file == null) {
+            toast()->error("Failed to save PDF");
+        } else {
+            $config->entity->update([
+                'pdf' => $file->id,
+                'pages_in_pdf' => null,
+            ]);
+        }
+        return $returnStream;
     }
 
     public static function submitForApproval($entityId, $entityType = null)
     {
         $config = new VTConfig($entityId, $entityType);
+        self::createPdf($config->entity, null, true);
         if (in_array($config->entity->status, ['NEW', 'REJECTED'])) {
             $newStatus = 'PENDING';
         } else if (in_array($config->entity->status, ['EXTERNAL_REJECT']) && ($config->entityType == 'VTRAM' && $config->entity->project->principle_contractor)) {

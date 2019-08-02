@@ -464,6 +464,7 @@ class CompanyVtramController extends Controller
         $nextNumber->increment('number');
 
         VTLogic::createDefaultMethodologies($insert, "VTRAM");
+        VTLogic::createPdf($insert, null, true);
     }
 
     public function unsetItems($record)
@@ -479,6 +480,8 @@ class CompanyVtramController extends Controller
         if (isset($request['send_for_approval'])) {
             VTLogic::submitForApproval($update);
             toast()->success("VTRAM submitted for Approval");
+        } else {
+            VTLogic::createPdf($update, null, true);
         }
 
         if (isset($request['from_methodology'])) {

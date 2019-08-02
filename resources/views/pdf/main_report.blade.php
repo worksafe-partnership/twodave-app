@@ -55,7 +55,7 @@
                 <br>
                 <div>
                     <div class="wide-50 company-names">
-                        <p><b>Company:</b> {{ $entity->company->name }}</p>
+                        <p><b>Company:</b> {{ $entity->company->name  ?? '' }}</p>
                         @if ($type == 'VTRAM')
                             <p><b>{{ $entity->name_on_pdf }}:</b> {{ $entity->name_on_pdf == 'Client' ? $entity->project->client_name : $entity->project->principle_contractor_name }}</p>
                             <p><b>Project:</b> {{ $entity->project->name }}</p>
@@ -85,7 +85,7 @@
                 </div>
                 <br>
                 <div class="pdf-heading">
-                    <h1>{{ $entity->company->vtrams_name }} {{ $type == 'VTRAM' ? $entity->number : '' }}</h1>
+                    <h1>{{ $entity->company->vtrams_name ?? '' }} {{ $type == 'VTRAM' ? $entity->number : '' }}</h1>
                     <p>{!! $entity->main_description !!}</p>
                 </div>
             </div>
