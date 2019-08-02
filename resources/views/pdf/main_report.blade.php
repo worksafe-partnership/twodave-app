@@ -83,6 +83,24 @@
                             @break
                     @endswitch
                 @endforeach
+
+                <?php
+                $keyPointsLogo = public_path('/key_points_logo.png');
+                ?>
+                <div class="key-points width-50">
+                    <div class="kp-heading-row">
+                        <div class="kp-image-div">
+                            <img src="{{$keyPointsLogo}}" style="height: 50px; width: 50px;">
+                        </div>
+                        <div class="kp-heading-div">
+                            <h2 style="margin-top: 8px"> Key Points </h2>
+                        </div>
+                    </div>
+                    <div class="kp-content">
+                        {!!$entity->key_points!!}
+                    </div>
+                </div>
+
             </div>
             <div class="page"></div>
             <div class="risk-assessment">
