@@ -1113,6 +1113,7 @@
 
                     $('#methodology-list-container').show();
                     $('[id^=methodology-][id$=-form-container]').css('display', 'none');
+                    $('#meth_type').val('');
                 },
                 error: function (data) {
                     if (data.status == 422) {
