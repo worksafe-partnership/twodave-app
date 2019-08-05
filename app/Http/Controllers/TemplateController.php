@@ -385,6 +385,8 @@ class TemplateController extends Controller
         if (isset($request['send_for_approval'])) {
             VTLogic::submitForApproval($update);
             toast()->success("Template submitted for Approval");
+        } else {
+            VTLogic::createPdf($update, null, true);
         }
 
         if (isset($request['from_methodology'])) {
@@ -395,6 +397,7 @@ class TemplateController extends Controller
     public function created($insert, $request, $args)
     {
         VTLogic::createDefaultMethodologies($insert, "TEMPLATE");
+        VTLogic::createPdf($insert, null, true);
     }
 
     public function commentsList()
