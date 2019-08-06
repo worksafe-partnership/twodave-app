@@ -38,7 +38,7 @@ class VTLogic
         $file = VTFiles::findOrFail($config->entity->pdf);
         $path = storage_path('app/'.$file->location);
         $merger = new Merger;
-        $merger->addFile($path, new Pages(6));
+        $merger->addFile($path, new Pages(4));
         $merger->addFile($path, new Pages(1));
         $merger->addFile($path, new Pages(2));
         $merger->addFile($path, new Pages(3));
@@ -51,7 +51,8 @@ class VTLogic
     public static function createPdf($entityId, $entityType = null, $force = false)
     {
         $config = new VTConfig($entityId, $entityType);
-        if ($config->entity->status == 'PREVIOUS' || ($config->entity->pdf != null && !$force)) {
+        if (false) {
+        //if ($config->entity->status == 'PREVIOUS' || ($config->entity->pdf != null && !$force)) {
             return EGFiles::image($config->entity->pdf);            
         }
         $logo = null;
@@ -94,6 +95,7 @@ class VTLogic
             ->setOption('margin-left', 5)
             ->setOption('margin-right', 5)
             ->setOption('margin-bottom', 5);
+//        return view('pdf.main_report', $data);
         $returnStream = $pdf->stream();
         $instances = null;
         preg_match_all('/Count [0-9]+/', $pdf->download()->getContent(), $instances);

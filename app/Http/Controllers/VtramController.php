@@ -136,9 +136,12 @@ class VtramController extends CompanyVtramController
     public function store(VtramRequest $request, $projectId, $otherId = null)
     {
         $user = Auth::user();
+        $company = Company::findOrFail($user->company_id);
         $request->merge([
             'project_id' => $projectId,
             'company_id' => $user->company_id,
+            'main_description' => $company->main_description,
+            'post_risk_assessment_text' => $company->post_risk_assessment_text,
             'created_by' => $user->id,
         ]);
         return parent::_store([
