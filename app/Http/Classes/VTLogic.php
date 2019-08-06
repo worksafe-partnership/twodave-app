@@ -38,7 +38,7 @@ class VTLogic
         $file = VTFiles::findOrFail($config->entity->pdf);
         $path = storage_path('app/'.$file->location);
         $merger = new Merger;
-        $merger->addFile($path, new Pages(6));
+        $merger->addFile($path, new Pages(4));
         $merger->addFile($path, new Pages(1));
         $merger->addFile($path, new Pages(2));
         $merger->addFile($path, new Pages(3));
@@ -52,7 +52,7 @@ class VTLogic
     {
         $config = new VTConfig($entityId, $entityType);
         if ($config->entity->status == 'PREVIOUS' || ($config->entity->pdf != null && !$force)) {
-            return EGFiles::image($config->entity->pdf);            
+            return EGFiles::image($config->entity->pdf);
         }
         $logo = null;
         if ($config->entity->logo !== null) {
@@ -102,7 +102,7 @@ class VTLogic
             $m = (int)str_replace('Count ', '', $match);
             if ($m > $count) {
                 $count = $m;
-            }   
+            }
         }
         $file = VTFiles::saveOrUpdate($pdf->download()->getContent(), $config->entity, $config->entityType);
         if ($file == null) {

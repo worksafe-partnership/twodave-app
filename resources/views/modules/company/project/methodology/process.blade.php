@@ -102,29 +102,80 @@
             checked = 'checked';
         }
         let table = $('#process-table');
-        let row_id = table.data('next_row');
+        let row_id = table.attr('data-next_row');
         if ($('#new_description').val() != "") {
-            let row = "<tr class='columns' data-row='"+row_id+"' style='margin:0'>";
-                row += "<td class='column is-2'><input type='checkbox' name='row_"+row_id+"__heading' "+checked+"></input></td>";
-                row += "<td class='column is-1'><input type='text' name='row_"+row_id+"__label' value='"+$('#new_label').val()+"'></input></td>";
-                row += "<td class='column is-3'><input type='text' name='row_"+row_id+"__description' value='"+$('#new_description').val()+"'></input></td>";
-                row += "<td class='column is-3'>[Image]</td>";
-                row += '<td class="column is-3 handms-actions" style="height:38px">\
-                        <a class="handms-icons delete_process" onclick="deleteProcess('+row_id+')">{{ icon("delete") }}</a>\
-                        <a class="handms-icons move_process_up" onclick="moveProcessUp('+row_id+')">{{ icon("keyboard_arrow_up") }}</a>\
-                        <a class="handms-icons move_process_down" onclick="moveProcessDown('+row_id+')">{{ icon("keyboard_arrow_down") }}</a>\
-                       </td>';
-            row += "</tr>"
-            table.append(row);
-            row_id++;
-            table.data('next_row', row_id);
-            $('#new_label').val('');
-            $('#new_description').val('');
-            $('#is_heading').prop('checked', false);
+            var image_id = '';
+
+            if ($('#methodology-process-form-container #image_id').prop('files')[0] !== undefined){
+                var form_data = new FormData();
+                form_data.append('_token', '{{ csrf_token() }}');
+                form_data.append('image', $('#methodology-process-form-container #image_id').prop('files')[0]);
+
+                $.ajax({
+                    url: '/methodology/add_image',
+                    type: 'POST',
+                    data: form_data,
+                    dataType    : 'text',
+                    cache       : false,
+                    contentType : false,
+                    processData : false,
+                    success: function (id) {
+                        image_id = id;
+                        sortOutNewProcessRow(table, checked, row_id, image_id); // functionised otherwise AJAX request comes back after this code starts executing.
+                    },
+                    error: function (data) {
+                        if (data.status == 422) {
+                            var errors = '';
+                            $.each(data.responseJSON.errors, function(key,val) {
+                                toastr.error(val);
+                            });
+                        } else if (data.status == 401) {
+                            toastr.error('Your sesson has expired, please refresh the page and login to proceed');
+                        } else {
+                            toastr.error('An error has occured when saving the methodology');
+                        }
+                    }
+                });
+            } else { // functionised otherwise AJAX request comes back after this code starts executing.
+                sortOutNewProcessRow(table, checked, row_id, image_id);
+            }
         } else {
             toastr.error('Please ensure your row is populated');
         }
-    })
+    });
+
+    function sortOutNewProcessRow(table, checked, row_id, image_id) {
+        let row = "<tr class='columns' data-row='"+row_id+"' style='margin:0'>";
+            row += "<td class='column is-2'><input type='checkbox' name='row_"+row_id+"__heading' "+checked+"></input></td>";
+            row += "<td class='column is-1'><input type='text' name='row_"+row_id+"__label' value='"+$('#new_label').val()+"'></input></td>";
+            row += "<td class='column is-3'><input type='text' name='row_"+row_id+"__description' value='"+$('#new_description').val()+"'></input></td>";
+            if (image_id != '') {
+                row += "<td class='column is-3 image-cell'><img src='/image/"+image_id+"' data-image_id='"+image_id+"' data-process_row='row_"+row_id+"__image'></img></td>";
+            } else {
+                row += "<td class='column is-3 image-cell'>No Image</td>";
+            }
+            row += '<td class="column is-3 handms-actions" style="height: 150px">\
+                    <a class="handms-icons delete_process" onclick="deleteProcess('+row_id+')">{{ icon("delete") }}</a>\
+                    <a class="handms-icons move_process_up" onclick="moveProcessUp('+row_id+')">{{ icon("keyboard_arrow_up") }}</a>\
+                    <a class="handms-icons move_process_down" onclick="moveProcessDown('+row_id+')">{{ icon("keyboard_arrow_down") }}</a><br>\
+                    <div class="field image_picker">\
+                        <input type="hidden" name="file" value="">\
+                        <input type="hidden" name="file" id="file" value=""><div class="control">\
+                        <input type="file" name="image_id" class="form-control  input " id="edit_image_'+row_id+'" value="">\
+                    </div>\
+                    <button class="button is-primary is-small image-button" onclick="editProcessImage('+row_id+')">Update Image</button>';
+            if (image_id != '') {
+                row += '<button class="button is-primary is-small image-button" onclick="deleteProcessImage('+row_id+')">Remove Image</button>';
+            }
+        row += "</td></tr>";
+        table.append(row);
+        row_id++;
+        table.attr('data-next_row', row_id);
+        $('#image_id').val('');
+        $('#new_label').val('');
+        $('#new_description').val('');
+        $('#is_heading').prop('checked', false);
+    }
 
     function deleteProcess(key) {
         if (confirm("Are you sure you want to delete this process?")) {
@@ -212,6 +263,93 @@
             }
         }
     }
+
+    function editProcessImage(row) {
+        var form_data = new FormData();
+        form_data.append('_token', '{{ csrf_token() }}');
+        form_data.append('image', $('#methodology-process-form-container #edit_image_'+row).prop('files')[0]);
+
+        $.ajax({
+            url: '/methodology/edit_image',
+            type: 'POST',
+            data: form_data,
+            dataType    : 'text',
+            cache       : false,
+            contentType : false,
+            processData : false,
+            success: function (fileId) {
+                // id is the new one.
+                // find out if an image already exists with this row id
+                let image = $('img[data-process_row="row_'+row+'__image"]');
+
+                // if so update the source
+                if (image.length > 0) {
+                    image.attr("src","/image/"+fileId);
+                    image.attr("data-image_id", fileId);
+                } else {
+                    // if not, add it in the relevant row
+                    var cell = $('#methodology-process-form-container .columns [data-row="'+row+'"] .image-cell');
+                    cell.html('<img src="/image/'+fileId+'" data-image_id="'+fileId+'" data-process_row="row_'+row+'__image">');
+                    var imagePickerCell = $('#process-table tr[data-row='+row+'] .image_picker');
+                    imagePickerCell.append('<button class="button is-primary is-small image-button" onclick="deleteProcessImage('+row+')">Remove Image</button>');
+                }
+            },
+            error: function (data) {
+                if (data.status == 422) {
+                    var errors = '';
+                    $.each(data.responseJSON.errors, function(key,val) {
+                        toastr.error(val);
+                    });
+                } else if (data.status == 401) {
+                    toastr.error('Your sesson has expired, please refresh the page and login to proceed');
+                } else {
+                    toastr.error('An error has occured when saving the methodology');
+                }
+            }
+        });
+    }
+
+    function deleteProcessImage(row) {
+        let image = $('img[data-process_row="row_'+row+'__image"]');
+
+        if (image) {
+            let fileId = image.attr('data-image_id');
+            let column = image.parent();
+
+            var form_data = new FormData();
+            form_data.append('_token', '{{ csrf_token() }}');
+            form_data.append('file', fileId);
+
+            $.ajax({
+                url: '/methodology/delete_image',
+                type: 'POST',
+                data: form_data,
+                dataType    : 'text',
+                cache       : false,
+                contentType : false,
+                processData : false,
+                success: function (id) {
+                    column.html("No Image");
+                    toastr.success('Image deleted - remember to save your changes');
+                },
+                error: function (data) {
+                    if (data.status == 422) {
+                        var errors = '';
+                        $.each(data.responseJSON.errors, function(key,val) {
+                            toastr.error(val);
+                        });
+                    } else if (data.status == 401) {
+                        toastr.error('Your sesson has expired, please refresh the page and login to proceed');
+                    } else {
+                        toastr.error('An error has occured when saving the methodology');
+                    }
+                }
+            });
+        } else {
+            toastr.error('No image to delete!');
+        }
+    }
+
 </script>
 @endpush
 
@@ -223,6 +361,14 @@
 
     #process-table * {
         box-sizing: border-box;
+    }
+
+    .image-button {
+        margin-top: 5px;
+    }
+
+    .image_picker {
+        margin-top: 5px;
     }
 </style>
 @endpush

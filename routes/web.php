@@ -315,6 +315,21 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => 'can:edit-methodology',
         'uses' => 'MethodologyController@moveDown'
     ]);
+
+    Route::post('/methodology/add_image', [
+        'middleware' => 'can:edit-methodology',
+        'uses' => 'MethodologyController@addImage'
+    ]);
+
+    Route::post('/methodology/edit_image', [
+        'middleware' => 'can:edit-methodology',
+        'uses' => 'MethodologyController@editImage'
+    ]);
+
+    Route::post('/methodology/delete_image', [
+        'middleware' => 'can:edit-methodology',
+        'uses' => 'MethodologyController@deleteImage'
+    ]);
 });
 // Principle Contractor Approval Routes
 Route::group(['prefix' => '{unique_link}/vtrams', 'middleware' => ['validate_link']], function () {
