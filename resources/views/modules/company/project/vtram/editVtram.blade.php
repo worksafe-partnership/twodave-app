@@ -858,8 +858,6 @@
                                 })
                                 $('#icon_main_heading').val(methodology.icon_main_heading);
                                 $('#icon_sub_heading').val(methodology.icon_sub_heading);
-                                $('#top_heading').html(methodology.icon_main_heading);
-                                $('#sub_heading').html(methodology.icon_sub_heading);
                             }
                         }
                         var after = methodology.text_after;
@@ -1036,14 +1034,16 @@
                     } else { // edit
                         for (let i = 0; i < methodologies.length; i++) {
                             if (methodologies[i]['id'] === editId) {
-                                methodologies[i]['title'] = form_data.get('title'),
-                                methodologies[i]['text_before'] = form_data.get('text_before'),
-                                methodologies[i]['list_order'] = form_data.get('list_order'),
-                                methodologies[i]['category'] = category,
-                                methodologies[i]['entity'] = form_data.get('entity'),
-                                methodologies[i]['image'] = image,
-                                methodologies[i]['image_on'] = form_data.get('image_on'),
-                                methodologies[i]['text_after'] = form_data.get('text_after'),
+                                methodologies[i]['title'] = form_data.get('title');
+                                methodologies[i]['text_before'] = form_data.get('text_before');
+                                methodologies[i]['list_order'] = form_data.get('list_order');
+                                methodologies[i]['category'] = category;
+                                methodologies[i]['entity'] = form_data.get('entity');
+                                methodologies[i]['image'] = image;
+                                methodologies[i]['image_on'] = form_data.get('image_on');
+                                methodologies[i]['text_after'] = form_data.get('text_after');
+                                methodologies[i]['icon_main_heading'] = form_data.get('icon_main_heading');
+                                methodologies[i]['icon_sub_heading'] = form_data.get('icon_sub_heading');
 
                                 // need to edit methodology table
                                 $('tr#methodology-' + editId + ' .methodology-order').html(form_data.get('list_order'));
