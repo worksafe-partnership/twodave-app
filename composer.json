@@ -18,7 +18,8 @@
         "h4cc/wkhtmltopdf-i386": "^0.12.4",
         "iio/libmergepdf": "^4.0",
         "laravel/framework": "5.5.*",
-        "laravel/tinker": "~1.0"
+        "laravel/tinker": "~1.0",
+        "barryvdh/laravel-debugbar": "3.1.*"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

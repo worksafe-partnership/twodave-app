@@ -118,9 +118,6 @@
         outline: 1px solid #FFF !important;
         color: #FFF;
     }
-    .width-50 {
-        width: 50%;
-    }
     .icon-table {
         width: 100%;
     }
@@ -205,7 +202,7 @@
     }
 
     .kp-heading-div {
-        width: 398px;
+        width: 384px;
         height: 50px;
         display:inline-block;
         outline: 1px solid black;
@@ -220,6 +217,20 @@
         padding: 10px;
         background-color: #66ff66
     }
-
-
+    .column {
+        line-height: 1.25;
+        position: relative;
+        width: 450px;
+        display: inline-block;
+        overflow: hidden;
+        vertical-align: top;
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+    .content {
+        width: 450px;
+    }
+    .no-break {
+        page-break-inside: avoid !important;
+    }
 </style>

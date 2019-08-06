@@ -273,8 +273,6 @@
             z-index: 999;
         }
 
-        .box-container {
-        }
         .inline-block {
             display: inline-block;
         }
@@ -302,8 +300,6 @@
         #methodology-process-form-container, #methodology-text-form-container, #methodology-text-image-form-container {
             position: absolute;
             top: 0;
-            border: 2px solid #404040;
-            border-top: none;
             width: 100%;
             display: none;
             z-index: 999;
@@ -312,7 +308,6 @@
         #hazard-list-container, #methodology-list-container {
             position: absolute;
             top: 0;
-            border: 2px solid #404040;
             border-top: none;
             width: 100%;
             background-color: #FFF;

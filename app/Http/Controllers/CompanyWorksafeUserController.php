@@ -40,6 +40,7 @@ class CompanyWorksafeUserController extends WorksafeUserController
             unset($r['password']);
             unset($r['password_confirmation']);
         }
+        $r['company_id'] = $companyId;
 
         return parent::_update([$r, $companyId, $userId]);
     }

@@ -132,7 +132,7 @@
                     <div class="field">
                         {{ EGForm::ckeditor('main_description', [
                             'label' => 'Company Description',
-                            'value' => $record["description"],
+                            'value' => $record["main_description"],
                             'type' => $pageType
                         ]) }}
                     </div>
