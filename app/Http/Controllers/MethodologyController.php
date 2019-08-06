@@ -35,7 +35,13 @@ class MethodologyController extends Controller
 
         $response = parent::_store(func_get_args());
         $returnId = explode("/", $response->getTargetUrl());
-        return end($returnId);
+
+        $record = Methodology::find(end($returnId));
+        if ($record->category == "TEXT_IMAGE") {
+            return ['id' => $record->id, 'image' => $record->image];
+        }
+
+        return $record->id;
     }
 
     public function created($record, $request, $args)
@@ -52,6 +58,7 @@ class MethodologyController extends Controller
                 $this->sortOutIcons($record, $request);
                 break;
         }
+
         return $record->id;
     }
 
@@ -68,6 +75,12 @@ class MethodologyController extends Controller
         }
         $response = parent::_update(func_get_args());
         $returnId = explode("/", $response->getTargetUrl());
+
+        $record = Methodology::find(end($returnId));
+        if ($record->category == "TEXT_IMAGE") {
+            return ['id' => $record->id, 'image' => $record->image];
+        }
+
         return end($returnId);
     }
 

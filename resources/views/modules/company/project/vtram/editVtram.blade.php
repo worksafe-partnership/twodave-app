@@ -670,6 +670,8 @@
                     case 'TEXT_IMAGE':
                         container = 'methodology-text-image-form-container';
                         cat = 'TEXT_IMAGE';
+                        $('#'+container+' #image').val('');
+                        $('.ti_image').html('');
                         break;
                     case 'SIMPLE_TABLE':
                         container = 'methodology-simple-table-form-container';
@@ -739,6 +741,7 @@
                         var image_on = methodology.image_on;
                         var before = methodology.text_before;
                         var after = methodology.text_after;
+                        $('.ti_image').html('<img src="/image/'+methodology.image+'">');
                         break;
                     case 'SIMPLE_TABLE':
                         container = 'methodology-simple-table-form-container';
@@ -1001,9 +1004,18 @@
                 cache       : false,
                 contentType : false,
                 processData : false,
-                success: function (id) {
+                success: function (data) {
+
+                    if (category != "TEXT_IMAGE") {
+                        var id = data;
+                        var image = form_data.get('image');
+                    } else {
+                        data = JSON.parse(data);
+                        var id = data.id;
+                        var image = data.image;
+                    }
+
                     if (!editId) {// create
-                        // adjust when we've got more types going in.
                         methodologies.push({
                             id: parseInt(id),
                             title: form_data.get('title'),
@@ -1011,7 +1023,7 @@
                             list_order: form_data.get('list_order'),
                             category: category,
                             entity: '{{$entityType}}',
-                            image: form_data.get('image'),
+                            image: image,
                             image_on: form_data.get('image_on'),
                             text_after: form_data.get('text_after')
                         });
@@ -1034,7 +1046,7 @@
                                 methodologies[i]['list_order'] = form_data.get('list_order'),
                                 methodologies[i]['category'] = category,
                                 methodologies[i]['entity'] = form_data.get('entity'),
-                                methodologies[i]['image'] = form_data.get('image'),
+                                methodologies[i]['image'] = image,
                                 methodologies[i]['image_on'] = form_data.get('image_on'),
                                 methodologies[i]['text_after'] = form_data.get('text_after'),
 

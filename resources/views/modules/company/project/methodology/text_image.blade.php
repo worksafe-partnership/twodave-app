@@ -22,6 +22,8 @@
                         'show_image' => true,
                     ]) }}
                 </div>
+                <div class="ti_image">
+                </div>
             </div>
             <div class="column is-6">
                 <div class="field">
