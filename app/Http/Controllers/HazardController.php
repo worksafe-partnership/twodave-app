@@ -35,6 +35,7 @@ class HazardController extends Controller
 
     public function created($record, $request, $args)
     {
+        VTLogic::createPdf($record->entityRecord, null, true);
         return $record->id;
     }
 
@@ -56,6 +57,7 @@ class HazardController extends Controller
 
     public function updated($record, $request, $args)
     {
+        VTLogic::createPdf($record->entityRecord, null, true);
         return $record->id;
     }
 

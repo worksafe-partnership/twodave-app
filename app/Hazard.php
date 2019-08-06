@@ -68,4 +68,13 @@ class Hazard extends Model
 
         return $class;
     }
+
+    public function entityRecord()
+    {
+        if ($this->entity == 'VTRAM') {
+            return $this->belongsTo(Vtram::class, 'entity_id', 'id');
+        } else if ($this->entity == 'TEMPLATE') {
+            return $this->belongsTo(Template::class, 'entity_id', 'id');
+        }
+    }
 }
