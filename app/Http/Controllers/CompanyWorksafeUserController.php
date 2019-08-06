@@ -18,7 +18,6 @@ class CompanyWorksafeUserController extends WorksafeUserController
         unset($this->config['datatable']['columns']['company_name']);
     }
 
-
     public function viewEditHook()
     {
         // if viewing company/{id}/user/{id} check that the user belongs to the viewed company - doesn't apply to create as there will be no record.
@@ -26,6 +25,19 @@ class CompanyWorksafeUserController extends WorksafeUserController
             abort(404);
         }
     }
+
+    public function store(UserRequest $request, $companyId = null)
+    {
+        $request->merge([
+            'company_id' => $companyId,
+        ]);
+
+        $hash = new Bhash();
+        $request->merge(['password' => $hash->make($request->password)]);
+
+        return parent::_store([$request->all(), $companyId]);
+    }
+
 
     public function update(UserRequest $request, $companyId, $userId = null)
     {
