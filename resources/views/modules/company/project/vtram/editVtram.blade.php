@@ -748,9 +748,20 @@
                                     let newRow = "<tr data-row='"+key+"'>";
                                         newRow += "<th><input type='text' name='row_"+key+"__col_1' value='"+row.col_1+"'></input></th>";
                                         newRow += "<td><input type='text' name='row_"+key+"__col_2' value='"+row.col_2+"'></input></td>";
-                                        newRow += "<td><input type='text' name='row_"+key+"__col_3' value='"+row.col_3+"'></input></td>";
-                                        newRow += "<td><input type='text' name='row_"+key+"__col_4' value='"+row.col_4+"'></input></td>";
-                                    newRow += "</tr>";
+                                        newRow += "<td><input type='text' name='row_"+key+"__col_3' value='";
+                                        if (row.col_3 != null) {
+                                            newRow += row.col_3+"'></input></td>";
+                                        } else {
+                                            newRow += "'></input></td>";
+                                        }
+
+                                        newRow += "<td><input type='text' name='row_"+key+"__col_4' value='";
+                                        if (row.col_4 != null) {
+                                            newRow += row.col_4+"'></input></td>";
+                                        } else {
+                                            newRow += "'></input></td>";
+                                        }
+                                        newRow += "</tr>";
                                     $('#simple-table tbody').append(newRow);
                                 });
                                 $('#simple-table').attr('data-next_row', Object.keys(rows).length);
@@ -777,9 +788,26 @@
 
                                     let newRow = "<tr data-row='"+key+"'>";
                                         newRow += "<th><input type='text' name='row_"+key+"__col_1' value='"+row.col_1+"'></input></th>";
-                                        newRow += "<td><input type='text' name='row_"+key+"__col_2' value='"+row.col_2+"'></input></td>";
-                                        newRow += "<td><input type='text' name='row_"+key+"__col_3' value='"+row.col_3+"'></input></td>";
-                                        newRow += "<td><input type='text' name='row_"+key+"__col_4' value='"+row.col_4+"'></input></td>";
+                                        newRow += "<td><input type='text' name='row_"+key+"__col_2' value='";
+                                        if (row.col_2 != null) {
+                                            newRow += row.col_2+"'></input></td>";
+                                        } else {
+                                            newRow += "'></input></td>";
+                                        }
+
+                                        newRow += "<td><input type='text' name='row_"+key+"__col_3' value='";
+                                        if (row.col_3 != null) {
+                                            newRow += row.col_3+"'></input></td>";
+                                        } else {
+                                            newRow += "'></input></td>";
+                                        }
+
+                                        newRow += "<td><input type='text' name='row_"+key+"__col_4' value='";
+                                        if (row.col_4 != null) {
+                                            newRow += row.col_4+"'></input></td>";
+                                        } else {
+                                            newRow += "'></input></td>";
+                                        }
                                     newRow += "</tr>";
                                     $('#complex-table tbody').append(newRow);
                                     $('#complex-table').attr('data-next_row', Object.keys(rows).length);
