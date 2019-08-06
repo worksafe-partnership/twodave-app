@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Http\Classes\VTLogic;
 use App\Http\Classes\VTConfig;
 use App\Http\Requests\MethodologyRequest;
+use App\Http\Requests\MethodologyImageRequest;
 
 class MethodologyController extends Controller
 {
@@ -268,13 +269,13 @@ class MethodologyController extends Controller
         }
     }
 
-    public function addImage(Request $request)
+    public function addImage(MethodologyImageRequest $request)
     {
         $data = EGFiles::store($request, ['image' => 'image']);
         return $data['image'];
     }
 
-    public function editImage(Request $request)
+    public function editImage(MethodologyImageRequest $request)
     {
         $data = EGFiles::store($request, ['image' => 'image']);
         return $data['image'];

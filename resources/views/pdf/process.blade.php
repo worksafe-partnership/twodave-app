@@ -1,5 +1,5 @@
 <div class="width-50">
-    <h3>{{$methodology->list_order}}. {{$methodology->title}}</h3>
+    <h3>{{$methodology->list_order}}. {!!$methodology->title!!}</h3>
     @php
         $rows = $methodology->instructions;
         $hasImage = $rows->max('image');
@@ -17,21 +17,21 @@
             @foreach($rows as $row)
                 @if($row->heading)
                     <tr>
-                        <td class="heading">{{$row->label}}</td>
+                        <td class="heading">{!!$row->label!!}</td>
                         <td class="heading"
                             @if($hasImage)
                                colspan="2"
                             @endif
-                        >{{$row->description}}</td>
+                        >{!!$row->description!!}</td>
                     </tr>
                 @else
                     <tr>
-                        <td>{{$row->label}}</td>
+                        <td>{!!$row->label!!}</td>
                         <td
                         @if(!$row->image)
                             colspan="2"
                         @endif
-                        >{{$row->description}}</td>
+                        >{!!$row->description!!}</td>
 
                         <?php
                         $imageSrc = null;

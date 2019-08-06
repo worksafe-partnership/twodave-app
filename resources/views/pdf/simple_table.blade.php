@@ -1,6 +1,6 @@
 <div class="width-50">
-    <h3>{{$methodology->list_order}}. {{$methodology->title}}</h3>
-    <p>{{$methodology->text_before}}</p>
+    <h3>{{$methodology->list_order}}. {!!$methodology->title!!}</h3>
+    <p>{!!$methodology->text_before!!}</p>
     @php
         $rows = $methodology->tableRows;
     @endphp
@@ -14,7 +14,7 @@
         @foreach($rows as $row)
             <tr>
                 @if($row->col_1)
-                    <th>{{$row->col_1}}</th>
+                    <th>{!!$row->col_1!!}</th>
                 @endif
                 @if($row->col_2)
                     <?php
@@ -23,7 +23,7 @@
                         $colspan = 1+($maxFilled-2);
                     }
                     ?>
-                    <td colspan="{{$colspan}}">{{$row->col_2}}</td>
+                    <td colspan="{{$colspan}}">{!!$row->col_2!!}</td>
                 @endif
                 @if($row->col_3)
                     <?php
@@ -32,14 +32,14 @@
                         $colspan = 1+($maxFilled-2);
                     }
                     ?>
-                    <td colspan="{{$colspan}}">{{$row->col_3}}</td>
+                    <td colspan="{{$colspan}}">{!!$row->col_3!!}</td>
                 @endif
                 @if($row->col_4)
-                    <td>{{$row->col_4}}</td>
+                    <td>{!!$row->col_4!!}</td>
                 @endif
             </tr>
         @endforeach
         </table>
     @endif
-    <p>{{$methodology->text_after}}</p>
+    <p>{!!$methodology->text_after!!}</p>
 </div>

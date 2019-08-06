@@ -1,5 +1,5 @@
 <div class="width-50">
-    <h3>{{$methodology->list_order}}. {{$methodology->title}}</h3>
+    <h3>{{$methodology->list_order}}. {!!$methodology->title!!}</h3>
 
     <table class="icon-table main-table">
         @foreach (['MAIN' => 'icon_main_heading','SUB' => 'icon_sub_heading'] as $key => $heading)
@@ -9,7 +9,7 @@
             @endphp
             @if ($count > 0)
                 <tr>
-                    <th colspan='5'>{{ $methodology->{$heading} }}</th>
+                    <th colspan='5'>{!! $methodology->{$heading} !!}</th>
                 </tr>
                 @php
                     $mod = $count % 5;
@@ -33,7 +33,7 @@
                             <span style="width: 80%"></span>
                         @endif
                         @if($icon->text != "null")
-                          <p>{{$icon->text}}</p>
+                          <p>{!!$icon->text!!}</p>
                         @endif
                     </td>
                     @if(($loop->index+1) % 5 == 0 && $loop->remaining > 0)

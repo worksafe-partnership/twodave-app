@@ -26,9 +26,7 @@
 <div class="columns">
     <div class="column is-10 is-offset-1">
         <table class="table is-bordered">
-            <thead>
-                <th colspan="5" id="top_heading">Main Table</th>
-            </thead>
+            <thead></thead>
             <tbody id="top-body">
                 <tr class="columns is-multiline" style="margin:0">
                 </tr>
@@ -52,9 +50,7 @@
 <div class="columns">
     <div class="column is-10 is-offset-1">
         <table class="table is-bordered">
-            <thead>
-                <th colspan="5" id="sub_heading">Sub Table</th>
-            </thead>
+            <thead></thead>
             <tbody id="bottom-body">
                 <tr class="columns is-multiline" style="margin:0">
                 </tr>
@@ -157,15 +153,6 @@
             let field = $(this).closest('.field');
             let image = $(field).find('.logo-img').attr("src", "/"+src);
         }
-    })
-
-    $('#methodology-icon-form-container #icon_main_heading').on('change keyup', function() {
-        $('#top_heading').html($(this).val());
-    })
-
-
-    $('#methodology-icon-form-container #icon_sub_heading').on('change keyup', function() {
-        $('#sub_heading').html($(this).val());
     })
 
     $('#add-icon').on('click', function() {
