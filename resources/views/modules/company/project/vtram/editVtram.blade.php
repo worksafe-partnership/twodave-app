@@ -665,6 +665,8 @@
                     case 'TEXT_IMAGE':
                         container = 'methodology-text-image-form-container';
                         cat = 'TEXT_IMAGE';
+                        $('#'+container+' #image').val('');
+                        $('.ti_image').html('');
                         break;
                     case 'SIMPLE_TABLE':
                         container = 'methodology-simple-table-form-container';
@@ -734,6 +736,7 @@
                         var image_on = methodology.image_on;
                         var before = methodology.text_before;
                         var after = methodology.text_after;
+                        $('.ti_image').html('<img src="/image/'+methodology.image+'">');
                         break;
                     case 'SIMPLE_TABLE':
                         container = 'methodology-simple-table-form-container';
@@ -801,12 +804,26 @@
                                         newRow += "<td class='column is-2'><input type='checkbox' name='row_"+key+"__heading' "+checked+"></input></td>";
                                         newRow += "<td class='column is-1'><input  type='text' name='row_"+key+"__label' value='"+row.label+"'></input></td>";
                                         newRow += "<td class='column is-3'><input type='text' name='row_"+key+"__description' value='"+row.description+"'></input></td>";
-                                        newRow += "<td class='column is-3'>[Image]</td>";
-                                        newRow += '<td class="column is-3 handms-actions" style="height:38px">\
+                                        if (row.image) {
+                                            newRow += "<td class='column is-3 image-cell'><img src='/image/"+row.image+"' data-image_id='"+row.image+"' data-process_row='row_"+key+"__image'</td>";
+                                        } else {
+                                            newRow += "<td class='column is-3 image-cell'>No Image</td>";
+                                        }
+                                        newRow += '<td class="column is-3 handms-actions" style="height:150px">\
                                                     <a class="handms-icons delete_process" onclick="deleteProcess('+key+')">{{ icon("delete") }}</a>\
                                                     <a class="handms-icons move_process_up" onclick="moveProcessUp('+key+')">{{ icon("keyboard_arrow_up") }}</a>\
                                                     <a class="handms-icons move_process_down" onclick="moveProcessDown('+key+')">{{ icon("keyboard_arrow_down") }}</a>\
-                                                   </td>';
+                                                    <div class="field image_picker">\
+                                                        <input type="hidden" name="file" value="">\
+                                                        <input type="hidden" name="file" id="file" value=""><div class="control">\
+                                                        <input type="file" name="image_id" class="form-control  input " id="edit_image_'+key+'" value="">\
+                                                    </div>\
+                                                    <button class="button is-primary is-small image-button" onclick="editProcessImage('+key+')">Update Image</button>';
+
+                                        if (row.image) {
+                                            newRow +='<button class="button is-primary is-small image-button" onclick="deleteProcessImage('+key+')">Remove Image</button>';
+                                        }
+                                        newRow += '</td>';
                                     newRow += "</tr>"
                                     $('#process-table tbody').append(newRow);
                                     $('#process-table').attr('data-next_row', Object.keys(rows).length);
@@ -943,6 +960,13 @@
                         } else {
                             form_data.append(input.name, input.checked)
                         }
+                    });
+
+                    let images = $('#process-table img');
+                    $.each(images, function(key, image) {
+                        var name = $(images[key]).attr('data-process_row');
+                        var value = $(images[key]).attr('data-image_id');
+                        form_data.append(name, value);
                     })
                     break;
                 case 'ICON':
@@ -975,9 +999,18 @@
                 cache       : false,
                 contentType : false,
                 processData : false,
-                success: function (id) {
+                success: function (data) {
+
+                    if (category != "TEXT_IMAGE") {
+                        var id = data;
+                        var image = form_data.get('image');
+                    } else {
+                        data = JSON.parse(data);
+                        var id = data.id;
+                        var image = data.image;
+                    }
+
                     if (!editId) {// create
-                        // adjust when we've got more types going in.
                         methodologies.push({
                             id: parseInt(id),
                             title: form_data.get('title'),
@@ -985,7 +1018,7 @@
                             list_order: form_data.get('list_order'),
                             category: category,
                             entity: '{{$entityType}}',
-                            image: form_data.get('image'),
+                            image: image,
                             image_on: form_data.get('image_on'),
                             text_after: form_data.get('text_after')
                         });
@@ -1008,7 +1041,7 @@
                                 methodologies[i]['list_order'] = form_data.get('list_order'),
                                 methodologies[i]['category'] = category,
                                 methodologies[i]['entity'] = form_data.get('entity'),
-                                methodologies[i]['image'] = form_data.get('image'),
+                                methodologies[i]['image'] = image,
                                 methodologies[i]['image_on'] = form_data.get('image_on'),
                                 methodologies[i]['text_after'] = form_data.get('text_after'),
 
@@ -1061,14 +1094,21 @@
                                 let inputs = $(row).find("input[name^=row_]");
                                 let checked = 0;
 
-                                if(inputs[0].checked) {
+                                if (inputs[0].checked) {
                                     checked = 1;
+                                }
+
+                                let image_id = null;
+                                let image = $(row).find("img");
+                                if (image !== 'undefined') {
+                                    image_id = $(image[0]).attr('data-image_id');
                                 }
 
                                 processes[id][key] = {
                                     heading: checked,
                                     label: inputs[1].value,
                                     description: inputs[2].value,
+                                    image: image_id
                                 }
                                 $(row).remove();
                             });
@@ -1108,6 +1148,7 @@
 
                     $('#methodology-list-container').show();
                     $('[id^=methodology-][id$=-form-container]').css('display', 'none');
+                    $('#meth_type').val('');
                 },
                 error: function (data) {
                     if (data.status == 422) {

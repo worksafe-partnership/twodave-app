@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use EGFiles;
 use Controller;
 use App\Icon;
 use App\TableRow;
 use App\Methodology;
 use App\Instruction;
+use Illuminate\Http\Request;
 use App\Http\Classes\VTLogic;
 use App\Http\Classes\VTConfig;
 use App\Http\Requests\MethodologyRequest;
@@ -33,7 +35,13 @@ class MethodologyController extends Controller
 
         $response = parent::_store(func_get_args());
         $returnId = explode("/", $response->getTargetUrl());
-        return end($returnId);
+
+        $record = Methodology::find(end($returnId));
+        if ($record->category == "TEXT_IMAGE") {
+            return ['id' => $record->id, 'image' => $record->image];
+        }
+
+        return $record->id;
     }
 
     public function created($record, $request, $args)
@@ -50,6 +58,7 @@ class MethodologyController extends Controller
                 $this->sortOutIcons($record, $request);
                 break;
         }
+
         return $record->id;
     }
 
@@ -66,6 +75,12 @@ class MethodologyController extends Controller
         }
         $response = parent::_update(func_get_args());
         $returnId = explode("/", $response->getTargetUrl());
+
+        $record = Methodology::find(end($returnId));
+        if ($record->category == "TEXT_IMAGE") {
+            return ['id' => $record->id, 'image' => $record->image];
+        }
+
         return end($returnId);
     }
 
@@ -126,7 +141,11 @@ class MethodologyController extends Controller
                 if ($rowCol[1] == "heading") { // "heading" checkbox
                     $value = $checks[$value];
                 }
-                $rows[$rowCol[0]][$rowCol[1]] = $value;
+                if ($rowCol[1] == "image") {
+                    $rows[$rowCol[0]][$rowCol[1]] = (int)$value;
+                } else {
+                    $rows[$rowCol[0]][$rowCol[1]] = $value;
+                }
             }
         }
 
@@ -136,8 +155,10 @@ class MethodologyController extends Controller
             $rows[$key]['list_order'] = $order;
             $rows[$key]['methodology_id'] = $record->id;
             $order++;
+            if (!isset($rows[$key]['image'])) {
+                $rows[$key]['image'] = null;
+            }
         }
-
         Instruction::insert($rows);
     }
 
@@ -243,5 +264,26 @@ class MethodologyController extends Controller
             toast()->error('Cannot move this Methodology');
             return 'disallow';
         }
+    }
+
+    public function addImage(Request $request)
+    {
+        $data = EGFiles::store($request, ['image' => 'image']);
+        return $data['image'];
+    }
+
+    public function editImage(Request $request)
+    {
+        $data = EGFiles::store($request, ['image' => 'image']);
+        return $data['image'];
+    }
+
+    public function deleteImage(Request $request)
+    {
+        $file = EGFiles::find($request['file']);
+        if ($file) {
+            $file->delete();
+        }
+        return "deleted";
     }
 }

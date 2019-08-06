@@ -51,9 +51,8 @@ class VTLogic
     public static function createPdf($entityId, $entityType = null, $force = false)
     {
         $config = new VTConfig($entityId, $entityType);
-        if (false) {
-        //if ($config->entity->status == 'PREVIOUS' || ($config->entity->pdf != null && !$force)) {
-            return EGFiles::image($config->entity->pdf);            
+        if ($config->entity->status == 'PREVIOUS' || ($config->entity->pdf != null && !$force)) {
+            return EGFiles::image($config->entity->pdf);
         }
         $logo = null;
         if ($config->entity->logo !== null) {
@@ -95,7 +94,6 @@ class VTLogic
             ->setOption('margin-left', 5)
             ->setOption('margin-right', 5)
             ->setOption('margin-bottom', 5);
-//        return view('pdf.main_report', $data);
         $returnStream = $pdf->stream();
         $instances = null;
         preg_match_all('/Count [0-9]+/', $pdf->download()->getContent(), $instances);
@@ -104,7 +102,7 @@ class VTLogic
             $m = (int)str_replace('Count ', '', $match);
             if ($m > $count) {
                 $count = $m;
-            }   
+            }
         }
         $file = VTFiles::saveOrUpdate($pdf->download()->getContent(), $config->entity, $config->entityType);
         if ($file == null) {
