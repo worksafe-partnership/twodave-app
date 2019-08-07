@@ -150,7 +150,7 @@
             row += "<td class='column is-1'><input type='text' name='row_"+row_id+"__label' value='"+$('#new_label').val()+"'></input></td>";
             row += "<td class='column is-3'><input type='text' name='row_"+row_id+"__description' value='"+$('#new_description').val()+"'></input></td>";
             if (image_id != '') {
-                row += "<td class='column is-3 image-cell'><img src='/image/"+image_id+"' data-image_id='"+image_id+"' data-process_row='row_"+row_id+"__image'></img></td>";
+                row += "<td class='column is-3 image-cell'><img class='process-image' src='/image/"+image_id+"' data-image_id='"+image_id+"' data-process_row='row_"+row_id+"__image'></img></td>";
             } else {
                 row += "<td class='column is-3 image-cell'>No Image</td>";
             }
@@ -163,9 +163,9 @@
                         <input type="hidden" name="file" id="file" value=""><div class="control">\
                         <input type="file" name="image_id" class="form-control  input " id="edit_image_'+row_id+'" value="">\
                     </div>\
-                    <button class="button is-primary is-small image-button" onclick="editProcessImage('+row_id+')">Update Image</button>';
+                    <button class="button is-primary is-small image-button edit-image" onclick="editProcessImage('+row_id+')">Update Image</button>';
             if (image_id != '') {
-                row += '<button class="button is-primary is-small image-button" onclick="deleteProcessImage('+row_id+')">Remove Image</button>';
+                row += '<button class="button is-primary is-small image-button delete-image" onclick="deleteProcessImage('+row_id+')">Remove Image</button>';
             }
         row += "</td></tr>";
         table.append(row);
@@ -223,6 +223,10 @@
                     upperTr.find('.delete_process').attr("onclick", "deleteProcess("+key+")");
                     upperTr.find('.move_process_up').attr("onclick", "moveProcessUp("+key+")");
                     upperTr.find('.move_process_down').attr('onclick', "moveProcessDown("+key+")");
+                    upperTr.find('input[name="image_id"]').attr('id', "edit_image_"+key);
+                    upperTr.find('.edit-image').attr('onclick', "editProcessImage("+key+")");
+                    upperTr.find('.delete-image').attr('onclick', "deleteProcessImage("+key+")");
+                    upperTr.find('.process-image').attr('data-process_row', 'row_'+key+'__image');
 
                     tr.attr('data-row', upperKey);
                     tr.find('[name*="heading"]').attr('name', 'row_'+upperKey+'__heading');
@@ -231,6 +235,10 @@
                     tr.find('.delete_process').attr("onclick", "deleteProcess("+upperKey+")");
                     tr.find('.move_process_up').attr("onclick", "moveProcessUp("+upperKey+")");
                     tr.find('.move_process_down').attr('onclick', "moveProcessDown("+upperKey+")");
+                    tr.find('input[name="image_id"]').attr('id', "edit_image_"+upperKey);
+                    tr.find('.edit-image').attr('onclick', "editProcessImage("+upperKey+")");
+                    tr.find('.delete-image').attr('onclick', "deleteProcessImage("+upperKey+")");
+                    tr.find('.process-image').attr('data-process_row', 'row_'+upperKey+'__image');
 
                 } else {
                     toastr.warning('Cannot move first icon left!');
@@ -249,6 +257,10 @@
                     lowerTr.find('.delete_process').attr("onclick", "deleteProcess("+key+")");
                     lowerTr.find('.move_process_up').attr("onclick", "moveProcessUp("+key+")");
                     lowerTr.find('.move_process_down').attr('onclick', "moveProcessDown("+key+")");
+                    lowerTr.find('input[name="image_id"]').attr('id', "edit_image_"+key);
+                    lowerTr.find('.edit-image').attr('onclick', "editProcessImage("+key+")");
+                    lowerTr.find('.delete-image').attr('onclick', "deleteProcessImage("+key+")");
+                    lowerTr.find('.process-image').attr('data-process_row', 'row_'+key+'__image');
 
                     tr.attr('data-row', lowerKey);
                     tr.find('[name*="heading"]').attr('name', 'row_'+lowerKey+'__heading');
@@ -257,6 +269,10 @@
                     tr.find('.delete_process').attr("onclick", "deleteProcess("+lowerKey+")");
                     tr.find('.move_process_up').attr("onclick", "moveProcessUp("+lowerKey+")");
                     tr.find('.move_process_down').attr('onclick', "moveProcessDown("+lowerKey+")");
+                    tr.find('input[name="image_id"]').attr('id', "edit_image_"+lowerKey);
+                    tr.find('.edit-image').attr('onclick', "editProcessImage("+lowerKey+")");
+                    tr.find('.delete-image').attr('onclick', "deleteProcessImage("+lowerKey+")");
+                    tr.find('.process-image').attr('data-process_row', 'row_'+lowerKey+'__image');
                 } else {
                     toastr.warning('Cannot move last icon right!');
                 }
@@ -291,8 +307,12 @@
                     var cell = $('#methodology-process-form-container .columns [data-row="'+row+'"] .image-cell');
                     cell.html('<img src="/image/'+fileId+'" data-image_id="'+fileId+'" data-process_row="row_'+row+'__image">');
                     var imagePickerCell = $('#process-table tr[data-row='+row+'] .image_picker');
-                    imagePickerCell.append('<button class="button is-primary is-small image-button" onclick="deleteProcessImage('+row+')">Remove Image</button>');
+                    var deleteExists = imagePickerCell.find('.delete_image');
+                    if (!deleteExists) {
+                        imagePickerCell.append('<button class="button is-primary is-small image-button delete-image" onclick="deleteProcessImage('+row+')">Remove Image</button>');
+                    }
                 }
+                $('#edit_image_'+row).val('');
             },
             error: function (data) {
                 if (data.status == 422) {

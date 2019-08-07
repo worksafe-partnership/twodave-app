@@ -857,7 +857,7 @@
                                         newRow += "<td class='column is-1'><input  type='text' name='row_"+key+"__label' value='"+row.label+"'></input></td>";
                                         newRow += "<td class='column is-3'><input type='text' name='row_"+key+"__description' value='"+row.description+"'></input></td>";
                                         if (row.image) {
-                                            newRow += "<td class='column is-3 image-cell'><img src='/image/"+row.image+"' data-image_id='"+row.image+"' data-process_row='row_"+key+"__image'</td>";
+                                            newRow += "<td class='column is-3 image-cell'><img class='process-image' src='/image/"+row.image+"' data-image_id='"+row.image+"' data-process_row='row_"+key+"__image'</td>";
                                         } else {
                                             newRow += "<td class='column is-3 image-cell'>No Image</td>";
                                         }
@@ -870,10 +870,10 @@
                                                         <input type="hidden" name="file" id="file" value=""><div class="control">\
                                                         <input type="file" name="image_id" class="form-control  input " id="edit_image_'+key+'" value="">\
                                                     </div>\
-                                                    <button class="button is-primary is-small image-button" onclick="editProcessImage('+key+')">Update Image</button>';
+                                                    <button class="button is-primary is-small image-button edit-image" onclick="editProcessImage('+key+')">Update Image</button>';
 
                                         if (row.image) {
-                                            newRow +='<button class="button is-primary is-small image-button" onclick="deleteProcessImage('+key+')">Remove Image</button>';
+                                            newRow +='<button class="button is-primary is-small image-button delete-image" onclick="deleteProcessImage('+key+')">Remove Image</button>';
                                         }
                                         newRow += '</td>';
                                     newRow += "</tr>"
