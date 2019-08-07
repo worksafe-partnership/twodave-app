@@ -97,26 +97,26 @@ class CompanySeeder extends Seeder
                                            ->where('project_id', $project->id)
                                            ->get();
                 $currentVTrams = $projectVTrams->where('status', 'CURRENT');
-                if ($currentVTrams->isNotEmpty()) {
-                    factory(App\Briefing::class, 2)->create([
-                        'project_id' => $currentVTrams->random(1)->first()->project_id,
-                        'vtram_id' => $currentVTrams->random(1)->first()->id,
-                    ]);
-                }
+                // if ($currentVTrams->isNotEmpty()) {
+                //     factory(App\Briefing::class, 2)->create([
+                //         'project_id' => $currentVTrams->random(1)->first()->project_id,
+                //         'vtram_id' => $currentVTrams->random(1)->first()->id,
+                //     ]);
+                // }
 
-                foreach ($projectVTrams as $vtram) {
-                    for ($i = 0; $i < 3; $i++) {
-                        factory(App\Hazard::class, 1)->create([
-                            'entity' => 'VTRAM',
-                            'entity_id' => $vtram->id
-                        ]);
+                // foreach ($projectVTrams as $vtram) {
+                //     for ($i = 0; $i < 3; $i++) {
+                //         factory(App\Hazard::class, 1)->create([
+                //             'entity' => 'VTRAM',
+                //             'entity_id' => $vtram->id
+                //         ]);
 
-                        factory(App\Methodology::class, 1)->create([
-                            'entity' => 'VTRAM',
-                            'entity_id' => $vtram->id
-                        ]);
-                    }
-                }
+                //         factory(App\Methodology::class, 1)->create([
+                //             'entity' => 'VTRAM',
+                //             'entity_id' => $vtram->id
+                //         ]);
+                //     }
+                // }
             }
 
             // a couple of templates for each company as well
@@ -126,20 +126,20 @@ class CompanySeeder extends Seeder
                 'submitted_by' => $contractManagers->random(1)->first()->id,
             ]);
 
-            $templates = App\Template::where('company_id', $company->id)->get(['id']);
-            foreach ($templates as $template) {
-                for ($i = 0; $i < 3; $i++) {
-                    factory(App\Hazard::class, 1)->create([
-                        'entity' => 'TEMPLATE',
-                        'entity_id' => $template->id
-                    ]);
+            // $templates = App\Template::where('company_id', $company->id)->get(['id']);
+            // foreach ($templates as $template) {
+            //     for ($i = 0; $i < 3; $i++) {
+            //         factory(App\Hazard::class, 1)->create([
+            //             'entity' => 'TEMPLATE',
+            //             'entity_id' => $template->id
+            //         ]);
 
-                    factory(App\Methodology::class, 1)->create([
-                        'entity' => 'TEMPLATE',
-                        'entity_id' => $template->id
-                    ]);
-                }
-            }
+            //         factory(App\Methodology::class, 1)->create([
+            //             'entity' => 'TEMPLATE',
+            //             'entity_id' => $template->id
+            //         ]);
+            //     }
+            // }
         }
 
         // $seededCompanies = factory(App\Company::class, $counts['extraCompanies'])->create();
