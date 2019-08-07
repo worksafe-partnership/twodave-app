@@ -345,6 +345,7 @@
 
         // Hazard Scripts
         var hazards = JSON.parse('{!! str_replace(['\'', '\\'], ['\\\'', '\\\\'], $hazards->toJson()) !!}');
+        var hazardMethodologies = JSON.parse('{!! str_replace(['\'', '\\'], ['\\\'', '\\\\'], json_encode($hazard_methodologies)) !!}');
 
         var riskLabels = JSON.parse('{!! json_encode($riskList) !!}');
         function createHazard() {
@@ -372,12 +373,23 @@
             $('#hazard-form-container [name="r_risk_severity"]').val(hazard['r_risk_severity']);
             $('#hazard-form-container [name="r_risk_probability"]').val(hazard['r_risk_probability']);
 
+            // add all methodologies relevant to the hazard as selected to the selectize.
+            if (hazardMethodologies[hazard['id']] !== "undefined") {
+                var selectize = $('#related_methodologies_div .control select')[0].selectize;
+                selectize.setValue(hazardMethodologies[hazard['id']]);
+            }
+
             $("#hazard-form-container .submitbutton").attr("onclick","submitHazardForm("+id+","+hazard['list_order']+")");
             $('#hazard-list-container').hide();
             $('#hazard-form-container').css('display', 'inherit');
         }
 
         function submitHazardForm(editId=null, listOrder=null) {
+
+            var selectedMethodologies = [];
+            $.each($('#related_methodologies_div .item'), function(key, meth) {
+                selectedMethodologies.push($(meth).attr('data-value'));
+            });
 
             var data = {
                 _token: '{{ csrf_token() }}',
@@ -392,7 +404,8 @@
                 list_order: hazards.length + 1,
                 at_risk: $('#main-hazard-container #at_risk').val(),
                 other_at_risk: $('#main-hazard-container #other_at_risk').val(),
-                entityType: '{{ $entityType }}'
+                entityType: '{{ $entityType }}',
+                selectedMethodologies: selectedMethodologies
             };
 
             let url = 'hazard/create';
@@ -459,6 +472,17 @@
                             }
                         }
                     }
+
+                    // wipe out and update the related methodologies in local storage (saved in back end above ajax)
+                    delete hazardMethodologies[id];
+                    hazardMethodologies[id] = [];
+                    $.each(selectedMethodologies, function(key, value) {
+                        hazardMethodologies[id].push(parseInt(value));
+                    });
+
+                    // remove all previously selected for next view
+                    $('#related_methodologies_div .control select')[0].selectize.clear();
+
                     $('#hazard-form-container').css('display', 'none');
                     $('#hazard-form-container #description').val('');
                     $('#hazard-form-container #control').val('');

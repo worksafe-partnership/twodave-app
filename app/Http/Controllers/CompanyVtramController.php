@@ -426,6 +426,13 @@ class CompanyVtramController extends Controller
             $this->customValues['icons'][$icon->methodology_id][$icon->type][] = $icon;
         }
         // End of Methodology Specific Items //
+
+        $this->customValues['hazard_methodologies'] = [];
+        $hms = DB::table('hazards_methodologies')->whereIn('hazard_id', $this->customValues['hazards']->pluck('id'))->get();
+        foreach ($hms as $hm) {
+            $this->customValues['hazard_methodologies'][$hm->hazard_id][] = $hm->methodology_id;
+        }
+
         $this->args = func_get_args();
         $this->id = $vtramId;
         $this->parentId = $projectId;

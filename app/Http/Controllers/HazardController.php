@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Controller;
+use DB;
 use Auth;
 use App\Hazard;
+use Controller;
 use App\Http\Classes\VTLogic;
 use App\Http\Classes\VTConfig;
 use App\Http\Requests\HazardRequest;
@@ -35,6 +36,13 @@ class HazardController extends Controller
 
     public function created($record, $request, $args)
     {
+        DB::table('hazards_methodologies')->where('hazard_id', $record->id)->delete();
+        $methodologies = [];
+        foreach ($request['selectedMethodologies'] as $link) {
+            $methodologies[] = ['hazard_id' => $record->id, 'methodology_id' => $link];
+        }
+        DB::table('hazards_methodologies')->insert($methodologies);
+
         return $record->id;
     }
 
@@ -54,9 +62,15 @@ class HazardController extends Controller
         return end($returnId);
     }
 
-    public function updated($record, $request, $args)
+    public function updated($updated, $original, $request)
     {
-        return $record->id;
+        DB::table('hazards_methodologies')->where('hazard_id', $updated->id)->delete();
+        $methodologies = [];
+        foreach ($request['selectedMethodologies'] as $link) {
+            $methodologies[] = ['hazard_id' => $updated->id, 'methodology_id' => $link];
+        }
+        DB::table('hazards_methodologies')->insert($methodologies);
+        return $updated->id;
     }
 
     public function delete($id)

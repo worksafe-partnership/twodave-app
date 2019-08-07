@@ -144,7 +144,7 @@
         </div>
 	</div>
 </div>
-<!-- @include('modules.company.project.vtram.hazard.related-methodologies') -->
+@include('modules.company.project.vtram.hazard.related-methodologies')
 <hr>
 
 @push('styles')
