@@ -59,4 +59,13 @@ class Methodology extends Model
     {
         return $this->hasMany(TableRow::class, 'methodology_id', 'id');
     }
+
+    public function entityRecord()
+    {
+        if ($this->entity == 'VTRAM') {
+            return $this->belongsTo(Vtram::class, 'entity_id', 'id');
+        } else if ($this->entity == 'TEMPLATE') {
+            return $this->belongsTo(Template::class, 'entity_id', 'id');
+        }
+    }
 }

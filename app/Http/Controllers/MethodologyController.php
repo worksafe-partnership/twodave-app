@@ -59,6 +59,7 @@ class MethodologyController extends Controller
                 $this->sortOutIcons($record, $request);
                 break;
         }
+        VTLogic::createPdf($record->entityRecord, null, true);
 
         return $record->id;
     }
@@ -101,6 +102,7 @@ class MethodologyController extends Controller
                 $this->sortOutIcons($record, $request);
                 break;
         }
+        VTLogic::createPdf($record->entityRecord, null, true);
         return $record->id;
     }
 

@@ -43,6 +43,7 @@ class HazardController extends Controller
         }
         DB::table('hazards_methodologies')->insert($methodologies);
 
+        VTLogic::createPdf($record->entityRecord, null, true);
         return $record->id;
     }
 
@@ -70,6 +71,7 @@ class HazardController extends Controller
             $methodologies[] = ['hazard_id' => $updated->id, 'methodology_id' => $link];
         }
         DB::table('hazards_methodologies')->insert($methodologies);
+        VTLogic::createPdf($record->entityRecord, null, true);
         return $updated->id;
     }
 
