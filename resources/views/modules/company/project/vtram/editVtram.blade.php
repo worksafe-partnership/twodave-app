@@ -1041,6 +1041,8 @@
                 url = 'methodology/'+editId+'/edit';
             }
 
+            var selectize = $('#related_methodologies_div .control select')[0].selectize;
+
             $.ajax({
                 url: url,
                 type: 'POST',
@@ -1083,6 +1085,10 @@
                                     <a class="handms-icons" onclick="moveMethodologyDown('+id+')">{{ icon('keyboard_arrow_down') }}</a>\
                                 </td>\
                             </tr>');
+
+                        // add option to the methodology list within hazard form
+                        selectize.addOption({value: id, text:form_data.get('title')});
+
                     } else { // edit
                         for (let i = 0; i < methodologies.length; i++) {
                             if (methodologies[i]['id'] === editId) {
@@ -1104,6 +1110,10 @@
                                 break;
                             }
                         }
+
+                        // edit methodology name within methodolgy list with hazard form.
+                        let data = {value: id, text:form_data.get('title')};
+                        selectize.updateOption(id, data);
                     }
 
                     // write them to the local array to display when you hit Edit.
@@ -1246,6 +1256,18 @@
                             methodologies = methodologies.filter(function (item) {
                                 return item !== undefined;
                             });
+
+                            // unset it in the hazards form's methodology field
+                            var selectize = $('#related_methodologies_div .control select')[0].selectize;
+                            selectize.removeOption(id);
+
+                            // loop through each of the hazard methodology's data array and wipe out any instances of the deleted key.
+                            $.each(hazardMethodologies, function (key, methodologyArray) {
+                                hazardMethodologies[key] = methodologyArray.filter(function(methodologyKey) {
+                                    return methodologyKey != id;
+                                })
+                            })
+
                             toastr.success('Methodology was deleted');
                         } else {
                             toastr.error('An error has occured when deleting the hazard');

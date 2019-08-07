@@ -71,7 +71,7 @@ class HazardController extends Controller
             $methodologies[] = ['hazard_id' => $updated->id, 'methodology_id' => $link];
         }
         DB::table('hazards_methodologies')->insert($methodologies);
-        VTLogic::createPdf($record->entityRecord, null, true);
+        VTLogic::createPdf($updated->entityRecord, null, true);
         return $updated->id;
     }
 
@@ -87,6 +87,7 @@ class HazardController extends Controller
         }
         if (VTLogic::canUseItem($hazard->entity_id, $hazard->entity)) {
             $hazard->delete();
+            DB::table('hazards_methodologies')->where('hazard_id', $id)->delete();
             $this->reOrderHazards($hazard);
             return 'allow';
         }
