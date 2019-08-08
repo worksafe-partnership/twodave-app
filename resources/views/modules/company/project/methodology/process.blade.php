@@ -193,6 +193,7 @@
                     cell.find('.move_process_down').attr('onclick', "moveProcessDown("+index+")");
                 }
             });
+            $('#process-table').attr('data-next_row', remaining.length);
         }
     }
 
