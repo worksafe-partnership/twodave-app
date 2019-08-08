@@ -21,6 +21,7 @@ use App\Methodology;
 use App\Http\Classes\VTLogic;
 use Illuminate\Http\Request;
 use App\Http\Requests\VtramRequest;
+use App\Http\Requests\EditVtramRequest;
 
 class CompanyVtramController extends Controller
 {
@@ -319,7 +320,7 @@ class CompanyVtramController extends Controller
         return parent::_update(func_get_args());
     }
 
-    public function updateFromMethodology(Request $request)
+    public function updateFromMethodology(EditVtramRequest $request)
     {
         $request->merge([
             'updated_by' => Auth::id(),

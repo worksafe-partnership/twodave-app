@@ -15,6 +15,7 @@ use App\Methodology;
 use Illuminate\Http\Request;
 use App\Http\Classes\VTLogic;
 use App\Http\Requests\TemplateRequest;
+use App\Http\Requests\EditVtramRequest;
 
 class TemplateController extends Controller
 {
@@ -85,7 +86,7 @@ class TemplateController extends Controller
         return parent::_update(func_get_args());
     }
 
-    public function updateFromMethodology(Request $request)
+    public function updateFromMethodology(EditVtramRequest $request)
     {
         $request->merge([
             'updated_by' => Auth::id(),
