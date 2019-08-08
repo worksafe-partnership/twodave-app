@@ -67,7 +67,7 @@
 <hr>
 <div class="columns">
     <div class="column is-8 is-offset-2">
-        <h2 class="sub-heading">Principle Contractor</h2>
+        <h2 class="sub-heading">Principal Contractor</h2>
         <div class="columns">
             <div class="column is-4">
                 <div class="field pc-check">
