@@ -75,7 +75,7 @@
                         ]) }}
                     </div>
                     <a href="javascript:createMethodology()" class="button is-success is-pulled-right" title="Add Methodology">
-                        {{ icon('plus2') }}&nbsp;<span class="action-text is-hidden-touch">Add Methodology</span>
+                        {{ icon('plus2') }}<span class="action-text is-hidden-touch"></span>
                     </a>
                 </div>
             </div>
@@ -187,7 +187,7 @@
             <div class="column is-12">
                 <h2 class="sub-heading inline-block">Hazards</h2>
                 <a href="javascript:createHazard()" class="button is-success is-pulled-right" title="Add Hazard">
-                    {{ icon('plus2') }}&nbsp;<span class="action-text is-hidden-touch">Add Hazard</span>
+                    {{ icon('plus2') }}<span class="action-text is-hidden-touch"></span>
                 </a>
             </div>
         </div>
