@@ -37,11 +37,13 @@ class HazardController extends Controller
     public function created($record, $request, $args)
     {
         DB::table('hazards_methodologies')->where('hazard_id', $record->id)->delete();
-        $methodologies = [];
-        foreach ($request['selectedMethodologies'] as $link) {
-            $methodologies[] = ['hazard_id' => $record->id, 'methodology_id' => $link];
+        if (isset($request['selectedMethodologies'])) {
+            $methodologies = [];
+            foreach ($request['selectedMethodologies'] as $link) {
+                $methodologies[] = ['hazard_id' => $record->id, 'methodology_id' => $link];
+            }
+            DB::table('hazards_methodologies')->insert($methodologies);
         }
-        DB::table('hazards_methodologies')->insert($methodologies);
 
         VTLogic::createPdf($record->entityRecord, null, true);
         return $record->id;
@@ -66,11 +68,13 @@ class HazardController extends Controller
     public function updated($updated, $original, $request)
     {
         DB::table('hazards_methodologies')->where('hazard_id', $updated->id)->delete();
-        $methodologies = [];
-        foreach ($request['selectedMethodologies'] as $link) {
-            $methodologies[] = ['hazard_id' => $updated->id, 'methodology_id' => $link];
+        if (isset($request['selectedMethodologies'])) {
+            $methodologies = [];
+            foreach ($request['selectedMethodologies'] as $link) {
+                $methodologies[] = ['hazard_id' => $updated->id, 'methodology_id' => $link];
+            }
+            DB::table('hazards_methodologies')->insert($methodologies);
         }
-        DB::table('hazards_methodologies')->insert($methodologies);
         VTLogic::createPdf($updated->entityRecord, null, true);
         return $updated->id;
     }
