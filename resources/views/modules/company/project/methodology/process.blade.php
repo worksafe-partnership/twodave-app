@@ -245,7 +245,7 @@
                     toastr.warning('Cannot move first icon left!');
                 }
             } else { // down
-                if (key < trs.length-1) {
+                if (key < trs.length-2) { // because we added a tr to the thead now.
                     let lowerKey = parseInt(key)+1;
                     let lowerTr = $('#process-table tr[data-row='+lowerKey+']')
                     let tr = $('#process-table tr[data-row='+key+']');
