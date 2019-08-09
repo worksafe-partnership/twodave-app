@@ -65,7 +65,7 @@ class VtramController extends CompanyVtramController
             }
         }
         $this->customValues['templates'] = Template::where('company_id', $this->user->company_id)->pluck('name', 'id');
-        $this->customValues['path'] = 'hello';
+        $this->customValues['path'] = 'create';
     }
 
     public function indexHook()
