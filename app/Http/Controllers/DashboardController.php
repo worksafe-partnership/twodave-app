@@ -80,7 +80,7 @@ class DashboardController extends Controller
         if (in_array($role, ['company_admin', 'contract_manager', 'project_admin'])) {
             if ($role == 'company_admin') {
                 $roleCheck = ['contract_manager', 'project_admin', 'supervisor'];
-            } else if ($role == 'contact_manager') {
+            } else if ($role == 'contract_manager') {
                 $roleCheck = ['project_admin', 'supervisor'];
             } else { // must be project admin based on above if!
                 $roleCheck = ['supervisor'];
