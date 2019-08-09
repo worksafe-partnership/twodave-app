@@ -39,7 +39,7 @@
     <div class="column is-10 is-offset-1">
         <div class="field">
             {{ EGForm::text('icon_sub_heading', [
-                'label' => 'Sub Table Heading',
+                'label' => 'Additional Table Heading',
                 'value' => '',
                 'type' => $pageType
             ]) }}

@@ -15,6 +15,7 @@ class CreateCompanyTable extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 100);
+            $table->string('short_name', 100)->nullable();
             $table->integer('review_timescale');
             $table->string('vtrams_name', 100);
             $table->string('email');

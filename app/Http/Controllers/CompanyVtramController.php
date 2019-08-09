@@ -97,7 +97,7 @@ class CompanyVtramController extends Controller
 
     public function viewHook()
     {
-        if (in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECT'])) {
+        if (in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
             $this->actionButtons['methodologies'] = [
                 'label' => 'Edit Hazards & Methodologies',
                 'path' => '/company/'.$this->args[0].'/project/'.$this->parentId.'/vtram/'.$this->id.'/methodology',
@@ -124,7 +124,7 @@ class CompanyVtramController extends Controller
         ];
 
         $this->customValues['comments'] = VTLogic::getComments($this->record->id, $this->record->status, "VTRAM");
-        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECT'])) {
+        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
             $this->disableEdit = true;
         }
     }

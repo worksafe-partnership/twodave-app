@@ -61,6 +61,18 @@
                 </div>
             @endif
         </div>
+        <div class="columns">
+            <div class="column is-6">
+                <div class="field">
+                    {{ EGForm::file("signature", [
+                        "label" => "Signature Image",
+                        "value"  => $record['signature'],
+                        "type" => $pageType,
+                        "show_image" => 1,
+                    ]) }}
+                </div>
+            </div>
+        </div>
         @if (isset($userPage) && $userPage)
             </div>
         </div>

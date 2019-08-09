@@ -18,6 +18,7 @@ class Company extends Model
      */
     protected $fillable = [
         'name',
+        'short_name',
         'review_timescale',
         'vtrams_name',
         'email',

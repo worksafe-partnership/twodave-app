@@ -25,6 +25,7 @@ class CompanyRequest extends FormRequest
     {
         return [
             'name' => 'required|max:100',
+            'short_name' => 'required|max:100',
             'review_timescale' => 'required|not_in:0',
             'vtrams_name' => 'required|max:100',
             'email' => 'required|max:255|email',
@@ -47,7 +48,9 @@ class CompanyRequest extends FormRequest
     {
         return [
             'name.required' => 'Please enter a Company Name',
+            'short_name.required' => 'Please enter a Company Short Name',
             'name.max' => 'The Company Name cannot be more than 100 character',
+            'short_name.max' => 'The Company Short Name cannot be more than 100 character',
             'review_timescale.required' => 'Please select a Review Timescale',
             'review_timescale.not_in' => 'Please select a Review Timescale',
             'vtrams_name.required' => 'Please enter a VTRAMS Name',

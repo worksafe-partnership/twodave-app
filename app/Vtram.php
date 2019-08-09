@@ -57,7 +57,8 @@ class Vtram extends Model
         'show_responsible_person',
         'responsible_person',
         'number',
-        'name_on_pdf',
+        'client_on_pdf',
+        'pc_on_pdf',
     ];
 
 

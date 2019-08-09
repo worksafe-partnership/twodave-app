@@ -104,7 +104,7 @@ return [
             'example' => 'gfx/methodology/complex_table.png',
         ],
         'PROCESS' => [
-            'label' => 'Process',
+            'label' => 'Method of Work',
             'view' => 'modules.company.project.methodology.process',
             'pdf_view' => 'pdf.methodology.process',
             'example' => 'gfx/methodology/process.png',
@@ -129,7 +129,7 @@ return [
         'TEXT_IMAGE' => 'Text and Image',
         'SIMPLE_TABLE' => 'Simple Table',
         'COMPLEX_TABLE' => 'Complex Table',
-        'PROCESS' => 'Process',
+        'PROCESS' => 'Method of Work',
         'ICON' => 'Icon',
     ],
     'first_last' => [
@@ -192,7 +192,7 @@ return [
     ],
     'icon_types' => [
         'MAIN' => 'Main',
-        'SUB' => 'Sub',
+        'SUB' => 'Additional',
     ],
     'review_colours' => [
         'review-okay' => '#98fb98',

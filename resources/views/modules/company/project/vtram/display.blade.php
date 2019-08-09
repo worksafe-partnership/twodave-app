@@ -14,7 +14,7 @@
             <div class="column is-3">
                 <div class="field">
                     {{ EGForm::text('name', [
-                        'label' => 'Name',
+                        'label' => 'Task Name',
                         'value' => isset($name) ? $name : $record['name'],
                         'type' => $pageType
                     ]) }}
@@ -23,14 +23,30 @@
             <div class="column is-3">
                 <div class="field">
                     @if (strpos($identifierPath, 'template') !== false)
-                        {{ EGForm::select('company_id', [
-                            'label' => 'Company (Leave blank for all)',
-                            'value' => $record["company_id"],
-                            'type' => $pageType,
-                            'list' => $companies,
-                            'display_value' => $record->company->name ?? 'No Company Selected',
-                            'selector' => 1
-                        ]) }}
+                        @if (strpos($identifierPath, 'company.template') === false)
+                            {{ EGForm::select('company_id', [
+                                'label' => 'Company',
+                                'value' => $record["company_id"],
+                                'type' => $pageType,
+                                'list' => $companies,
+                                'display_value' => $record->company->name ?? 'No Company Selected',
+                                'selector' => 1
+                            ]) }}
+                        @else 
+                            {{ EGForm::select('company_id', [
+                                'label' => 'Company',
+                                'value' => $parentId,
+                                'type' => $pageType,
+                                'list' => [
+                                    $parentId => $companies[$parentId]
+                                ],
+                                'display_value' => $record->company->name ?? 'No Company Selected',
+                            ]) }}
+                            {{ EGForm::hidden('company_id', [
+                                'value' => $parentId,
+                                'type' => $pageType,
+                            ]) }}
+                        @endif
                     @else
                         {{ EGForm::text('number', [
                             'label' => 'Number',
@@ -107,13 +123,18 @@
             <div class="columns">
                 <div class="column is-6">
                     <div class="field">
-                        {{ EGForm::radio('name_on_pdf', [
-                            'label' => 'Name on PDF',
-                            'value' => $record['name_on_pdf'],
-                            'list' => [
-                                'Client' => 'Client',
-                                'Principle Contractor' => 'Principle Contractor',
-                            ],
+                        {{ EGForm::checkbox('client_on_pdf', [
+                            'label' => 'Show Client Name on PDF',
+                            'value' => $record['client_on_pdf'],
+                            'type' => $pageType,
+                        ]) }}
+                    </div>
+                </div>
+                <div class="column is-6">
+                    <div class="field">
+                        {{ EGForm::checkbox('pc_on_pdf', [
+                            'label' => 'Show Principal Contractor Name on PDF (if applicable)',
+                            'value' => $record['pc_on_pdf'],
                             'type' => $pageType,
                         ]) }}
                     </div>
@@ -131,7 +152,7 @@
                 <div class="column is-6">
                     <div class="field">
                         {{ EGForm::ckeditor('main_description', [
-                            'label' => 'Company Description',
+                            'label' => 'Title Block Text',
                             'value' => $record["main_description"],
                             'type' => $pageType
                         ]) }}

@@ -30,6 +30,7 @@ class WorksafeUserRequest extends FormRequest
             'password' => 'nullable|min:8|confirmed',
             'password_confirmation' => 'nullable|min:8',
             'roles' => 'onlyOneRole',
+            'signature' => 'mimes:jpg,jpeg,png,bmp,tiff',
         ];
         if (is_null(Auth::user()->company_id)) {
             $rules['company_id'] = 'companyRequired';
@@ -42,6 +43,7 @@ class WorksafeUserRequest extends FormRequest
         return [
             'roles.only_one_role' => 'Please check one (only one) of the Roles boxes',
             'company_id.company_required' => 'A Company must be selected',
+            'signature.mimes' => 'Only images are allowed to be uploaded for the Signature',
         ];
     }
 }
