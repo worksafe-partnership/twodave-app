@@ -21,6 +21,8 @@ class VtramController extends CompanyVtramController
     {
         if (isset($_GET['template'])) {
             $template = Template::findOrFail($_GET['template']);
+            $this->customValues['createdFromEntity'] = "TEMPLATE";
+            $this->customValues['createdFromId'] = $_GET['template'];
             if ($template->company_id != $this->user->company_id) {
                 abort(404);
             }

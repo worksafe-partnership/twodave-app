@@ -14,7 +14,7 @@ class CreateInstructionTable extends Migration
     {
         Schema::create('instructions', function (Blueprint $table) {
             $table->increments('id');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->string('label')->nullable();
             $table->boolean('heading')->nullable();
             $table->integer('list_order')->nullable()->unsigned();

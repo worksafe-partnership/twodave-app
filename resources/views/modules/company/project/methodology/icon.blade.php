@@ -19,19 +19,14 @@
                 'value' => '',
                 'type' => $pageType
             ]) }}
+            <table class="table is-bordered">
+                <thead></thead>
+                <tbody id="top-body">
+                    <tr class="columns is-multiline" style="margin:0">
+                    </tr>
+                </tbody>
+            </table>
         </div>
-    </div>
-</div>
-
-<div class="columns">
-    <div class="column is-10 is-offset-1">
-        <table class="table is-bordered">
-            <thead></thead>
-            <tbody id="top-body">
-                <tr class="columns is-multiline" style="margin:0">
-                </tr>
-            </tbody>
-        </table>
     </div>
 </div>
 
@@ -43,19 +38,14 @@
                 'value' => '',
                 'type' => $pageType
             ]) }}
+            <table class="table is-bordered">
+                <thead></thead>
+                <tbody id="bottom-body">
+                    <tr class="columns is-multiline" style="margin:0">
+                    </tr>
+                </tbody>
+            </table>
         </div>
-    </div>
-</div>
-
-<div class="columns">
-    <div class="column is-10 is-offset-1">
-        <table class="table is-bordered">
-            <thead></thead>
-            <tbody id="bottom-body">
-                <tr class="columns is-multiline" style="margin:0">
-                </tr>
-            </tbody>
-        </table>
     </div>
 </div>
 

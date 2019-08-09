@@ -470,11 +470,12 @@ class CompanyVtramController extends Controller
 
             // copy everything!
             VTLogic::copyEntity($original, $insert);
+        } else {
+            VTLogic::createDefaultMethodologies($insert, "VTRAM");
         }
 
         $nextNumber->increment('number');
 
-        VTLogic::createDefaultMethodologies($insert, "VTRAM");
         VTLogic::createPdf($insert, null, true);
     }
 
