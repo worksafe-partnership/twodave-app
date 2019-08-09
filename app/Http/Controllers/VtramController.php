@@ -26,6 +26,10 @@ class VtramController extends CompanyVtramController
             if ($template->company_id != $this->user->company_id) {
                 abort(404);
             }
+            if ($template->status != "CURRENT") {
+                abort(404);
+            }
+
             $this->customValues['name'] = $template['name'];
             $this->customValues['reference'] = $template['reference'];
             $this->customValues['logo'] = $template['logo'];
@@ -50,7 +54,9 @@ class VtramController extends CompanyVtramController
         if (isset($this->actionButtons['create']['class'])) {
             $this->actionButtons['create']['class'] .= " create_vtram";
         }
-        $this->customValues['templates'] = Template::where('company_id', $this->user->company_id)->pluck('name', 'id');
+        $this->customValues['templates'] = Template::where('company_id', $this->user->company_id)
+                                                   ->where('status', 'CURRENT')
+                                                   ->pluck('name', 'id');
         $this->customValues['path'] = 'vtram/create';
     }
 
@@ -66,7 +72,9 @@ class VtramController extends CompanyVtramController
                 abort(404);
             }
         }
-        $this->customValues['templates'] = Template::where('company_id', $this->user->company_id)->pluck('name', 'id');
+        $this->customValues['templates'] = Template::where('company_id', $this->user->company_id)
+                                                   ->where('status', 'CURRENT')
+                                                   ->pluck('name', 'id');
         $this->customValues['path'] = 'create';
     }
 
