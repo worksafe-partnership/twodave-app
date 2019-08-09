@@ -46,6 +46,8 @@ class Template extends Model
         'working_at_height',
         'manual_handling',
         'accident_reporting',
+        'main_description',
+        'post_risk_assessment_text'
     ];
 
     public static function scopeDatatableAll($query, $parent, $identifier)
