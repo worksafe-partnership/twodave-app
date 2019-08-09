@@ -29,7 +29,9 @@ class CompanyVtramController extends Controller
 
     public function postIndexHook()
     {
-        $this->customValues['templates'] = Template::where('company_id', $this->args[0])->pluck('name', 'id');
+        $this->customValues['templates'] = Template::where('company_id', $this->args[0])
+                                                   ->where('status', 'CURRENT')
+                                                   ->pluck('name', 'id');
         if (isset($this->actionButtons['create']['class'])) {
             $this->actionButtons['create']['class'] .= " create_vtram";
         }
@@ -45,7 +47,9 @@ class CompanyVtramController extends Controller
 
     public function bladeHook()
     {
-        $this->customValues['templates'] = Template::where('company_id', $this->args[0])->pluck('name', 'id');
+        $this->customValues['templates'] = Template::where('company_id', $this->args[0])
+                                                           ->where('status', 'CURRENT')
+                                                           ->pluck('name', 'id');
     }
 
     public function createHook()

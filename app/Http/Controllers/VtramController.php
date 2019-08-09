@@ -48,7 +48,9 @@ class VtramController extends CompanyVtramController
         if (isset($this->actionButtons['create']['class'])) {
             $this->actionButtons['create']['class'] .= " create_vtram";
         }
-        $this->customValues['templates'] = Template::where('company_id', $this->user->company_id)->pluck('name', 'id');
+        $this->customValues['templates'] = Template::where('company_id', $this->user->company_id)
+                                                   ->where('status', 'CURRENT')
+                                                   ->pluck('name', 'id');
         $this->customValues['path'] = 'vtram/create';
     }
 
@@ -64,7 +66,9 @@ class VtramController extends CompanyVtramController
                 abort(404);
             }
         }
-        $this->customValues['templates'] = Template::where('company_id', $this->user->company_id)->pluck('name', 'id');
+        $this->customValues['templates'] = Template::where('company_id', $this->user->company_id)
+                                                   ->where('status', 'CURRENT')
+                                                   ->pluck('name', 'id');
         $this->customValues['path'] = 'create';
     }
 

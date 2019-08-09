@@ -16,7 +16,9 @@ class CompanyProjectTrackerController extends Controller
     public function postIndexHook()
     {
         $this->heading = str_replace("VTRAMS Tracker of", "VTRAMS Tracker for", $this->heading);
-        $this->customValues['templates'] = Template::where('company_id', $this->args[0])->pluck('name', 'id');
+        $this->customValues['templates'] = Template::where('company_id', $this->args[0])
+                                                   ->where('status', 'CURRENT')
+                                                   ->pluck('name', 'id');
         $this->customValues['path'] = 'vtram/create';
     }
 
