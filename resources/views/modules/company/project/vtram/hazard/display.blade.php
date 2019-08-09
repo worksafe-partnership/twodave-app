@@ -20,13 +20,11 @@
         <div class="columns">
             <div class="column is-6">
                 <div class="field">
-                    {{ EGForm::select('at_risk', [
+                    {{ EGForm::multiCheckbox('at_risk', [
                         'label' => 'Who is at Risk',
-                        'value' => $record["at_risk"],
+                        'values' => $record["at_risk"],
                         'type' => $pageType,
                         'list' => $whoList,
-                        'display_value' => $whoList[$record['at_risk']] ?? '',
-                        'selector' => 1
                     ]) }}
                 </div>
             </div>

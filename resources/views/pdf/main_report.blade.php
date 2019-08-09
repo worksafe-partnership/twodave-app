@@ -119,7 +119,7 @@
                 <br>
                 <div>
                     <div class="wide-50 company-names">
-                        <p><b>Company:</b> {{ $entity->company->name  ?? '' }}</p>
+                        <p><b>Trade Contractor:</b> {{ $entity->company->name  ?? '' }}</p>
                         @if ($type == 'VTRAM')
                             @if ($entity->client_on_pdf)
                                 <p><b>Client:</b> {{ $entity->project->client_name }}</p>
@@ -128,11 +128,16 @@
                                 <p><b>Principal Contractor:</b> {{ $entity->project->principle_contractor_name }}</p>
                             @endif
                             <p><b>Project:</b> {{ $entity->project->name }}</p>
+                            <p><b>Project Ref:</b> {{ $entity->project->ref }}</p>
                             @if ($entity->project->show_contact)
-                                <p><b>Company: </b><br>Email: {{ $entity->company->email }}<br>Phone: {{ $entity->company->phone }}<br>Fax: {{ $entity->company->fax }}</p>
-                                <p><b>Project Admin: </b>{{ $entity->project->admin->email }}</p>
+                                <p><b>Trade Contractor Contact: </b><br>Email: {{ $entity->company->email }}<br>Phone: {{ $entity->company->phone }}<br>Fax: {{ $entity->company->fax }}</p>
+                                <p><b>Project Admin Contact: </b> {{ $entity->project->admin->email }}</p>
                             @endif
                         @endif
+                        @if ($entity->show_area)
+                            <p><b>Areas:</b> {{ $entity->area }}</p>
+                        @endif
+                        <p><b>{{ $entity->company->vtrams_name }} Ref:</b> {{ $entity->reference }}</p>
                         @if ($entity->show_responsible_person)
                             <p><b>Responsible Person: </b>{{ $entity->responsible_person }}</p>
                         @endif
@@ -243,10 +248,24 @@
                             <tr>
                                 <td>{{ $hazard->list_order }}</td>
                                 <td class="hazard-width">{{ $hazard->description }}</td>
-                                <td>{{ $whoIsRisk[$hazard->at_risk] }}
-                                    @if ($hazard->at_risk == 'O')
-                                        {{ $hazard->other_ar_risk }}
-                                    @endif
+                                <td>
+                                @foreach (array_filter($hazard->at_risk, function ($v) {
+                                    return $v == "1";   
+                                }) as $key => $risk)
+                                        @if ($loop->last) 
+                                            @if ($key == 'O')
+                                                {{ $hazard->other_at_risk }}
+                                            @else
+                                                {{ $whoIsRisk[$key] }}
+                                            @endif
+                                        @else
+                                            @if ($key == 'O')
+                                                {{ $hazard->other_at_risk }} \
+                                            @else
+                                                {{ $whoIsRisk[$key] }} \
+                                            @endif
+                                        @endif
+                                    @endforeach
                                 </td>
                                 <td>{{ $hazard->risk_probability }}</td>
                                 <td>{{ $hazard->risk_severity }}</td>

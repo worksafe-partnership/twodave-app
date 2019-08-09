@@ -23,7 +23,7 @@ class HazardRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             'description' => 'required',
             'control' => 'required',
             'risk' => 'required',
@@ -33,9 +33,12 @@ class HazardRequest extends FormRequest
             'r_risk_severity' => 'required|max:4|min:1',
             'r_risk_probability' => 'required|max:4|min:1',
             'at_risk' => 'required',
-            'other_at_risk' => 'required_if:at_risk,O',
             'list_order' => 'required',
         ];
+        if ($this->at_risk["O"] == "1") {
+            $rules['other_at_risk'] = 'required';
+        }
+        return $rules;
     }
 
     public function messages()
@@ -46,7 +49,7 @@ class HazardRequest extends FormRequest
             'risk.required' => 'Please select the Hazard\'s Risk',
             'r_risk.required' => 'Please select the Hazard\'s Reduced Risk',
             'at_risk.required' => 'Please select who is at risk',
-            'other_at_risk.required_if' => 'Please specify who is at risk',
+            'other_at_risk.required' => 'Please specify who is at risk',
         ];
     }
 }

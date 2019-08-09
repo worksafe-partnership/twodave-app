@@ -30,6 +30,10 @@ class Hazard extends Model
         'other_at_risk'
     ];
 
+    protected $casts = [
+        'at_risk' => 'json',
+    ];
+
     public static function scopeDatatableAll($query, $parent, $identifier)
     {
         $query->select([

@@ -29,6 +29,7 @@ class TemplateRequest extends FormRequest
             'reference' => 'required|max:100',
             'responsible_person' => 'max:100|required_if:show_responsible_person,1',
             'company_id' => 'required|exists:companies,id',
+            'area' => 'max:100|required_if:show_area,1',
         ];
     }
 
@@ -44,6 +45,8 @@ class TemplateRequest extends FormRequest
             'responsible_person.required_if' => 'Please enter the Responsible Person',
             'company_id.required' => 'Please select a Company',
             'company_id.exists' => 'The selected Company does not Exist',
+            'area.max' => 'The Area Name cannot be more than 100 charcters',
+            'area.required_if' => 'Please enter the Area Name'
         ];
     }
 }
