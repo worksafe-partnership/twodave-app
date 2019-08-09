@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Controller;
+use DB;
 use Auth;
 use App\Hazard;
+use Controller;
 use App\Http\Classes\VTLogic;
 use App\Http\Classes\VTConfig;
 use App\Http\Requests\HazardRequest;
@@ -35,6 +36,15 @@ class HazardController extends Controller
 
     public function created($record, $request, $args)
     {
+        DB::table('hazards_methodologies')->where('hazard_id', $record->id)->delete();
+        if (isset($request['selectedMethodologies'])) {
+            $methodologies = [];
+            foreach ($request['selectedMethodologies'] as $link) {
+                $methodologies[] = ['hazard_id' => $record->id, 'methodology_id' => $link];
+            }
+            DB::table('hazards_methodologies')->insert($methodologies);
+        }
+
         VTLogic::createPdf($record->entityRecord, null, true);
         return $record->id;
     }
@@ -55,10 +65,18 @@ class HazardController extends Controller
         return end($returnId);
     }
 
-    public function updated($record, $request, $args)
+    public function updated($updated, $original, $request)
     {
-        VTLogic::createPdf($record->entityRecord, null, true);
-        return $record->id;
+        DB::table('hazards_methodologies')->where('hazard_id', $updated->id)->delete();
+        if (isset($request['selectedMethodologies'])) {
+            $methodologies = [];
+            foreach ($request['selectedMethodologies'] as $link) {
+                $methodologies[] = ['hazard_id' => $updated->id, 'methodology_id' => $link];
+            }
+            DB::table('hazards_methodologies')->insert($methodologies);
+        }
+        VTLogic::createPdf($updated->entityRecord, null, true);
+        return $updated->id;
     }
 
     public function delete($id)
@@ -73,6 +91,7 @@ class HazardController extends Controller
         }
         if (VTLogic::canUseItem($hazard->entity_id, $hazard->entity)) {
             $hazard->delete();
+            DB::table('hazards_methodologies')->where('hazard_id', $id)->delete();
             $this->reOrderHazards($hazard);
             return 'allow';
         }

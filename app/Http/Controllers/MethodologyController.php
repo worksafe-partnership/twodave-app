@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Auth;
 use EGFiles;
 use Controller;
@@ -211,6 +212,7 @@ class MethodologyController extends Controller
         if (VTLogic::canUseItem($methodology->entity_id, $methodology->entity)) {
             $methodology->delete();
             $this->reOrderMethodologies($methodology);
+            DB::table('hazards_methodologies')->where('methodology_id', $id)->delete();
             return 'allow';
         }
         return "disallow";

@@ -1,5 +1,5 @@
 <div class="columns">
-    <div class="column">
+    <div class="column" id="related_methodologies_div">
         {{ VTForm::multiSelect('related_methodologies[]', [
             'label' => 'Related Methodologies',
             'value' => '',

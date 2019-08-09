@@ -189,7 +189,7 @@
             <div class="column is-12">
                 <h2 class="sub-heading inline-block">Hazards</h2>
                 <a href="javascript:createHazard()" class="button is-success is-pulled-right" title="Add Hazard">
-                    {{ icon('plus2') }}&nbsp;<span class="action-text is-hidden-touch"></span>
+                    {{ icon('plus2') }}<span class="action-text is-hidden-touch"></span>
                 </a>
             </div>
         </div>
@@ -364,6 +364,7 @@
 
         // Hazard Scripts
         var hazards = JSON.parse('{!! str_replace(['\'', '\\'], ['\\\'', '\\\\'], $hazards->toJson()) !!}');
+        var hazardMethodologies = JSON.parse('{!! str_replace(['\'', '\\'], ['\\\'', '\\\\'], json_encode($hazard_methodologies)) !!}');
 
         var riskLabels = JSON.parse('{!! json_encode($riskList) !!}');
         function createHazard() {
@@ -392,6 +393,12 @@
             $('#hazard-form-container [name="r_risk_severity"]').val(hazard['r_risk_severity']);
             $('#hazard-form-container [name="r_risk_probability"]').val(hazard['r_risk_probability']);
 
+            // add all methodologies relevant to the hazard as selected to the selectize.
+            if (hazardMethodologies[hazard['id']] !== "undefined") {
+                var selectize = $('#related_methodologies_div .control select')[0].selectize;
+                selectize.setValue(hazardMethodologies[hazard['id']]);
+            }
+
             $("#hazard-form-container .submitbutton").attr("onclick","submitHazardForm("+id+","+hazard['list_order']+")");
             $('#hazard-list-container').hide();
             $('.risk-rating').css('border', '1px solid #404040');
@@ -401,6 +408,11 @@
         }
 
         function submitHazardForm(editId=null, listOrder=null) {
+
+            var selectedMethodologies = [];
+            $.each($('#related_methodologies_div .item'), function(key, meth) {
+                selectedMethodologies.push($(meth).attr('data-value'));
+            });
 
             var data = {
                 _token: '{{ csrf_token() }}',
@@ -415,7 +427,8 @@
                 list_order: hazards.length + 1,
                 at_risk: $('#main-hazard-container #at_risk').val(),
                 other_at_risk: $('#main-hazard-container #other_at_risk').val(),
-                entityType: '{{ $entityType }}'
+                entityType: '{{ $entityType }}',
+                selectedMethodologies: selectedMethodologies
             };
 
             let url = 'hazard/create';
@@ -482,6 +495,17 @@
                             }
                         }
                     }
+
+                    // wipe out and update the related methodologies in local storage (saved in back end above ajax)
+                    delete hazardMethodologies[id];
+                    hazardMethodologies[id] = [];
+                    $.each(selectedMethodologies, function(key, value) {
+                        hazardMethodologies[id].push(parseInt(value));
+                    });
+
+                    // remove all previously selected for next view
+                    $('#related_methodologies_div .control select')[0].selectize.clear();
+
                     $('#hazard-form-container').css('display', 'none');
                     $('#hazard-form-container #description').val('');
                     $('#hazard-form-container #control').val('');
@@ -856,7 +880,7 @@
                                         newRow += "<td class='column is-1'><input  type='text' name='row_"+key+"__label' value='"+row.label+"'></input></td>";
                                         newRow += "<td class='column is-3'><input type='text' name='row_"+key+"__description' value='"+row.description+"'></input></td>";
                                         if (row.image) {
-                                            newRow += "<td class='column is-3 image-cell'><img src='/image/"+row.image+"' data-image_id='"+row.image+"' data-process_row='row_"+key+"__image'</td>";
+                                            newRow += "<td class='column is-3 image-cell'><img class='process-image' src='/image/"+row.image+"' data-image_id='"+row.image+"' data-process_row='row_"+key+"__image'</td>";
                                         } else {
                                             newRow += "<td class='column is-3 image-cell'>No Image</td>";
                                         }
@@ -869,10 +893,10 @@
                                                         <input type="hidden" name="file" id="file" value=""><div class="control">\
                                                         <input type="file" name="image_id" class="form-control  input " id="edit_image_'+key+'" value="">\
                                                     </div>\
-                                                    <button class="button is-primary is-small image-button" onclick="editProcessImage('+key+')">Update Image</button>';
+                                                    <button class="button is-primary is-small image-button edit-image" onclick="editProcessImage('+key+')">Update Image</button>';
 
                                         if (row.image) {
-                                            newRow +='<button class="button is-primary is-small image-button" onclick="deleteProcessImage('+key+')">Remove Image</button>';
+                                            newRow +='<button class="button is-primary is-small image-button delete-image" onclick="deleteProcessImage('+key+')">Remove Image</button>';
                                         }
                                         newRow += '</td>';
                                     newRow += "</tr>"
@@ -1040,6 +1064,8 @@
                 url = 'methodology/'+editId+'/edit';
             }
 
+            var selectize = $('#related_methodologies_div .control select')[0].selectize;
+
             $.ajax({
                 url: url,
                 type: 'POST',
@@ -1082,6 +1108,10 @@
                                     <a class="handms-icons" onclick="moveMethodologyDown('+id+')">{{ icon('keyboard_arrow_down') }}</a>\
                                 </td>\
                             </tr>');
+
+                        // add option to the methodology list within hazard form
+                        selectize.addOption({value: id, text:form_data.get('title')});
+
                     } else { // edit
                         for (let i = 0; i < methodologies.length; i++) {
                             if (methodologies[i]['id'] === editId) {
@@ -1103,6 +1133,10 @@
                                 break;
                             }
                         }
+
+                        // edit methodology name within methodolgy list with hazard form.
+                        let data = {value: id, text:form_data.get('title')};
+                        selectize.updateOption(id, data);
                     }
 
                     // write them to the local array to display when you hit Edit.
@@ -1245,6 +1279,18 @@
                             methodologies = methodologies.filter(function (item) {
                                 return item !== undefined;
                             });
+
+                            // unset it in the hazards form's methodology field
+                            var selectize = $('#related_methodologies_div .control select')[0].selectize;
+                            selectize.removeOption(id);
+
+                            // loop through each of the hazard methodology's data array and wipe out any instances of the deleted key.
+                            $.each(hazardMethodologies, function (key, methodologyArray) {
+                                hazardMethodologies[key] = methodologyArray.filter(function(methodologyKey) {
+                                    return methodologyKey != id;
+                                })
+                            })
+
                             toastr.success('Methodology was deleted');
                         } else {
                             toastr.error('An error has occured when deleting the hazard');

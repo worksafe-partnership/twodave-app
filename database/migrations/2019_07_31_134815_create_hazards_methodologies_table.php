@@ -19,7 +19,6 @@ class CreateHazardsMethodologiesTable extends Migration
             $table->foreign('hazard_id')->references('id')->on('hazards')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->unsignedInteger('methodology_id');
             $table->foreign('methodology_id')->references('id')->on('methodologies')->onDelete('CASCADE')->onUpdate('CASCADE');
-            $table->timestamps();
         });
     }
 
