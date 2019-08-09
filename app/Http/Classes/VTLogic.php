@@ -65,6 +65,16 @@ class VTLogic
         } else {
             $file = null;
         }
+        if ($config->entity->approved != null && $config->entity->approved->signature != null) {
+            $approvedSig = EGFiles::download($config->entity->approved->signature)->getFile()->getPathName() ?? null;
+        } else {
+            $approvedSig = null;
+        }
+        if ($config->entity->submitted != null && $config->entity->submitted->signature != null) {
+            $submittedSig = EGFiles::download($config->entity->submitted->signature)->getFile()->getPathName() ?? null;
+        } else {
+            $submittedSig = null;
+        }
 
         $company = $config->entity->company;
         if ($company != null) {
@@ -82,13 +92,27 @@ class VTLogic
                 3 => 'H',
             ];
         }
+        $titleBlockText = self::replaceContent($config->entity, 'main_description');
+        $postRiskText = self::replaceContent($config->entity, 'post_risk_assessment_text');
+        foreach ($config->entity->methodologies as &$meth) {
+            $meth = self::replaceContent($meth, [
+                'text_before',
+                'text_after',
+            ]);
+        }
+
         $data = [
             'entity' => $config->entity,
+            'titleBlockText' => $titleBlockText,
+            'postRiskText' => $postRiskText,
             'type' => $config->entityType,
             'logo' => $file,
+            'approvedSig' => $approvedSig,
+            'submittedSig' => $submittedSig,
             'riskList' => $riskList,
             'whoIsRisk' => config('egc.hazard_who_risk')
         ];
+
         $pdf = \PDF::loadView('pdf.main_report', $data)
             ->setOption('margin-top', 10)
             ->setOption('margin-left', 5)
@@ -159,7 +183,7 @@ class VTLogic
         if (!is_null($entityType) && !$status) {
             return Approval::where('entity_id', $config->entityId)
                                 ->where('approvals.entity', $config->entityType)
-                                ->get(); // returning everything for now, can lock down when I know what to display
+                                ->get();
         }
 
         if (!is_null($entityType) && in_array($status, ['REJECTED', 'EXTERNAL_REJECT', 'CURRENT', 'PREVIOUS'])) {
@@ -168,7 +192,7 @@ class VTLogic
                                 ->when(in_array($status, ['CURRENT', 'PREVIOUS']), function ($atTime) {
                                     $atTime->where('status_at_time', 'ACCEPT');
                                 })
-                                ->get(); // returning everything for now, can lock down when I know what to display
+                                ->get();
         }
         return collect([]);
     }
@@ -371,5 +395,26 @@ class VTLogic
             Instruction::insert($insertInstructions);
             return $cloned;
         });
+    }
+
+    public static function replaceContent($entity, $fields) 
+    {
+        $replacements = [];
+        if ($entity instanceof Template || $entity instanceof Vtram) {
+            $replacements['{{title}}'] = $entity->name;
+            $replacements['{{company_name}}'] = $entity->company->name;
+            $replacements['{{company_short_name}}'] = $entity->company->short_name;
+        } else {
+            $replacements['{{title}}'] = $entity->entityRecord->name;
+            $replacements['{{company_name}}'] = $entity->entityRecord->company->name;
+            $replacements['{{company_short_name}}'] = $entity->entityRecord->company->short_name;
+        }
+        if (is_array($fields)) {
+            foreach ($fields as $field) {
+                $entity->{$field} = str_replace(array_keys($replacements), array_values($replacements), $entity->{$field});    
+            }
+            return $entity;
+        }
+        return str_replace(array_keys($replacements), array_values($replacements), $entity->{$fields});    
     }
 }

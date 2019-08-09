@@ -10,6 +10,15 @@
                     ]) }}
                 </div>
             </div>
+            <div class="column is-4">
+                <div class="field">
+                    {{ EGForm::text('short_name', [
+                        'label' => 'Short Name',
+                        'value' => $record["short_name"],
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
             <div class="column">
                 <div class="field">
                     {{ EGForm::select('review_timescale', [

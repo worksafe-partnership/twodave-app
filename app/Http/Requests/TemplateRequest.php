@@ -28,7 +28,7 @@ class TemplateRequest extends FormRequest
             'logo' => 'mimes:jpg,jpeg,png,bmp,tiff',
             'reference' => 'required|max:100',
             'responsible_person' => 'max:100|required_if:show_responsible_person,1',
-            'name_on_pdf' => 'required',
+            'company_id' => 'required|exists:companies,id',
         ];
     }
 
@@ -41,7 +41,9 @@ class TemplateRequest extends FormRequest
             'reference.required' => 'Please enter a Reference',
             'reference.max' => 'The Reference cannot be more than 100 characters',
             'responsible_person.max' => 'The Responsible Person cannot be more than 100 charcters',
-            'responsible_person.required_if' => 'Please enter the Responsible Person'
+            'responsible_person.required_if' => 'Please enter the Responsible Person',
+            'company_id.required' => 'Please select a Company',
+            'company_id.exists' => 'The selected Company does not Exist',
         ];
     }
 }

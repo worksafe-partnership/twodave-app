@@ -63,7 +63,8 @@ class CreateVtramTable extends Migration
             $table->integer('created_from_id')->nullable()->unsigned();
             $table->boolean('show_responsible_person')->nullable();
             $table->string('responsible_person')->nullable();
-            $table->text('name_on_pdf')->nullable();
+            $table->boolean('client_on_pdf')->nullable();
+            $table->boolean('pc_on_pdf')->nullable();
             $table->softDeletes();
             $table->timestamps();
             $table->index('status');

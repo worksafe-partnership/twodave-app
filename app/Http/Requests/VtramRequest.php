@@ -28,7 +28,6 @@ class VtramRequest extends FormRequest
             'logo' => 'mimes:jpg,jpeg,png,bmp,tiff',
             'reference' => 'required|max:100',
             'responsible_person' => 'max:100|required_if:show_responsible_person,1',
-            'name_on_pdf' => 'required',
         ];
     }
 

@@ -1,69 +1,71 @@
-<h2 class="sub-heading">Extra Information</h2>
-<form method="POST" action="edit_extra" enctype="multipart/form-data">
-    {{ csrf_field() }}
-    <div class="columns">
-        <div class="column is-3">
-            <a download="Noise Vibration Assessment.xls" href="/Noise_Vibration_Assessment.xls" class="button">Download Noise Vibration Assessment</a>
-        </div>
-        <div class="column is-2">
-            <div class="field">
-                {{ EGForm::file('coshh_assessment', [
-                    'label' => 'COSHH Assessment Document',
-                    'value' => $record["coshh_assessment"],
-                    'type' => $pageType
-                ]) }}
+<div class="extra-form-container">
+    <h2 class="sub-heading">Extra Information</h2>
+    <form method="POST" action="edit_extra" enctype="multipart/form-data">
+        {{ csrf_field() }}
+        <div class="columns">
+            <div class="column is-3">
+                <a download="Noise Vibration Assessment.xls" href="/Noise_Vibration_Assessment.xls" class="button">Download Noise Vibration Assessment</a>
+            </div>
+            <div class="column is-2">
+                <div class="field">
+                    {{ EGForm::file('coshh_assessment', [
+                        'label' => 'COSHH Assessment Document',
+                        'value' => $record["coshh_assessment"],
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+            <div class="column is-2">
+                <div class="field">
+                    {{ EGForm::file('havs_noise_assessment', [
+                        'label' => 'HAVS/Noise Assessment Document',
+                        'value' => $record["havs_noise_assessment"],
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+            <div class="column is-4">
+                <div class="field">
+                    {{ EGForm::checkbox('dynamic_risk', [
+                        'label' => 'Dynamic Risk (Adds Dynamic Risk boxes to the Risk Assessment)',
+                        'value' => $record['dynamic_risk'] ?? false,
+                        'type' => $pageType
+                    ]) }}
+                </div>
             </div>
         </div>
-        <div class="column is-2">
-            <div class="field">
-                {{ EGForm::file('havs_noise_assessment', [
-                    'label' => 'HAVS/Noise Assessment Document',
-                    'value' => $record["havs_noise_assessment"],
-                    'type' => $pageType
-                ]) }}
+        <div class="columns">
+            <div class="column">
+                <div class="field">
+                    {{ EGForm::ckeditor('key_points', [
+                        'label' => 'Key Points',
+                        'value' => $record["key_points"],
+                        'type' => 'edit'
+                    ]) }}
+                </div>
+            </div>
+            <div class="column is-2" id="comments-button-div">
+                <button class="button is-success is-primary" id="comments-button" type="button" style="float:right">View Comments ( {{ $comments->count() }} )</button>
             </div>
         </div>
-        <div class="column is-4">
-            <div class="field">
-                {{ EGForm::checkbox('dynamic_risk', [
-                    'label' => 'Dynamic Risk (Adds Dynamic Risk boxes to the Risk Assessment)',
-                    'value' => $record['dynamic_risk'] ?? false,
-                    'type' => $pageType
-                ]) }}
+        <div class="columns">
+            <div class="column">
+                <p class="control">
+                    <button class="button is-primary submitbutton">Save</button>
+                    <button class="button is-primary submitbutton" name="send_for_approval" value="1">Save and Submit for Approval</button>
+                </p>
             </div>
         </div>
-    </div>
-    <div class="columns">
-        <div class="column">
-            <div class="field">
-                {{ EGForm::ckeditor('key_points', [
-                    'label' => 'Key Points',
-                    'value' => $record["key_points"],
-                    'type' => 'edit'
-                ]) }}
-            </div>
-        </div>
-        <div class="column is-2" id="comments-button-div">
-            <button class="button is-success is-primary" id="comments-button" type="button" style="float:right">Show/Hide Comments</button>
-        </div>
-    </div>
-    <div class="columns">
-        <div class="column">
-            <p class="control">
-                <button class="button is-primary submitbutton">Save</button>
-                <button class="button is-primary submitbutton" name="send_for_approval" value="1">Save and Submit for Approval</button>
-            </p>
-        </div>
-    </div>
-</form>
+    </form>
+</div>
 <hr>
-<h2 class="sub-heading">Hazards & Methodologies</h2>
+<h2 class="sub-heading">Hazards & Method Statements</h2>
 <br>
 <div class="columns">
     <div class="column is-6 box-container">
         <div class="columns">
             <div class="column is-12">
-                <h2 class="sub-heading inline-block">Methodologies</h2>
+                <h2 class="sub-heading inline-block">Method Statements</h2>
                 <div class="is-pulled-right">
                     <div class="meth-type-selector">
                         {{ EGForm::select('meth_type', [
@@ -75,7 +77,7 @@
                         ]) }}
                     </div>
                     <a href="javascript:createMethodology()" class="button is-success is-pulled-right" title="Add Methodology">
-                        {{ icon('plus2') }}<span class="action-text is-hidden-touch"></span>
+                        {{ icon('plus2') }}&nbsp;<span class="action-text is-hidden-touch"></span>
                     </a>
                 </div>
             </div>
@@ -236,7 +238,7 @@
         </div>
     </div>
 </div>
-
+<hr>
 <div id="comments-sidebar" class="column hidden">
     <p class="sub-heading">Comments
         <button class="button is-success is-small" style="float:right" id="close-comments">Close</button>
@@ -244,7 +246,7 @@
 
     @if(isset($comments) && $comments->isNotEmpty())
         @foreach($comments as $comment)
-            <p>{{$comment->comment}}</i></p>
+            <p>{!!$comment->comment!!}</i></p>
             <p><i>{{$comment->completedByName()}} {{$comment->created_at->format('d/m/Y')}}</i></p>
             <hr>
         @endforeach
@@ -255,6 +257,14 @@
 
 @push('styles')
     <style>
+        /*.extra-form-container {
+            bottom: 0px;
+            position: fixed;
+            background-color: #FFF;
+            padding: 10px;
+            width: 100%;
+            margin-left: -24px;
+        }*/
         .meth-type-selector {
             display: inline-block;
             margin-top: -21px;
@@ -329,6 +339,15 @@
           $('#comments-button-div').removeClass('hidden');
         });
 
+        $('.risk-area .risk-rating').on('click', function () {
+            $('.risk-area .risk-rating').css('border', '1px solid #404040');
+            $(this).css('border', '3px solid blue');
+        });
+        $('.r-risk-area .risk-rating').on('click', function () {
+            $('.r-risk-area .risk-rating').css('border', '1px solid #404040');
+            $(this).css('border', '3px solid blue');
+        });
+
         // Both
         function cancelForm(type) {
             if (confirm("Any unsaved changes will be lost, are you sure?")) {
@@ -350,6 +369,7 @@
         var riskLabels = JSON.parse('{!! json_encode($riskList) !!}');
         function createHazard() {
             $("#hazard-form-container .submitbutton").attr("onclick","submitHazardForm()");
+            $('.risk-rating').css('border', '1px solid #404040');
             $('#hazard-form-container').css('display', 'inherit');
             $('#hazard-list-container').hide();
         }
@@ -381,6 +401,9 @@
 
             $("#hazard-form-container .submitbutton").attr("onclick","submitHazardForm("+id+","+hazard['list_order']+")");
             $('#hazard-list-container').hide();
+            $('.risk-rating').css('border', '1px solid #404040');
+            $('.risk-area td[data-prob=' + hazard['risk_probability'] + '][data-severity=' + hazard['risk_severity'] + ']').css('border', '3px solid blue');
+            $('.r-risk-area td[data-prob=' + hazard['r_risk_probability'] + '][data-severity=' + hazard['r_risk_severity'] + ']').css('border', '3px solid blue');
             $('#hazard-form-container').css('display', 'inherit');
         }
 
@@ -767,7 +790,7 @@
                         if (tableRows[methodology.id] !== 'undefined') {
                             let rows = tableRows[methodology.id];
                             $('#simple-table tbody').html('');
-                            if (rows !== 'undefined') {
+                            if (rows !== undefined) {
                                 $.each(rows, function(key, row) {
                                     let newRow = "<tr data-row='"+key+"'>";
                                         newRow += "<th><input type='text' name='row_"+key+"__col_1' value='"+row.col_1+"'></input></th>";
@@ -799,7 +822,7 @@
                         if (tableRows[methodology.id] !== 'undefined') {
                             let rows = tableRows[methodology.id];
                             $('#complex-table tbody').html('');
-                            if (rows !== 'undefined') {
+                            if (rows !== undefined) {
                                 $.each(rows, function(key, row) {
 
                                     if (row.col_3 == "null") {

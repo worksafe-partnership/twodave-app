@@ -67,20 +67,11 @@
                 </div>
             </div>
             <div class="columns">
-                <div class="column is-6">
+                <div class="column is-12">
                     <div class="field">
-                        {{ EGForm::textarea('comment', [
+                        {{ EGForm::ckeditor('comment', [
                             'label' => 'Comment',
                             'value' => $record['comment'],
-                            'type' => 'create',
-                        ]) }}
-                    </div>
-                </div>
-                <div class="column is-6">
-                    <div class="field type-details">
-                        {{ EGForm::date('resubmit_date', [
-                            'label' => 'Resubmit Date',
-                            'value' => $record['resubmit_date'],
                             'type' => 'create',
                         ]) }}
                     </div>
@@ -92,6 +83,15 @@
                         {{ EGForm::file('review_document', [
                             'label' => 'Review Document',
                             'value' => $record["review_document"],
+                            'type' => 'create',
+                        ]) }}
+                    </div>
+                </div>
+                <div class="column is-6">
+                    <div class="field type-details">
+                        {{ EGForm::date('resubmit_date', [
+                            'label' => 'Resubmit Date',
+                            'value' => $record['resubmit_date'],
                             'type' => 'create',
                         ]) }}
                     </div>
@@ -138,3 +138,4 @@
         });
     </script>
 @endpush
+@include("egl::partials.ckeditor")

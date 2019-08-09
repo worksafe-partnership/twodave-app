@@ -48,12 +48,12 @@
         <h2 class="sub-heading">Risk</h2>
         <div class="columns">
             <div class="column is-12">
-                <div class="field">
+                <div class="field risk-area">
                     @include('modules.company.project.vtram.hazard.risk-chart', ['hazardType' => 'risk'])
                 </div>
             </div>
         </div>
-        <div class="columns">
+        <div class="columns is-hidden">
             <div class="column is-6">
                 <div class="field">
                     {{ EGForm::number('risk_severity', [
@@ -103,12 +103,12 @@
         <h2 class="sub-heading">Residual Risk</h2>
         <div class="columns">
             <div class="column is-12">
-                <div class="field">
+                <div class="field r-risk-area">
                     @include('modules.company.project.vtram.hazard.risk-chart', ['hazardType' => 'r_risk'])
                 </div>
             </div>
         </div>
-        <div class="columns">
+        <div class="columns is-hidden">
             <div class="column is-6">
                 <div class="field">
                     {{ EGForm::number('r_risk_severity', [

@@ -82,7 +82,11 @@
                             <th>Position: </th>
                             <td>{{ $entity->submitted->position ?? '' }}</td>
                             <th>Signed: </th>
-                            <td></td>
+                            <td>
+                                @if ($submittedSig != null) 
+                                    <img src="{{ $submittedSig }}" height="30px">
+                                @endif
+                            </td>
                         </tr>
                     </table>
                     @if (isset($tableHeight))
@@ -104,7 +108,11 @@
                             <th>Position: </th>
                             <td>{{ $entity->approved->position ?? '' }}</td>
                             <th>Signed: </th>
-                            <td></td>
+                            <td>
+                                @if ($approvedSig != null) 
+                                    <img src="{{ $approvedSig }}" height="30px">
+                                @endif
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -113,7 +121,12 @@
                     <div class="wide-50 company-names">
                         <p><b>Company:</b> {{ $entity->company->name  ?? '' }}</p>
                         @if ($type == 'VTRAM')
-                            <p><b>{{ $entity->name_on_pdf }}:</b> {{ $entity->name_on_pdf == 'Client' ? $entity->project->client_name : $entity->project->principle_contractor_name }}</p>
+                            @if ($entity->client_on_pdf)
+                                <p><b>Client:</b> {{ $entity->project->client_name }}</p>
+                            @endif
+                            @if ($entity->pc_on_pdf)
+                                <p><b>Principal Contractor:</b> {{ $entity->project->principle_contractor_name }}</p>
+                            @endif
                             <p><b>Project:</b> {{ $entity->project->name }}</p>
                             @if ($entity->project->show_contact)
                                 <p><b>Company: </b><br>Email: {{ $entity->company->email }}<br>Phone: {{ $entity->company->phone }}<br>Fax: {{ $entity->company->fax }}</p>
@@ -140,9 +153,9 @@
                     </div>
                 </div>
                 <br>
-                <div class="pdf-heading">
+                <div class="pdf-heading" style="background-color: {{ $entity->company->secondary_colour }}">
                     <h1>{{ $entity->company->vtrams_name ?? '' }} {{ $type == 'VTRAM' ? $entity->number : '' }}</h1>
-                    <p>{!! $entity->main_description !!}</p>
+                    <p>{!! $titleBlockText !!}</p>
                 </div>
             </div>
             <h2>Method Statement</h2>
@@ -272,7 +285,7 @@
                         @endif
                     </table>
                 </div>
-                <p>{!! $entity->post_risk_assessment_text !!}</p>
+                <p>{!! $postRiskText !!}</p>
             </div>
         </div>
     </body>
