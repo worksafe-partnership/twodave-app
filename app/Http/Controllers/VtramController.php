@@ -24,6 +24,10 @@ class VtramController extends CompanyVtramController
             if ($template->company_id != $this->user->company_id) {
                 abort(404);
             }
+            if ($template->status != "CURRENT") {
+                abort(404);
+            }
+
             $this->customValues['name'] = $template['name'];
             $this->customValues['reference'] = $template['reference'];
             $this->customValues['logo'] = $template['logo'];
