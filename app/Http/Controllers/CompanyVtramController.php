@@ -406,7 +406,7 @@ class CompanyVtramController extends Controller
             ->orderBy('list_order')
             ->get();
 
-        $this->customValues['comments'] = VTLogic::getComments($this->record->id, $this->record->status, "VTRAM");
+        $this->customValues['comments'] = VTLogic::getComments($this->record, $this->record->status, "VTRAM");
         $this->customValues['entityType'] = 'VTRAM';
 
         // Start of Methodology Specific Items

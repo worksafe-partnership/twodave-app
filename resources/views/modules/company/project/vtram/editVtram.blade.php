@@ -77,7 +77,7 @@
                         ]) }}
                     </div>
                     <a title="Add Method Statement" href="javascript:createMethodology()" class="button is-success is-pulled-right">
-                        {{ icon('plus2') }}&nbsp;<span class="action-text is-hidden-touch"></span>
+                        {{ icon('plus2') }}<span class="action-text is-hidden-touch"></span>
                     </a>
                 </div>
             </div>
