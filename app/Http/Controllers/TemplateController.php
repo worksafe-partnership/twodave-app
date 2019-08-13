@@ -32,9 +32,14 @@ class TemplateController extends Controller
                 ],
                 'name' => 'send_for_approval',
                 'label' => 'Update and Submit for Approval',
-                'order' => 300,
+                'order' => 150,
                 'value' => true,
             ];
+
+            // reorder the formButtons as EGL doesn't appear to do this for us.
+            usort($this->formButtons, function ($a, $b) {
+                return $a['order'] <=> $b['order'];
+            });
         }
     }
 

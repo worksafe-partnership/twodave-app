@@ -125,6 +125,25 @@ class VtramController extends CompanyVtramController
     public function postEditHook()
     {
         $project = $this->args[0];
+        if (in_array($this->record->status, ['REJECTED','EXTERNAL_REJECT','NEW'])) {
+            $this->formButtons['save_and_submit'] = [
+                'class' => [
+                    'submitbutton',
+                    'button',
+                    'is-primary',
+                ],
+                'name' => 'send_for_approval',
+                'label' => 'Update and Submit for Approval',
+                'order' => 150,
+                'value' => true,
+            ];
+        }
+
+        // reorder the formButtons as EGL doesn't appear to do this for us.
+        usort($this->formButtons, function ($a, $b) {
+            return $a['order'] <=> $b['order'];
+        });
+
         $this->customValues['path'] = '/project/'.$project.'/vtram/create';
     }
 
