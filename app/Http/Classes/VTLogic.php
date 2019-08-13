@@ -361,26 +361,35 @@ class VTLogic
                 $cloned->resubmit_by = null;
                 $cloned->save();
             }
-            $insertHazards = [];
+            $hazardOld = [];
             foreach ($original->hazards as $hazard) {
                 $newHazard = $hazard->toArray();
                 unset($newHazard['id']);
                 $newHazard['entity'] = $cloned instanceof Vtram ? 'VTRAM' : 'TEMPLATE';
                 $newHazard['entity_id'] = $cloned->id;
-                $newHazard['at_risk'] = json_encode($newHazard['at_risk']);
-                $insertHazards[] = $newHazard;
+                $copy = Hazard::create($newHazard);
+                $hazardOld[$hazard->id] = $copy->id;
             }
-            Hazard::insert($insertHazards);
 
             $insertIcons = [];
             $insertTableRows = [];
             $insertInstructions = [];
+            $insertHazMethLink = [];
             foreach ($original->methodologies as $methodology) {
                 $newMeth = $methodology->toArray();
                 unset($newMeth['id']);
                 $newMeth['entity'] = $cloned instanceof Vtram ? 'VTRAM' : 'TEMPLATE';
                 $newMeth['entity_id'] = $cloned->id;
                 $meth = Methodology::create($newMeth);
+                $hms = DB::table('hazards_methodologies')
+                    ->where('methodology_id', '=', $methodology->id)
+                    ->get();
+                foreach ($hms as $hm) {
+                    $insertHazMethLink[] = [
+                        'hazard_id' => $hazardOld[$hm->hazard_id],
+                        'methodology_id' => $meth->id,
+                    ];
+                }
                 foreach ($methodology->icons as $icon) {
                     $newIcon = $icon->toArray();
                     unset($newIcon['id']);
@@ -403,6 +412,8 @@ class VTLogic
             Icon::insert($insertIcons);
             TableRow::insert($insertTableRows);
             Instruction::insert($insertInstructions);
+            DB::table('hazards_methodologies')
+                ->insert($insertHazMethLink);
             return $cloned;
         });
     }
