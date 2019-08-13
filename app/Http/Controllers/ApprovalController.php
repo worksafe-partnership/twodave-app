@@ -24,6 +24,8 @@ class ApprovalController extends CompanyApprovalController
 
     public function bladeHook()
     {
+        $this->heading = "Viewing Approval Feedback";
+
         if ($this->user->company_id !== null && $this->record !== null) {
             if ($this->user->company_id !== $this->record->vtram->project->company_id) {
                 abort(404);
@@ -32,7 +34,7 @@ class ApprovalController extends CompanyApprovalController
         if ($this->user->inRole('supervisor') && $this->record !== null) {
             if (!$this->record->vtram->project->userOnProject($this->user->id)) {
                 abort(404);
-            }        
+            }
         }
     }
 }
