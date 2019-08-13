@@ -521,6 +521,9 @@ class CompanyVtramController extends Controller
         }
 
         if (isset($request['from_methodology'])) {
+            if (isset($request['send_for_approval'])) { // remove 'methodology' from the end, needs to go back to  e.g. /vtram/{id}
+                return str_replace("/methodology", "", $request['return_path']);
+            }
             return $request['return_path'];
         }
     }
