@@ -320,6 +320,7 @@ class TemplateController extends Controller
                 'path' => $this->record->id.'/revision',
                 'icon' => 'new-tab',
                 'order' => '200',
+                "onclick" => "return confirm('Are you sure you want to make a new revision of this template?')",
                 'id' => 'create_new_revision',
             ];
         }

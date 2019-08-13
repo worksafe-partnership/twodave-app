@@ -231,12 +231,14 @@ class CompanyVtramController extends Controller
         $vtrams = Vtram::where('created_from_entity', '=', 'VTRAM')
             ->where('created_from_id', '=', $this->record->id)
             ->get();
+
         if ($this->record->status == 'CURRENT' && $vtrams->count() == 0) {
             $this->actionButtons[] = [
                 'label' => 'Create New Revision',
                 'path' => $this->record->id.'/revision',
                 'icon' => 'new-tab',
                 'order' => '200',
+                "onclick" => "return confirm('Are you sure you want to make a new revision of this VTRAM?')",
                 'id' => 'create_new_revision',
             ];
         }
