@@ -70,7 +70,7 @@ return [
     'hazard_who_risk' => [
         'C' => 'Client',
         'M' => 'Management',
-        'S' => 'Supervisor',
+        'U' => 'Supervisor', // we already have an 'S' below, so any other character!
         'E' => 'Employees',
         'S' => 'Sub-contractor',
         'T' => 'Third Party',
