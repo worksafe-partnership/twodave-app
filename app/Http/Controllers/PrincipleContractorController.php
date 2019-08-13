@@ -243,11 +243,18 @@ class PrincipleContractorController extends Controller
                     ]);
                 }
             }
-            $this->vtconfig->entity->update([
+            $update = [
                 'status' => 'CURRENT',
                 'approved_date' => date('Y-m-d'),
                 'revision_number' => $revisionNumber,
-            ]);
+            ];
+
+            // if accept, remove resubmit by date.
+            if ($approval->type == 'PC_A') {
+                $update['resubmit_by'] = null;
+            }
+            $this->vtconfig->entity->update($update);
+
         } else if ($approval->type == 'PC_R') {
             $this->vtconfig->entity->update([
                 'status' => 'EXTERNAL_REJECT',
