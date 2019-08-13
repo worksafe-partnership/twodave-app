@@ -14,7 +14,7 @@ use App\Approval;
 use App\TableRow;
 use App\Template;
 use App\UniqueLink;
-use app\Instruction;
+use App\Instruction;
 use App\Methodology;
 use App\NextNumber;
 use iio\libmergepdf\Merger;
@@ -358,6 +358,7 @@ class VTLogic
                 unset($newHazard['id']);
                 $newHazard['entity'] = $cloned instanceof Vtram ? 'VTRAM' : 'TEMPLATE';
                 $newHazard['entity_id'] = $cloned->id;
+                $newHazard['at_risk'] = json_encode($newHazard['at_risk']);
                 $insertHazards[] = $newHazard;
             }
             Hazard::insert($insertHazards);

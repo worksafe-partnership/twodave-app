@@ -59,6 +59,8 @@ class Vtram extends Model
         'number',
         'client_on_pdf',
         'pc_on_pdf',
+        'show_area',
+        'area',
     ];
 
 

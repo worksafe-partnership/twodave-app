@@ -406,7 +406,7 @@ class CompanyVtramController extends Controller
             ->orderBy('list_order')
             ->get();
 
-        $this->customValues['comments'] = VTLogic::getComments($this->record->id, $this->record->status, "VTRAM");
+        $this->customValues['comments'] = VTLogic::getComments($this->record, $this->record->status, "VTRAM");
         $this->customValues['entityType'] = 'VTRAM';
 
         // Start of Methodology Specific Items
@@ -477,11 +477,12 @@ class CompanyVtramController extends Controller
 
             // copy everything!
             VTLogic::copyEntity($original, $insert);
+        } else {
+            VTLogic::createDefaultMethodologies($insert, "VTRAM");
         }
 
         $nextNumber->increment('number');
 
-        VTLogic::createDefaultMethodologies($insert, "VTRAM");
         VTLogic::createPdf($insert, null, true);
     }
 

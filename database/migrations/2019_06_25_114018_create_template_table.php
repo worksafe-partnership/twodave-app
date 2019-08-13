@@ -60,8 +60,8 @@ class CreateTemplateTable extends Migration
             $table->foreign('created_from')->references('id')->on('templates')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->boolean('show_responsible_person')->nullable();
             $table->string('responsible_person')->nullable();
-            $table->boolean('client_on_pdf')->nullable();
-            $table->boolean('pc_on_pdf')->nullable();
+            $table->boolean('show_area')->nullable();
+            $table->string('area')->nullable();
             $table->softDeletes();
             $table->timestamps();
             $table->index('status');

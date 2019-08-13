@@ -25,7 +25,7 @@ class CreateHazardTable extends Migration
             $table->integer('r_risk_probability')->nullable();
             $table->integer('r_risk_severity')->nullable();
             $table->integer('list_order')->nullable();
-            $table->string('at_risk');
+            $table->jsonb('at_risk')->nullable();
             $table->string('other_at_risk')->nullable();
             $table->timestamps();
         });

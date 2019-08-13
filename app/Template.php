@@ -46,7 +46,9 @@ class Template extends Model
         'working_at_height',
         'manual_handling',
         'accident_reporting',
-        'main_description',
+        'show_area',
+        'area',
+	'main_description',
         'post_risk_assessment_text'
     ];
 

@@ -76,8 +76,8 @@
                             'selector' => true,
                         ]) }}
                     </div>
-                    <a href="javascript:createMethodology()" class="button is-success is-pulled-right" title="Add Methodology">
-                        {{ icon('plus2') }}&nbsp;<span class="action-text is-hidden-touch"></span>
+                    <a title="Add Method Statement" href="javascript:createMethodology()" class="button is-success is-pulled-right">
+                        {{ icon('plus2') }}<span class="action-text is-hidden-touch"></span>
                     </a>
                 </div>
             </div>
@@ -99,10 +99,10 @@
                                     <td class="methodology-title">{{ $meth->title }}</td>
                                     <td class="methodology-category">{{ $methTypeList[$meth->category] }}</td>
                                     <td class="handms-actions">
-                                        <a class="handms-icons" onclick="editMethodology({{ $meth->id }})">{{ icon('mode_edit') }}</a>
-                                        <a class="handms-icons" onclick="deleteMethodology({{ $meth->id }})">{{ icon('delete') }}</a>
-                                        <a class="handms-icons" onclick="moveMethodologyUp({{ $meth->id }})">{{ icon('keyboard_arrow_up') }}</a>
-                                        <a class="handms-icons" onclick="moveMethodologyDown({{ $meth->id }})">{{ icon('keyboard_arrow_down') }}</a>
+                                        <a title="Edit" class="handms-icons" onclick="editMethodology({{ $meth->id }})">{{ icon('mode_edit') }}</a>
+                                        <a title="Delete" class="handms-icons" onclick="deleteMethodology({{ $meth->id }})">{{ icon('delete') }}</a>
+                                        <a title="Move Up" class="handms-icons" onclick="moveMethodologyUp({{ $meth->id }})">{{ icon('keyboard_arrow_up') }}</a>
+                                        <a title="Move Down" class="handms-icons" onclick="moveMethodologyDown({{ $meth->id }})">{{ icon('keyboard_arrow_down') }}</a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -112,7 +112,7 @@
                         @include('modules.company.project.methodology.text')
                         <div class="field is-grouped is-grouped-centered">
                             <p class="control">
-                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm('TEXT');">Save Methodology</button>
+                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm('TEXT');">Save Method Statement</button>
                             </p>
                             <p class="control">
                                 <button class="button" onclick="cancelForm('methodology');">Cancel</button>
@@ -124,7 +124,7 @@
                         @include('modules.company.project.methodology.icon')
                         <div class="field is-grouped is-grouped-centered">
                             <p class="control">
-                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm('ICON');">Save Methodology</button>
+                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm('ICON');">Save Method Statement</button>
                             </p>
                             <p class="control">
                                 <button class="button" onclick="cancelForm('methodology');">Cancel</button>
@@ -136,7 +136,7 @@
                         @include('modules.company.project.methodology.complex_table')
                         <div class="field is-grouped is-grouped-centered">
                             <p class="control">
-                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm('COMPLEX_TABLE');">Save Methodology</button>
+                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm('COMPLEX_TABLE');">Save Method Statement</button>
                             </p>
                             <p class="control">
                                 <button class="button" onclick="cancelForm('methodology');">Cancel</button>
@@ -148,7 +148,7 @@
                         @include('modules.company.project.methodology.process')
                         <div class="field is-grouped is-grouped-centered">
                             <p class="control">
-                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm('PROCESS');">Save Methodology</button>
+                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm('PROCESS');">Save Method Statement</button>
                             </p>
                             <p class="control">
                                 <button class="button" onclick="cancelForm('methodology');">Cancel</button>
@@ -160,7 +160,7 @@
                         @include('modules.company.project.methodology.simple_table')
                         <div class="field is-grouped is-grouped-centered">
                             <p class="control">
-                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm('SIMPLE_TABLE');">Save Methodology</button>
+                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm('SIMPLE_TABLE');">Save Method Statement</button>
                             </p>
                             <p class="control">
                                 <button class="button" onclick="cancelForm('methodology');">Cancel</button>
@@ -172,7 +172,7 @@
                         @include('modules.company.project.methodology.text_image')
                         <div class="field is-grouped is-grouped-centered">
                             <p class="control">
-                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm('TEXT_IMAGE');">Save Methodology</button>
+                                <button class="button is-primary submitbutton" onclick="submitMethodologyForm('TEXT_IMAGE');">Save Method Statement</button>
                             </p>
                             <p class="control">
                                 <button class="button" onclick="cancelForm('methodology');">Cancel</button>
@@ -212,10 +212,10 @@
                                     <td class="has-text-centered hazard-risk">{{ $riskList[$hazard->risk] ?? '' }}</td>
                                     <td class="has-text-centered hazard-r-risk">{{ $riskList[$hazard->r_risk] ?? '' }}</td>
                                     <td class="handms-actions">
-                                        <a class="handms-icons" onclick="editHazard({{ $hazard->id }})">{{ icon('mode_edit') }}</a>
-                                        <a class="handms-icons" onclick="deleteHazard({{ $hazard->id }})">{{ icon('delete') }}</a>
-                                        <a class="handms-icons" onclick="moveHazardUp({{ $hazard->id }})">{{ icon('keyboard_arrow_up') }}</a>
-                                        <a class="handms-icons" onclick="moveHazardDown({{ $hazard->id }})">{{ icon('keyboard_arrow_down') }}</a>
+                                        <a title="Edit" class="handms-icons" onclick="editHazard({{ $hazard->id }})">{{ icon('mode_edit') }}</a>
+                                        <a title="Delete" class="handms-icons" onclick="deleteHazard({{ $hazard->id }})">{{ icon('delete') }}</a>
+                                        <a title="Move Up" class="handms-icons" onclick="moveHazardUp({{ $hazard->id }})">{{ icon('keyboard_arrow_up') }}</a>
+                                        <a title="Move Down" class="handms-icons" onclick="moveHazardDown({{ $hazard->id }})">{{ icon('keyboard_arrow_down') }}</a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -384,6 +384,11 @@
             }
             $('#hazard-form-container [name="description"]').val(hazard['description']);
             $('#hazard-form-container [name="at_risk"]').val(hazard['at_risk']);
+            @foreach ($whoList as $key => $who)
+                if (hazard['at_risk'].{{ $key }} == "1") {
+                    $('#main-hazard-container label[for="at_risk[{{ $key }}]"').click();
+                }
+            @endforeach
             $('#hazard-form-container [name="other_at_risk"]').val(hazard['other_at_risk']);
             $('#hazard-form-container [name="risk"]').val(hazard['risk']);
             $('#hazard-form-container [name="risk_severity"]').val(hazard['risk_severity']);
@@ -425,7 +430,11 @@
                 r_risk_probability: $('#main-hazard-container #r_risk_probability').val(),
                 r_risk_severity: $('#main-hazard-container #r_risk_severity').val(),
                 list_order: hazards.length + 1,
-                at_risk: $('#main-hazard-container #at_risk').val(),
+                at_risk: {
+                    @foreach ($whoList as $key => $who)
+                    {{ $key }}: $('#main-hazard-container [name="at_risk[{{ $key }}]"').val(),
+                    @endforeach
+                },
                 other_at_risk: $('#main-hazard-container #other_at_risk').val(),
                 entityType: '{{ $entityType }}',
                 selectedMethodologies: selectedMethodologies
@@ -455,7 +464,11 @@
                             r_risk_probability: data.r_risk_probability,
                             r_risk_severity: data.r_risk_severity,
                             list_order: data.list_order,
-                            at_risk: data.at_risk,
+                            at_risk: {
+                                @foreach ($whoList as $key => $who)
+                                    {{ $key }}: data.at_risk.{{ $key }},
+                                @endforeach
+                            },
                             other_at_risk: data.other_at_risk
                         });
                         // Add hazards to table
@@ -465,10 +478,10 @@
                                 <td class="has-text-centered hazard-risk">' + riskLabels[data.risk] + '</td>\
                                 <td class="has-text-centered hazard-r-risk">' + riskLabels[data.r_risk] + '</td>\
                                 <td class="handms-actions">\
-                                    <a class="handms-icons" onclick="editHazard(' + id + ')">{{ icon('mode_edit') }}</a>\
-                                    <a class="handms-icons" onclick="deleteHazard(' + id + ')">{{ icon('delete') }}</a>\
-                                    <a class="handms-icons" onclick="moveHazardUp(' + id + ')">{{ icon('keyboard_arrow_up') }}</a>\
-                                    <a class="handms-icons" onclick="moveHazardDown(' + id + ')">{{ icon('keyboard_arrow_down') }}</a>\
+                                    <a title="Edit" class="handms-icons" onclick="editHazard(' + id + ')">{{ icon('mode_edit') }}</a>\
+                                    <a title="Delete" class="handms-icons" onclick="deleteHazard(' + id + ')">{{ icon('delete') }}</a>\
+                                    <a title="Move Up" class="handms-icons" onclick="moveHazardUp(' + id + ')">{{ icon('keyboard_arrow_up') }}</a>\
+                                    <a title="Move Down" class="handms-icons" onclick="moveHazardDown(' + id + ')">{{ icon('keyboard_arrow_down') }}</a>\
                                 </td>\
                             </tr>');
                     } else {
@@ -480,11 +493,16 @@
                                 hazards[i]['risk_probability'] = data.risk_probability,
                                 hazards[i]['risk_severity'] = data.risk_severity,
                                 hazards[i]['r_risk'] = data.r_risk,
+                                hazards[i]['at_risk'] = {
+                                    @foreach ($whoList as $key => $who)
+                                        {{ $key }}: data.at_risk.{{ $key }},
+                                    @endforeach
+                                },
                                 hazards[i]['r_risk_probability'] = data.r_risk_probability,
                                 hazards[i]['r_risk_severity'] = data.r_risk_severity,
                                 hazards[i]['list_order'] = data.list_order,
-                                hazards[i]['at_risk'] = data.at_risk,
                                 hazards[i]['other_at_risk'] = data.other_at_risk
+                                    debugger
 
                                 // need to edit hazard table
                                 $('tr#hazard-' + editId + ' .hazard-order').html(data.list_order);
@@ -885,9 +903,9 @@
                                             newRow += "<td class='column is-3 image-cell'>No Image</td>";
                                         }
                                         newRow += '<td class="column is-3 handms-actions" style="height:150px">\
-                                                    <a class="handms-icons delete_process" onclick="deleteProcess('+key+')">{{ icon("delete") }}</a>\
-                                                    <a class="handms-icons move_process_up" onclick="moveProcessUp('+key+')">{{ icon("keyboard_arrow_up") }}</a>\
-                                                    <a class="handms-icons move_process_down" onclick="moveProcessDown('+key+')">{{ icon("keyboard_arrow_down") }}</a>\
+                                                    <a title="Delete" class="handms-icons delete_process" onclick="deleteProcess('+key+')">{{ icon("delete") }}</a>\
+                                                    <a title="Move Up" class="handms-icons move_process_up" onclick="moveProcessUp('+key+')">{{ icon("keyboard_arrow_up") }}</a>\
+                                                    <a title="Move Down" class="handms-icons move_process_down" onclick="moveProcessDown('+key+')">{{ icon("keyboard_arrow_down") }}</a>\
                                                     <div class="field image_picker">\
                                                         <input type="hidden" name="file" value="">\
                                                         <input type="hidden" name="file" id="file" value=""><div class="control">\
@@ -1102,10 +1120,10 @@
                                 <td class="methodology-title">' + form_data.get('title') + '</td>\
                                 <td class="methodology-category">' +  methTypeList[category] + '</td>\
                                 <td class="handms-actions">\
-                                    <a class="handms-icons" onclick="editMethodology('+ id +')">{{ icon('mode_edit') }}</a>\
-                                    <a class="handms-icons" onclick="deleteMethodology('+id+')">{{ icon('delete') }}</a>\
-                                    <a class="handms-icons" onclick="moveMethodologyUp('+id+')">{{ icon('keyboard_arrow_up') }}</a>\
-                                    <a class="handms-icons" onclick="moveMethodologyDown('+id+')">{{ icon('keyboard_arrow_down') }}</a>\
+                                    <a title="Edit" class="handms-icons" onclick="editMethodology('+ id +')">{{ icon('mode_edit') }}</a>\
+                                    <a title="Delete" class="handms-icons" onclick="deleteMethodology('+id+')">{{ icon('delete') }}</a>\
+                                    <a title="Move Up" class="handms-icons" onclick="moveMethodologyUp('+id+')">{{ icon('keyboard_arrow_up') }}</a>\
+                                    <a title="Move Down" class="handms-icons" onclick="moveMethodologyDown('+id+')">{{ icon('keyboard_arrow_down') }}</a>\
                                 </td>\
                             </tr>');
 

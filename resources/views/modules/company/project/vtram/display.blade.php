@@ -119,9 +119,27 @@
                 </div>
             </div>
         </div>
-        @if (strpos($identifierPath, 'vtram') !== false)
-            <div class="columns">
-                <div class="column is-6">
+        <div class="columns">
+            <div class="column is-3">
+                <div class="field area-check">
+                    {{ EGForm::checkbox('show_area', [
+                        'label' => 'Show Area on PDF',
+                        'value' => $record['show_area'],
+                        'type' => $pageType,
+                    ]) }}
+                </div>
+            </div>
+            <div class="column is-3">
+                <div class="field area-details">
+                    {{ EGForm::text('area', [
+                        'label' => 'Area Name',
+                        'value' => $record['area'],
+                        'type' => $pageType,
+                    ]) }}
+                </div>
+            </div>
+            @if (strpos($identifierPath, 'vtram') !== false)
+                <div class="column is-3">
                     <div class="field">
                         {{ EGForm::checkbox('client_on_pdf', [
                             'label' => 'Show Client Name on PDF',
@@ -130,7 +148,7 @@
                         ]) }}
                     </div>
                 </div>
-                <div class="column is-6">
+                <div class="column is-3">
                     <div class="field">
                         {{ EGForm::checkbox('pc_on_pdf', [
                             'label' => 'Show Principal Contractor Name on PDF (if applicable)',
@@ -139,8 +157,8 @@
                         ]) }}
                     </div>
                 </div>
-            </div>
-        @endif
+            @endif
+        </div>
         @if ($pageType != 'create')
         </div>
     </div>
@@ -382,11 +400,21 @@
 @push('styles')
     @php
         $oldR = old('show_responsible_person');
+        $oldArea = old('show_area');
     @endphp
-    @if (($oldR != "1" && $pageType == 'create') || (isset($record) && $record->show_responsible_person != "1"))
+    @if (($oldR != "1" && $pageType == 'create') || (isset($record) && $record->show_responsible_person != "1" && $pageType == 'edit' && $oldR != "1"))
         @push('styles')
             <style>
                .responsible-details {
+                    display: none;
+                }
+            </style>
+        @endpush
+    @endif
+    @if (($oldArea != "1" && $pageType == 'create') || (isset($record) && $record->show_area != "1" && $pageType == 'edit' && $oldArea != "1"))
+        @push('styles')
+            <style>
+               .area-details {
                     display: none;
                 }
             </style>
@@ -406,6 +434,14 @@
                 $('.responsible-details').hide();
             } else {
                 $('.responsible-details').show();
+            }
+        });
+        $('.area-check [id^=show_area]').click(function() {
+            var name = $(this).prev().val();
+            if (name == "1") {
+                $('.area-details').hide();
+            } else {
+                $('.area-details').show();
             }
         });
     </script>
