@@ -18,7 +18,10 @@ return [
             'name' => ['label' => 'Name'],
             'ref' => ['label' => 'Reference'],
             'project_admin' => ['label' => 'Project Admin'],
-            'principle_contractor' => ['label' => 'Principal Contractor'],
+            'principle_contractor' => [
+                'label' => 'Principal Contractor',
+                'raw' => true
+            ],
             'principle_contractor_name' => ['label' => 'Principal Contractor Name'],
             'principle_contractor_email' => ['label' => 'Principal Contractor Email'],
             'client_name' => ['label' => 'Client Name'],
