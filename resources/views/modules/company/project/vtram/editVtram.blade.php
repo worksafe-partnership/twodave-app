@@ -357,6 +357,11 @@
                     $('#hazard-form-container #description').val('');
                     $('#hazard-form-container #other_at_risk').val('');
                     $('#hazard-form-container #control').val('');
+                    @foreach ($whoList as $key => $who)
+                        if ($('#hazard-form-container input[name="at_risk[{{ $key }}]"]').val() == "1") {
+                            $('#main-hazard-container label[for="at_risk[{{ $key }}]"').click();
+                        }
+                    @endforeach
                     $('#related_methodologies_div .control select')[0].selectize.clear();
                 } else {
                     $('#methodology-list-container').show();
@@ -500,13 +505,13 @@
                                 hazards[i]['at_risk'] = {
                                     @foreach ($whoList as $key => $who)
                                         {{ $key }}: data.at_risk.{{ $key }},
+                                        // These are one and blank not one and null
                                     @endforeach
                                 },
                                 hazards[i]['r_risk_probability'] = data.r_risk_probability,
                                 hazards[i]['r_risk_severity'] = data.r_risk_severity,
                                 hazards[i]['list_order'] = data.list_order,
                                 hazards[i]['other_at_risk'] = data.other_at_risk
-                                    debugger
 
                                 // need to edit hazard table
                                 $('tr#hazard-' + editId + ' .hazard-order').html(data.list_order);
@@ -539,6 +544,11 @@
                     $('#hazard-form-container #r_risk_severity').val('');
                     $('#hazard-form-container #at_risk').val('');
                     $('#hazard-form-container #other_at_risk').val('');
+                    @foreach ($whoList as $key => $who)
+                        if ($('#hazard-form-container input[name="at_risk[{{ $key }}]"]').val() == "1") {
+                            $('#main-hazard-container label[for="at_risk[{{ $key }}]"').click();
+                        }
+                    @endforeach
                     $('#hazard-list-container').show();
                 },
                 error: function (data) {
