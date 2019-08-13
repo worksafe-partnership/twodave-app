@@ -100,6 +100,7 @@ class TemplateController extends Controller
     public function editContent($templateId, $otherId = null)
     {
         $this->record = Template::findOrFail($templateId);
+        $this->heading = 'Adding Hazard and Method Statements to '.$this->record->name;
         if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
             abort(404);
         }
