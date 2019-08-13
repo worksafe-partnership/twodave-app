@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'singular' => 'Company Project',
-    'plural' => 'Company Projects',
+    'singular' => 'Project',
+    'plural' => 'Projects',
     'identifier_path' => 'company.project',
     'route_type' => 'resource',
     'db' => [

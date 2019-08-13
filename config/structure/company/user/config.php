@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'singular' => 'Company User',
-    'plural' => 'Company Users',
+    'singular' => 'User',
+    'plural' => 'Users',
     'identifier_path' => 'company.user',
     'db' => [
         'model' => 'User',

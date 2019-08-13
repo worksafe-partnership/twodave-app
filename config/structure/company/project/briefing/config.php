@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'singular' => 'Company Briefing',
-    'plural' => 'Company Briefings',
+    'singular' => 'Briefing',
+    'plural' => 'Briefings',
     'identifier_path' => 'company.project.briefing',
     'route_type' => 'resource',
     'db' => [

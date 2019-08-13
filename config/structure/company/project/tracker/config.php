@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'singular' => 'Company VTRAMS Tracker',
-    'plural' => 'Company VTRAMS Tracker',
+    'singular' => 'VTRAMS Tracker',
+    'plural' => 'VTRAMS Tracker',
     'identifier_path' => 'company.project.tracker',
     'route_type' => 'index',
     'icon' => 'document-add',

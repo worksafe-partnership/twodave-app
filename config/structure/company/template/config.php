@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'singular' => 'Company Template',
-    'plural' => 'Company Templates',
+    'singular' => 'Template',
+    'plural' => 'Templates',
     'identifier_path' => 'company.template',
     'route_type' => 'resource',
     'db' => [
