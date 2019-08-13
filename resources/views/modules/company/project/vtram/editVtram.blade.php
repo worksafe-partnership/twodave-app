@@ -354,6 +354,10 @@
                 if (type == 'hazard') {
                     $('#hazard-form-container').css('display', 'none');
                     $('#hazard-list-container').show();
+                    $('#hazard-form-container #description').val('');
+                    $('#hazard-form-container #other_at_risk').val('');
+                    $('#hazard-form-container #control').val('');
+                    $('#related_methodologies_div .control select')[0].selectize.clear();
                 } else {
                     $('#methodology-list-container').show();
                     $('[id^=methodology-][id$=-form-container]').css('display', 'none');
