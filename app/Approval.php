@@ -118,6 +118,14 @@ class Approval extends Model
         return Carbon::createFromFormat('Y-m-d', $this->approved_date)->format('d/m/Y');
     }
 
+    public function niceApprovedDT()
+    {
+        if (is_null($this->created_at)) {
+            return '';
+        }
+        return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y H:i');
+    }
+
     public function vtram()
     {
         if ($this->entity == 'VTRAM') {
