@@ -80,7 +80,6 @@ class CompanyVtramController extends Controller
             $this->customValues['working_at_height'] = $template['working_at_height'];
             $this->customValues['manual_handling'] = $template['manual_handling'];
             $this->customValues['accident_reporting'] = $template['accident_reporting'];
-
         } else {
             $this->customValues['main_description'] = $company['main_description'];
             $this->customValues['post_risk_assessment_text'] = $company['post_risk_assessment_text'];
@@ -93,7 +92,6 @@ class CompanyVtramController extends Controller
             $this->customValues['manual_handling'] = $company['manual_handling'];
             $this->customValues['accident_reporting'] = $company['accident_reporting'];
         }
-
     }
 
     public function postEditHook()
@@ -162,7 +160,7 @@ class CompanyVtramController extends Controller
         if ($this->record->pages_in_pdf == 4) {
             $this->pillButtons['view_pdf_a3'] = [
                 'label' => 'View PDF A3',
-                'path' => $this->record->id.'/view_a3',
+                'path' => $this->record->id.'/view_a4',
                 'icon' => 'file-pdf',
                 'order' => 100,
                 'id' => 'view_pdf_a3',
@@ -234,11 +232,8 @@ class CompanyVtramController extends Controller
         }
 
         if (VTLogic::canReview($this->record)) {
-            if ($this->record->pages_in_pdf == 4) {
-                $path = 'javascript: window.open("'.$this->record->id.'/view_a3", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
-            } else {
-                $path = 'javascript: window.open("'.$this->record->id.'/view_a4", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
-            }
+            // ALWAYS open for preview in A4 - only print should A3 it.
+            $path = 'javascript: window.open("'.$this->record->id.'/view_a4", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
             $this->pillButtons['approve_vtrams'] = [
                 'label' => 'Approve VTRAMS',
                 'path' => $path,
