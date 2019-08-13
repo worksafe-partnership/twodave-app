@@ -21,7 +21,7 @@ return [
             'project_admin' => ['label' => 'Project Admin'],
             'principle_contractor' => [
                 'label' => 'Principal Contractor',
-                'col_type' => 'checkbox'
+                'raw' => true
             ],
             'principle_contractor_name' => ['label' => 'Principal Contractor Name'],
             'review_timescale' => ['label' => 'Review Timescale'],

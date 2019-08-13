@@ -11,7 +11,7 @@ class Project extends Model
 {
     use SoftDeletes;
     protected $table = 'projects';
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -60,6 +60,7 @@ class Project extends Model
         }
 
         return app('datatables')->of($query)
+            ->rawColumns(['principle_contractor'])
             ->editColumn('review_timescale', function ($item) {
                 return $item->reviewTimeScaleName();
             })
@@ -76,6 +77,16 @@ class Project extends Model
                     return $item->admin->name;
                 }
                 return 'None Selected';
+            })
+            ->editColumn('principle_contractor', function ($item) {
+                return '<div class="checkbox">
+                            <div class="control">
+                                <div class="b-checkbox is-primary">
+                                    <input class="styled" type="checkbox" id="active" disabled="" '.($item->principle_contractor ? 'checked' : '').'>
+                                    <label for="active" style="padding:0px"></label>
+                                </div>
+                            </div>
+                        </div>';
             })
             ->make("query");
     }
