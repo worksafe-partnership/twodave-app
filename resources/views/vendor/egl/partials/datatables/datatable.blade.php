@@ -15,7 +15,7 @@ var options = {
     buttons: [
         { extend: 'copy', className: 'button is-light' },
         { extend: 'excel', className: 'button is-light' },
-        { extend: 'pdf', className: 'button is-light' },
+        { extend: 'pdf', className: 'button is-light', orientation: 'landscape' },
         { extend: 'csv', className: 'button is-light' }
     ]
 };
