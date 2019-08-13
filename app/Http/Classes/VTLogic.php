@@ -260,14 +260,23 @@ class VTLogic
         $order = 1;
         foreach ($list as $item) {
             if (strlen($config->entity->{$item['name']}) > 0) {
-                Methodology::create([
+                $methodology = [
                     'title' => $item['title'],
                     'category' => $item['type'],
                     'entity' => $config->entityType,
                     'entity_id' => $config->entityId,
                     'text_before' => $config->entity->{$item['name']},
                     'list_order' => $order,
-                ]);
+                ];
+
+                if ($item['name'] == 'first_aid') {
+                    $file = VTFiles::saveNew(file_get_contents(public_path('first_aid_logo.png')), $config->entity, $config->entityType, time().'first_aid.png');
+                    if ($file != false) {
+                        $methodology['image'] = $file->id;
+                    }
+                }
+
+                Methodology::create($methodology);
                 $order++;
             }
         }
@@ -398,7 +407,7 @@ class VTLogic
         });
     }
 
-    public static function replaceContent($entity, $fields) 
+    public static function replaceContent($entity, $fields)
     {
         $replacements = [];
         if ($entity instanceof Template || $entity instanceof Vtram) {
@@ -412,10 +421,10 @@ class VTLogic
         }
         if (is_array($fields)) {
             foreach ($fields as $field) {
-                $entity->{$field} = str_replace(array_keys($replacements), array_values($replacements), $entity->{$field});    
+                $entity->{$field} = str_replace(array_keys($replacements), array_values($replacements), $entity->{$field});
             }
             return $entity;
         }
-        return str_replace(array_keys($replacements), array_values($replacements), $entity->{$fields});    
+        return str_replace(array_keys($replacements), array_values($replacements), $entity->{$fields});
     }
 }

@@ -20,6 +20,30 @@ class VTFiles extends EGFiles
                 'mime_type' => 'application/pdf',
                 'updated_at' => date('Y-m-d H:i:s')
             ];
+
+            $file = self::find($entity->pdf);
+            if ($file == null) {
+                return self::create($data);
+            } else {
+                $file->update($data);
+                return $file;
+            }
+        }
+        return false;
+    }
+    public static function saveNew($fileContent, $entity, $entityType, $fileName)
+    {
+        $now = Carbon::now();
+        $storagePath = "files/".$now->year."/".$now->month."/".$now->day.'/'.$fileName;
+        if (Storage::disk('local')->put($storagePath, $fileContent)) {
+            $data = [
+                'title' => $fileName,
+                'filename' => $fileName,
+                'location' => $storagePath,
+                'mime_type' => '',
+                'updated_at' => date('Y-m-d H:i:s')
+            ];
+
             $file = self::find($entity->pdf);
             if ($file == null) {
                 return self::create($data);
