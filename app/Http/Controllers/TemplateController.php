@@ -42,7 +42,7 @@ class TemplateController extends Controller
     {
         if (can('edit', $this->identifierPath) && in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
             $this->actionButtons['methodologies'] = [
-                'label' => 'Edit Hazards & Methodologies',
+                'label' => 'Hazards & Methodologies',
                 'path' => '/template/'.$this->id.'/methodology',
                 'icon' => 'receipt',
                 'order' => '500',
