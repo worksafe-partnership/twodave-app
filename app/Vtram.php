@@ -413,4 +413,20 @@ class Vtram extends Model
         return $this->hasMany(Methodology::class, 'entity_id', 'id')
             ->where('entity', '=', 'VTRAM');
     }
+
+    public function getCreatedFromAttribute()
+    {
+        if ($this->created_from_entity == 'VTRAM') {
+            $vt = VTRAM::find($this->created_from_id);
+            if ($vt) {
+                return $vt->name;
+            }
+        } else if ($this->created_from_entity == 'TEMPLATE') {
+            $template = Template::find($this->created_from_id);
+            if ($template) {
+                return $template->name;
+            }
+        }
+        return "";
+    }
 }

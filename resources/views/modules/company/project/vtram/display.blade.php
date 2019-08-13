@@ -32,7 +32,7 @@
                                 'display_value' => $record->company->name ?? 'No Company Selected',
                                 'selector' => 1
                             ]) }}
-                        @else 
+                        @else
                             {{ EGForm::select('company_id', [
                                 'label' => 'Company',
                                 'value' => $parentId,
@@ -385,7 +385,7 @@
                 <div class="field">
                     {{ EGForm::text('created_from', [
                         'label' => 'Created From',
-                        'value' => $record->createdFrom->name ?? '',
+                        'value' => $record->createdFrom,
                         'type' => $pageType,
                         'disabled' => 1
                     ]) }}
