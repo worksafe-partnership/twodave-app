@@ -55,12 +55,12 @@
                 </div>
             </div>
             <div class="columns">
-                <div class="column is-6 is-offset-3">
+                <div class="column is-12">
                     <div class="field type-check">
                         {{ EGForm::radio('type', [
                             'label' => 'Approval Type',
                             'value' => $record['type'],
-                            'list' => $approvalTypes, 
+                            'list' => $approvalTypes,
                             'type' => 'create',
                         ]) }}
                     </div>
@@ -100,7 +100,7 @@
             <div class="bottom-bar">
                 <div class="field is-grouped is-grouped-centered ">
                     <p class="control">
-                        <button class="button is-primary" onclick="$('#approval-form').submit();">Create Approval</button>
+                        <button class="button is-primary" onclick="$('#approval-form').submit();">Submit Feedback</button>
                     </p>
                     <p class="control">
                         <a href="{{ $cancelPath }}" class="button">Cancel</a>
