@@ -71,7 +71,7 @@ class CompanyProjectController extends Controller
             'label' => ucfirst($this->pageType)." ".$briefConfig['plural'],
             'path' => '/company/'.$this->parentId.'/project/'.$this->id.'/briefing',
             'icon' => $briefConfig['icon'],
-            'order' => '600',
+            'order' => '550',
             'id' => 'briefingsList'
         ];
 
