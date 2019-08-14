@@ -16,6 +16,14 @@ class WorksafeUserController extends Controller
 {
     protected $identifierPath = "user";
 
+    public function indexHook()
+    {
+        if ($this->user->roles->first()->slug == "company_admin") {
+            unset($this->config['datatable']['columns']['company_name']);
+        }
+    }
+
+
     public function bladeHook()
     {
         if ($this->user->company_id !== null && $this->record !== null) {
