@@ -178,7 +178,7 @@
     }
 
     function deleteProcess(key) {
-        if (confirm("Are you sure you want to delete this process?")) {
+        if (confirm("Are you sure you want to delete this row?")) {
             let deleted = $('#process-table tbody tr[data-row='+key+']').remove();
             let remaining = $('#process-table tbody tr');
             $.each(remaining, function(index, tr) {
@@ -191,6 +191,9 @@
                     cell.find('.delete_process').attr("onclick", "deleteProcess("+index+")");
                     cell.find('.move_process_up').attr("onclick", "moveProcessUp("+index+")");
                     cell.find('.move_process_down').attr('onclick', "moveProcessDown("+index+")");
+                    cell.find('[name*="image_id"]').attr('id', "edit_image_"+index);
+                    cell.find('.edit-image').attr('onclick', "editProcessImage("+index+")");
+                    cell.find('.delete-image').attr('onclick', "deleteProcessImage("+index+")");
                 }
             });
             $('#process-table').attr('data-next_row', remaining.length);
@@ -306,10 +309,10 @@
                 } else {
                     // if not, add it in the relevant row
                     var cell = $('#methodology-process-form-container .columns [data-row="'+row+'"] .image-cell');
-                    cell.html('<img src="/image/'+fileId+'" data-image_id="'+fileId+'" data-process_row="row_'+row+'__image">');
+                    cell.html('<img class="process-image" src="/image/'+fileId+'" data-image_id="'+fileId+'" data-process_row="row_'+row+'__image">');
                     var imagePickerCell = $('#process-table tr[data-row='+row+'] .image_picker');
-                    var deleteExists = imagePickerCell.find('.delete_image');
-                    if (!deleteExists) {
+                    var deleteExists = imagePickerCell.find('.delete-image');
+                    if (deleteExists.length == 0) {
                         imagePickerCell.append('<button class="button is-primary is-small image-button delete-image" onclick="deleteProcessImage('+row+')">Remove Image</button>');
                     }
                 }
@@ -351,6 +354,8 @@
                 processData : false,
                 success: function (id) {
                     column.html("No Image");
+                    var imagePickerCell = $('#process-table tr[data-row='+row+'] .image_picker');
+                    var deleteButton = imagePickerCell.find('.delete-image').remove();
                     toastr.success('Image deleted - remember to save your changes');
                 },
                 error: function (data) {

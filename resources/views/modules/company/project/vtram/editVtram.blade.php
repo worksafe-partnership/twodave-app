@@ -907,10 +907,19 @@
                                     if (row.heading == 1) {
                                         checked = 'checked';
                                     }
+                                    let label = '';
+                                    if (row.label) {
+                                        label = row.label;
+                                    }
+                                    let description = '';
+                                    if (row.description) {
+                                        description = row.description;
+                                    }
+
                                     let newRow = "<tr class='columns' data-row='"+key+"' style='margin:0'>";
                                         newRow += "<td class='column is-2'><input type='checkbox' name='row_"+key+"__heading' "+checked+"></input></td>";
-                                        newRow += "<td class='column is-1'><input  type='text' name='row_"+key+"__label' value='"+row.label+"'></input></td>";
-                                        newRow += "<td class='column is-3'><input type='text' name='row_"+key+"__description' value='"+row.description+"'></input></td>";
+                                        newRow += "<td class='column is-1'><input  type='text' name='row_"+key+"__label' value='"+label+"'></input></td>";
+                                        newRow += "<td class='column is-3'><input type='text' name='row_"+key+"__description' value='"+description+"'></input></td>";
                                         if (row.image) {
                                             newRow += "<td class='column is-3 image-cell'><img class='process-image' src='/image/"+row.image+"' data-image_id='"+row.image+"' data-process_row='row_"+key+"__image'</td>";
                                         } else {
