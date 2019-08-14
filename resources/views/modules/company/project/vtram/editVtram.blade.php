@@ -1005,6 +1005,15 @@
         }
 
         function submitMethodologyForm(category, editId=null, listOrder=null) {
+
+            // stop double click submits
+            $('#main-methodology-container .submitbutton').attr("disabled", true);
+            $('#main-hazard-container .submitbutton').attr("disabled", true);
+            setTimeout(function() {
+                $('#main-methodology-container .submitbutton').attr("disabled", false);
+                $('#main-hazard-container .submitbutton').attr("disabled", false);
+            }, 500);
+
             var form_data = new FormData();
 
             form_data.append('_token', '{{ csrf_token() }}');
