@@ -21,6 +21,14 @@ class TemplateController extends Controller
 {
     protected $identifierPath = 'template';
 
+    public function indexHook()
+    {
+        if ($this->user->roles->first()->slug == "company_admin") {
+            unset($this->config['datatable']['columns']['company_id']);
+        }
+    }
+
+
     public function postEditHook()
     {
         if (in_array($this->record->status, ['REJECTED','EXTERNAL_REJECT','NEW'])) {
@@ -76,9 +84,19 @@ class TemplateController extends Controller
         }
     }
 
+    public function viewEditHook()
+    {
+        // don't let company admins see templates that don't belong to them.
+        if (!is_null($this->user->company_id) && $this->user->company_id != $this->record->company_id) {
+            abort(404);
+        }
+    }
+
     public function bladeHook()
     {
-        $this->customValues['companies'] = Company::pluck('name', 'id');
+        $this->customValues['companies'] = Company::when(!is_null($this->user->company_id), function ($sub) {
+            $sub->where('id', $this->user->company_id);
+        })->orderBy('name', 'ASC')->pluck('name', 'id');
     }
 
     public function store(TemplateRequest $request)
