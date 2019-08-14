@@ -37,7 +37,7 @@ class WorksafeUserController extends Controller
                                               $companyUsers->whereNotIn('id', [1,2]);
                                            })
                                            ->pluck("name", "id");
-        $this->customValues['companies'] = Company::withTrashed()
+        $this->customValues['companies'] = Company::orderBy('name', 'ASC')->withTrashed()
             ->pluck('name', 'id');
         $this->customValues['userPage'] = true;
 
