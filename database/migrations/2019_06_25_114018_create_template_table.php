@@ -17,7 +17,7 @@ class CreateTemplateTable extends Migration
             $table->integer('company_id')->nullable()->unsigned();
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->string('name');
-            $table->text('description')->nullable();
+            // $table->text('description')->nullable(); // not used - superseded by main_description.
             $table->integer('logo')->nullable()->unsigned();
             $table->foreign('logo')->references('id')->on('files')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->string('reference');

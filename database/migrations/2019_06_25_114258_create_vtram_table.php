@@ -19,7 +19,7 @@ class CreateVtramTable extends Migration
             $table->integer('project_id')->unsigned();
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->string('name');
-            $table->text('description')->nullable();
+            // $table->text('description')->nullable(); // not used - superseded by main_description.
             $table->integer('logo')->nullable()->unsigned();
             $table->foreign('logo')->references('id')->on('files')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->string('reference');
