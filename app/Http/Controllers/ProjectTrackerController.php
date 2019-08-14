@@ -6,6 +6,7 @@ use Auth;
 use Carbon;
 use Controller;
 use App\Vtram;
+use App\Project;
 use App\Template;
 
 class ProjectTrackerController extends Controller
@@ -24,6 +25,13 @@ class ProjectTrackerController extends Controller
 
     public function indexHook()
     {
+        if ($this->user->company_id !== null) {
+            $project = Project::findOrFail($this->parentId);
+            if ($this->user->company_id !== $project->company_id) {
+                abort(404);
+            }
+        }
+
         if (can('create', 'project.vtram')) {
             $this->actionButtons['create_vtram'] = [
                 'label' => 'Create VTRAMS',
