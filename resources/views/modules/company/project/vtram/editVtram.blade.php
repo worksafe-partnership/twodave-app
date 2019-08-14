@@ -824,22 +824,24 @@
                             $('#simple-table tbody').html('');
                             if (rows !== undefined) {
                                 $.each(rows, function(key, row) {
-                                    let newRow = "<tr data-row='"+key+"'>";
-                                        newRow += "<th><input type='text' name='row_"+key+"__col_1' value='"+row.col_1+"'></input></th>";
-                                        newRow += "<td><input type='text' name='row_"+key+"__col_2' value='"+row.col_2+"'></input></td>";
-                                        newRow += "<td><input type='text' name='row_"+key+"__col_3' value='";
+                                    let newRow = "<tr class='columns' data-row='"+key+"'>";
+                                        newRow += "<th class='column is-2'><input type='text' name='row_"+key+"__col_1' value='"+row.col_1+"'></input></th>";
+                                        newRow += "<td class='column is-2'><input type='text' name='row_"+key+"__col_2' value='"+row.col_2+"'></input></td>";
+                                        newRow += "<td class='column is-2'><input type='text' name='row_"+key+"__col_3' value='";
                                         if (row.col_3 != null) {
                                             newRow += row.col_3+"'></input></td>";
                                         } else {
                                             newRow += "'></input></td>";
                                         }
 
-                                        newRow += "<td><input type='text' name='row_"+key+"__col_4' value='";
+                                        newRow += "<td class='column is-2'><input type='text' name='row_"+key+"__col_4' value='";
                                         if (row.col_4 != null) {
                                             newRow += row.col_4+"'></input></td>";
                                         } else {
                                             newRow += "'></input></td>";
                                         }
+                                        newRow += "<td class='column is-1'><a class='handms-icons delete_icon' onclick='deleteSimpleRow("+parseInt(key)+")'><svg class='eg-delete'><use xmlns:xlink='http://www.w3.org/1999/xlink' xlink:href='/eg-icons.svg#eg-delete'></use></svg></a>\
+                                        </td>";
                                         newRow += "</tr>";
                                     $('#simple-table tbody').append(newRow);
                                 });
@@ -865,28 +867,31 @@
                                         row.col_4 = '';
                                     }
 
-                                    let newRow = "<tr data-row='"+key+"'>";
-                                        newRow += "<th><input type='text' name='row_"+key+"__col_1' value='"+row.col_1+"'></input></th>";
-                                        newRow += "<td><input type='text' name='row_"+key+"__col_2' value='";
+                                    let newRow = "<tr class='columns' data-row='"+key+"'>";
+                                        newRow += "<th class='column is-2'><input type='text' name='row_"+key+"__col_1' value='"+row.col_1+"'></input></th>";
+                                        newRow += "<td class='column is-2'><input type='text' name='row_"+key+"__col_2' value='";
                                         if (row.col_2 != null) {
                                             newRow += row.col_2+"'></input></td>";
                                         } else {
                                             newRow += "'></input></td>";
                                         }
 
-                                        newRow += "<td><input type='text' name='row_"+key+"__col_3' value='";
+                                        newRow += "<td class='column is-2'><input type='text' name='row_"+key+"__col_3' value='";
                                         if (row.col_3 != null) {
                                             newRow += row.col_3+"'></input></td>";
                                         } else {
                                             newRow += "'></input></td>";
                                         }
 
-                                        newRow += "<td><input type='text' name='row_"+key+"__col_4' value='";
+                                        newRow += "<td class='column is-2'><input type='text' name='row_"+key+"__col_4' value='";
                                         if (row.col_4 != null) {
                                             newRow += row.col_4+"'></input></td>";
                                         } else {
                                             newRow += "'></input></td>";
                                         }
+
+
+                                    newRow += "<td class='column is-1'><a class='handms-icons delete_icon' onclick='deleteComplexRow("+parseInt(key)+")'><svg class='eg-delete'><use xmlns:xlink='http://www.w3.org/1999/xlink' xlink:href='/eg-icons.svg#eg-delete'></use></svg></a></td>";
                                     newRow += "</tr>";
                                     $('#complex-table tbody').append(newRow);
                                     $('#complex-table').attr('data-next_row', Object.keys(rows).length);

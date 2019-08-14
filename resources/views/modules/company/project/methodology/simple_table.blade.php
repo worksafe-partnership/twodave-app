@@ -28,68 +28,15 @@
         <p class="sub-heading">Table:</p>
         <div class="columns">
             <div class="column">
-                <div class="field">
-                    <table class="table is-striped is-bordered" id="simple-table" data-next_row="0">
-                        <tbody>
+                <table class="table is-striped is-bordered" id="simple-table" data-next_row="0">
+                    <tbody>
 
-                        </tbody>
-                    </table>
-                </div>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
-
-<div class="columns">
-    <div class="column is-10 is-offset-1">
-        <p class="sub-heading">New Row</p>
-        <div class="columns">
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::text('simple_col_1', [
-                        'label' => 'Cell 1 (Heading)',
-                        'value' => '',
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::text('simple_col_2', [
-                        'label' => 'Cell 2',
-                        'value' => '',
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="columns">
-    <div class="column is-10 is-offset-1">
-        <div class="columns">
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::text('simple_col_3', [
-                        'label' => 'Cell 3',
-                        'value' => '',
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::text('simple_col_4', [
-                        'label' => 'Cell 4',
-                        'value' => '',
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="columns">
     <div class="column is-10 is-offset-1">
         <div class="columns">
@@ -120,24 +67,36 @@
     $('#add-row-simple').on('click', function() {
         let table = $('#simple-table');
         let row_id = table.attr('data-next_row');
-        if ($('#simple_col_1').val() != "" && $('#simple_col_2').val() != "") {
-            let row = "<tr class='columns' data-row='"+row_id+"'>";
-                row += "<th class='column is-3'><input type='text' name='row_"+row_id+"__col_1' value='"+$('#simple_col_1').val()+"'></input></th>";
-                row += "<td class='column is-3'><input type='text' name='row_"+row_id+"__col_2' value='"+$('#simple_col_2').val()+"'></input></td>";
-                row += "<td class='column is-3'><input type='text' name='row_"+row_id+"__col_3' value='"+$('#simple_col_3').val()+"'></input></td>";
-                row += "<td class='column is-3'><input type='text' name='row_"+row_id+"__col_4' value='"+$('#simple_col_4').val()+"'></input></td>";
-            row += "</tr>"
-            table.append(row);
-            row_id++;
-            table.attr('data-next_row', row_id);
-            $('#simple_col_1').val('');
-            $('#simple_col_2').val('');
-            $('#simple_col_3').val('');
-            $('#simple_col_4').val('');
-        } else {
-            toastr.error('Please ensure your row is populated');
-        }
+        let row = "<tr class='columns' data-row='"+row_id+"'>";
+            row += "<th class='column is-2'><input type='text' name='row_"+row_id+"__col_1' value=''></input></th>";
+            row += "<td class='column is-2'><input type='text' name='row_"+row_id+"__col_2' value=''></input></td>";
+            row += "<td class='column is-2'><input type='text' name='row_"+row_id+"__col_3' value=''></input></td>";
+            row += "<td class='column is-2'><input type='text' name='row_"+row_id+"__col_4' value=''></input></td>";
+            row += "<td class='column is-1'><a class='handms-icons delete_icon' onclick='deleteSimpleRow("+parseInt(row_id)+")'><svg class='eg-delete'><use xmlns:xlink='http://www.w3.org/1999/xlink' xlink:href='/eg-icons.svg#eg-delete'></use></svg></a>\
+            </td>";
+        row += "</tr>"
+        table.append(row);
+        table.attr('data-next_row', parseInt(row_id)+1);
     })
+
+    function deleteSimpleRow(key) {
+        $('#simple-table tbody tr[data-row='+key+']').remove();
+
+        let remaining = $('#simple-table tbody tr');
+        $.each(remaining, function(index, tr) {
+            if (index >= key) {
+                let cell = $(tr);
+                cell.attr('data-row', index);
+                cell.find('[name*="col_1"]').attr('name', 'row_'+index+'__col_1');
+                cell.find('[name*="col_2"]').attr('name', 'row_'+index+'__col_2');
+                cell.find('[name*="col_3"]').attr('name', 'row_'+index+'__col_3');
+                cell.find('[name*="col_4"]').attr('name', 'row_'+index+'__col_4');
+                cell.find('.delete_icon').attr('onclick', 'deleteSimpleRow('+index+')');
+            }
+        });
+        $('#simple-table').attr('data-next_row', remaining.length);
+    }
+
 </script>
 
 <style>
