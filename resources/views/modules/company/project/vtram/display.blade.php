@@ -24,7 +24,7 @@
                 <div class="field">
                     @if (strpos($identifierPath, 'template') !== false)
                         @if (strpos($identifierPath, 'company.template') === false)
-                            {{ EGForm::select('company_id', [
+                            {{ EGForm::autocomplete('company_id', [
                                 'label' => 'Company',
                                 'value' => $record["company_id"],
                                 'type' => $pageType,
