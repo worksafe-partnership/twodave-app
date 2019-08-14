@@ -11,7 +11,7 @@
             @foreach($comments as $comment)
                 <tr>
                     <td>{{$comment->niceApprovedDT()}}</td>
-                    <td>{{$comment->completedByName()}}</td>
+                    <td>{{$comment->completed_by}}</td>
                     <td>{!!$comment->comment!!}</td>
                 </tr>
             @endforeach

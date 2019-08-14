@@ -434,6 +434,14 @@ class TemplateController extends Controller
         $this->view = 'modules.company.project.vtram.comment.display';
         $this->heading = 'Viewing All Comments';
         $this->customValues['comments'] = VTLogic::getComments($record, null, "TEMPLATE");
-        return parent::_custom();
+
+        $url = \URL::current();
+        $this->backButton = [
+            'path' => str_replace("/comment", "", $url),
+            'label' => 'Back to Template',
+            'icon' => 'arrow-left',
+        ];
+        parent::_buildProperties($args);
+        return parent::_renderView("layouts.custom");
     }
 }
