@@ -101,12 +101,13 @@ class CompanyController extends Controller
         } else if ($request['timescale_update'] == "select") {
             $projectIds = [];
             foreach ($request['projects_to_update'] as $key => $value) {
-                if ($value != "") {
+                if ($value == "1") {
                     $projectIds[] = $key;
                 }
             }
+
             Project::where('company_id', $companyId)
-                   ->whereIn('id', [$projectIds])
+                   ->whereIn('id', $projectIds)
                    ->update(['review_timescale' => $request['review_timescale']]);
         }
     }
