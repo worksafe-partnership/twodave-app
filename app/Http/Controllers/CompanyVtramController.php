@@ -318,7 +318,7 @@ class CompanyVtramController extends Controller
                 abort(404);
             }
         }
-        return VTLogic::createPdf($vtram);
+        return VTLogic::createPdf($vtram, null, true);
     }
 
     public function store(VtramRequest $request, $companyId, $projectId)

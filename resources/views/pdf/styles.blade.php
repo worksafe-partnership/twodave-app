@@ -111,6 +111,15 @@
     .hazard-width {
         width: 150px;
     }
+    .who-risk-width {
+        width: 80px;
+    }
+    .haz-small-width {
+        width: 20px;
+    }
+    .control-width {
+        width: 500px;
+    }
     .risk-assessment-container {
         margin-top: -80px;
     }
@@ -159,6 +168,10 @@
         outline: 1px solid black;
     }
 
+    .process-table {
+        width: 100%;
+    }
+
     .process-table th {
         outline: 1px solid black;
         background-color: #d9d9d9;
@@ -175,13 +188,11 @@
 
     .text-image-wording {
         display:inline-block;
-        width: 79%;
         vertical-align: top;
     }
 
     .text-image-icon-div {
         display:inline-block;
-        width: 20%;
     }
 
     .key-points {
