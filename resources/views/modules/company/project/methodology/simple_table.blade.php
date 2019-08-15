@@ -68,10 +68,10 @@
         let table = $('#simple-table');
         let row_id = table.attr('data-next_row');
         let row = "<tr class='columns' data-row='"+row_id+"'>";
-            row += "<th class='column is-2'><input type='text' name='row_"+row_id+"__col_1' value=''></input></th>";
-            row += "<td class='column is-2'><input type='text' name='row_"+row_id+"__col_2' value=''></input></td>";
-            row += "<td class='column is-2'><input type='text' name='row_"+row_id+"__col_3' value=''></input></td>";
-            row += "<td class='column is-2'><input type='text' name='row_"+row_id+"__col_4' value=''></input></td>";
+            row += "<th class='column'><input type='text' name='row_"+row_id+"__col_1' value=''></input></th>";
+            row += "<td class='column'><input type='text' name='row_"+row_id+"__col_2' value=''></input></td>";
+            row += "<td class='column'><input type='text' name='row_"+row_id+"__col_3' value=''></input></td>";
+            row += "<td class='column'><input type='text' name='row_"+row_id+"__col_4' value=''></input></td>";
             row += "<td class='column is-1'><a class='handms-icons delete_icon' onclick='deleteSimpleRow("+parseInt(row_id)+")'><svg class='eg-delete'><use xmlns:xlink='http://www.w3.org/1999/xlink' xlink:href='/eg-icons.svg#eg-delete'></use></svg></a>\
             </td>";
         row += "</tr>"

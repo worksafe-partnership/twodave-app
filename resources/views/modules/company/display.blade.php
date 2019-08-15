@@ -164,7 +164,7 @@
                 <div class="field">
                     {{ VTForm::colour('secondary_colour', [
                         'label' => 'Secondary Colour',
-                        'value' => $record->secondary_colour ?? '#000000',
+                        'value' => $record->secondary_colour ?? '#203878',
                         'type' => $pageType
                     ]) }}
                 </div>

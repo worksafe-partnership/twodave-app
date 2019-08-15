@@ -91,7 +91,6 @@ $factory->define(App\Vtram::class, function (Faker $faker) {
         'company_id' => 1,
         'project_id' => 1,
         'name' => $faker->words(3, true),
-        'description' => $faker->words(3, true),
         // 'logo',
         'reference' => $faker->words(2, true),
         'key_points' => "<p>".$faker->words(50, true)."</p>",
@@ -137,7 +136,6 @@ $factory->define(App\Template::class, function (Faker $faker) {
     return [
         'company_id' => 1,
         'name' => 'Seeded Template '.$faker->numberBetween(0, 100),
-        'description' => 'Seeded Description',
         // 'logo',
         'reference' => 'Seeded Reference',
         'key_points' => "<p>".$faker->words(50, true)."</p>",

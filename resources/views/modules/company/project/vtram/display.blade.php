@@ -26,7 +26,7 @@
                         @if (strpos($identifierPath, 'company.template') === false)
                             {{ EGForm::autocomplete('company_id', [
                                 'label' => 'Company',
-                                'value' => $record["company_id"],
+                                'value' => $record["company_id"] ?? Auth::user()->company_id,
                                 'type' => $pageType,
                                 'list' => $companies,
                                 'display_value' => $record->company->name ?? 'No Company Selected',
