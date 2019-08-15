@@ -61,7 +61,6 @@ class VtramController extends CompanyVtramController
 
     }
 
-
     public function postIndexHook()
     {
         if (isset($this->actionButtons['create']['class'])) {
@@ -112,7 +111,7 @@ class VtramController extends CompanyVtramController
                 'id' => 'methodologyEdit',
             ];
         }
-        if (can('view', $this->identifierPath)) {
+        if (can('edit', $this->identifierPath)) {
             $prevConfig = config('structure.project.vtram.previous.config');
             $this->actionButtons['previous'] = [
                 'label' => ucfirst($this->pageType)." ".$prevConfig['plural'],
