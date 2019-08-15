@@ -393,6 +393,7 @@
             @endforeach
 
             $('#related_methodologies_div .control select')[0].selectize.clear();
+            $('#main-hazard-container .submitbutton').attr("disabled", false);
         }
 
         function editHazard(id) {
@@ -431,9 +432,12 @@
             $('.risk-area td[data-prob=' + hazard['risk_probability'] + '][data-severity=' + hazard['risk_severity'] + ']').css('border', '3px solid blue');
             $('.r-risk-area td[data-prob=' + hazard['r_risk_probability'] + '][data-severity=' + hazard['r_risk_severity'] + ']').css('border', '3px solid blue');
             $('#hazard-form-container').css('display', 'inherit');
+            $('#main-hazard-container .submitbutton').attr("disabled", false);
         }
 
         function submitHazardForm(editId=null, listOrder=null) {
+
+            $('#main-hazard-container .submitbutton').attr("disabled", true);
 
             var selectedMethodologies = [];
             $.each($('#related_methodologies_div .item'), function(key, meth) {
@@ -564,6 +568,7 @@
                     $('#hazard-list-container').show();
                 },
                 error: function (data) {
+                    $('#main-hazard-container .submitbutton').attr("disabled", false);
                     if (data.status == 422) {
                         var errors = '';
                         $.each(data.responseJSON.errors, function(key,val) {
@@ -817,6 +822,7 @@
 
                 $('#' + container).css('display', 'inherit');
                 $('#' + container + ' .submitbutton').attr("onclick","submitMethodologyForm('"+cat+"')");
+                $('#main-methodology-container .submitbutton').attr("disabled", false);
             }
         }
 
@@ -1048,6 +1054,7 @@
 
                 $('#' + container).css('display', 'inherit');
                 $('#' + container + ' .submitbutton').attr("onclick","submitMethodologyForm('"+methodology.category+"',"+id+","+methodology.list_order+")");
+                $('#main-methodology-container .submitbutton').attr("disabled", false);
             }
         }
 
@@ -1055,11 +1062,6 @@
 
             // stop double click submits
             $('#main-methodology-container .submitbutton').attr("disabled", true);
-            $('#main-hazard-container .submitbutton').attr("disabled", true);
-            setTimeout(function() {
-                $('#main-methodology-container .submitbutton').attr("disabled", false);
-                $('#main-hazard-container .submitbutton').attr("disabled", false);
-            }, 500);
 
             var form_data = new FormData();
 
@@ -1333,6 +1335,7 @@
                     $('#meth_type').val('');
                 },
                 error: function (data) {
+                    $('#main-methodology-container .submitbutton').attr("disabled", false);
                     if (data.status == 422) {
                         var errors = '';
                         $.each(data.responseJSON.errors, function(key,val) {
