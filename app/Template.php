@@ -47,7 +47,7 @@ class Template extends Model
         'accident_reporting',
         'show_area',
         'area',
-	    'main_description',
+        'main_description',
         'post_risk_assessment_text'
     ];
 

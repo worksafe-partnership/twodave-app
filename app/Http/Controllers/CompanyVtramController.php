@@ -192,7 +192,7 @@ class CompanyVtramController extends Controller
             'id' => 'print_pdf',
             'target' => '_blank',
         ];
-        if (in_array($this->record->status, ['NEW','REJECTED','EXTERNAL_REJECT'])) {
+        if (in_array($this->record->status, ['NEW','REJECTED','EXTERNAL_REJECT']) && can('edit', $this->identifierPath)) {
             $this->pillButtons['submit_for_approval'] = [
                 'label' => 'Submit for Approval',
                 'path' => $this->record->id.'/submit',
