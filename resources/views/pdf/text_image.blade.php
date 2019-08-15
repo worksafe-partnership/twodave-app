@@ -6,38 +6,17 @@
             $imageSrc = EGFiles::download($methodology->image)->getFile()->getPathName() ?? null;
         }
     @endphp
-    @if($methodology->text_before)
+    <div class="image_text_block">
         @if($methodology->image_on == "BEFOR")
-            @if(!is_null($imageSrc))
-                <div class="text-image-icon-div">
-                    <img src="{{$imageSrc}}" style="width: 100px;">
-                </div>
-            @endif
-            <div class="text-image-wording">
-                {!!$methodology->text_before!!}
+            <div class="text-image-icon-div" style="float:left; padding-right: 5px">
+                <img src="{{$imageSrc}}" style="width: 100px;">
             </div>
+            {!!$methodology->text_before!!}
         @else
-            <div>
-                {!!$methodology->text_before!!}
-            </div>
-            <br>
-        @endif
-    @endif
-    @if($methodology->text_after)
-        @if($methodology->image_on == "AFTER")
-            @if(!is_null($imageSrc))
-                <div class="text-image-icon-div">
-                    <img src="{{$imageSrc}}" style="width: 100px;">
-                </div>
-            @endif
-            <div class="text-image-wording">
-                {!!$methodology->text_after!!}
-            </div>
-        @else
-            <br>
-            <div>
-                {!!$methodology->text_after!!}
+            {!!$methodology->text_after!!}
+            <div class="text-image-icon-div" style="float:left; bottom: 0; padding-right: 5px">
+                <img src="{{$imageSrc}}" style="width: 100px;">
             </div>
         @endif
-    @endif
+    </div>
 </div>
