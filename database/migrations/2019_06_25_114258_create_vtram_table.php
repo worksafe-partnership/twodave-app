@@ -30,8 +30,8 @@ class CreateVtramTable extends Migration
             $table->foreign('coshh_assessment')->references('id')->on('files')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->date('review_due')->nullable();
             $table->date('approved_date')->nullable();
-            $table->integer('original_id')->nullable()->unsigned();
-            $table->foreign('original_id')->references('id')->on('vtrams')->onDelete('CASCADE')->onUpdate('CASCADE');
+            $table->integer('current_id')->nullable()->unsigned();
+            $table->foreign('current_id')->references('id')->on('vtrams')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->integer('revision_number')->nullable();
             $table->string('status')->default('NEW');
             $table->integer('created_by')->nullable()->unsigned();

@@ -28,7 +28,7 @@ class Vtram extends Model
         'coshh_assessment',
         'review_due',
         'approved_date',
-        'original_id',
+        'current_id',
         'revision_number',
         'status',
         'created_by',
@@ -76,7 +76,7 @@ class Vtram extends Model
                 'coshh_assessment',
                 'review_due',
                 'approved_date',
-                'original_id',
+                'current_id',
                 'revision_number',
                 'status',
                 'created_by',
@@ -151,7 +151,7 @@ class Vtram extends Model
                 'coshh_assessment',
                 'review_due',
                 'approved_date',
-                'original_id',
+                'current_id',
                 'revision_number',
                 'status',
                 'created_by',
@@ -172,7 +172,7 @@ class Vtram extends Model
             ]);
 
         if (in_array($identifier['identifier_path'], ['company.project.vtram.previous', 'project.vtram.previous'])) {
-            $query->where('original_id', '=', $parent)
+            $query->where('current_id', '=', $parent)
                 ->where('status', '=', 'PREVIOUS');
         } else {
             $query->where('status', '!=', 'PREVIOUS')
