@@ -29,7 +29,7 @@
                 <div class="field">
                     {{ EGForm::radio('image_on', [
                         'label' => 'Text next to image',
-                        'list' => ['LEFT' => 'Before Text', 'RIGHT' => 'After Text'],
+                        'list' => ['BEFOR' => 'Before Text', 'AFTER' => 'After Text'],
                         'value' => '',
                         'type' => $pageType,
                     ]) }}

@@ -43,7 +43,7 @@ class MethodologyRequest extends FormRequest
 
                 $rules['image_on'] = 'required';
                 if ($this->image_on != "undefined") {
-                    if ($this->image_on == "LEFT") {
+                    if ($this->image_on == "BEFOR") {
                         $rules['text_before'] = 'required';
                     } else {
                         $rules['text_after'] = 'required';

@@ -1022,9 +1022,9 @@
 
                 // text + image
                 if ($('#' + container + ' input[name=image_on]')) {
-                    if (image_on == "LEFT") {
+                    if (image_on == "BEFOR") {
                         $('input:radio[name=image_on]')[0].checked = true;
-                    } else if (image_on == "RIGHT") {
+                    } else if (image_on == "AFTER") {
                         $('input:radio[name=image_on]')[1].checked = true;
                     }
                 }
