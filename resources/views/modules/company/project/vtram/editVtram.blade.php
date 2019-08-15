@@ -1053,6 +1053,13 @@
                     if ($('#methodology-text-image-form-container #image').prop('files')[0] !== undefined){
                         form_data.append('image', $('#methodology-text-image-form-container #image').prop('files')[0]);
                     }
+
+                    let imageCheck = $('.ti_image img');
+                    if (imageCheck.length > 0) {
+                        let image = $(imageCheck[0]).attr('src');
+                        form_data.append('image_check', image);
+                    }
+
                     let checked = $('input[name=image_on]:checked').val();
                     if (checked && checked !== "undefined") {
                         form_data.append('image_on', checked);
