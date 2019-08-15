@@ -100,6 +100,39 @@ class VTLogic
                 'text_after',
             ]);
         }
+        // First page height calculation
+        $height = 120;
+        if ($config->entityType == 'VTRAM' && $config->entity->project->show_contact) {
+            $height += 90;
+        }
+        if ($config->entity->show_responsible_person) {
+            $height += 30;
+        }
+        if (($config->entity->submitted != null && strlen($config->entity->submitted->name) > 26) || ($config->entity->approved != null && strlen($config->entity->approved->name) > 26)) {
+            $tableHeight = 100;
+        }
+        $mainHeight = $height;
+        if (isset($tableHeight)) {
+            $mainHeight += $tableHeight;
+        } else {
+            $mainHeight += 50;
+        }
+        if ($config->entity->show_responsible_person) {
+            $mainHeight += 25;
+        }
+        if ($config->entity->show_area) {
+            $mainHeight += 25;
+        }
+        $mainHeight += 30; // method statements
+        $mainHeight += 60; // task name
+        // Can we improve this to get the html height of the ckeditor field?
+        $titleBlockTextLength = strlen($config->entity->main_description) / 134;
+        $mainHeight += $titleBlockTextLength * 25;
+        $brs = [];
+        preg_match_all("/&nbsp;/", $config->entity->main_description, $brs);
+        $mainHeight += count($brs) * 20;
+        $mainHeight += 250;
+        // End first page height calculation
 
         $data = [
             'entity' => $config->entity,
@@ -109,8 +142,11 @@ class VTLogic
             'logo' => $file,
             'approvedSig' => $approvedSig,
             'submittedSig' => $submittedSig,
+            'tableHeight' => $tableHeight ?? null,
             'riskList' => $riskList,
-            'whoIsRisk' => config('egc.hazard_who_risk')
+            'whoIsRisk' => config('egc.hazard_who_risk'),
+            'height' => $height,
+            'startingHeight' => $mainHeight,//self::calculateStartingHeight($config),
         ];
 
         $pdf = \PDF::loadView('pdf.main_report', $data)
@@ -118,6 +154,7 @@ class VTLogic
             ->setOption('margin-left', 5)
             ->setOption('margin-right', 5)
             ->setOption('margin-bottom', 5);
+#        return view('pdf.main_report', $data);
         $returnStream = $pdf->stream();
         $instances = null;
         preg_match_all('/Count [0-9]+/', $pdf->download()->getContent(), $instances);
@@ -138,6 +175,12 @@ class VTLogic
             ]);
         }
         return $returnStream;
+    }
+
+    public static function calculateStartingHeight($config)
+    {
+        $height = 0;
+
     }
 
     public static function submitForApproval($entityId, $entityType = null)

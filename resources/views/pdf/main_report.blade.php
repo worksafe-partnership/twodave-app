@@ -10,7 +10,10 @@
             var content = document.querySelector('.content');
 
             // Set heights
-            var introHeight = document.querySelector('.introduction').offsetHeight;
+            //var introHeight = document.querySelector('.introduction').offsetHeight;
+            //document.querySelector('.company-names').innerHtml += introHeight;
+//            var titleHeight = document.getElementById('title-block-text').scrollHeight;
+            var introHeight = {{ $startingHeight }};// + titleHeight;
             var maxHeight = 1300;
             var smallHeight = (maxHeight - introHeight) + "px";
             var bigHeight = maxHeight + "px";
@@ -62,11 +65,6 @@
         <div class="pdf-container">
             <div class="introduction">
                 <div class="columns">
-                    @php
-                        if (($entity->submitted != null && strlen($entity->submitted->name) > 28) || ($entity->approved != null && strlen($entity->approved->name) > 28)) {
-                            $tableHeight = 81;
-                        }
-                    @endphp
                     @if (isset($tableHeight))
                         <table class="top-table" style="height: {{ $tableHeight }}px">
                     @else
@@ -144,21 +142,12 @@
                     </div>
                     <div class="wide-50">
                         @if ($logo != null)
-                            @php
-                                $height = 120;
-                                if ($type == 'VTRAM' && $entity->project->show_contact) {
-                                    $height += 90;
-                                }
-                                if ($entity->show_responsible_person) {
-                                    $height += 30;
-                                }
-                            @endphp
                             <img src="{{ $logo }}" class="logo" style="height: {{ $height }}px;max-width:100%;">
                         @endif
                     </div>
                 </div>
                 <br>
-                <div class="pdf-heading" style="background-color: {{ $entity->company->secondary_colour }}">
+                <div id="title-block-text" class="pdf-heading" style="background-color: {{ $entity->company->secondary_colour }}">
                     <h1>{{ $entity->company->vtrams_name ?? '' }} {{ $type == 'VTRAM' ? $entity->number : '' }}</h1>
                     <p>{!! $titleBlockText !!}</p>
                 </div>
@@ -230,25 +219,25 @@
                         <tr>
                             <th rowspan="2">No</th>
                             <th rowspan="2" class="hazard-width">Hazard/Risk</th>
-                            <th rowspan="2">Who at Risk</th>
+                            <th rowspan="2" class="who-risk-width">Who at Risk</th>
                             <th colspan="3">Initial Risk</th>
-                            <th class="left">Controls</th>
+                            <th class="left control-width">Controls</th>
                             <th colspan="3">Residual Risk</th>
                         </tr>
                         <tr>
-                            <th>P</th>
-                            <th>S</th>
-                            <th>R</th>
-                            <th></th>
-                            <th>P</th>
-                            <th>S</th>
-                            <th>R</th>
+                            <th class="haz-small-width">P</th>
+                            <th class="haz-small-width">S</th>
+                            <th class="haz-small-width">R</th>
+                            <th class="control-width"></th>
+                            <th class="haz-small-width">P</th>
+                            <th class="haz-small-width">S</th>
+                            <th class="haz-small-width">R</th>
                         </tr>
                         @foreach ($entity->hazards->sortBy('list_order') as $hazard)
                             <tr>
                                 <td>{{ $hazard->list_order }}</td>
                                 <td class="hazard-width">{{ $hazard->description }}</td>
-                                <td>
+                                <td class="who-risk-width">
                                 @foreach (array_filter($hazard->at_risk, function ($v) {
                                     return $v == "1";   
                                 }) as $key => $risk)
@@ -267,13 +256,13 @@
                                         @endif
                                     @endforeach
                                 </td>
-                                <td>{{ $hazard->risk_probability }}</td>
-                                <td>{{ $hazard->risk_severity }}</td>
-                                <td class="{{ $hazard->riskClass('risk') }}">{{ $riskList[$hazard->risk] }}</td>
-                                <td class="left">{{ $hazard->control }}</td>
-                                <td>{{ $hazard->r_risk_probability }}</td>
-                                <td>{{ $hazard->r_risk_severity }}</td>
-                                <td class="{{ $hazard->riskClass('r_risk') }}">{{ $riskList[$hazard->r_risk] }}</td>
+                                <td class="haz-small-width">{{ $hazard->risk_probability }}</td>
+                                <td class="haz-small-width">{{ $hazard->risk_severity }}</td>
+                                <td class="{{ $hazard->riskClass('risk') }} haz-small-width">{{ $riskList[$hazard->risk] }}</td>
+                                <td class="left control-width">{{ $hazard->control }}</td>
+                                <td class="haz-small-width">{{ $hazard->r_risk_probability }}</td>
+                                <td class="haz-small-width">{{ $hazard->r_risk_severity }}</td>
+                                <td class="{{ $hazard->riskClass('r_risk') }} haz-small-width">{{ $riskList[$hazard->r_risk] }}</td>
                             </tr>
                         @endforeach
                         @if ($entity->dynamic_risk)

@@ -17,7 +17,7 @@
             @foreach($rows as $row)
                 @if($row->heading)
                     <tr>
-                        <td class="heading">{!!$row->label!!}</td>
+                        <td class="heading">{{ $row->label }}</td>
                         <td class="heading"
                             @if($hasImage)
                                colspan="2"
@@ -26,22 +26,22 @@
                     </tr>
                 @else
                     <tr>
-                        <td>{!!$row->label!!}</td>
+                        <td>{{ $row->label }}</td>
                         <td
                         @if(!$row->image)
                             colspan="2"
                         @endif
                         >{!!$row->description!!}</td>
 
-                        <?php
-                        $imageSrc = null;
-                        if (!is_null($row->image)) {
-                            $imageSrc = EGFiles::download($row->image)->getFile()->getPathName() ?? null;
-                        }
-                        ?>
+                        @php
+                            $imageSrc = null;
+                            if (!is_null($row->image)) {
+                                $imageSrc = EGFiles::download($row->image)->getFile()->getPathName() ?? null;
+                            }
+                        @endphp
 
                         @if(!is_null($imageSrc))
-                            <td><img style="height: 200px; width: 200px" src="{{$imageSrc}}"></td>
+                            <td><img style="max-width: 200px" src="{{$imageSrc}}"></td>
                         @endif
                     </tr>
                 @endif
