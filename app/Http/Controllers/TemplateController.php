@@ -206,6 +206,14 @@ class TemplateController extends Controller
         $this->id = $templateId;
         $this->parentId = $otherId;
         parent::setup();
+
+        // because the ids come in backwards for this route, you need to flip them before they go into buildProperties
+        if ($this->identifierPath == 'company.template') {
+            $temp = $this->args[0];
+            $this->args[0] = $this->args[1];
+            $this->args[1] = $temp;
+        }
+
         parent::_buildProperties($this->args);
         if ($this->parentPath == '') {
             $this->parentPath = '/template';
