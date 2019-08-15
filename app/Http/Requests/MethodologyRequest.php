@@ -35,7 +35,12 @@ class MethodologyRequest extends FormRequest
                 $rules['text_before'] = 'required';
                 break;
             case "TEXT_IMAGE":
-                $rules['image'] = 'required|mimes:jpg,jpeg,png,bmp,tiff';
+                if (isset($data['image_check'])) {
+                    $rules['image'] = 'mimes:jpg,jpeg,png,bmp,tiff';
+                } else {
+                    $rules['image'] = 'required|mimes:jpg,jpeg,png,bmp,tiff';
+                }
+
                 $rules['image_on'] = 'required';
                 if ($this->image_on != "undefined") {
                     if ($this->image_on == "LEFT") {

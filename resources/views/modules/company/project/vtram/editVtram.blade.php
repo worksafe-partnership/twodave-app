@@ -830,8 +830,21 @@
                             if (rows !== undefined) {
                                 $.each(rows, function(key, row) {
                                     let newRow = "<tr class='columns' data-row='"+key+"'>";
-                                        newRow += "<th class='column'><input type='text' name='row_"+key+"__col_1' value='"+row.col_1+"'></input></th>";
-                                        newRow += "<td class='column'><input type='text' name='row_"+key+"__col_2' value='"+row.col_2+"'></input></td>";
+
+                                        newRow += "<th class='column'><input type='text' name='row_"+key+"__col_1' value='";
+                                        if (row.col_1 != null) {
+                                            newRow += row.col_1+"'></input></td>";
+                                        } else {
+                                            newRow += "'></input></td>";
+                                        }
+
+                                        newRow += "<td class='column'><input type='text' name='row_"+key+"__col_2' value='";
+                                        if (row.col_2 != null) {
+                                            newRow += row.col_2+"'></input></td>";
+                                        } else {
+                                            newRow += "'></input></td>";
+                                        }
+
                                         newRow += "<td class='column'><input type='text' name='row_"+key+"__col_3' value='";
                                         if (row.col_3 != null) {
                                             newRow += row.col_3+"'></input></td>";
@@ -863,17 +876,15 @@
                             $('#complex-table tbody').html('');
                             if (rows !== undefined) {
                                 $.each(rows, function(key, row) {
-
-                                    if (row.col_3 == "null") {
-                                        row.col_3 = '';
-                                    }
-
-                                    if (row.col_4 == "null") {
-                                        row.col_4 = '';
-                                    }
-
                                     let newRow = "<tr class='columns' data-row='"+key+"'>";
-                                        newRow += "<th class='column'><input type='text' name='row_"+key+"__col_1' value='"+row.col_1+"'></input></th>";
+
+                                        newRow += "<td class='column'><input type='text' name='row_"+key+"__col_1' value='";
+                                        if (row.col_1 != null) {
+                                            newRow += row.col_1+"'></input></td>";
+                                        } else {
+                                            newRow += "'></input></td>";
+                                        }
+
                                         newRow += "<td class='column'><input type='text' name='row_"+key+"__col_2' value='";
                                         if (row.col_2 != null) {
                                             newRow += row.col_2+"'></input></td>";
@@ -1053,6 +1064,13 @@
                     if ($('#methodology-text-image-form-container #image').prop('files')[0] !== undefined){
                         form_data.append('image', $('#methodology-text-image-form-container #image').prop('files')[0]);
                     }
+
+                    let imageCheck = $('.ti_image img');
+                    if (imageCheck.length > 0) {
+                        let image = $(imageCheck[0]).attr('src');
+                        form_data.append('image_check', image);
+                    }
+
                     let checked = $('input[name=image_on]:checked').val();
                     if (checked && checked !== "undefined") {
                         form_data.append('image_on', checked);
@@ -1155,7 +1173,9 @@
                             entity: '{{$entityType}}',
                             image: image,
                             image_on: form_data.get('image_on'),
-                            text_after: form_data.get('text_after')
+                            text_after: form_data.get('text_after'),
+                            icon_main_heading: form_data.get('icon_main_heading'),
+                            icon_sub_heading: form_data.get('icon_sub_heading')
                         });
                         $('.methodology-list-table').append('<tr id="methodology-' + id + '">\
                                 <td class="has-text-centered methodology-order">' + form_data.get('list_order')+ '</td>\
