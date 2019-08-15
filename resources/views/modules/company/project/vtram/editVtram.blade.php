@@ -381,6 +381,18 @@
             $('.risk-rating').css('border', '1px solid #404040');
             $('#hazard-form-container').css('display', 'inherit');
             $('#hazard-list-container').hide();
+
+            $('#description').val('');
+            $('#other_at_risk').val('');
+            $('#control').val('');
+
+            @foreach ($whoList as $key => $who)
+                if ($('#hazard-form-container input[name="at_risk[{{ $key }}]"]').val() == "1") {
+                    $('#main-hazard-container label[for="at_risk[{{ $key }}]"').click();
+                }
+            @endforeach
+
+            $('#related_methodologies_div .control select')[0].selectize.clear();
         }
 
         function editHazard(id) {
@@ -824,6 +836,7 @@
                         var image_on = methodology.image_on;
                         var before = methodology.text_before;
                         var after = methodology.text_after;
+                        $('#image').val('');
                         $('.ti_image').html('<img src="/image/'+methodology.image+'">');
                         break;
                     case 'SIMPLE_TABLE':
