@@ -91,7 +91,6 @@ $factory->define(App\Vtram::class, function (Faker $faker) {
         'company_id' => 1,
         'project_id' => 1,
         'name' => $faker->words(3, true),
-        'description' => $faker->words(3, true),
         // 'logo',
         'reference' => $faker->words(2, true),
         'key_points' => "<p>".$faker->words(50, true)."</p>",
@@ -137,7 +136,6 @@ $factory->define(App\Template::class, function (Faker $faker) {
     return [
         'company_id' => 1,
         'name' => 'Seeded Template '.$faker->numberBetween(0, 100),
-        'description' => 'Seeded Description',
         // 'logo',
         'reference' => 'Seeded Reference',
         'key_points' => "<p>".$faker->words(50, true)."</p>",
@@ -177,14 +175,14 @@ $factory->define(App\Hazard::class, function (Faker $faker) {
         // 'entity' => 'VTRAM',
         // 'entity_id' => 1,
         'control' => $faker->words($numberOfWords, true),
-        'risk' => $faker->numberBetween(0,3),
+        'risk' => $faker->numberBetween(0, 3),
         'risk_probability' => $faker->numberBetween(1, 5),
         'risk_severity' => $faker->numberBetween(1, 5),
-        'r_risk' => $faker->numberBetween(0,3),
+        'r_risk' => $faker->numberBetween(0, 3),
         'r_risk_probability' => $faker->numberBetween(1, 5),
         'r_risk_severity' => $faker->numberBetween(1, 5),
         'list_order' => $listOrder,
-        'at_risk' => $faker->randomElement(array_flip($config['hazard_who_risk'])),
+        'at_risk' => ["C" => 1],
         // 'other_at_risk'
     ];
 });
