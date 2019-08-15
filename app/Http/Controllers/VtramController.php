@@ -56,9 +56,7 @@ class VtramController extends CompanyVtramController
             $this->customValues['working_at_height'] = $company['working_at_height'];
             $this->customValues['manual_handling'] = $company['manual_handling'];
             $this->customValues['accident_reporting'] = $company['accident_reporting'];
-
         }
-
     }
 
     public function postIndexHook()
@@ -120,15 +118,16 @@ class VtramController extends CompanyVtramController
                 'order' => '600',
                 'id' => 'previousList'
             ];
+            // moving this into /edit also to stop supervisors seeing the approve button
+            $approvalConfig = config('structure.project.vtram.approval.config');
+            $this->actionButtons['approval'] = [
+                'label' => ucfirst($this->pageType)." ".$approvalConfig['plural'],
+                'path' => '/project/'.$this->parentId.'/vtram/'.$this->id.'/approval',
+                'icon' => $approvalConfig['icon'],
+                'order' => '500',
+                'id' => 'approvalList'
+            ];
         }
-        $approvalConfig = config('structure.project.vtram.approval.config');
-        $this->actionButtons['approval'] = [
-            'label' => ucfirst($this->pageType)." ".$approvalConfig['plural'],
-            'path' => '/project/'.$this->parentId.'/vtram/'.$this->id.'/approval',
-            'icon' => $approvalConfig['icon'],
-            'order' => '500',
-            'id' => 'approvalList'
-        ];
         if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
             $this->disableEdit = true;
         }
