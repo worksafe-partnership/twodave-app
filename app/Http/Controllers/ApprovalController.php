@@ -16,7 +16,7 @@ class ApprovalController extends CompanyApprovalController
     {
         if ($this->user->company_id !== null) {
             if (strpos($this->identifierPath, "vtram") !== false) {
-                $record = Vtram::with('project')
+                $vtram = Vtram::with('project')
                                ->findOrFail($this->parentId);
                 if ($this->user->company_id !== $vtram->project->company_id) {
                     abort(404);
