@@ -30,7 +30,7 @@ return [
     ],
     'sidebar' => [],
     'permissions' => true,
-    'exclude_route' => [
+    'exclude_routes' => [
         'create',
         'edit',
         'delete',

@@ -16,6 +16,14 @@ class WorksafeUserController extends Controller
 {
     protected $identifierPath = "user";
 
+    public function indexHook()
+    {
+        if ($this->user->roles->first()->slug == "company_admin") {
+            unset($this->config['datatable']['columns']['company_name']);
+        }
+    }
+
+
     public function bladeHook()
     {
         if ($this->user->company_id !== null && $this->record !== null) {
@@ -37,7 +45,7 @@ class WorksafeUserController extends Controller
                                               $companyUsers->whereNotIn('id', [1,2]);
                                            })
                                            ->pluck("name", "id");
-        $this->customValues['companies'] = Company::withTrashed()
+        $this->customValues['companies'] = Company::orderBy('name', 'ASC')->withTrashed()
             ->pluck('name', 'id');
         $this->customValues['userPage'] = true;
 

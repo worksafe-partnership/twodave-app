@@ -116,7 +116,7 @@ class Template extends Model
                 if (!is_null($company)) {
                     return $item->company->name;
                 }
-                return 'All';
+                return '';
             })
             ->editColumn('submitted_by', function ($item) {
                 $submitted = $item->submitted;
@@ -231,5 +231,19 @@ class Template extends Model
     {
         return $this->hasMany(Methodology::class, 'entity_id', 'id')
             ->where('entity', '=', 'TEMPLATE');
+    }
+
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by', 'id');
+    }
+
+    public function createdName()
+    {
+        if (!is_null($this->createdBy)) {
+            return $this->createdBy->name;
+        }
+        return "";
     }
 }

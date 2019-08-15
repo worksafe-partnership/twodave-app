@@ -23,6 +23,7 @@ class MethodologyRequest extends FormRequest
      */
     public function rules()
     {
+
         $category = $this->category;
         $rules = [
             'category' => 'required',
@@ -34,7 +35,7 @@ class MethodologyRequest extends FormRequest
                 $rules['text_before'] = 'required';
                 break;
             case "TEXT_IMAGE":
-                $rules['image'] = 'required';
+                $rules['image'] = 'required|mimes:jpg,jpeg,png,bmp,tiff';
                 $rules['image_on'] = 'required';
                 if ($this->image_on != "undefined") {
                     if ($this->image_on == "LEFT") {
@@ -43,7 +44,6 @@ class MethodologyRequest extends FormRequest
                         $rules['text_after'] = 'required';
                     }
                 }
-                $rules['image'] = 'mimes:jpg,jpeg,png,bmp,tiff';
                 break;
             case "SIMPLE_TABLE":
             case "COMPLEX_TABLE":
@@ -56,11 +56,6 @@ class MethodologyRequest extends FormRequest
             case "ICON":
                 $rules['icon_main_heading'] = 'required';
                 $rules['icon_list_top_0'] = 'required';
-
-                // MB: After - I assume these aren't required, but will leave commented for now.
-                // $rules['text_after'] = 'required';
-                // $rules['wording_bottom_0'] = 'required';
-                // $rules['icon_list_bottom_0'] = 'required';
                 break;
         }
 

@@ -395,6 +395,7 @@ class VTLogic
                 $cloned->status = 'NEW';
                 $cloned->revision_number = null;
                 $cloned->review_due = null;
+                $cloned->approved_by = null;
                 $cloned->approved_date = null;
                 $cloned->updated_by = null;
                 $cloned->created_by = Auth::id();

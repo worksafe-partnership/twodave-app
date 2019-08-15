@@ -340,8 +340,16 @@
                     $('#timescale_2').removeClass('hidden');
                 } else {
                     $('#timescale_2').addClass('hidden');
+                    $('#timescale_2 input[type="checkbox"]').prop('checked', false); // deslect all checkboxes on deselect
                 }
             });
+
+            @if(old('review_timescale') && old('review_timescale') != $record['review_timescale']) // ensuring relevant fields appear on failed validation
+               $('#timescale_1').removeClass('hidden');
+               if ($('#timescale_update').val() == 'select') {
+                    $('#timescale_2').removeClass('hidden');
+               }
+            @endif
         </script>
     @endpush
 @endif

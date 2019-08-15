@@ -15,8 +15,8 @@ use App\Http\Requests\ApprovalRequest;
 class CompanyApprovalController extends Controller
 {
     protected $identifierPath = 'company.project.vtram.approval';
-    
-    public function __construct() 
+
+    public function __construct()
     {
         $this->disableCreate = true;
         $this->disableEdit = true;
@@ -25,7 +25,7 @@ class CompanyApprovalController extends Controller
         $this->disablePermanetlyDelete = true;
         parent::__construct();
     }
-    
+
     public function store(ApprovalRequest $request)
     {
         $this->args = func_get_args();
@@ -35,7 +35,7 @@ class CompanyApprovalController extends Controller
         } else {
             $this->vtconfig = new VTConfig($id, 'TEMPLATE');
         }
-        if (!VTLogic::canReview($this->vtconfig->entity)) { 
+        if (!VTLogic::canReview($this->vtconfig->entity)) {
             abort(404);
         }
         $this->user = Auth::user();
@@ -76,7 +76,7 @@ class CompanyApprovalController extends Controller
                                 'status' => 'PREVIOUS',
                                 'date_replaced' => date('Y-m-d'),
                             ]);
-                        } 
+                        }
                     }
                 } else {
                     $template = Template::find($this->vtconfig->entity->created_from);
@@ -87,7 +87,7 @@ class CompanyApprovalController extends Controller
                             'date_replaced' => date('Y-m-d'),
                         ]);
                     }
-                }            
+                }
                 $this->vtconfig->entity->update([
                     'status' => 'CURRENT',
                     'approved_date' => date('Y-m-d'),
@@ -115,7 +115,7 @@ class CompanyApprovalController extends Controller
             $this->customValues['entity'] = Template::findOrFail($id);
             $type = 'Template';
         }
-        if (!VTLogic::canReview($this->customValues['entity'])) { 
+        if (!VTLogic::canReview($this->customValues['entity'])) {
             abort(404);
         }
         $this->user = Auth::user();
@@ -144,6 +144,7 @@ class CompanyApprovalController extends Controller
             'label' => 'Back to '.$type,
             'icon' => 'arrow-left',
         ];
+        $this->customValues['cancelPath'] = $this->backButton['path'];
         return parent::_renderView("layouts.custom");
     }
 }

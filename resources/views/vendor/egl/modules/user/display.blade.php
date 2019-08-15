@@ -84,7 +84,7 @@
                     @if (strpos($identifierPath, "company") === false && Auth::user()->company_id == null)
                         <div class="column is-6">
                             <div class="field company-field">
-                                {{ EGForm::select('company_id', [
+                                {{ EGForm::autocomplete('company_id', [
                                     "label" => "Company",
                                     "type" => $pageType,
                                     "list" => $companies,

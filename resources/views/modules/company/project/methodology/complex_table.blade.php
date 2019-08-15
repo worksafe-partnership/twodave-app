@@ -42,56 +42,6 @@
 
 <div class="columns">
     <div class="column is-10 is-offset-1">
-        <p class="sub-heading">New Row</p>
-        <div class="columns">
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::text('complex_col_1', [
-                        'label' => 'Cell 1',
-                        'value' => '',
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::text('complex_col_2', [
-                        'label' => 'Cell 2',
-                        'value' => '',
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="columns">
-    <div class="column is-10 is-offset-1">
-        <div class="columns">
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::text('complex_col_3', [
-                        'label' => 'Cell 3',
-                        'value' => '',
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::text('complex_col_4', [
-                        'label' => 'Cell 4',
-                        'value' => '',
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="columns">
-    <div class="column is-10 is-offset-1">
         <div class="columns">
             <div class="column is-6">
                 <div class="field">
@@ -124,24 +74,36 @@
         if (row_id == 1) {
             type = "th";
         }
-        if ($('#complex_col_1').val() != "") {
-            let row = "<tr data-row='"+row_id+"'>";
-                row += "<"+type+"><input type='text' name='row_"+row_id+"__col_1' value='"+$('#complex_col_1').val()+"'></input></"+type+">";
-                row += "<"+type+"><input type='text' name='row_"+row_id+"__col_2' value='"+$('#complex_col_2').val()+"'></input></"+type+">";
-                row += "<"+type+"><input type='text' name='row_"+row_id+"__col_3' value='"+$('#complex_col_3').val()+"'></input></"+type+">";
-                row += "<"+type+"><input type='text' name='row_"+row_id+"__col_4' value='"+$('#complex_col_4').val()+"'></input></"+type+">";
+        let row = "<tr class='columns' data-row='"+row_id+"'>";
+            row += "<"+type+" class='column is-2'><input type='text' name='row_"+row_id+"__col_1' value=''></input></"+type+">";
+            row += "<"+type+" class='column is-2'><input type='text' name='row_"+row_id+"__col_2' value=''></input></"+type+">";
+            row += "<"+type+" class='column is-2'><input type='text' name='row_"+row_id+"__col_3' value=''></input></"+type+">";
+            row += "<"+type+" class='column is-2'><input type='text' name='row_"+row_id+"__col_4' value=''></input></"+type+">";
+            row += "<td class='column is-1'><a class='handms-icons delete_icon' onclick='deleteComplexRow("+parseInt(row_id)+")'><svg class='eg-delete'><use xmlns:xlink='http://www.w3.org/1999/xlink' xlink:href='/eg-icons.svg#eg-delete'></use></svg></a></td>";
             row += "</tr>"
-            table.append(row);
-            row_id++;
-            table.attr('data-next_row', row_id);
-            $('#complex_col_1').val('');
-            $('#complex_col_2').val('');
-            $('#complex_col_3').val('');
-            $('#complex_col_4').val('');
-        } else {
-            toastr.error('Please ensure your row is populated');
-        }
+        table.append(row);
+        row_id++;
+        table.attr('data-next_row', row_id);
     })
+
+    function deleteComplexRow(key) {
+        $('#complex-table tbody tr[data-row='+key+']').remove();
+
+        let remaining = $('#complex-table tbody tr');
+        $.each(remaining, function(index, tr) {
+            if (index >= key) {
+                let cell = $(tr);
+                cell.attr('data-row', index);
+                cell.find('[name*="col_1"]').attr('name', 'row_'+index+'__col_1');
+                cell.find('[name*="col_2"]').attr('name', 'row_'+index+'__col_2');
+                cell.find('[name*="col_3"]').attr('name', 'row_'+index+'__col_3');
+                cell.find('[name*="col_4"]').attr('name', 'row_'+index+'__col_4');
+                cell.find('.delete_icon').attr('onclick', 'deleteComplexRow('+index+')');
+            }
+        });
+        $('#complex-table').attr('data-next_row', remaining.length);
+    }
+
 </script>
 
 <style>

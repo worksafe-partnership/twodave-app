@@ -103,16 +103,15 @@ class PrincipleContractorController extends Controller
         $this->view = 'modules.company.project.vtram.display';
         $this->pageType = 'view';
         $this->record = $vtrams;
-        if ($this->record->pages_in_pdf == 4) {
-            $path = 'javascript: window.open("'.$this->record->id.'/view_a3", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
-        } else {
-            $path = 'javascript: window.open("'.$this->record->id.'/view_a4", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
-        }
+        // another example where it needs to open in A4 but actually print in A3.
+        $path = 'javascript: window.open("'.$this->record->id.'/view_a4", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
+
         $this->actionButtons['approve_vtrams'] = [
-            'label' => 'Approve VTRAMS',
+            'label' => 'Approve / Amend / Reject VTRAMS',
             'path' => $path,
             'icon' => 'playlist_add_check',
             'id' => 'approve_vtrams',
+            'class' => 'is-success',
             'order'=> 100,
         ];
         $this->disableCreate = true;
@@ -166,7 +165,7 @@ class PrincipleContractorController extends Controller
         $types['PC_R'] = $company->reject_label;
         $this->customValues['approvalTypes'] = $types;
         $this->customValues['entity'] = $vtrams;
-        $this->pageType = 'create';
+        $this->pageType = 'custom';
         $this->submitButtonText = 'Create VTRAMS Approval';
 
         parent::setup();
@@ -232,7 +231,7 @@ class PrincipleContractorController extends Controller
                             'status' => 'PREVIOUS',
                             'date_replaced' => date('Y-m-d'),
                         ]);
-                    } 
+                    }
                 }
             } else {
                 $template = Template::find($this->vtconfig->entity->created_from);
@@ -243,12 +242,19 @@ class PrincipleContractorController extends Controller
                         'date_replaced' => date('Y-m-d'),
                     ]);
                 }
-            }            
-            $this->vtconfig->entity->update([
+            }
+            $update = [
                 'status' => 'CURRENT',
                 'approved_date' => date('Y-m-d'),
                 'revision_number' => $revisionNumber,
-            ]);
+            ];
+
+            // if accept, remove resubmit by date.
+            if ($approval->type == 'PC_A') {
+                $update['resubmit_by'] = null;
+            }
+            $this->vtconfig->entity->update($update);
+
         } else if ($approval->type == 'PC_R') {
             $this->vtconfig->entity->update([
                 'status' => 'EXTERNAL_REJECT',
@@ -257,7 +263,7 @@ class PrincipleContractorController extends Controller
         }
         if ($this->totalVtrams == 0) {
             UniqueLink::where('unique_link', '=', $this->link)
-                ->delete();     
+                ->delete();
             toast()->success('Successfully Approved VTRAMS, there are no more VTRAMS to approve');
             return '/login';
         }

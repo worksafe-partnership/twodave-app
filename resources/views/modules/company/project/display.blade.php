@@ -189,6 +189,8 @@
             var name = $(this).prev().val();
             if (name == "1") {
                 $('.principle-contractor-details').hide();
+                $('#principle_contractor_name').val('');
+                $('#principle_contractor_email').val('');
             } else {
                 $('.principle-contractor-details').show();
             }
