@@ -764,6 +764,10 @@
                         cat = 'PROCESS';
                         $('#process-table tbody tr').remove();
                         $('#process-table').attr('data-next_row', 0);
+                        $('#is_heading').prop('checked', false);
+                        $('#new_label').val('');
+                        $('#new_description').val('');
+                        $('#' + container + ' #image_id').val('');
                         break;
                     case 'ICON':
                         container = 'methodology-icon-form-container';
