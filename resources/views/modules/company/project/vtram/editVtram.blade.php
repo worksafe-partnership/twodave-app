@@ -769,8 +769,13 @@
                         container = 'methodology-icon-form-container';
                         $('#top-body td').remove();
                         $('#bottom-body td').remove();
-                        $('#top_heading').html("Main Table");
-                        $('#sub_heading').html("Sub Table");
+                        $('#icon_main_heading').val('');
+                        $('#icon_sub_heading').val('');
+                        $('#' + container + ' input[name=type]')[0].checked = false;
+                        $('#' + container + ' input[name=type]')[1].checked = false;
+                        $('#icon_list').prop('selectedIndex',0);
+                        $('#image_preview').attr('src', '/gfx/icons/no_image.png');
+                        $('#words').val('');
                         cat = 'ICON';
                         break;
                 }

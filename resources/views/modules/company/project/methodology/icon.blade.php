@@ -254,10 +254,16 @@
 
         td += select;
 
+
+        let text = '';
+        if(tdData['text']) {
+            text = tdData['text'];
+        }
+
         let wording = '<div class="field">\
                         <label for="wording">Wording:</label>\
                         <div class="control">\
-                            <input type="text" name="wording_'+loc+'_'+list_order+'" class="form-control input wording" value="'+tdData['text']+'">\
+                            <input type="text" name="wording_'+loc+'_'+list_order+'" class="form-control input wording" value="'+text+'">\
                         </div>\
                       </div>'
 
