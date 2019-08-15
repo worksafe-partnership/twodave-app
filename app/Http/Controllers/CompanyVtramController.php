@@ -160,7 +160,7 @@ class CompanyVtramController extends Controller
         if ($this->record->pages_in_pdf == 4) {
             $this->pillButtons['view_pdf_a3'] = [
                 'label' => 'View PDF A3',
-                'path' => $this->record->id.'/view_a4',
+                'path' => $this->record->id.'/view_a3',
                 'icon' => 'file-pdf',
                 'order' => 100,
                 'id' => 'view_pdf_a3',

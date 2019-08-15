@@ -831,28 +831,28 @@
                                 $.each(rows, function(key, row) {
                                     let newRow = "<tr class='columns' data-row='"+key+"'>";
 
-                                        newRow += "<th class='column is-2'><input type='text' name='row_"+key+"__col_1' value='";
+                                        newRow += "<th class='column'><input type='text' name='row_"+key+"__col_1' value='";
                                         if (row.col_1 != null) {
                                             newRow += row.col_1+"'></input></td>";
                                         } else {
                                             newRow += "'></input></td>";
                                         }
 
-                                        newRow += "<td class='column is-2'><input type='text' name='row_"+key+"__col_2' value='";
+                                        newRow += "<td class='column'><input type='text' name='row_"+key+"__col_2' value='";
                                         if (row.col_2 != null) {
                                             newRow += row.col_2+"'></input></td>";
                                         } else {
                                             newRow += "'></input></td>";
                                         }
 
-                                        newRow += "<td class='column is-2'><input type='text' name='row_"+key+"__col_3' value='";
+                                        newRow += "<td class='column'><input type='text' name='row_"+key+"__col_3' value='";
                                         if (row.col_3 != null) {
                                             newRow += row.col_3+"'></input></td>";
                                         } else {
                                             newRow += "'></input></td>";
                                         }
 
-                                        newRow += "<td class='column is-2'><input type='text' name='row_"+key+"__col_4' value='";
+                                        newRow += "<td class='column'><input type='text' name='row_"+key+"__col_4' value='";
                                         if (row.col_4 != null) {
                                             newRow += row.col_4+"'></input></td>";
                                         } else {
@@ -878,28 +878,28 @@
                                 $.each(rows, function(key, row) {
                                     let newRow = "<tr class='columns' data-row='"+key+"'>";
 
-                                        newRow += "<td class='column is-2'><input type='text' name='row_"+key+"__col_1' value='";
+                                        newRow += "<td class='column'><input type='text' name='row_"+key+"__col_1' value='";
                                         if (row.col_1 != null) {
                                             newRow += row.col_1+"'></input></td>";
                                         } else {
                                             newRow += "'></input></td>";
                                         }
 
-                                        newRow += "<td class='column is-2'><input type='text' name='row_"+key+"__col_2' value='";
+                                        newRow += "<td class='column'><input type='text' name='row_"+key+"__col_2' value='";
                                         if (row.col_2 != null) {
                                             newRow += row.col_2+"'></input></td>";
                                         } else {
                                             newRow += "'></input></td>";
                                         }
 
-                                        newRow += "<td class='column is-2'><input type='text' name='row_"+key+"__col_3' value='";
+                                        newRow += "<td class='column'><input type='text' name='row_"+key+"__col_3' value='";
                                         if (row.col_3 != null) {
                                             newRow += row.col_3+"'></input></td>";
                                         } else {
                                             newRow += "'></input></td>";
                                         }
 
-                                        newRow += "<td class='column is-2'><input type='text' name='row_"+key+"__col_4' value='";
+                                        newRow += "<td class='column'><input type='text' name='row_"+key+"__col_4' value='";
                                         if (row.col_4 != null) {
                                             newRow += row.col_4+"'></input></td>";
                                         } else {

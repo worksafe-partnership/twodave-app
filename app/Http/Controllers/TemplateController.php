@@ -392,7 +392,7 @@ class TemplateController extends Controller
                 abort(404);
             }
         }
-        if ($templates->pages_in_pdf == 4) {
+        if ($template->pages_in_pdf == 4) {
             return VTLogic::createA3Pdf($template);
         }
         return VTLogic::createPdf($template);

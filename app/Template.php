@@ -21,7 +21,6 @@ class Template extends Model
     protected $fillable = [
         'company_id',
         'name',
-        'description',
         'logo',
         'reference',
         'key_points',
@@ -58,7 +57,6 @@ class Template extends Model
                 'id',
                 'company_id',
                 'name',
-                'description',
                 'logo',
                 'reference',
                 'key_points',
