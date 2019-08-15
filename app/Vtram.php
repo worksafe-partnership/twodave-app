@@ -65,7 +65,7 @@ class Vtram extends Model
 
     public static function scopePcDatatableAll($query, $parent, $identifier, $email)
     {
-        $query->select([
+        $query->withTrashed(can('permanentlyDelete', $identifier))->select([
                 'id',
                 'project_id',
                 'name',
@@ -97,9 +97,9 @@ class Vtram extends Model
             ]);
 
         $query->whereHas('project', function ($q) use ($email) {
-            return $q->where('principle_contractor_email', '=' , $email);
+            return $q->where('principle_contractor_email', '=', $email);
         })
-            ->where('status', '=', 'AWAITING_EXTERNAL');
+        ->where('status', '=', 'AWAITING_EXTERNAL');
 
         return app('datatables')->of($query)
             ->editColumn('project_id', function ($item) {
