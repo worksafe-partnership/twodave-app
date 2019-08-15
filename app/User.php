@@ -50,7 +50,7 @@ class User extends Authenticatable
             $query->where('company_id', '=', $user->company_id);
         }
 
-        $data = $query->withTrashed(can('permanentlyDelete', $identifier))->select(
+        $data = $query->withTrashed(can('permanentlyDelete', $config))->select(
             "id",
             "company_id",
             "name",
