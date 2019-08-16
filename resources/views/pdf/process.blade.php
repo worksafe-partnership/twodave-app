@@ -15,31 +15,32 @@
                 @endif
             </tr>
             @foreach($rows as $row)
+                @php
+                    $imageSrc = null;
+                    if (!is_null($row->image)) {
+                        $imageSrc = EGFiles::download($row->image)->getFile()->getPathName() ?? null;
+                    }
+                @endphp
                 @if($row->heading)
                     <tr>
                         <td class="heading">{{ $row->label }}</td>
                         <td class="heading"
-                            @if($hasImage)
+                            @if(is_null($row->image))
                                colspan="2"
                             @endif
                         >{!!$row->description!!}</td>
+                        @if(!is_null($imageSrc))
+                            <td><img style="max-width: 200px" src="{{$imageSrc}}"></td>
+                        @endif
                     </tr>
                 @else
                     <tr>
                         <td>{{ $row->label }}</td>
                         <td
-                        @if(!$row->image)
+                        @if(is_null($row->image))
                             colspan="2"
                         @endif
                         >{!!$row->description!!}</td>
-
-                        @php
-                            $imageSrc = null;
-                            if (!is_null($row->image)) {
-                                $imageSrc = EGFiles::download($row->image)->getFile()->getPathName() ?? null;
-                            }
-                        @endphp
-
                         @if(!is_null($imageSrc))
                             <td><img style="max-width: 200px" src="{{$imageSrc}}"></td>
                         @endif

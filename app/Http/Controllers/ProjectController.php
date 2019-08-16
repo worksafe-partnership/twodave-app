@@ -62,6 +62,12 @@ class ProjectController extends CompanyProjectController
         ];
     }
 
+    /*public function permanentlyDeleted($original, $args)
+    {
+        dd(func_get_args());
+        VTFiles::delete($original->logo, true);
+    }*/
+
     public function store(ProjectRequest $request, $companyId = null)
     {
         $request->merge([
