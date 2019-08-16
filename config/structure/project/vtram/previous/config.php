@@ -16,6 +16,7 @@ return [
         "columns" => [
             'id' => ['visible' => false, 'searchable' => false, 'label' => 'Id'],
             'project_id' => ['label' => 'Project'],
+            'number' => ['label' => 'VTRAMS Number'],
             'name' => ['label' => 'Name'],
             'logo' => [
                 'label' => 'Logo',

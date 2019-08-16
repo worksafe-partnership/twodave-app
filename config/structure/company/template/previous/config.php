@@ -44,6 +44,5 @@ return [
         'delete',
         'permanentlyDelete',
         'restore',
-        'datatable_all',
     ],
 ];
