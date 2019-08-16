@@ -125,7 +125,6 @@ class CompanyApprovalController extends Controller
             }
         }
         $this->view = 'modules.company.project.vtram.approveVtram';
-        $this->heading = "Approving ".$this->customValues['entity']->name." ".$type;
         $company = Company::findOrFail($this->user->company_id ?? $this->customValues['entity']->company_id);
         $this->customValues['company'] = $company;
         $types = config('egc.approval_type');
@@ -144,7 +143,13 @@ class CompanyApprovalController extends Controller
             'label' => 'Back to '.$type,
             'icon' => 'arrow-left',
         ];
+        $this->heading = "Viewing Approval Feedback";
         $this->customValues['cancelPath'] = $this->backButton['path'];
         return parent::_renderView("layouts.custom");
+    }
+
+    public function viewEditHook()
+    {
+        $this->heading = "Viewing Approval Feedback";
     }
 }
