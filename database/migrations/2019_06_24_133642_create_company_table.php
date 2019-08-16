@@ -20,7 +20,7 @@ class CreateCompanyTable extends Migration
             $table->string('vtrams_name', 100);
             $table->string('email');
             $table->string('phone');
-            $table->string('fax');
+            $table->string('fax')->nullable();
             $table->char('low_risk_character')->default('L');
             $table->char('med_risk_character')->default('M');
             $table->char('high_risk_character')->default('H');

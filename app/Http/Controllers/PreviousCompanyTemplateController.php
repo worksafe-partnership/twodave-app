@@ -31,6 +31,14 @@ class PreviousCompanyTemplateController extends CompanyTemplateController
             'order' => '500',
             'id' => 'approvalList'
         ];
+        $this->pillButtons['view_comments'] = [
+            'label' => 'View All Comments',
+            'path' => $this->record->id.'/comment',
+            'icon' => 'comment',
+            'order' => 800,
+            'id' => 'view_comments',
+        ];
+        $this->customValues['companyId'] = $this->record->company_id;
     }
 
     public function store(TemplateRequest $request, $companyId = null)

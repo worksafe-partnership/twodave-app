@@ -328,7 +328,7 @@ class TemplateController extends Controller
                 'label' => 'View All Comments',
                 'path' => $this->record->id.'/comment',
                 'icon' => 'comment',
-                'order' => 100,
+                'order' => 600,
                 'id' => 'view_comments',
             ];
         }

@@ -118,7 +118,7 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => 'can:view-company.project.vtram',
         'uses' => 'CompanyVtramController@viewA3'
     ]);
-    Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/previous/{previous_id}/view_ar43', [
+    Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/previous/{previous_id}/view_a4', [
         'middleware' => 'can:view-company.project.vtram.previous',
         'uses' => 'CompanyPreviousVtramController@viewA4'
     ]);
@@ -256,17 +256,33 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => 'can:view-company.project.vtram',
         'uses' => 'CompanyVtramController@commentsList'
     ]);
+    Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/previous/{previous_id}/comment', [
+        'middleware' => 'can:view-company.project.vtram.previous',
+        'uses' => 'CompanyPreviousVtramController@commentsList'
+    ]);
     Route::get('/project/{project_id}/vtram/{vtram_id}/comment', [
         'middleware' => 'can:view-project.vtram',
         'uses' => 'VtramController@commentsList'
+    ]);
+    Route::get('/project/{project_id}/vtram/{vtram_id}/previous/{previous_id}/comment', [
+        'middleware' => 'can:view-project.vtram.previous',
+        'uses' => 'PreviousVtramController@commentsList'
     ]);
     Route::get('/company/{company_id}/template/{template_id}/comment', [
         'middleware' => 'can:view-company.template',
         'uses' => 'CompanyTemplateController@commentsList'
     ]);
+    Route::get('/company/{company_id}/template/{template_id}/previous/{previous_id}/comment', [
+        'middleware' => 'can:view-company.template.previous',
+        'uses' => 'PreviousCompanyTemplateController@commentsList'
+    ]);
     Route::get('/template/{template_id}/comment', [
         'middleware' => 'can:view-template',
         'uses' => 'TemplateController@commentsList'
+    ]);
+    Route::get('/template/{template_id}/previous/{previous_id}/comment', [
+        'middleware' => 'can:view-template.previous',
+        'uses' => 'PreviousTemplateController@commentsList'
     ]);
     // Methodologies
     // create

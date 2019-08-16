@@ -373,9 +373,6 @@ class VTLogic
         return DB::transaction(function () use ($original, $cloned) {
             if ($cloned == null) {
                 $cloned = $original->replicate();
-                if ($original->original_id == null) {
-                    $cloned->original_id = $original->id;
-                }
                 if ($cloned instanceof Vtram) {
                     $cloned->created_from_entity = $original instanceof Vtram ? 'VTRAM' : 'TEMPLATE';
                     $cloned->created_from_id = $original->id;
@@ -404,6 +401,21 @@ class VTLogic
                 $cloned->date_replaced = null;
                 $cloned->resubmit_by = null;
                 $cloned->save();
+                if ($original instanceof Vtram) {
+                    Vtram::where('current_id', '=', $original->id)
+                        ->update([
+                            'current_id' => $cloned->id,
+                        ]);
+                } else {
+                    Template::where('current_id', '=', $original->id)
+                        ->update([
+                            'current_id' => $cloned->id,
+                        ]);
+                }
+
+                $original->current_id = $cloned->id;
+                $original->status = 'PREVIOUS';
+                $original->save();
             }
             $hazardOld = [];
             foreach ($original->hazards as $hazard) {
