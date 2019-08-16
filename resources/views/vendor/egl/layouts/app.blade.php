@@ -200,13 +200,10 @@
     @endif
     @stack('scripts')
     <script>
-        toastr.options.closeHtml = ' <button class="delete"></button>';
-        toastr.options.timeout = 10000;
-        toastr.options.positionClass = 'toast-bottom-right';
-        toastr.options.newestOnTop = false;
         $(".nano").nanoScroller({ iOSNativeScrolling: true });
     </script>
-    @include('vendor.roksta.toastr')
+    @include("egl::partials.toastr")
+
     @yield('body-content')
     <script>
     // polyfill for svg icons ie8+
