@@ -8,14 +8,18 @@
     @endphp
     <div class="image_text_block">
         @if($methodology->image_on == "BEFOR")
-            <div class="text-image-icon-div" style="float:left; padding-right: 5px">
-                <img src="{{$imageSrc}}" style="width: 100px;">
+            <div>
+                <div class="text-image-div inline"><img src="{{$imageSrc}}" width="100"></div>
+                <div style="width:340px" class="inline">{!!$methodology->text_before!!}</div>
             </div>
-            {!!$methodology->text_before!!}
+            <br>
+            <div>{!!$methodology->text_after!!}</div>
         @else
-            {!!$methodology->text_after!!}
-            <div class="text-image-icon-div" style="float:left; bottom: 0; padding-right: 5px">
-                <img src="{{$imageSrc}}" style="width: 100px;">
+            <div>{!!$methodology->text_before!!}</div>
+            <br>
+            <div>
+                <div class="text-image-div inline"><img src="{{$imageSrc}}" width="100"></div>
+                <div style="width:340px" class="inline">{!!$methodology->text_after!!}</div>
             </div>
         @endif
     </div>

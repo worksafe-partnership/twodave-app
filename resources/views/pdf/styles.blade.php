@@ -191,8 +191,14 @@
         vertical-align: top;
     }
 
-    .text-image-icon-div {
+    .inline {
         display:inline-block;
+    }
+
+    .text-image-div {
+        width: 100px;
+        margin-right: 5px;
+        vertical-align: top;
     }
 
     .key-points {
