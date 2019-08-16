@@ -26,10 +26,10 @@ class VTConfig
                 break;
             case is_int((int)$e) && $type != null && in_array($type, ['VTRAM', 'TEMPLATE']):
                 if ($type == 'VTRAM') {
-                    $this->entity = Vtram::findOrFail($e);
+                    $this->entity = Vtram::withTrashed()->findOrFail($e);
                     $this->entityType = 'VTRAM';
                 } else {
-                    $this->entity = Template::findOrFail($e);
+                    $this->entity = Template::withTrashed()->findOrFail($e);
                     $this->entityType = 'TEMPLATE';
                 }
 

@@ -54,4 +54,12 @@ class VTFiles extends EGFiles
         }
         return false;
     }
+
+    public static function deleteFile($fileId, $perm = false)
+    {
+        self::findOrFail($fileId)->delete();
+        if ($perm) {
+            self::withTrashed()->findOrFail($fileId)->delete();
+        }
+    }
 }

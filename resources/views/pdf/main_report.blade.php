@@ -267,6 +267,9 @@
                         @endforeach
                         @if ($entity->dynamic_risk)
                             <tr>
+                                <td colspan="10" style="text-align: center">Dynamic Risks</td>
+                            </tr>
+                            <tr>
                                 <td></td>
                                 <td></td>
                                 <td></td>

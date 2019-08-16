@@ -48,7 +48,9 @@ class Template extends Model
         'show_area',
         'area',
         'main_description',
-        'post_risk_assessment_text'
+        'post_risk_assessment_text',
+        'pages_in_pdf',
+        'pdf'
     ];
 
     public static function scopeDatatableAll($query, $parent, $identifier)
