@@ -738,10 +738,6 @@
                         title = 'Disposing of Waste';
                         content = company.disposing_of_waste;
                         break;
-                    case 'FIRST_AID':
-                        title = 'First Aid';
-                        content = company.first_aid;
-                        break;
                     case 'NOISE':
                         title = 'Noise';
                         content = company.noise;
@@ -757,6 +753,14 @@
                     case 'ACC_REPORT':
                         title = 'Accident Reporting';
                         content = company.accident_reporting;
+                        break;
+                    case 'FIRST_AID':
+                        container = 'methodology-text-image-form-container';
+                        cat = 'TEXT_IMAGE';
+                        title = 'First Aid';
+                        $('#'+container+' #image').val('');
+                        $('.ti_image').html('');
+                        content = company.first_aid;
                         break;
                     case 'TEXT_IMAGE':
                         container = 'methodology-text-image-form-container';
