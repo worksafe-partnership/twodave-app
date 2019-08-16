@@ -31,7 +31,7 @@ class TemplateController extends Controller
 
     public function postEditHook()
     {
-        if (in_array($this->record->status, ['REJECTED','EXTERNAL_REJECT','NEW'])) {
+        if (in_array($this->record->status, ['REJECTED','EXTERNAL_REJECT','NEW']) && is_null($this->record['deleted_at'])) {
             $this->formButtons['save_and_submit'] = [
                 'class' => [
                     'submitbutton',
@@ -53,12 +53,13 @@ class TemplateController extends Controller
 
     public function viewHook()
     {
-        if (can('edit', $this->identifierPath) && in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
+
+        if (can('edit', $this->identifierPath) && in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED']) && is_null($this->record['deleted_at'])) {
             $this->actionButtons['methodologies'] = [
                 'label' => 'Hazards & Methodologies',
                 'path' => '/template/'.$this->id.'/methodology',
                 'icon' => 'receipt',
-                'order' => '500',
+                'order' => '550',
                 'id' => 'methodologyEdit',
             ];
         }
@@ -68,7 +69,7 @@ class TemplateController extends Controller
             'label' => ucfirst($this->pageType)." ".$prevConfig['plural'],
             'path' => '/template/'.$this->id.'/previous',
             'icon' => $prevConfig['icon'],
-            'order' => '500',
+            'order' => '560',
             'id' => 'previousList'
         ];
         $approvalConfig = config('structure.template.approval.config');
@@ -76,7 +77,7 @@ class TemplateController extends Controller
             'label' => ucfirst($this->pageType)." ".$approvalConfig['plural'],
             'path' => '/template/'.$this->id.'/approval',
             'icon' => $approvalConfig['icon'],
-            'order' => '500',
+            'order' => '570',
             'id' => 'approvalList'
         ];
         if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
@@ -96,7 +97,9 @@ class TemplateController extends Controller
     {
         $this->customValues['companies'] = Company::when(!is_null($this->user->company_id), function ($sub) {
             $sub->where('id', $this->user->company_id);
-        })->orderBy('name', 'ASC')->pluck('name', 'id');
+        })->orderBy('name', 'ASC')
+        ->withTrashed()
+        ->pluck('name', 'id');
     }
 
     public function store(TemplateRequest $request)
@@ -300,7 +303,7 @@ class TemplateController extends Controller
             'id' => 'print_pdf',
             'target' => '_blank',
         ];
-        if (in_array($this->record->status, ['NEW','REJECTED','EXTERNAL_REJECT'])) {
+        if (in_array($this->record->status, ['NEW','REJECTED','EXTERNAL_REJECT']) && is_null($this->record['deleted_at'])) {
             $this->pillButtons['submit_for_approval'] = [
                 'label' => 'Submit for Approval',
                 'path' => $this->record->id.'/submit',
@@ -336,17 +339,19 @@ class TemplateController extends Controller
             } else {
                 $path = 'javascript: window.open("'.$this->record->id.'/view_a4", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
             }
-            $this->pillButtons['approve_template'] = [
-                'label' => 'Approve Template',
-                'path' => $path,
-                'icon' => 'playlist_add_check',
-                'id' => 'approve_template',
-            ];
+            if (is_null($this->record['deleted_at'])) {
+                $this->pillButtons['approve_template'] = [
+                    'label' => 'Approve Template',
+                    'path' => $path,
+                    'icon' => 'playlist_add_check',
+                    'id' => 'approve_template',
+                ];
+            }
         }
 
         $template = Template::where('created_from', '=', $this->record->id)
             ->get();
-        if ($this->record->status == 'CURRENT' && $template->count() == 0) {
+        if ($this->record->status == 'CURRENT' && $template->count() == 0 && is_null($this->record['deleted_at'])) {
             $this->actionButtons[] = [
                 'label' => 'Create New Revision',
                 'path' => $this->record->id.'/revision',

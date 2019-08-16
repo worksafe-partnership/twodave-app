@@ -21,7 +21,7 @@ class CompanyTemplateController extends TemplateController
                 'label' => 'Hazards & Methodologies',
                 'path' => '/company/'.$this->parentId.'/template/'.$this->id.'/methodology',
                 'icon' => 'receipt',
-                'order' => '500',
+                'order' => '550',
                 'id' => 'methodologyEdit',
             ];
         }
@@ -31,7 +31,7 @@ class CompanyTemplateController extends TemplateController
             'label' => ucfirst($this->pageType)." ".$prevConfig['plural'],
             'path' => '/company/'.$this->parentId.'/template/'.$this->id.'/previous',
             'icon' => $prevConfig['icon'],
-            'order' => '500',
+            'order' => '560',
             'id' => 'previousList'
         ];
         $approvalConfig = config('structure.company.template.approval.config');
@@ -39,7 +39,7 @@ class CompanyTemplateController extends TemplateController
             'label' => ucfirst($this->pageType)." ".$approvalConfig['plural'],
             'path' => '/company/'.$this->parentId.'/template/'.$this->id.'/approval',
             'icon' => $approvalConfig['icon'],
-            'order' => '500',
+            'order' => '570',
             'id' => 'approvalList'
         ];
         if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {

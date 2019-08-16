@@ -10,8 +10,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Template extends Model
 {
+    use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
     use SoftDeletes;
     protected $table = 'templates';
+    protected $softCascade = ['approvals'];
 
     /**
      * The attributes that are mass assignable.
@@ -150,7 +152,7 @@ class Template extends Model
 
     public function company()
     {
-        return $this->belongsTo(Company::class, 'company_id', 'id');
+        return $this->belongsTo(Company::class, 'company_id', 'id')->withTrashed();
     }
 
     public function submitted()
@@ -243,5 +245,11 @@ class Template extends Model
             return $this->createdBy->name;
         }
         return "";
+    }
+
+    public function approvals()
+    {
+        return $this->hasMany(Approval::class, 'entity_id', 'id')
+            ->where('entity', '=', 'TEMPLATE');
     }
 }

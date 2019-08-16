@@ -122,12 +122,12 @@ class CompanyVtramController extends Controller
 
     public function viewHook()
     {
-        if (in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
+        if (in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED']) && is_null($this->record['deleted_at'])) {
             $this->actionButtons['methodologies'] = [
                 'label' => 'Hazards & Methodologies',
                 'path' => '/company/'.$this->args[0].'/project/'.$this->parentId.'/vtram/'.$this->id.'/methodology',
                 'icon' => 'receipt',
-                'order' => '500',
+                'order' => '550',
                 'id' => 'methodologyEdit',
             ];
         }
@@ -136,7 +136,7 @@ class CompanyVtramController extends Controller
             'label' => ucfirst($this->pageType)." ".$prevConfig['plural'],
             'path' => '/company/'.$this->args[0].'/project/'.$this->parentId.'/vtram/'.$this->id.'/previous',
             'icon' => $prevConfig['icon'],
-            'order' => '500',
+            'order' => '560',
             'id' => 'previousList'
         ];
         $approvalConfig = config('structure.company.project.vtram.approval.config');
@@ -144,7 +144,7 @@ class CompanyVtramController extends Controller
             'label' => ucfirst($this->pageType)." ".$approvalConfig['plural'],
             'path' => '/company/'.$this->args[0].'/project/'.$this->parentId.'/vtram/'.$this->id.'/approval',
             'icon' => $approvalConfig['icon'],
-            'order' => '500',
+            'order' => '570',
             'id' => 'approvalList'
         ];
 
@@ -192,7 +192,7 @@ class CompanyVtramController extends Controller
             'id' => 'print_pdf',
             'target' => '_blank',
         ];
-        if (in_array($this->record->status, ['NEW','REJECTED','EXTERNAL_REJECT']) && can('edit', $this->identifierPath)) {
+        if (in_array($this->record->status, ['NEW','REJECTED','EXTERNAL_REJECT']) && can('edit', $this->identifierPath) && is_null($this->record['deleted_at'])) {
             $this->pillButtons['submit_for_approval'] = [
                 'label' => 'Submit for Approval',
                 'path' => $this->record->id.'/submit',
@@ -246,7 +246,7 @@ class CompanyVtramController extends Controller
             ->where('created_from_id', '=', $this->record->id)
             ->get();
 
-        if ($this->record->status == 'CURRENT' && $vtrams->count() == 0 && can('edit', $this->identifierPath)) {
+        if ($this->record->status == 'CURRENT' && $vtrams->count() == 0 && can('edit', $this->identifierPath)  && $this->record->created_from_id != null) {
             $this->actionButtons[] = [
                 'label' => 'Create New Revision',
                 'path' => $this->record->id.'/revision',
@@ -268,6 +268,13 @@ class CompanyVtramController extends Controller
         }
         return parent::_edit(func_get_args());
     }
+
+    // public function view() // blocking soft deleted records being seen by users who can't see sd'ed items
+    // {
+    //     $this->args = func_get_args();
+    //     $this->record = Vtram::findOrFail(end($this->args))->withTrashed();
+    //     return parent::_view($this->args);
+    // }
 
     public function submitForApproval($companyId, $projectId, $vtramId)
     {
@@ -533,7 +540,7 @@ class CompanyVtramController extends Controller
         $args = func_get_args();
         $id = end($args);
         $userCompany = Auth::User()->company_id;
-        $record = Vtram::findOrFail($id);
+        $record = Vtram::withTrashed()->findOrFail($id);
 
         if (!is_null($userCompany)) {
             if ($userCompany != $record->company_id) {

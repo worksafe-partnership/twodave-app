@@ -23,7 +23,7 @@ class CompanyController extends Controller
             'label' => ucfirst($this->pageType)." ".$projectConfig['plural'],
             'path' => '/company/'.$this->id.'/project',
             'icon' => $projectConfig['icon'],
-            'order' => '400',
+            'order' => '550',
             'id' => 'projectsList'
         ];
 
@@ -32,7 +32,7 @@ class CompanyController extends Controller
             'label' => ucfirst($this->pageType)." ".$templateConfig['plural'],
             'path' => '/company/'.$this->id.'/template',
             'icon' => $templateConfig['icon'],
-            'order' => '500',
+            'order' => '560',
             'id' => 'templatesList'
         ];
 
@@ -41,17 +41,19 @@ class CompanyController extends Controller
             'label' => ucfirst($this->pageType)." ".$userConfig['plural'],
             'path' => '/company/'.$this->id.'/user',
             'icon' => $userConfig['icon'],
-            'order' => '550',
+            'order' => '570',
             'id' => 'templatesList'
         ];
 
-        $this->actionButtons['clone'] = [
-            'label' => 'Clone',
-            'path' => '/company/'.$this->id.'/clone',
-            'icon' => 'copy',
-            'order' => '600',
-            'id' => 'cloneCompany',
-        ];
+        if (is_null($this->record['deleted_at'])) {
+            $this->actionButtons['clone'] = [
+                'label' => 'Clone',
+                'path' => '/company/'.$this->id.'/clone',
+                'icon' => 'copy',
+                'order' => '600',
+                'id' => 'cloneCompany',
+            ];
+        }
     }
 
     public function store(CompanyRequest $request)

@@ -9,8 +9,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Briefing extends Model
 {
+    use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
     use SoftDeletes;
     protected $table = 'briefings';
+    protected $softCascade = ['attendance'];
 
     /**
      * The attributes that are mass assignable.
@@ -64,12 +66,12 @@ class Briefing extends Model
 
     public function project()
     {
-        return $this->belongsTo(Project::class, 'project_id', 'id');
+        return $this->belongsTo(Project::class, 'project_id', 'id')->withTrashed();
     }
 
     public function vtram()
     {
-        return $this->belongsTo(Vtram::class, 'vtram_id', 'id');
+        return $this->belongsTo(Vtram::class, 'vtram_id', 'id')->withTrashed();
     }
 
     public function createdTimestamp()
@@ -78,5 +80,10 @@ class Briefing extends Model
             return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->timestamp;
         }
         return '';
+    }
+
+    public function attendance()
+    {
+        return $this->hasMany(Attendance::class, 'briefing_id', 'id')->withTrashed();
     }
 }

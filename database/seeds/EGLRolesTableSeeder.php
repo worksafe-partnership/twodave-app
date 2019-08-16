@@ -112,19 +112,19 @@ class EGLRolesTableSeeder extends Seeder
 
             // covers /user
             if (strpos($perm, "-user") !== false) {
-                if (strpos($perm, "permanentlyDelete") === false) {
+                // if (strpos($perm, "permanentlyDelete") === false) {
                     $evergreenPermissions[$perm] = 1;
                     $adminPermissions[$perm] = 1;
                     $companyAdminPermissions[$perm] = 1;
-                }
+                // }
             }
 
             //covers /company/{id}/user
-            if (strpos($perm, "user") !== false) {
-                if (strpos($perm, "permanentlyDelete") === false) {
+            if (strpos($perm, ".user") !== false) {
+                // if (strpos($perm, "permanentlyDelete") === false) {
                     $evergreenPermissions[$perm] = 1;
                     $adminPermissions[$perm] = 1;
-                }
+                // }
             }
 
         }

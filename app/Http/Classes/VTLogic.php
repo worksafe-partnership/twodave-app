@@ -224,13 +224,13 @@ class VTLogic
         $config = new VTConfig($entityId, $entityType);
         //if status is null, show all
         if (!is_null($entityType) && !$status) {
-            return Approval::where('entity_id', $config->entityId)
+            return Approval::withTrashed()->where('entity_id', $config->entityId)
                                 ->where('approvals.entity', $config->entityType)
                                 ->get();
         }
 
         if (!is_null($entityType) && in_array($status, ['REJECTED', 'EXTERNAL_REJECT', 'CURRENT', 'PREVIOUS'])) {
-            return Approval::where('entity_id', $config->entityId)
+            return Approval::withTrashed()->where('entity_id', $config->entityId)
                                 ->where('approvals.entity', $config->entityType)
                                 ->when(in_array($status, ['CURRENT', 'PREVIOUS']), function ($atTime) {
                                     $atTime->where('status_at_time', 'ACCEPT');

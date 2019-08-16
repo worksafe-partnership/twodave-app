@@ -14,11 +14,11 @@ class CompanyBriefingController extends Controller
     public function bladeHook()
     {
         if ($this->pageType == 'create') {
-            $this->customValues['vtrams'] = Vtram::where('project_id', '=', $this->parentId)
+            $this->customValues['vtrams'] = Vtram::withTrashed()->where('project_id', '=', $this->parentId)
                 ->where('status', '=', 'CURRENT')
                 ->pluck('name', 'id');
         } else {
-            $this->customValues['vtrams'] = Vtram::where('project_id', '=', $this->parentId)
+            $this->customValues['vtrams'] = Vtram::withTrashed()->where('project_id', '=', $this->parentId)
                 ->pluck('name', 'id');
         }
     }
@@ -30,11 +30,11 @@ class CompanyBriefingController extends Controller
             'label' => ucfirst($this->pageType)." ".$attendanceConfig['plural'],
             'path' => '/company/'.$this->args[0].'/project/'.$this->parentId.'/briefing/'.$this->id.'/attendance',
             'icon' => $attendanceConfig['icon'],
-            'order' => '400',
+            'order' => '550',
             'id' => 'briefingsList'
         ];
     }
-    
+
     public function store(BriefingRequest $request, $companyId, $projectId)
     {
         $request->merge([

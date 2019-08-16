@@ -67,6 +67,7 @@ class User extends Authenticatable
                 'company_name' => $row->company_name,
                 'name' => $row->name,
                 'email' => $row->email,
+                'deleted_at' => $row->deleted_at
             ];
         }
         return ["data" => $result];
@@ -101,7 +102,7 @@ class User extends Authenticatable
 
     public function company()
     {
-        return $this->belongsTo(Company::class, 'company_id', 'id');
+        return $this->belongsTo(Company::class, 'company_id', 'id')->withTrashed();
     }
 
     public function getCompanyNameAttribute()
