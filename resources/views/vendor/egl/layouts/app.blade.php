@@ -202,7 +202,7 @@
     <script>
         $(".nano").nanoScroller({ iOSNativeScrolling: true });
     </script>
-    @include("egl::partials.toastr")
+    @includeIf("egl::partials.toastr")
 
     @yield('body-content')
     <script>
