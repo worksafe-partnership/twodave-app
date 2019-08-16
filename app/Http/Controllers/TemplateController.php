@@ -351,7 +351,7 @@ class TemplateController extends Controller
 
         $template = Template::where('created_from', '=', $this->record->id)
             ->get();
-        if ($this->record->status == 'CURRENT' && $template->count() == 0 && is_null($this->record['deleted_at'])) {
+        if ($this->record->status == 'CURRENT' && $template->count() == 0 && is_null($this->record['deleted_at']) && can('edit', $this->identifierPath)) {
             $this->actionButtons[] = [
                 'label' => 'Create New Revision',
                 'path' => $this->record->id.'/revision',
