@@ -42,7 +42,8 @@ class CompanyProjectTrackerController extends Controller
         $args = func_get_args();
         $nowCarbon = Carbon::now();
         $twoWeeksCarbon = $nowCarbon->copy()->addWeeks(2);
-        $query = Vtram::where('status', '!=', 'PREVIOUS')
+        $query = Vtram::withTrashed()
+                        ->where('status', '!=', 'PREVIOUS')
                         ->where('project_id', '=', $args[1])
                         ->where('company_id', '=', $args[0])
                         ->get([
@@ -58,7 +59,8 @@ class CompanyProjectTrackerController extends Controller
                             'submitted_date',
                             'approved_date',
                             'approved_by',
-                            'review_due'
+                            'review_due',
+                            'deleted_at'
                         ]);
 
         return app('datatables')->of($query)

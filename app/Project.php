@@ -9,8 +9,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Project extends Model
 {
+    use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
     use SoftDeletes;
     protected $table = 'projects';
+    protected $softCascade = ['vtrams', 'briefings'];
 
     /**
      * The attributes that are mass assignable.
@@ -123,4 +125,15 @@ class Project extends Model
         }
         return false;
     }
+
+    public function vtrams()
+    {
+        return $this->hasMany(Vtram::class, 'project_id', 'id');
+    }
+
+    public function briefings()
+    {
+        return $this->hasMany(Briefing::class, 'project_id', 'id');
+    }
+
 }

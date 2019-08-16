@@ -15,8 +15,8 @@ class CompanyProjectController extends Controller
 
     public function bladeHook()
     {
-        $this->customValues['company'] = Company::findOrFail($this->parentId);
-        $this->customValues['projectAdmins'] = User::where('company_id', '=', $this->parentId)
+        $this->customValues['company'] = Company::withTrashed()->findOrFail($this->parentId);
+        $this->customValues['projectAdmins'] = User::withTrashed()->where('company_id', '=', $this->parentId)
             ->whereHas('roles', function ($q) {
                 $q->where('slug', '=', 'project_admin');
             })
@@ -59,7 +59,7 @@ class CompanyProjectController extends Controller
                 ->join('users', 'user_projects.user_id', '=', 'users.id')
                 ->pluck('name', 'users.id');
         } else {
-            $this->customValues['allUsers'] = User::where('company_id', '=', $companyId)
+            $this->customValues['allUsers'] = User::withTrashed()->where('company_id', '=', $companyId)
                 ->pluck('name', 'id');
         }
     }

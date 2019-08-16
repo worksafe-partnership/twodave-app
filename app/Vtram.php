@@ -9,8 +9,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Vtram extends Model
 {
+    use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
+
     use SoftDeletes;
     protected $table = 'vtrams';
+    protected $softCascade = ['approvals'];
 
     /**
      * The attributes that are mass assignable.
@@ -227,12 +230,12 @@ class Vtram extends Model
 
     public function company()
     {
-        return $this->belongsTo(Company::class, 'company_id', 'id');
+        return $this->belongsTo(Company::class, 'company_id', 'id')->withTrashed();
     }
 
     public function project()
     {
-        return $this->belongsTo(Project::class, 'project_id', 'id');
+        return $this->belongsTo(Project::class, 'project_id', 'id')->withTrashed();
     }
 
     public function submitted()
@@ -425,5 +428,11 @@ class Vtram extends Model
             }
         }
         return "";
+    }
+
+    public function approvals()
+    {
+        return $this->hasMany(Approval::class, 'entity_id', 'id')
+            ->where('entity', '=', 'VTRAM');
     }
 }

@@ -100,7 +100,7 @@ class VtramController extends CompanyVtramController
 
     public function viewHook()
     {
-        if (can('edit', $this->identifierPath) && in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
+        if (can('edit', $this->identifierPath) && in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])  && is_null($this->record['deleted_at'])) {
             $this->actionButtons['methodologies'] = [
                 'label' => 'Hazards & Methodologies',
                 'path' => '/project/'.$this->parentId.'/vtram/'.$this->id.'/methodology',
@@ -124,7 +124,7 @@ class VtramController extends CompanyVtramController
                 'label' => ucfirst($this->pageType)." ".$approvalConfig['plural'],
                 'path' => '/project/'.$this->parentId.'/vtram/'.$this->id.'/approval',
                 'icon' => $approvalConfig['icon'],
-                'order' => '500',
+                'order' => '650',
                 'id' => 'approvalList'
             ];
         }

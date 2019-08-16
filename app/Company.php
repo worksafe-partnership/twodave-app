@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Company extends Model
 {
+    use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
     use SoftDeletes;
     protected $table = 'companies';
-    
+    protected $softCascade = ['users', 'projects', 'templates'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -96,5 +98,20 @@ class Company extends Model
             return $config[$this->review_timescale];
         }
         return 'None Selected';
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class, 'company_id', 'id');
+    }
+
+    public function projects()
+    {
+        return $this->hasMany(Project::class, 'company_id', 'id');
+    }
+
+    public function templates()
+    {
+        return $this->hasMany(Template::class, 'company_id', 'id');
     }
 }

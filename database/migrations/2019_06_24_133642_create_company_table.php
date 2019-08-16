@@ -49,7 +49,7 @@ class CreateCompanyTable extends Migration
 
         Schema::table('users', function (Blueprint $table) {
             $table->unsignedInteger('company_id')->nullable()->before('email');
-            $table->foreign('company_id')->references('id')->on('companies');
+            $table->foreign('company_id')->references('id')->on('companies')->onDelete('CASCADE')->onUpdate('CASCADE');
         });
     }
 
