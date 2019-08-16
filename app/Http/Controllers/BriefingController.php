@@ -22,7 +22,7 @@ class BriefingController extends CompanyBriefingController
         if ($this->user->inRole('supervisor') && $this->record !== null) {
             if (!$this->record->project->userOnProject($this->user->id)) {
                 abort(404);
-            }        
+            }
         }
         parent::bladeHook();
     }
@@ -48,7 +48,7 @@ class BriefingController extends CompanyBriefingController
             'id' => 'briefingsList'
         ];
     }
-    
+
     public function store(BriefingRequest $request, $projectId, $otherId = null)
     {
         $request->merge([
@@ -59,6 +59,13 @@ class BriefingController extends CompanyBriefingController
             $request,
             $projectId
         ]);
+    }
+
+    public function view() // blocking soft deleted records being seen by users who can't see sd'ed items
+    {
+        $this->args = func_get_args();
+        $this->record = Briefing::findOrFail(end($this->args));
+        return parent::_view($this->args);
     }
 
     public function update(BriefingRequest $request)

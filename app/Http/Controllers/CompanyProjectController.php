@@ -43,6 +43,13 @@ class CompanyProjectController extends Controller
         $this->customValues['timescales'] = $timescales;
     }
 
+    public function view() // blocking soft deleted records being seen by users who can't see sd'ed items
+    {
+        $this->args = func_get_args();
+        $this->record = Project::withTrashed()->findOrFail(end($this->args));
+        return parent::_view($this->args);
+    }
+
     protected function getProjectUsers($companyId)
     {
         $selected = [];

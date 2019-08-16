@@ -25,5 +25,9 @@ return [
             ],
         ]
     ],
-    'permissions' => true
+    'permissions' => true,
+    'override_route_actions' => [
+        '_view' => 'view'
+    ]
+
 ];

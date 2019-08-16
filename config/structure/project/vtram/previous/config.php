@@ -50,4 +50,7 @@ return [
         'permanentlyDelete',
         'restore',
     ],
+    'override_route_actions' => [
+        '_view' => 'view'
+    ]
 ];

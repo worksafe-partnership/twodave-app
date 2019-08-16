@@ -129,9 +129,9 @@ class Approval extends Model
     public function vtram()
     {
         if ($this->entity == 'VTRAM') {
-            return $this->belongsTo(Vtram::class, 'entity_id', 'id');
+            return $this->belongsTo(Vtram::class, 'entity_id', 'id')->withTrashed();
         } else {
-            return $this->belongsTo(Template::class, 'entity_id', 'id');
+            return $this->belongsTo(Template::class, 'entity_id', 'id')->withTrashed();
         }
     }
 

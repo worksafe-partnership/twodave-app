@@ -269,12 +269,12 @@ class CompanyVtramController extends Controller
         return parent::_edit(func_get_args());
     }
 
-    // public function view() // blocking soft deleted records being seen by users who can't see sd'ed items
-    // {
-    //     $this->args = func_get_args();
-    //     $this->record = Vtram::findOrFail(end($this->args))->withTrashed();
-    //     return parent::_view($this->args);
-    // }
+    public function view() // blocking soft deleted records being seen by users who can't see sd'ed items
+    {
+        $this->args = func_get_args();
+        $this->record = Vtram::withTrashed()->findOrFail(end($this->args));
+        return parent::_view($this->args);
+    }
 
     public function submitForApproval($companyId, $projectId, $vtramId)
     {

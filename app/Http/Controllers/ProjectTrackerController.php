@@ -26,7 +26,7 @@ class ProjectTrackerController extends Controller
     public function indexHook()
     {
         if ($this->user->company_id !== null) {
-            $project = Project::findOrFail($this->parentId);
+            $project = Project::withTrashed()->findOrFail($this->parentId);
             if ($this->user->company_id !== $project->company_id) {
                 abort(404);
             }

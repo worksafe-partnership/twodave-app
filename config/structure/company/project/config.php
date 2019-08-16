@@ -27,5 +27,8 @@ return [
             'review_timescale' => ['label' => 'Review Timescale'],
         ]
     ],
-    'permissions' => true
+    'permissions' => true,
+    'override_route_actions' => [
+        '_view' => 'view'
+    ]
 ];
