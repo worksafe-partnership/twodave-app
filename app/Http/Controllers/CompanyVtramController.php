@@ -308,9 +308,9 @@ class CompanyVtramController extends Controller
             }
         }
         if ($vtram->pages_in_pdf == 4) {
-            return VTLogic::createA3Pdf($vtram);
+            return VTLogic::createA3Pdf($vtram, null, true);
         }
-        return VTLogic::createPdf($vtram);
+        return VTLogic::createPdf($vtram, null, true);
     }
 
     public function viewA4($companyId, $projectId, $vtramId, $otherId = null)

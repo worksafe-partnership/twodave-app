@@ -401,14 +401,14 @@ class TemplateController extends Controller
         }
         $template = Template::findOrFail($templateId);
         if ($user->company_id !== null) {
-            if ($user->company_id !== $template->company_id && $template->company_id !== null) {
+            if ($user->company_id !== $template->company_id) {
                 abort(404);
             }
         }
         if ($template->pages_in_pdf == 4) {
-            return VTLogic::createA3Pdf($template);
+            return VTLogic::createA3Pdf($template, null, true);
         }
-        return VTLogic::createPdf($template);
+        return VTLogic::createPdf($template, null, true);
     }
 
     public function viewA4($templateId, $companyId = null, $otherId = null)
@@ -419,11 +419,11 @@ class TemplateController extends Controller
         }
         $template = Template::findOrFail($templateId);
         if ($user->company_id !== null) {
-            if ($user->company_id !== $template->company_id && $template->company_id !== null) {
+            if ($user->company_id !== $template->company_id) {
                 abort(404);
             }
         }
-        return VTLogic::createPdf($template);
+        return VTLogic::createPdf($template, null, true);
     }
 
     public function updated($update, $orig, $request, $args)

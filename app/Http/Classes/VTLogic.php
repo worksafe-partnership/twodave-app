@@ -31,10 +31,13 @@ class VTLogic
     }
 
     // Static functions
-    public static function createA3Pdf($entityId, $entityType = null)
+    public static function createA3Pdf($entityId, $entityType = null, $force = false)
     {
         $config = new VTConfig($entityId, $entityType);
 
+        if ($force) {
+            self::createPdf($config->entity, null, true);
+        }
         $file = VTFiles::findOrFail($config->entity->pdf);
         $path = storage_path('app/'.$file->location);
         $merger = new Merger;
@@ -45,6 +48,7 @@ class VTLogic
 
         $response = \Response::make($merger->merge(), 200);
         $response->header('Content-Type', 'application/pdf');
+        $response->header('Content-Disposition', 'filename="'.$config->entity->name.'.pdf"');
         return $response;
     }
 
@@ -155,7 +159,7 @@ class VTLogic
             ->setOption('margin-right', 5)
             ->setOption('margin-bottom', 5);
 #        return view('pdf.main_report', $data);
-        $returnStream = $pdf->stream();
+        $returnStream = $pdf->stream($config->entity->name.'.pdf');
         $instances = null;
         preg_match_all('/Count [0-9]+/', $pdf->download()->getContent(), $instances);
         $count = 0;
