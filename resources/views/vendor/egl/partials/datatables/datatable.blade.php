@@ -57,7 +57,7 @@ options.columns = [
                         if ((type === 'display' || type === 'filter') && typeof(data) != "undefined") {
                             if (typeof(data.date) != "undefined" && data.date != '' && data.date != null) {
                                 var dateFormat = "{{isset($value['date_format']) ? $value['date_format'] : 'DD/MM/YYYY'}}";
-                                return "<div style=\"outline: 8px solid " + data.colour + "\" class="+data.class+">"+(moment(data.date * 1000).format(dateFormat))+"</div>";
+                                return "<div style=\"outline: 4px solid " + data.colour + "; margin-top: 3px\" class="+data.class+">"+(moment(data.date * 1000).format(dateFormat))+"</div>";
                             } else {
                                 return ''; // return blank to hide zero timestamp
                             }
