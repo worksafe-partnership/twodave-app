@@ -246,7 +246,7 @@ class CompanyVtramController extends Controller
             ->where('created_from_id', '=', $this->record->id)
             ->get();
 
-        if ($this->record->status == 'CURRENT' && $vtrams->count() == 0 && can('edit', $this->identifierPath)  && $this->record->created_from_id != null) {
+        if ($this->record->status == 'CURRENT' && $vtrams->count() == 0 && can('edit', $this->identifierPath) && is_null($this->record['deleted_at'])) {
             $this->actionButtons[] = [
                 'label' => 'Create New Revision',
                 'path' => $this->record->id.'/revision',
