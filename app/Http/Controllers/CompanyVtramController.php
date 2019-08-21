@@ -564,8 +564,11 @@ class CompanyVtramController extends Controller
     }
 
 
-    public function permanentlyDeleted($record)
+    public function permanentlyDeleted($record, $args)
     {
+        // $record doesn't contain the id???
+        $id = end($args);
+
         $project = Project::withTrashed()->findOrFail($record->project_id);
         $vtramsCount = VTram::join('projects', 'vtrams.project_id', '=', 'projects.id')
                        ->where('vtrams.status', 'AWAITING_EXTERNAL')
@@ -576,5 +579,20 @@ class CompanyVtramController extends Controller
         if ($vtramsCount == 0) {
             UniqueLink::where('email', $project->principle_contractor_email)->delete();
         }
+
+        Approval::where('entity', '=', 'VTRAM')
+                ->where('entity_id', '=', $id)
+                ->forceDelete();
+
+        $hazards = Hazard::where('entity', '=', 'VTRAM')
+                        ->where('entity_id', '=', $id)
+                        ->delete();
+
+        $methodologies = Methodology::where('entity', '=', 'VTRAM')
+                        ->where('entity_id', '=', $id)->pluck('id');
+
+        $links = DB::table('hazards_methodologies')->whereIn('methodology_id', $methodologies)->delete();
+
+        Methodology::whereIn('id', $methodologies)->delete();
     }
 }
