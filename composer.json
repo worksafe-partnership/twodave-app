@@ -14,7 +14,7 @@
         "php": ">=7.0.0",
         "askedio/laravel-soft-cascade": "5.5.*",
         "barryvdh/laravel-snappy": "^0.4.4",
-        "evergreen/generic": "2.1.*",
+        "evergreen/generic": "dev-develop",
         "fideloper/proxy": "~3.3",
         "h4cc/wkhtmltopdf-i386": "^0.12.4",
         "iio/libmergepdf": "^4.0",

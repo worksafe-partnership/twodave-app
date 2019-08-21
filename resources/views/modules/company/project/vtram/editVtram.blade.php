@@ -382,9 +382,9 @@
             $('#hazard-form-container').css('display', 'inherit');
             $('#hazard-list-container').hide();
 
-            $('#description').val('');
+            CKEDITOR.instances.description.setData('');
             $('#other_at_risk').val('');
-            $('#control').val('');
+            CKEDITOR.instances.control.setData('');
 
             @foreach ($whoList as $key => $who)
                 if ($('#hazard-form-container input[name="at_risk[{{ $key }}]"]').val() == "1") {
@@ -404,7 +404,7 @@
                     break;
                 }
             }
-            $('#hazard-form-container [name="description"]').val(hazard['description']);
+            CKEDITOR.instances.description.setData(hazard['description']);
             $('#hazard-form-container [name="at_risk"]').val(hazard['at_risk']);
             @foreach ($whoList as $key => $who)
                 if (hazard['at_risk'].{{ $key }} == "1") {
@@ -415,7 +415,7 @@
             $('#hazard-form-container [name="risk"]').val(hazard['risk']);
             $('#hazard-form-container [name="risk_severity"]').val(hazard['risk_severity']);
             $('#hazard-form-container [name="risk_probability"]').val(hazard['risk_probability']);
-            $('#hazard-form-container [name="control"]').val(hazard['control']);
+            CKEDITOR.instances.control.setData(hazard['control']);
             $('#hazard-form-container [name="r_risk"]').val(hazard['r_risk']);
             $('#hazard-form-container [name="r_risk_severity"]').val(hazard['r_risk_severity']);
             $('#hazard-form-container [name="r_risk_probability"]').val(hazard['r_risk_probability']);
@@ -446,8 +446,8 @@
 
             var data = {
                 _token: '{{ csrf_token() }}',
-                description: $('#main-hazard-container #description').val(),
-                control: $('#main-hazard-container #control').val(),
+                description: CKEDITOR.instances.description.getData(),
+                control: CKEDITOR.instances.control.getData(),
                 risk: $('#main-hazard-container #risk').val(),
                 risk_probability: $('#main-hazard-container #risk_probability').val(),
                 risk_severity: $('#main-hazard-container #risk_severity').val(),
@@ -728,31 +728,31 @@
                 switch (type) {
                     case 'TASK_DESC':
                         title = 'Task Description';
-                        content = company.task_description;
+                        CKEDITOR.instances.text_content.setData(company.task_description);
                         break;
                     case 'PLANT_EQUIP':
                         title = 'Plant & Equipment';
-                        content = company.plant_and_equipment;
+                        CKEDITOR.instances.text_content.setData(company.plant_and_equipment);
                         break;
                     case 'DISP_WASTE':
                         title = 'Disposing of Waste';
-                        content = company.disposing_of_waste;
+                        CKEDITOR.instances.text_content.setData(company.disposing_of_waste);
                         break;
                     case 'NOISE':
                         title = 'Noise';
-                        content = company.noise;
+                        CKEDITOR.instances.text_content.setData(company.noise);
                         break;
                     case 'WORK_HIGH':
                         title = 'Working at Height';
-                        content = company.working_at_height;
+                        CKEDITOR.instances.text_content.setData(company.working_at_height);
                         break;
                     case 'MAN_HANDLE':
                         title = 'Manual Handling';
-                        content = company.manual_handling;
+                        CKEDITOR.instances.text_content.setData(company.manual_handling);
                         break;
                     case 'ACC_REPORT':
                         title = 'Accident Reporting';
-                        content = company.accident_reporting;
+                        CKEDITOR.instances.text_content.setData(company.accident_reporting);
                         break;
                     case 'FIRST_AID':
                         container = 'methodology-text-image-form-container';
@@ -760,25 +760,32 @@
                         title = 'First Aid';
                         $('#'+container+' #image').val('');
                         $('.ti_image').html('');
-                        content = company.first_aid;
+                        CKEDITOR.instances.image_text_before.setData(company.first_aid);
+                        CKEDITOR.instances.image_text_after.setData('');
                         break;
                     case 'TEXT_IMAGE':
                         container = 'methodology-text-image-form-container';
                         cat = 'TEXT_IMAGE';
                         $('#'+container+' #image').val('');
                         $('.ti_image').html('');
+                        CKEDITOR.instances.image_text_before.setData('');
+                        CKEDITOR.instances.image_text_after.setData('');
                         break;
                     case 'SIMPLE_TABLE':
                         container = 'methodology-simple-table-form-container';
                         cat = 'SIMPLE_TABLE';
                         $('#simple-table tbody tr').remove();
                         $('#simple-table').attr('data-next_row', 0);
+                        CKEDITOR.instances.simple_text_before.setData('');
+                        CKEDITOR.instances.simple_text_after.setData('');
                         break;
                     case 'COMPLEX_TABLE':
                         container = 'methodology-complex-table-form-container';
                         cat = 'COMPLEX_TABLE';
                         $('#complex-table tbody tr').remove();
                         $('#complex-table').attr('data-next_row', 0);
+                        CKEDITOR.instances.complex_text_before.setData('');
+                        CKEDITOR.instances.complex_text_after.setData('');
                         break;
                     case 'PROCESS':
                         container = 'methodology-process-form-container';
@@ -789,6 +796,7 @@
                         $('#new_label').val('');
                         $('#new_description').val('');
                         $('#' + container + ' #image_id').val('');
+                        CKEDITOR.instances.new_description.setData('');
                         break;
                     case 'ICON':
                         container = 'methodology-icon-form-container';
@@ -801,23 +809,27 @@
                         $('#icon_list').prop('selectedIndex',0);
                         $('#image_preview').attr('src', '/gfx/icons/no_image.png');
                         $('#words').val('');
+                        CKEDITOR.instances.icon_text_after.setData('');
                         cat = 'ICON';
                         break;
                 }
                 $('[id^=methodology-][id$=-form-container]').css('display', 'none');
                 $('#methodology-list-container').hide();
                 $('#' + container + ' #title').val(title);
-                if ($('#' + container + ' #content')) {
-                    $('#' + container + ' #content').val(content);
+                /*if ($('#' + container + ' #content')) {
+                    CKEDITOR.instances.content.setData(content);
+//                    $('#' + container + ' #content').val(content);
                 }
 
                 if ($('#' + container + ' #text_before').length) {
-                    $('#' + container + ' #text_before').val('');
+                    CKEDITOR.instances.text_before.setData('');
+//                    $('#' + container + ' #text_before').val('');
                 }
 
                 if ($('#' + container + ' #text_after').length) {
-                    $('#' + container + ' #text_after').val('');
-                }
+                    CKEDITOR.instances.text_after.setData('');
+//                    $('#' + container + ' #text_after').val('');
+                }*/
 
                 if ($('#' + container + ' input[name=image_on]').length) {
                     $('#' + container + ' input[name=image_on]')[0].checked = false;
@@ -839,13 +851,13 @@
                 let container = 'methodology-text-form-container';
                 switch (methodology.category) {
                     case 'TEXT':
-                        content = methodology.text_before;
+                        CKEDITOR.instances.text_content.setData(methodology.text_before);
                         break;
                     case 'TEXT_IMAGE':
                         container = 'methodology-text-image-form-container';
                         var image_on = methodology.image_on;
-                        var before = methodology.text_before;
-                        var after = methodology.text_after;
+                        CKEDITOR.instances.image_text_before.setData(methodology.text_before);
+                        CKEDITOR.instances.image_text_after.setData(methodology.text_after);
                         $('#image').val('');
                         $('.ti_image').html('<img src="/image/'+methodology.image+'">');
                         break;
@@ -893,8 +905,8 @@
                                 $('#simple-table').attr('data-next_row', Object.keys(rows).length);
                             }
                         }
-                        var before = methodology.text_before;
-                        var after = methodology.text_after;
+                        CKEDITOR.instances.simple_text_before.setData(methodology.text_before);
+                        CKEDITOR.instances.simple_text_after.setData(methodology.text_after);
                         break;
                     case 'COMPLEX_TABLE':
                         container = 'methodology-complex-table-form-container';
@@ -941,8 +953,8 @@
                                 });
                             }
                         }
-                        var before = methodology.text_before;
-                        var after = methodology.text_after;
+                        CKEDITOR.instances.complex_text_before.setData(methodology.text_before);
+                        CKEDITOR.instances.complex_text_after.setData(methodology.text_after);
                         break;
                     case 'PROCESS':
                         container = 'methodology-process-form-container';
@@ -993,7 +1005,7 @@
                                     $('#process-table').attr('data-next_row', Object.keys(rows).length);
                                 });
                             }
-                            var after = methodology.text_after;
+                            CKEDITOR.instances.new_description.setData(methodology.text_after);
                         }
                         break;
                     case 'ICON':
@@ -1024,28 +1036,13 @@
                                 $('#icon_sub_heading').val(methodology.icon_sub_heading);
                             }
                         }
-                        var after = methodology.text_after;
+                        CKEDITOR.instances.icon_text_after.setData(methodology.text_after);
                         break;
                 }
                 $('#methodology-list-container').hide();
                 $('[id^=methodology-][id$=-form-container]').css('display', 'none');
 
                 $('#' + container + ' #title').val(title);
-
-                if ($('#' + container + ' #content')) {
-                    $('#' + container + ' #content').val(content);
-                }
-
-
-                // text + image, simple table, complex table, icon
-                if ($('#' + container + ' #text_before')) {
-                    $('#' + container + ' #text_before').val(before);
-                }
-
-                // text + image, simple table, complex table, icon
-                if ($('#' + container + ' #text_after')) {
-                    $('#' + container + ' #text_after').val(after);
-                }
 
                 // text + image
                 if ($('#' + container + ' input[name=image_on]')) {
@@ -1080,7 +1077,7 @@
             switch (category) {
                 case 'TEXT':
                     form_data.append('title', $('#methodology-text-form-container #title').val());
-                    form_data.append('text_before', $('#methodology-text-form-container #content').val());
+                    form_data.append('text_before', CKEDITOR.instances.text_content.getData());
                     break;
                 case 'TEXT_IMAGE':
                 form_data.append('title', $('#methodology-text-image-form-container #title').val());
@@ -1098,8 +1095,8 @@
                     if (checked && checked !== "undefined") {
                         form_data.append('image_on', checked);
                     }
-                    form_data.append('text_before', $('#methodology-text-image-form-container #text_before').val());
-                    form_data.append('text_after', $('#methodology-text-image-form-container #text_after').val());
+                    form_data.append('text_before', CKEDITOR.instances.image_text_before.getData());
+                    form_data.append('text_after', CKEDITOR.instances.image_text_after.getData());
                     break;
                 case 'SIMPLE_TABLE':
                     form_data.append('title', $('#methodology-simple-table-form-container #title').val());
@@ -1110,8 +1107,8 @@
                         form_data.append(input.name, input.value);
                     })
 
-                    form_data.append('text_before', $('#methodology-simple-table-form-container #text_before').val());
-                    form_data.append('text_after', $('#methodology-simple-table-form-container #text_after').val());
+                    form_data.append('text_before', CKEDITOR.instances.simple_text_before.getData()); 
+                    form_data.append('text_after', CKEDITOR.instances.simple_text_after.getData());
                     break;
                 case 'COMPLEX_TABLE':
                     form_data.append('title', $('#methodology-complex-table-form-container #title').val());
@@ -1121,8 +1118,8 @@
                         form_data.append(input.name, input.value);
                     })
 
-                    form_data.append('text_before', $('#methodology-complex-table-form-container #text_before').val());
-                    form_data.append('text_after', $('#methodology-complex-table-form-container #text_after').val());
+                    form_data.append('text_before', CKEDITOR.instances.complex_text_before.getData()); 
+                    form_data.append('text_after', CKEDITOR.instances.complex_text_after.getData());
                     break;
                 case 'PROCESS':
                     form_data.append('title', $('#methodology-process-form-container #title').val());
@@ -1145,7 +1142,7 @@
                     break;
                 case 'ICON':
                     form_data.append('title', $('#methodology-icon-form-container #title').val());
-                    form_data.append('text_after', $('#methodology-icon-form-container #text_after').val());
+                    form_data.append('text_after', CKEDITOR.instances.icon_text_after.getData());
 
                     form_data.append('icon_main_heading', $('#methodology-icon-form-container #icon_main_heading').val());
                     form_data.append('icon_sub_heading', $('#methodology-icon-form-container #icon_sub_heading').val());
@@ -1478,3 +1475,4 @@
 
     </script>
 @endpush
+@include("egl::partials.ckeditor")  
