@@ -18,6 +18,7 @@ use App\TableRow;
 use App\NextNumber;
 use App\Instruction;
 use App\Methodology;
+use App\UniqueLink;
 use App\Http\Classes\VTLogic;
 use Illuminate\Http\Request;
 use App\Http\Requests\VtramRequest;
@@ -246,7 +247,7 @@ class CompanyVtramController extends Controller
             ->where('created_from_id', '=', $this->record->id)
             ->get();
 
-        if ($this->record->status == 'CURRENT' && $vtrams->count() == 0 && can('edit', $this->identifierPath)  && $this->record->created_from_id != null) {
+        if ($this->record->status == 'CURRENT' && $vtrams->count() == 0 && can('edit', $this->identifierPath) && is_null($this->record['deleted_at'])) {
             $this->actionButtons[] = [
                 'label' => 'Create New Revision',
                 'path' => $this->record->id.'/revision',
@@ -560,5 +561,20 @@ class CompanyVtramController extends Controller
         ];
         parent::_buildProperties($args);
         return parent::_renderView("layouts.custom");
+    }
+
+
+    public function permanentlyDeleted($record)
+    {
+        $project = Project::withTrashed()->findOrFail($record->project_id);
+        $vtramsCount = VTram::join('projects', 'vtrams.project_id', '=', 'projects.id')
+                       ->where('vtrams.status', 'AWAITING_EXTERNAL')
+                       ->where('principle_contractor', 1)
+                       ->where('principle_contractor_email', $project->principle_contractor)
+                       ->count();
+
+        if ($vtramsCount == 0) {
+            UniqueLink::where('email', $project->principle_contractor_email)->delete();
+        }
     }
 }
