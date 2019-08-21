@@ -593,6 +593,8 @@ class CompanyVtramController extends Controller
 
         $links = DB::table('hazards_methodologies')->whereIn('methodology_id', $methodologies)->delete();
 
+        VTRAM::where('current_id', $id)->delete();
+
         Methodology::whereIn('id', $methodologies)->delete();
     }
 }

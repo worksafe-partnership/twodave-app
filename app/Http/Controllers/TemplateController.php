@@ -495,6 +495,8 @@ class TemplateController extends Controller
 
         $links = DB::table('hazards_methodologies')->whereIn('methodology_id', $methodologies)->delete();
 
+        Template::where('current_id', $id)->delete();
+
         Methodology::whereIn('id', $methodologies)->delete();
     }
 }
