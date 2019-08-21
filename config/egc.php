@@ -1,6 +1,11 @@
 <?php
 
 return [
+    'redirect' => [
+        'path' => '/dashboard',
+        'permission' => 'list-dashboard',
+        'backup' => '/role'
+    ],
     'dates' => [
         'date' => 'd/m/Y',
         'datetime' => "d/m/Y H:i",

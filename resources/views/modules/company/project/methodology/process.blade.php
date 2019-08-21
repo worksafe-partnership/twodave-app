@@ -71,7 +71,7 @@
         <div class="columns">
             <div class="column is-12">
                 <div class="field">
-                    {{ EGForm::ckeditor('new_description', [
+                    {{ EGForm::textarea('new_description', [
                         'label' => 'Description',
                         'value' => '',
                         'type' => $pageType

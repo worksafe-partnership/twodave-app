@@ -45,10 +45,12 @@ class VTLogic
         $merger->addFile($path, new Pages(1));
         $merger->addFile($path, new Pages(2));
         $merger->addFile($path, new Pages(3));
+        VTFiles::saveA3($merger->merge(), "VTRAM_140_A3");
+        dd("done");
 
-        $response = \Response::make($merger->merge(), 200);
-        $response->header('Content-Type', 'application/pdf');
-        $response->header('Content-Disposition', 'filename="'.$config->entity->name.'.pdf"');
+        // $response = \Response::make($merger->merge(), 200);
+        // $response->header('Content-Type', 'application/pdf');
+        // $response->header('Content-Disposition', 'filename="'.$config->entity->name.'.pdf"');
         return $response;
     }
 

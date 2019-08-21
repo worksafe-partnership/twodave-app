@@ -52,7 +52,7 @@
 <div class="columns">
     <div class="column is-10 is-offset-1">
         <div class="field">
-            {{ EGForm::ckeditor('text_after', [
+            {{ EGForm::ckeditor('icon_text_after', [
                 'label' => 'Text After',
                 'value' => '',
                 'type' => $pageType

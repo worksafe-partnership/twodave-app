@@ -13,7 +13,7 @@
 <div class="columns">
     <div class="column is-10 is-offset-1">
         <div class="field">
-            {{ EGForm::ckeditor('content', [
+            {{ EGForm::ckeditor('text_content', [
                 'label' => 'Content',
                 'value' => '',
                 'type' => $pageType
