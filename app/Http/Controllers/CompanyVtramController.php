@@ -126,7 +126,7 @@ class CompanyVtramController extends Controller
     {
         if (in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED']) && is_null($this->record['deleted_at'])) {
             $this->actionButtons['methodologies'] = [
-                'label' => 'Hazards & Methodologies',
+                'label' => 'Hazards & Method Statements',
                 'path' => '/company/'.$this->args[0].'/project/'.$this->parentId.'/vtram/'.$this->id.'/methodology',
                 'icon' => 'receipt',
                 'order' => '550',
