@@ -570,8 +570,8 @@
                 error: function (data) {
                     $('#main-hazard-container .submitbutton').attr("disabled", false);
                     if (data.status == 422) {
-                        var errors = '';
-                        $.each(data.responseJSON.errors, function(key,val) {
+                        var errorList = JSON.parse(data.responseText);
+                        $.each(errorList.errors, function(key,val) {
                             toastr.error(val);
                         });
                     } else if (data.status == 401) {
@@ -1342,10 +1342,11 @@
                     $('#meth_type').val('');
                 },
                 error: function (data) {
+                    debugger;
                     $('#main-methodology-container .submitbutton').attr("disabled", false);
                     if (data.status == 422) {
-                        var errors = '';
-                        $.each(data.responseJSON.errors, function(key,val) {
+                        var errorList = JSON.parse(data.responseText);
+                        $.each(errorList.errors, function(key,val) {
                             toastr.error(val);
                         });
                     } else if (data.status == 401) {

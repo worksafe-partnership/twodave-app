@@ -50,6 +50,9 @@ class HazardRequest extends FormRequest
             'r_risk.required' => 'Please select the Hazard\'s Reduced Risk',
             'at_risk.required' => 'Please select who is at risk',
             'other_at_risk.required' => 'Please specify who is at risk',
+            'r_risk_severity.required' => 'Please select the Risk Severity',
+            'r_risk_probability.required' => 'Please select the Risk Probability',
+
         ];
     }
 }
