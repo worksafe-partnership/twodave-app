@@ -1,67 +1,9 @@
-<div class="extra-form-container">
-    <h2 class="sub-heading">Extra Information</h2>
-    <form method="POST" action="edit_extra" enctype="multipart/form-data">
-        {{ csrf_field() }}
-        <div class="columns">
-            <div class="column is-3">
-                <a download="Noise Vibration Assessment.xls" href="/Noise_Vibration_Assessment.xls" class="button">Download Noise Vibration Assessment</a>
-            </div>
-            <div class="column is-2">
-                <div class="field">
-                    {{ EGForm::file('coshh_assessment', [
-                        'label' => 'COSHH Assessment Document',
-                        'value' => $record["coshh_assessment"],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-            <div class="column is-2">
-                <div class="field">
-                    {{ EGForm::file('havs_noise_assessment', [
-                        'label' => 'HAVS/Noise Assessment Document',
-                        'value' => $record["havs_noise_assessment"],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-            <div class="column is-4">
-                <div class="field">
-                    {{ EGForm::checkbox('dynamic_risk', [
-                        'label' => 'Dynamic Risk (Adds Dynamic Risk boxes to the Risk Assessment)',
-                        'value' => $record['dynamic_risk'] ?? false,
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-        </div>
-        <div class="columns">
-            <div class="column">
-                <div class="field">
-                    {{ EGForm::ckeditor('key_points', [
-                        'label' => 'Key Points',
-                        'value' => $record["key_points"],
-                        'type' => 'edit'
-                    ]) }}
-                </div>
-            </div>
-            <div class="column is-2" id="comments-button-div">
-                <button class="button is-success is-primary" id="comments-button" type="button" style="float:right">View Comments ( {{ $comments->count() }} )</button>
-            </div>
-        </div>
-        <div class="columns">
-            <div class="column">
-                <p class="control">
-                    <button class="button is-primary submitbutton">Save</button>
-                    <button class="button is-primary submitbutton" name="send_for_approval" value="1">Save and Submit for Approval</button>
-                </p>
-            </div>
-        </div>
-    </form>
+<div style="height: 65px;text-align:right;">
+    <div>
+        <button class="button is-success is-primary" id="comments-button">View Comments ( {{ $comments->count() }} )</button>
+    </div>
 </div>
-<hr>
-<h2 class="sub-heading">Hazards & Method Statements</h2>
-<br>
-<div class="columns">
+<div class="columns is-multiline">
     <div class="column is-6 box-container">
         <div class="columns">
             <div class="column is-12">
@@ -183,6 +125,7 @@
                 </div>
             </div>
         </div>
+        <hr>
     </div>
     <div class="column is-6 box-container">
         <div class="columns">
@@ -236,9 +179,9 @@
                 </div>
             </div>
         </div>
+        <hr>
     </div>
 </div>
-<hr>
 <div id="comments-sidebar" class="column hidden">
     <p class="sub-heading">Comments
         <button class="button is-success is-small" style="float:right" id="close-comments">Close</button>
@@ -254,17 +197,70 @@
         <p>No Comments</p>
     @endif
 </div>
+<div class="extra-form-container">
+    <h2 class="sub-heading">Extra Information</h2>
+    <form method="POST" action="edit_extra" enctype="multipart/form-data">
+        {{ csrf_field() }}
+        <div class="columns">
+            <div class="column is-6">
+                <div class="field">
+                    <a download="Noise Vibration Assessment.xls" href="/Noise_Vibration_Assessment.xls" class="button">Download HAVS/Noise Assessment</a>
+                </div>
+            </div>
+            <div class="column is-6">
+                <div class="field">
+                    {{ EGForm::checkbox('dynamic_risk', [
+                        'label' => 'Dynamic Risk (Adds Dynamic Risk boxes to the Risk Assessment)',
+                        'value' => $record['dynamic_risk'] ?? false,
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column is-6">
+                <div class="field">
+                    {{ EGForm::file('coshh_assessment', [
+                        'label' => 'COSHH Assessment Document',
+                        'value' => $record["coshh_assessment"],
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+            <div class="column is-6">
+                <div class="field">
+                    {{ EGForm::file('havs_noise_assessment', [
+                        'label' => 'HAVS/Noise Assessment Document',
+                        'value' => $record["havs_noise_assessment"],
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <div class="field">
+                    {{ EGForm::ckeditor('key_points', [
+                        'label' => 'Key Points',
+                        'value' => $record["key_points"],
+                        'type' => 'edit'
+                    ]) }}
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <p class="control">
+                    <button class="button is-primary submitbutton">Save</button>
+                    <button class="button is-primary submitbutton" name="send_for_approval" value="1">Save and Submit for Approval</button>
+                </p>
+            </div>
+        </div>
+    </form>
+</div>
 
 @push('styles')
     <style>
-        /*.extra-form-container {
-            bottom: 0px;
-            position: fixed;
-            background-color: #FFF;
-            padding: 10px;
-            width: 100%;
-            margin-left: -24px;
-        }*/
         .meth-type-selector {
             display: inline-block;
             margin-top: -21px;
@@ -308,7 +304,6 @@
         #hazard-form-container, #methodology-form-container, #methodology-icon-form-container,
         #methodology-complex-table-form-container, #methodology-simple-table-form-container,
         #methodology-process-form-container, #methodology-text-form-container, #methodology-text-image-form-container {
-            position: absolute;
             top: 0;
             width: 100%;
             display: none;
@@ -316,7 +311,6 @@
             background-color: #FFF;
         }
         #hazard-list-container, #methodology-list-container {
-            position: absolute;
             top: 0;
             border-top: none;
             width: 100%;
@@ -324,6 +318,11 @@
         }
         .nopad {
             padding: 0px;
+        }
+        @media screen and (max-width:1090px) {
+            .box-container {
+                width: 100% !important;
+            }
         }
     </style>
 @endpush

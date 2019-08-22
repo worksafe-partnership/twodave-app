@@ -6,7 +6,9 @@ use DB;
 use Mail;
 use Auth;
 use Bhash;
+use Carbon;
 use EGFiles;
+use Storage;
 use App\Icon;
 use App\Vtram;
 use App\Hazard;
@@ -45,12 +47,33 @@ class VTLogic
         $merger->addFile($path, new Pages(1));
         $merger->addFile($path, new Pages(2));
         $merger->addFile($path, new Pages(3));
-        VTFiles::saveA3($merger->merge(), "VTRAM_140_A3");
-        dd("done");
 
-        // $response = \Response::make($merger->merge(), 200);
-        // $response->header('Content-Type', 'application/pdf');
-        // $response->header('Content-Disposition', 'filename="'.$config->entity->name.'.pdf"');
+        $now = Carbon::now();
+        $storagePath = "files/".$now->year."/".$now->month."/".$now->day.'/';
+        $fileName = $storagePath.$config->entityType."_".$config->entity->id."_A3_TEMP.pdf";
+        $res = VTFiles::saveA3($merger->merge(), $fileName);
+        if (!$res) {
+            return back()->withErrors(['Could not create A3 PDF TEMP']);
+        }
+        $storageFileName = "app/".$fileName;
+        $storageOutputFileName = "app/".$storagePath.$config->entityType."_".$config->entity->id."_A3_FINAL.pdf";
+        $outputFileName = $storagePath.$config->entityType."_".$config->entity->id."_A3_FINAL.pdf";
+        
+        $c = "pdfnup --a3paper --suffix 2up ".storage_path($storageFileName)." --outfile ".storage_path($storageOutputFileName);
+
+        exec($c);
+
+        if (!file_exists(storage_path($storageOutputFileName))) {
+            return back()->withErrors(['Could not create A3 PDF']);
+        }
+        
+        $response = \Response::make(file_get_contents(storage_path($storageOutputFileName)), 200);
+        $response->header('Content-Type', 'application/pdf');
+        $response->header('Content-Disposition', 'filename="'.$config->entity->name.'.pdf"');
+
+        Storage::disk('local')->delete($fileName);
+        Storage::disk('local')->delete($outputFileName);
+
         return $response;
     }
 
@@ -186,7 +209,6 @@ class VTLogic
     public static function calculateStartingHeight($config)
     {
         $height = 0;
-
     }
 
     public static function submitForApproval($entityId, $entityType = null)

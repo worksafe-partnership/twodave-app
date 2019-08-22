@@ -346,6 +346,16 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => 'can:edit-methodology',
         'uses' => 'MethodologyController@deleteImage'
     ]);
+    Route::get('/', 'DashboardController@view');
+    Route::get('/dashboard', function () {
+        $user = Auth::user();
+        if ($user->inRole('supervisor')) {
+            return Redirect('/project');
+        } else if ($user->inRole('evergreen') || $user->inRole('admin')) {
+            return Redirect('/company');
+        }
+        return Redirect::action('DashboardController@view');
+    });
 });
 // Principle Contractor Approval Routes
 Route::group(['prefix' => '{unique_link}/vtrams', 'middleware' => ['validate_link']], function () {

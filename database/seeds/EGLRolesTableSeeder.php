@@ -39,9 +39,6 @@ class EGLRolesTableSeeder extends Seeder
                 $companyAdminPermissions[$perm] = 1;
                 $contractsManagerPermissions[$perm] = 1;
                 $projectAdminPermissions[$perm] = 1;
-                $evergreenPermissions[$perm] = 1;
-                $adminPermissions[$perm] = 1;
-                $supervisorPermissions[$perm] = 1;
             }
 
             if (strpos($perm, "project") !== false && strpos($perm, "company.project") === false) {

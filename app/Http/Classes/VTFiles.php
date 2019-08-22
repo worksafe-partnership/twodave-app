@@ -57,17 +57,7 @@ class VTFiles extends EGFiles
 
     public static function saveA3($fileContent, $fileName)
     {
-        $now = Carbon::now();
-        $storagePath = $fileName;//"files/".$now->year."/".$now->month."/".$now->day.'/'.$fileName;
-        if (Storage::disk('local')->put($storagePath, $fileContent)) {
-            $data = [
-                'title' => $fileName,
-                'filename' => $fileName,
-                'location' => $storagePath,
-                'mime_type' => '',
-                'updated_at' => date('Y-m-d H:i:s')
-            ];
-
+        if (Storage::disk('local')->put($fileName, $fileContent)) {
             return true;
         }
         return false;
