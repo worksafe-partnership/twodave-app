@@ -45,6 +45,7 @@ class CompanyVtramController extends Controller
         if (isset($this->actionButtons['create']['class'])) {
             $this->actionButtons['create']['class'] .= " create_vtram";
         }
+        $this->backButton['path'] = str_replace("vtram", "tracker", $this->backPath);
     }
 
     public function bladeHook()
