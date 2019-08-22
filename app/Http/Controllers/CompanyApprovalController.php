@@ -63,6 +63,7 @@ class CompanyApprovalController extends Controller
                     'status' => 'AWAITING_EXTERNAL',
                     'approved_date' => date('Y-m-d'),
                     'approved_by' => $this->user->id,
+                    'resubmit_by' => null,
                 ]);
                 VTLogic::sendPcApprovalEmail($this->vtconfig);
             } else {
@@ -75,6 +76,7 @@ class CompanyApprovalController extends Controller
                             $vtram->update([
                                 'status' => 'PREVIOUS',
                                 'date_replaced' => date('Y-m-d'),
+                                'resubmit_by' => null,
                             ]);
                         }
                     }
@@ -85,6 +87,7 @@ class CompanyApprovalController extends Controller
                         $template->update([
                             'status' => 'PREVIOUS',
                             'date_replaced' => date('Y-m-d'),
+                            'resubmit_by' => null,
                         ]);
                     }
                 }
@@ -93,6 +96,7 @@ class CompanyApprovalController extends Controller
                     'approved_date' => date('Y-m-d'),
                     'approved_by' => $this->user->id,
                     'revision_number' => $revisionNumber,
+                    'resubmit_by' => null,
                 ]);
             }
         } else if ($approval->type == 'R') {

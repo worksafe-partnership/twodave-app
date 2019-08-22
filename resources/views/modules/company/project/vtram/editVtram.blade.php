@@ -569,8 +569,8 @@
                 error: function (data) {
                     $('#main-hazard-container .submitbutton').attr("disabled", false);
                     if (data.status == 422) {
-                        var errors = '';
-                        $.each(data.responseJSON.errors, function(key,val) {
+                        var errorList = JSON.parse(data.responseText);
+                        $.each(errorList.errors, function(key,val) {
                             toastr.error(val);
                         });
                     } else if (data.status == 401) {
@@ -795,7 +795,6 @@
                         $('#new_label').val('');
                         $('#new_description').val('');
                         $('#' + container + ' #image_id').val('');
-                        CKEDITOR.instances.new_description.setData('');
                         break;
                     case 'ICON':
                         container = 'methodology-icon-form-container';
@@ -1004,7 +1003,10 @@
                                     $('#process-table').attr('data-next_row', Object.keys(rows).length);
                                 });
                             }
-                            CKEDITOR.instances.new_description.setData(methodology.text_after);
+                            $('#is_heading').prop('checked', false);
+                            $('#new_label').val('');
+                            $('#' + container + ' #image_id').val('');
+                            $('#new_description').val('');
                         }
                         break;
                     case 'ICON':
@@ -1033,6 +1035,10 @@
                                 })
                                 $('#icon_main_heading').val(methodology.icon_main_heading);
                                 $('#icon_sub_heading').val(methodology.icon_sub_heading);
+                                $('#' + container + ' input[name=type]')[0].checked = false;
+                                $('#' + container + ' input[name=type]')[1].checked = false;
+                                $('#icon_list').prop('selectedIndex',0);
+                                $('#words').val('');
                             }
                         }
                         CKEDITOR.instances.icon_text_after.setData(methodology.text_after);
@@ -1106,7 +1112,7 @@
                         form_data.append(input.name, input.value);
                     })
 
-                    form_data.append('text_before', CKEDITOR.instances.simple_text_before.getData()); 
+                    form_data.append('text_before', CKEDITOR.instances.simple_text_before.getData());
                     form_data.append('text_after', CKEDITOR.instances.simple_text_after.getData());
                     break;
                 case 'COMPLEX_TABLE':
@@ -1117,7 +1123,7 @@
                         form_data.append(input.name, input.value);
                     })
 
-                    form_data.append('text_before', CKEDITOR.instances.complex_text_before.getData()); 
+                    form_data.append('text_before', CKEDITOR.instances.complex_text_before.getData());
                     form_data.append('text_after', CKEDITOR.instances.complex_text_after.getData());
                     break;
                 case 'PROCESS':
@@ -1335,10 +1341,11 @@
                     $('#meth_type').val('');
                 },
                 error: function (data) {
+                    debugger;
                     $('#main-methodology-container .submitbutton').attr("disabled", false);
                     if (data.status == 422) {
-                        var errors = '';
-                        $.each(data.responseJSON.errors, function(key,val) {
+                        var errorList = JSON.parse(data.responseText);
+                        $.each(errorList.errors, function(key,val) {
                             toastr.error(val);
                         });
                     } else if (data.status == 401) {
@@ -1474,4 +1481,4 @@
 
     </script>
 @endpush
-@include("egl::partials.ckeditor")  
+@include("egl::partials.ckeditor")

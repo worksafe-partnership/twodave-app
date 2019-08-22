@@ -11,7 +11,7 @@ class PreviousVtramController extends CompanyPreviousVtramController
 {
     protected $identifierPath = 'project.vtram.previous';
 
-    public function __construct() 
+    public function __construct()
     {
         $this->disableCreate = true;
         $this->disableEdit = true;
@@ -31,6 +31,12 @@ class PreviousVtramController extends CompanyPreviousVtramController
             'order' => '500',
             'id' => 'approvalList'
         ];
+    }
+
+    public function viewEditHook()
+    {
+        // no withTrashed() - hide from lower level users when soft deleted.
+        $this->record = Vtram::findOrFail(end($this->args));
     }
 
     public function indexHook()
@@ -54,7 +60,7 @@ class PreviousVtramController extends CompanyPreviousVtramController
         if ($this->user->inRole('supervisor') && $this->record !== null) {
             if (!$this->record->project->userOnProject($this->user->id)) {
                 abort(404);
-            }        
+            }
         }
     }
 

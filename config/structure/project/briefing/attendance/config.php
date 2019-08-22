@@ -25,5 +25,9 @@ return [
         ]
     ],
     'sidebar' => [],
-    'permissions' => true
+    'permissions' => true,
+    'exclude_routes' => [
+        'view',
+        'edit'
+    ]
 ];

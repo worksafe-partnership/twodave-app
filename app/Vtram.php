@@ -13,7 +13,7 @@ class Vtram extends Model
 
     use SoftDeletes;
     protected $table = 'vtrams';
-    protected $softCascade = ['approvals'];
+    protected $softCascade = ['approvals', 'briefings', 'previousVTs'];
 
     /**
      * The attributes that are mass assignable.
@@ -434,5 +434,16 @@ class Vtram extends Model
     {
         return $this->hasMany(Approval::class, 'entity_id', 'id')
             ->where('entity', '=', 'VTRAM');
+    }
+
+    public function previousVTs()
+    {
+        return $this->hasMany(VTRAM::class, 'current_id', 'id')
+            ->where('created_from_entity', '=', 'VTRAM');
+    }
+
+    public function briefings()
+    {
+        return $this->hasMany(Briefing::class, 'vtram_id', 'id');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use DB;
 use Auth;
 use EGFiles;
+use Storage;
 use Controller;
 use App\Icon;
 use App\TableRow;
@@ -208,6 +209,25 @@ class MethodologyController extends Controller
             }
         }
         if (VTLogic::canUseItem($methodology->entity_id, $methodology->entity)) {
+            if (!is_null($methodology->image)) {
+                $file = EGFiles::findOrFail($methodology->image);
+                Storage::disk('local')->delete($file->location);
+                $file->forceDelete();
+            }
+
+            // database cascade should ensure that related Instructions are deleted. Ensure their images are taken out too.
+            if ($methodology->category == "PROCESS") {
+                $instructionImages = Instruction::where('methodology_id', $methodology->id)
+                                    ->whereNotNull('image')
+                                    ->pluck('image');
+
+                foreach ($instructionImages as $image) {
+                    $file = EGFiles::findOrFail($image);
+                    Storage::disk('local')->delete($file->location);
+                    $file->forceDelete();
+                }
+            }
+
             $methodology->delete();
             $this->reOrderMethodologies($methodology);
             DB::table('hazards_methodologies')->where('methodology_id', $id)->delete();

@@ -13,7 +13,7 @@ class Template extends Model
     use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
     use SoftDeletes;
     protected $table = 'templates';
-    protected $softCascade = ['approvals'];
+    protected $softCascade = ['approvals', 'previousTemplates'];
 
     /**
      * The attributes that are mass assignable.
@@ -253,5 +253,11 @@ class Template extends Model
     {
         return $this->hasMany(Approval::class, 'entity_id', 'id')
             ->where('entity', '=', 'TEMPLATE');
+    }
+
+    public function previousTemplates()
+    {
+        return $this->hasMany(Template::class, 'current_id', 'id')
+            ->where('created_from_entity', '=', 'TEMPLATE');
     }
 }

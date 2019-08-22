@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use DB;
 use Auth;
-use EGFiles;
-use Controller;
 use Route;
+use EGFiles;
+use Storage;
+use Controller;
 use App\Icon;
 use App\Vtram;
 use App\Hazard;
@@ -564,9 +565,24 @@ class CompanyVtramController extends Controller
     }
 
 
-    public function permanentlyDeleted($record)
+    public function permanentlyDeleted($deletedRecord, $args)
     {
-        $project = Project::withTrashed()->findOrFail($record->project_id);
+        // $record doesn't contain the id???
+        $id = end($args);
+
+        if (!is_null($deletedRecord->logo)) {
+            $file = EGFiles::findOrFail($deletedRecord->logo);
+            Storage::disk('local')->delete($file->location);
+            $file->forceDelete();
+        }
+
+        if (!is_null($deletedRecord->pdf)) {
+            $file = EGFiles::findOrFail($deletedRecord->pdf);
+            Storage::disk('local')->delete($file->location);
+            $file->forceDelete();
+        }
+
+        $project = Project::withTrashed()->findOrFail($deletedRecord->project_id);
         $vtramsCount = VTram::join('projects', 'vtrams.project_id', '=', 'projects.id')
                        ->where('vtrams.status', 'AWAITING_EXTERNAL')
                        ->where('principle_contractor', 1)
@@ -576,5 +592,23 @@ class CompanyVtramController extends Controller
         if ($vtramsCount == 0) {
             UniqueLink::where('email', $project->principle_contractor_email)->delete();
         }
+
+        Approval::where('entity', '=', 'VTRAM')
+                ->where('entity_id', '=', $id)
+                ->forceDelete();
+
+        $hazards = Hazard::where('entity', '=', 'VTRAM')
+                        ->where('entity_id', '=', $id)
+                        ->delete();
+
+        $methodologies = Methodology::where('entity', '=', 'VTRAM')
+                        ->where('entity_id', '=', $id)->pluck('id');
+
+        $links = DB::table('hazards_methodologies')->whereIn('methodology_id', $methodologies)->delete();
+
+        VTRAM::where('current_id', $id)->delete();
+
+        Methodology::whereIn('id', $methodologies)->delete();
     }
+
 }

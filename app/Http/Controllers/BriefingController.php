@@ -27,6 +27,12 @@ class BriefingController extends CompanyBriefingController
         parent::bladeHook();
     }
 
+    public function viewEditHook()
+    {
+        // no withTrashed() - hide from lower level users when soft deleted.
+        $this->record = Briefing::findOrFail(end($this->args));
+    }
+
     public function indexHook()
     {
         if ($this->user->company_id !== null) {

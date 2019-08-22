@@ -77,6 +77,7 @@ class MethodologyRequest extends FormRequest
     {
         $category = $this->category;
         $messages = [
+            'title.required' => 'Please enter a title',
             'category.required' => 'Please select a Category',
         ];
 
