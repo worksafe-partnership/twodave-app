@@ -1,0 +1,89 @@
+body > aside, 
+.bottom-menu
+{
+    background-color: %COLOUR% !important;
+}
+.is-active {
+    color: %COLOUR% !important;
+}
+.pagination-link.is-current,
+.button.is-primary {
+    background-color: %COLOUR% !important;
+    border-color: %COLOUR%; 
+}
+.button.is-primary.is-inverted {
+    border-color: #FFF !important;
+}
+.button.is-primary.is-outlined {
+    background-color: transparent;
+}
+.button.is-primary.is-inverted.is-outlined:hover, .button.is-primary.is-inverted.is-outlined:focus {
+    background-color: #fff !important;
+    color: %COLOUR% !important;
+}
+.selectize-dropdown .active {
+    color: %COLOUR% !important;
+}
+.dash-container {
+    border-color: %COLOUR% !important;
+}
+.dash-heading {
+    background-color: %COLOUR% !important;
+}
+.is-primary input[type="checkbox"]:checked + label::before {
+    background-color: %COLOUR% !important;
+    border-color: %COLOUR% !important;
+}
+
+
+
+.has-text-primary {
+  color: %COLOUR%;
+}
+.input:focus,
+.input.is-focused,
+.input:active,
+.input.is-active,
+.textarea:focus,
+.textarea.is-focused,
+.textarea:active,
+.textarea.is-active {
+  border-color: %COLOUR%;
+}
+.input.is-primary,
+.textarea.is-primary {
+  border-color: %COLOUR%;
+}
+.select select:focus,
+.select select.is-focused,
+.select select:active,
+.select select.is-active {
+  border-color: %COLOUR%;
+}
+.select select:focus,
+.select select.is-focused,
+.select select:active,
+.select select.is-active {
+  border-color: %COLOUR%;
+}
+.select.is-primary select {
+  border-color: %COLOUR%;
+}
+.help.is-primary {
+  color: %COLOUR%;
+}
+.notification.is-primary {
+  background-color: %COLOUR%;
+}
+.progress.is-primary::-webkit-progress-value {
+  background-color: %COLOUR%;
+}
+.progress.is-primary::-moz-progress-bar {
+  background-color: %COLOUR%;
+}
+.table tr.is-selected {
+  background-color: %COLOUR%;
+}
+.dash-button {
+    border-color: #FFF !important;
+}

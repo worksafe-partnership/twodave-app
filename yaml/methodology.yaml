@@ -1,0 +1,82 @@
+identifierPath: company.project.vtram.methodology
+model: Methodology
+timestamps: true
+permissions: false
+softDeletes: false
+config:
+    singular: Methodology
+    plural: Methodologies
+    icon: list
+    route_type: index
+    exclude_routes:
+        - view
+          create
+          edit
+          delete
+          list
+          datatable_all
+          restore
+          permanentlyDelete
+
+fields:
+    - type: increments
+      name: id
+
+    - type: string
+      name: category
+      label: Category
+      request:
+          - type: required
+            message: Please select a Category
+
+    - type: string
+      name: entity
+
+    - type: integer
+      name: entity_id
+
+    - type: text
+      name: text_before
+      label: Text Before
+      formType: ckeditor
+      nullable: true
+
+    - type: text
+      name: text_after
+      label: Text After
+      formType: ckeditor
+      nullable: true
+
+    - type: integer
+      name: image
+      label: Image
+      formType: file
+      unsigned: true
+      nullable: true
+      request:
+          - type: mimes:jpg,jpeg,png,bmp,tiff
+            message: Only images are allowed to be uploaded
+      foreign:
+          table: files
+          id: id
+          onDelete: CASCADE
+          onUpdate: CASCADE
+
+    - type: string
+      name: image_on
+      label: Image On
+      migrationArgument: 5
+      nullable: true
+      formType: select
+      formAttribute:
+          - key: list
+            value: config('egc.first_last')
+          - key: selector
+            value: true
+          - key: display_value
+            value: config('egc.first_last')[$record->image_on] ?? ''
+
+    - type: integer
+      name: list_order
+      nullable: true
+      unsigned: true

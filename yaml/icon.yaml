@@ -1,0 +1,77 @@
+identifierPath: company.project.vtram.methodology.icon
+model: Icon
+timestamps: true
+permissions: false
+softDeletes: false
+config:
+    singular: Icon
+    plural: Icons
+    icon: details
+    route_type: index
+    exclude_routes:
+        - view
+          create
+          edit
+          delete
+          list
+          datatable_all
+          restore
+          permanentlyDelete
+
+fields:
+    - type: increments
+      name: id
+
+    - type: string
+      name: image
+      label: Image
+      formType: select
+      request:
+          - type: required
+            value: Please select an Image
+      formAttribute:
+          - key: list
+            value: config('egc.icons')
+          - key: selector
+            value: true
+          - key: display_value
+            value: config('egc.icons')[$record->image] ?? ''
+
+    - type: string
+      name: text
+      label: Text
+      nullable: true
+      request:
+          - type: required
+            message: Please enter the Text
+          - type: max:255
+            message: The Text cannot be more than 255 characters
+
+    - type: integer
+      name: list_order
+      nullable: true
+
+    - type: integer
+      name: methodology_id
+      unsigned: true
+      request:
+          - type: exists:methodologies,id
+            message: The selected Methodology does not exist
+      foreign:
+          table: methodologies
+          id: id
+          onDelete: CASCADE
+          onUpdate: CASCADE
+
+    - type: string
+      name: type
+      label: Type
+      migrationArguement: 4
+      formType: select
+      formAttribute:
+          - key: list
+            value: config('egc.icon_types')
+          - key: selector
+            value: true
+          - key: display_value
+            value: config('egc.icon_types')[$record->type] ?? ''

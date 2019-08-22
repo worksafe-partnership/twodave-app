@@ -1,0 +1,101 @@
+identifierPath: company.project.vtram.hazard
+model: Hazard
+timestamps: true
+permissions: false
+softDeletes: false
+config:
+    singular: Hazard
+    plural: Hazards
+    icon: warning
+    route_type: index
+    exclude_routes:
+        - view
+          create
+          edit
+          delete
+          list
+          datatable_all
+          restore
+          permanentlyDelete
+
+fields:
+    - type: increments
+      name: id
+
+    - type: text
+      name: description
+      label: Description
+      request:
+          - type: required
+            message: Please enter a Description
+
+    - type: string
+      name: entity
+
+    - type: integer
+      name: entity_id
+
+    - type: text
+      name: control
+      formType: ckeditor
+      request:
+          - type: required
+            message: Please enter the Control for this Hazard
+
+    - type: char
+      name: risk
+      label: Risk
+      migrationArguement: 1
+      formType: select
+      formAttribute:
+          - key: list
+            value: $riskList
+          - key: display_value
+            value: $riskList[$record->risk] ?? ''
+          - key: selector
+            value: true
+      request:
+          - type: required
+            message: Please select the Hazard's Risk
+
+    - type: char
+      name: r_risk
+      label: Reduced Risk
+      migrationArguement: 1
+      formType: select
+      formAttribute:
+          - key: list
+            value: $riskList
+          - key: display_value
+            value: $riskList[$record->r_risk] ?? ''
+          - key: selector
+            value: true
+      request:
+          - type: required
+            message: Please select the Hazard's Reduced Risk
+
+    - type: integer
+      name: list_order
+      nullable: true
+
+    - type: string
+      name: at_risk
+      label: Who is at Risk
+      formType: select
+      formAttribute:
+          - key: list
+            value: $whoList
+          - key: display_value
+            value: $whoList[$record->at_risk'] ?? ''
+          - key: selector
+            value: true
+      request:
+          - type: required
+            message: Please select who is at risk
+
+    - type: string
+      name: other_at_risk
+      label: Please Specify
+      request:
+          - type: required_if:at_risk,O
+            message: Please specify who is at risk

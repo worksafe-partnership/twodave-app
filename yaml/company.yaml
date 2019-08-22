@@ -1,0 +1,237 @@
+identifierPath: company
+model: Company
+timestamps: true
+permissions: true
+softDeletes: true
+config:
+    singular: Company
+    plural: Companies
+    icon: people
+    route_type: resource
+
+fields:
+    - type: increments
+      name: id
+
+    - type: string
+      name: name
+      label: Name
+      migrationArgument: 100
+      request:
+          - type: required
+            message: Please enter a Company Name
+          - type: max:100
+            message: The Company Name cannot be more than 100 character
+    
+    - type: integer
+      name: review_timescale
+      label: Review Timescale
+      formType: select
+      formAttribute: 
+          - key: list
+            value: config('egc.review_timescales')      
+          - key: value
+            value: $record->review_timescale ?? 0
+      request:
+          - type: required
+            message: Please select the Review Timescale
+
+    - type: string
+      name: vtrams_name
+      label: VTRAMs Name
+      migrationArgument: 100
+      datatable: false
+      formAttribute:
+          - key: value
+            value: $record->vtrams_name ?? 'Task RAM'
+      request:
+          - type: required
+            message: Please enter a VTRAMs Name
+          - type: max:100
+            message: The VTRAMs Name cannot be more than 100 characters
+
+    - type: string
+      name: email
+      label: Contact Email
+      request:
+          - type: required
+            message: Please enter a Contact Email
+          - type: max:255
+            message: The Contact Email cannot be more than 255 characters
+          - type: email
+            message: Please enter a valid Email Address
+
+    - type: string
+      name: phone
+      label: Phone Number
+      migrationArguement: 30
+      request:
+          - type: required
+            message: Please enter a Phone Number
+
+    - type: string
+      name: fax
+      label: Fax Number
+      migrationArguement: 30
+      request:
+          - type: required
+            message: Please enter a Fax Number
+
+    - type: char
+      name: low_risk_character
+      label: Low Risk Label
+      migrationArguement: 1
+      datatable: false
+      default: L
+      formAttribute:
+          - key: value
+            value: $record->low_risk_character ?? 'L'
+      request:
+          - type: required
+            message: Please enter a Low Risk Label
+          - type: max:1
+            message: The Low Risk Label cannot be more than 1 character
+
+    - type: char
+      name: med_risk_character
+      label: Medium Risk Label
+      migrationArguement: 1
+      datatable: false
+      default: M
+      formAttribute:
+          - key: value
+            value: $record->med_risk_character ?? 'M'
+      request:
+          - type: required
+            message: Please enter a Medium Risk Label
+          - type: max:1
+            message: The Medium Risk Label cannot be more than 1 character
+
+    - type: char
+      name: high_risk_character
+      label: High Risk Label
+      migrationArguement: 1
+      datatable: false
+      default: H
+      formAttribute:
+          - key: value
+            value: $record->high_risk_character ?? 'H'
+      request:
+          - type: required
+            message: Please enter a High Risk Label
+          - type: max:1
+            message: The High Risk Label cannot be more than 1 character
+
+    - type: char
+      name: no_risk_character
+      label: No Risk Label
+      migrationArguement: 1
+      datatable: false
+      default: #
+      formAttribute:
+          - key: value
+            value: $record->no_risk_character ?? '#'
+      request:
+          - type: required
+            message: Please enter a No Risk Label
+          - type: max:1
+            message: The No Risk Label cannot be more than 1 character
+
+    - type: string
+      name: primary_colour
+      label: Primary Colour
+      formType: colour
+      migrationArguement: 7
+      datatable: false
+      default: #000000
+      formAttribute:
+          - key: value
+            value: $record->primary_colour ?? '#000000'
+      request: 
+        - type: required
+          message: Please select a Primary Colour
+        - type: max:7
+          message: The Primary Colour needs to be in valid HEX format i.e. #000000
+
+    - type: string
+      name: secondary_colour
+      label: Secondary Colour
+      formType: colour
+      migrationArguement: 7
+      datatable: false
+      default: #000000
+      formAttribute:
+          - key: value
+            value: $record->secondary_colour ?? '#000000'
+      request: 
+        - type: required
+          message: Please select a Secondary Colour
+        - type: max:7
+          message: The Secondary Colour needs to be in valid HEX format i.e. #000000
+
+    - type: boolean
+      name: light_text
+      label: Light Text
+      default: false
+      nullable: true
+      datatable: false
+      formAttribute:
+          - key: value
+            value: $record->light_text ?? false
+
+    - type: string
+      name: accept_label
+      label: Accept Label
+      migrationArugement: 20
+      datatable: false
+      formAttribute:
+          - key: value
+            value: $record->accept_label ?? 'Accept'
+      request:
+          - type: required
+            message: Please enter an Accept Label
+          - type: max:20
+            message: The Accept Label cannot be more than 20 characters
+
+    - type: string
+      name: amend_label
+      label: Amend Label
+      migrationArugement: 20
+      datatable: false
+      formAttribute:
+          - key: value
+            value: $record->amend_label ?? 'Amend'
+      request:
+          - type: required
+            message: Please enter an Amend Label
+          - type: max:20
+            message: The Amend Label cannot be more than 20 characters
+
+    - type: string
+      name: reject_label
+      label: Reject Label
+      migrationArguement: 20
+      datatable: false
+      formAttribute:
+          - key: value
+            value: $record->reject_label ?? 'Reject'
+      request:
+          - type: required
+            message: Please enter a Reject Label
+          - type: max:20
+            message: The Reject Label cannot be more than 20 characters
+
+    - type: integer
+      name: logo
+      label: Logo
+      nullable: true
+      unsigned: true
+      formType: file
+      request:
+          - type: mimes:jpg,jpeg,png,bmp,tiff
+            message: Only images are allowed to be uploaded for the Logo
+      foreign:
+          table: files
+          id: id
+          onDelete: CASCADE
+          onUpdate: CASCADE

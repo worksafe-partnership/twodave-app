@@ -1,0 +1,67 @@
+identifierPath: project.vtram.approval
+model: Approval
+timestamps: true
+permissions: true
+softDeletes: true
+config:
+    singular: Approval
+    plural: Approvals
+    icon: tick
+    route_type: resource
+
+fields:
+    - type: increments
+      name: id
+
+    - type: string
+      name: entity
+
+    - type: integer
+      name: entity_id
+      unsigned: true
+
+    - type: text
+      name: comment
+      label: Comment
+      
+    - type: string
+      name: type
+
+    - type: string
+      name: completed_by
+
+    - type: integer
+      name: completed_by_id
+      nullable: true
+      unsigned: true
+      foreign:
+          table: users
+          id: id
+          onDelete: CASCADE
+          onUpdate: CASCADE
+
+    - type: date
+      name: approved_date
+
+    - type: date
+      name: resubmit_date
+      label: Resubmit Date
+      nullable: true
+
+    - type: string
+      name: status_at_time
+
+    - type: integer
+      name: review_document
+      formType: file
+      label: Review Document
+      nullable: true
+      unsigned: true
+      request:
+          - type: mimes:jpg,jpeg,png,bmp,tiff,pdf
+            message: Only images and PDFs are allowed to be uploaded for the Review Document
+      foreign:
+          table: files
+          id: id
+          onDelete: CASCADE
+          onUpdate: CASCADE

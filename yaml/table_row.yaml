@@ -1,0 +1,74 @@
+identifierPath: company.project.vtram.methodology.table_row
+model: TableRow
+timestamps: true
+permissions: false
+softDeletes: false
+config:
+    singular: Table Row
+    plural: Table Rows
+    icon: dehaze
+    route_type: index
+    exclude_routes:
+        - view
+          create
+          edit
+          delete
+          list
+          datatable_all
+          restore
+          permanentlyDelete
+fields:
+    - type: increments
+      name: id
+
+    - type: string
+      name: col_1
+      label: Column 1
+      nullable: true
+      request:
+          - type: max:255
+            message: Column 1 cannot be more than 255 characters
+
+    - type: string
+      name: col_2
+      label: Column 2
+      nullable: true
+      request:
+          - type: max:255
+            message: Column 2 cannot be more than 255 characters
+
+    - type: string
+      name: col_3
+      label: Column 3
+      nullable: true
+      request:
+          - type: max:255
+            message: Column 3 cannot be more than 255 characters
+
+    - type: string
+      name: col_4
+      label: Column 4
+      nullable: true
+      request:
+          - type: max:255
+            message: Column 4 cannot be more than 255 characters
+
+    - type: integer
+      name: list_order
+      nullable: true
+
+    - type: integer
+      name: methodology_id
+      unsigned: true
+      request:
+          - type: exists:methodologies,id
+            message: The selected Methodology does not exist
+      foreign:
+          table: methodologies
+          id: id
+          onDelete: CASCADE
+          onUpdate: CASCADE
+
+    - type: integer
+      name: cols_filled
+      nullable: true

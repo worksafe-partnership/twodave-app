@@ -1,0 +1,315 @@
+identifierPath: project.vtram
+model: Vtram
+timestamps: true
+permissions: true
+config:
+    singular: VTRAM
+    plural: VTRAMS
+    icon: document-add
+    route_type: resource
+
+fields:
+    - type: increments
+      name: id
+
+    - type: integer
+      name: project_id
+      label: Project
+      formType: select
+      unsigned: true
+      formAttribute:
+          - key: list
+            value: $projects
+          - key: display_value
+            value: $record->project->name ?? 'No Project Selected'
+          - key: selector
+            value: true
+      foreign: 
+          table: projects
+          id: id
+          onDelete: CASCADE
+          onUpdate: CASCADE
+
+    - type: string
+      name: name
+      label: Name
+      migrationArguement: 100
+      request:
+          - type: required
+            message: Please enter a VTRAM Name
+          - type: max:100
+            message: The VTRAM Name cannot be more than 100 characters
+
+    - type: text
+      name: description
+      label: Description
+      formType: ckeditor
+      request:
+          - type: required
+            message: Please enter a Description
+          
+    - type: integer
+      name: logo
+      label: Logo (Overrides Company Logo on VTRAMs)
+      nullable: true
+      unsigned: true
+      formType: file
+      request:
+          - type: mimes:jpg,jpeg,png,bmp,tiff
+            message: Only images are allowed to be uploaded for the Logo
+      foreign:
+          table: files
+          id: id
+          onDelete: CASCADE
+          onUpdate: CASCADE
+
+    - type: string
+      name: reference
+      label: Reference
+      migrationArguement: 100
+      request:
+          - type: required
+            message: Please enter a Reference
+          - type: max:100
+            message: The Reference cannot be more than 100 characters
+
+    - type: text
+      name: key_points
+      label: Key Points
+      formType: ckeditor
+      request:
+          - type: required
+            message: Please enter the Key Points
+
+    - type: integer
+      name: havs_noise_assessment
+      label: HAVs/Noise Assessment Document
+      nullable: true
+      unsigned: true
+      formType: file
+      request:
+          - type: mimes:jpg,jpeg,png,bmp,tiff,pdf
+            message: Only images and PDFS are allowed to be uploaded for the HAVS/Noise Assessment
+      foreign:
+          table: files
+          id: id
+          onDelete: CASCADE
+          onUpdate: CASCADE
+
+    - type: integer
+      name: coshh_assessment
+      label: COSHH Assessment Document
+      nullable: true
+      unsigned: true
+      formType: file
+      request:
+          - type: mimes:jpg,jpeg,png,bmp,tiff,pdf
+            message: Only images and PDFS are allowed to be uploaded for the COSHH Assessment
+      foreign:
+          table: files
+          id: id
+          onDelete: CASCADE
+          onUpdate: CASCADE
+
+    - type: date
+      name: review_due
+      label: Review Due
+      nullable: true
+      formAttribute:
+          - key: disabled
+            value: true
+
+    - type: date
+      name: approved_date
+      label: Approved Date
+      nullable: true
+      formAttribute:
+          - key: disabled
+            value: true
+
+    - type: integer
+      name: original_id
+      nullable: true
+      formAttribute:
+          - key: disabled
+            value: true
+
+    - type: integer
+      name: revision_number
+      label: Revision Number
+      nullable: true
+      default: null
+      formAttribute:
+          - key: disabled
+            value: true
+
+    - type: string
+      name: status
+      label: Status
+      default: NEW
+      formType: select
+      index: 
+        - status
+      formAttribute:
+          - key: disabled
+            value: true
+          - key: list
+            value: config('egc.vtram_status')
+          - key: display_value
+            value: isset($record->status) ? config('egc.vtram_status')[$record->status]
+          - key: value
+            value: "'NEW'"
+
+    - type: integer
+      name: created_by
+      label: Created By
+      nullable: true
+      unsigned: true
+      formAttribute:
+          - key: disabled
+            value: true
+          - key: value
+            value: $record->created->name ?? ''
+      foreign:
+          table: users
+          id: id
+          onDelete: NO ACTION
+          onUpdate: NO ACTION
+
+    - type: integer
+      name: updated_by
+      label: Updated By
+      nullable: true
+      unsigned: true
+      formAttribute:
+          - key: disabled
+            value: true
+          - key: value
+            value: $record->updated->name ?? ''
+      foreign:
+          table: users
+          id: id
+          onDelete: NO ACTION
+          onUpdate: NO ACTION
+
+    - type: integer
+      name: submitted_by
+      label: Submitted By
+      nullable: true
+      unsigned: true
+      formAttribute:
+          - key: disabled
+            value: true
+          - key: value
+            value: $record->submitted->name ?? ''
+      foreign:
+          table: users
+          id: id
+          onDelete: NO ACTION
+          onUpdate: NO ACTION
+
+    - type: integer
+      name: approved_by
+      label: Approved By
+      nullable: true
+      unsigned: true
+      formAttribute:
+          - key: disabled
+            value: true
+          - key: value
+            value: $record->approved->name ?? ''
+      foreign:
+          table: users
+          id: id
+          onDelete: NO ACTION
+          onUpdate: NO ACTION
+
+    - type: date
+      name: date_replaced
+      label: Date Replaced
+      nullable: true
+      formAttribute:
+          - key: disabled
+            value: true
+
+    - type: date
+      name: resubmit_by
+      label: Resubmit By
+      nullable: true
+      formAttribute:
+          - key: disabled
+            value: true
+
+    - type: text
+      name: pre_risk_assessment_text
+      label: Pre Risk Assessment Text
+      formType: ckeditor
+      nullable: true
+
+    - type: text
+      name: post_risk_assessment_text
+      label: Post Risk Assessment Text
+      formType: ckeditor
+      nullable: true
+
+    - type: boolean
+      name: dynamic_risk
+      label: Dynamic Risk (Adds Dynamic Risk boxes to the VTRAM)
+      default: false
+      nullable: true
+      formAttribute:
+          - key: value
+            value: $record->dynamic_risk ?? false
+
+    - type: integer
+      name: pdf
+      nullable: true
+      unsigned: true
+      foreign:
+          table: files
+          id: id
+          onDelete: CASCADE
+          onUpdate: CASCADE
+
+    - type: integer
+      name: pages_in_pdf
+      nullable: true
+      default: null
+
+    - type: integer
+      name: created_from
+      label: Created From
+      nullable: true
+      unsigned: true
+      default: null
+      formAttribute:
+          - key: disabled
+            value: true
+          - key: value
+            value: $record->createdFrom->name ?? ''
+      foreign:
+          table: templates
+          id: id
+          onDelete: SET NULL
+          onUpdate: SET NULL
+
+    - type: boolean
+      name: show_responsible_person
+      label: Show Responsible Person
+      default: false
+      nullable: true
+      formAttribute:
+          - key: value
+            value: $record->show_responsible_person ?? false
+
+    - type: string
+      name: responsible_person
+      label: Responsible Person
+      nullable: true
+      migrationArguement: 100
+      request:
+         - type: max:100
+           message: The Responsible Person cannot be more than 100 charcters
+         - type: required_if:show_responsible_person,true
+           message: Please enter the Responsible Person
+
