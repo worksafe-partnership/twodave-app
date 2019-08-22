@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Storage;
 use Controller;
+// use File;
+use EGFiles;
 use App\Company;
 use App\Project;
 use App\Http\Requests\CompanyRequest;
@@ -121,5 +124,15 @@ class CompanyController extends Controller
         $newCompany->save();
         toast()->success('Company Cloned!', 'You\'re now editing the new Company');
         return redirect('/company/'.$newCompany->id.'/edit');
+    }
+
+    public function permanentlyDeleted($deletedRecord, $args)
+    {
+        $id = end($args);
+        if (!is_null($deletedRecord->logo)) {
+            $file = EGFiles::findOrFail($deletedRecord->logo);
+            Storage::disk('local')->delete($file->location);
+            $file->forceDelete();
+        }
     }
 }

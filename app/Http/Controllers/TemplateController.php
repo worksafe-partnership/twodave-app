@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use DB;
 use Auth;
+use EGFiles;
+use Storage;
 use App\Icon;
 use Controller;
 use App\Hazard;
@@ -477,10 +479,22 @@ class TemplateController extends Controller
         return parent::_renderView("layouts.custom");
     }
 
-    public function permanentlyDeleted($record, $args)
+    public function permanentlyDeleted($deletedRecord, $args)
     {
         // $record doesn't contain the id???
         $id = end($args);
+
+        if (!is_null($deletedRecord->logo)) {
+            $file = EGFiles::findOrFail($deletedRecord->logo);
+            Storage::disk('local')->delete($file->location);
+            $file->forceDelete();
+        }
+
+        if (!is_null($deletedRecord->pdf)) {
+            $file = EGFiles::findOrFail($deletedRecord->pdf);
+            Storage::disk('local')->delete($file->location);
+            $file->forceDelete();
+        }
 
         Approval::where('entity', '=', 'TEMPLATE')
                 ->where('entity_id', '=', $id)

@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use DB;
 use Auth;
-use EGFiles;
-use Controller;
 use Route;
+use EGFiles;
+use Storage;
+use Controller;
 use App\Icon;
 use App\Vtram;
 use App\Hazard;
@@ -564,12 +565,24 @@ class CompanyVtramController extends Controller
     }
 
 
-    public function permanentlyDeleted($record, $args)
+    public function permanentlyDeleted($deletedRecord, $args)
     {
         // $record doesn't contain the id???
         $id = end($args);
 
-        $project = Project::withTrashed()->findOrFail($record->project_id);
+        if (!is_null($deletedRecord->logo)) {
+            $file = EGFiles::findOrFail($deletedRecord->logo);
+            Storage::disk('local')->delete($file->location);
+            $file->forceDelete();
+        }
+
+        if (!is_null($deletedRecord->pdf)) {
+            $file = EGFiles::findOrFail($deletedRecord->pdf);
+            Storage::disk('local')->delete($file->location);
+            $file->forceDelete();
+        }
+
+        $project = Project::withTrashed()->findOrFail($deletedRecord->project_id);
         $vtramsCount = VTram::join('projects', 'vtrams.project_id', '=', 'projects.id')
                        ->where('vtrams.status', 'AWAITING_EXTERNAL')
                        ->where('principle_contractor', 1)
@@ -597,4 +610,5 @@ class CompanyVtramController extends Controller
 
         Methodology::whereIn('id', $methodologies)->delete();
     }
+
 }
