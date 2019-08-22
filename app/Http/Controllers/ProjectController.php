@@ -62,6 +62,12 @@ class ProjectController extends CompanyProjectController
         ];
     }
 
+    public function viewEditHook()
+    {
+        // no withTrashed() - hide from lower level users when soft deleted.
+        $this->record = Project::findOrFail(end($this->args));
+    }
+
     /*public function permanentlyDeleted($original, $args)
     {
         dd(func_get_args());
