@@ -168,14 +168,6 @@ class CompanyVtramController extends Controller
                 'id' => 'view_pdf_a3',
                 'target' => '_blank',
             ];
-            $this->pillButtons['print_pdf_a3'] = [
-                'label' => 'Print PDF A3',
-                'path' => "javascript: var wnd = window.open('".$this->record->id."/view_a3', '_blank'); wnd.onload = function () {wnd.print();}",
-                'icon' => 'print',
-                'order' => 100,
-                'id' => 'print_pdf_a3',
-                'target' => '_blank',
-            ];
         }
 
         $this->pillButtons['view_pdf'] = [
@@ -184,14 +176,6 @@ class CompanyVtramController extends Controller
             'icon' => 'file-pdf',
             'order' => 100,
             'id' => 'view_pdf',
-            'target' => '_blank',
-        ];
-        $this->pillButtons['print_pdf'] = [
-            'label' => 'Print PDF',
-            'path' => "javascript: var wnd = window.open('".$this->record->id."/view_a4', '_blank'); wnd.onload = function () {this.print();}",
-            'icon' => 'print',
-            'order' => 100,
-            'id' => 'print_pdf',
             'target' => '_blank',
         ];
         if (in_array($this->record->status, ['NEW','REJECTED','EXTERNAL_REJECT']) && can('edit', $this->identifierPath) && is_null($this->record['deleted_at'])) {

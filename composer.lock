@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "651fc3b001f380f6b2c061dc87fc7690",
+    "content-hash": "22b6ba98901e8a370841415689fe39e8",
     "packages": [
         {
             "name": "askedio/laravel-soft-cascade",
@@ -677,16 +677,16 @@
         },
         {
             "name": "evergreen/generic",
-            "version": "dev-develop",
+            "version": "2.1.3",
             "source": {
                 "type": "git",
                 "url": "git@github.com:evergreencomputing/laravel-generic.git",
-                "reference": "2caa2049080832b1b24b994ea3132ffc8fd27ab0"
+                "reference": "83e1d7f001cfc4699aaa550837088d31edd3a3a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/evergreencomputing/laravel-generic/zipball/2caa2049080832b1b24b994ea3132ffc8fd27ab0",
-                "reference": "2caa2049080832b1b24b994ea3132ffc8fd27ab0",
+                "url": "https://api.github.com/repos/evergreencomputing/laravel-generic/zipball/83e1d7f001cfc4699aaa550837088d31edd3a3a6",
+                "reference": "83e1d7f001cfc4699aaa550837088d31edd3a3a6",
                 "shasum": ""
             },
             "require": {
@@ -695,6 +695,7 @@
                 "h4cc/wkhtmltoimage-amd64": "0.12.x",
                 "h4cc/wkhtmltopdf-amd64": "0.12.x",
                 "phpseclib/phpseclib": "~2.0",
+                "roksta/toast": "^1.0",
                 "symfony/yaml": "^4.1",
                 "unisharp/laravel-ckeditor": "~4.6",
                 "yajra/laravel-datatables-oracle": "~8.0"
@@ -710,8 +711,7 @@
             "autoload": {
                 "files": [
                     "src/app/Helpers/blade.php",
-                    "src/app/Helpers/EGPermission.php",
-                    "src/app/Helpers/Toast.php"
+                    "src/app/Helpers/EGPermission.php"
                 ],
                 "psr-4": {
                     "Evergreen\\Generic\\": "src",
@@ -720,10 +720,10 @@
             },
             "description": "Evergreen laravel package",
             "support": {
-                "source": "https://github.com/evergreencomputing/laravel-generic/tree/develop",
+                "source": "https://github.com/evergreencomputing/laravel-generic/tree/2.1.3",
                 "issues": "https://github.com/evergreencomputing/laravel-generic/issues"
             },
-            "time": "2019-08-16T08:07:04+00:00"
+            "time": "2019-03-27T12:41:18+00:00"
         },
         {
             "name": "fideloper/proxy",
@@ -1158,16 +1158,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.5.47",
+            "version": "v5.5.48",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "0f538802144a41664f545fd92bbb556000cba115"
+                "reference": "e3e8d585dcfab5abe6261b060f4df0d48f9924bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/0f538802144a41664f545fd92bbb556000cba115",
-                "reference": "0f538802144a41664f545fd92bbb556000cba115",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/e3e8d585dcfab5abe6261b060f4df0d48f9924bf",
+                "reference": "e3e8d585dcfab5abe6261b060f4df0d48f9924bf",
                 "shasum": ""
             },
             "require": {
@@ -1288,7 +1288,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2019-08-13T14:13:01+00:00"
+            "time": "2019-08-20T15:46:40+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -2214,6 +2214,64 @@
                 "uuid"
             ],
             "time": "2018-07-19T23:38:55+00:00"
+        },
+        {
+            "name": "roksta/toast",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/roksta21/Toast.git",
+                "reference": "248ec7ce941863dcc6a0caf98e0daa3b55218a3d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/roksta21/Toast/zipball/248ec7ce941863dcc6a0caf98e0daa3b55218a3d",
+                "reference": "248ec7ce941863dcc6a0caf98e0daa3b55218a3d",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/session": "~5.0",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "dev-master"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Roksta\\Toastr\\ToastrServiceProvider"
+                    ],
+                    "aliases": {
+                        "Toast": "Roksta\\Toastr\\Toast"
+                    }
+                }
+            },
+            "autoload": {
+                "files": [
+                    "helpers/helpers.php"
+                ],
+                "psr-4": {
+                    "Roksta\\Toastr\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "roksta",
+                    "email": "roksta21@gmail.com"
+                }
+            ],
+            "description": "Toastr notifications in laravel",
+            "keywords": [
+                "alert",
+                "laravel notifications",
+                "notifications"
+            ],
+            "time": "2019-05-17T14:13:03+00:00"
         },
         {
             "name": "setasign/fpdi",
@@ -5637,9 +5695,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "evergreen/generic": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

@@ -166,6 +166,10 @@
             padding: 0;
             margin-bottom: 5px;
             overflow: scroll;
+            scrollbar-width: none;
+        }
+        ::-webkit-scrollbar {
+            display: none;
         }
 
         .dash-heading {
