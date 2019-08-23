@@ -24,6 +24,10 @@ class PreviousApprovalController extends PreviousCompanyApprovalController
     {
         // no withTrashed() - hide from lower level users when soft deleted.
         $this->record = Approval::findOrFail(end($this->args));
+        $this->heading = "Viewing Approval Feedback";
+        if ($this->record->entity_id != $this->parentId) {
+            abort(404);
+        }
     }
 
     public function store(ApprovalRequest $request)
