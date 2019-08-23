@@ -68,12 +68,6 @@ class ProjectController extends CompanyProjectController
         $this->record = Project::findOrFail(end($this->args));
     }
 
-    /*public function permanentlyDeleted($original, $args)
-    {
-        dd(func_get_args());
-        VTFiles::delete($original->logo, true);
-    }*/
-
     public function store(ProjectRequest $request, $companyId = null)
     {
         $request->merge([

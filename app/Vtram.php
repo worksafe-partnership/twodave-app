@@ -2,7 +2,10 @@
 
 namespace App;
 
+use DB;
 use Carbon;
+use EGFiles;
+use Storage;
 use Yajra\DataTables\Datatables;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -432,8 +435,13 @@ class Vtram extends Model
 
     public function approvals()
     {
+        if ($this->deleted_at == null) {
+            return $this->hasMany(Approval::class, 'entity_id', 'id')
+                ->where('entity', '=', 'VTRAM');
+        }
         return $this->hasMany(Approval::class, 'entity_id', 'id')
-            ->where('entity', '=', 'VTRAM');
+            ->where('entity', '=', 'VTRAM')
+            ->withTrashed();
     }
 
     public function previousVTs()
@@ -445,5 +453,63 @@ class Vtram extends Model
     public function briefings()
     {
         return $this->hasMany(Briefing::class, 'vtram_id', 'id');
+    }
+
+    public function delete()
+    {
+        if (!is_null($this->deleted_at)) {
+            if (!is_null($this->logo)) {
+                $file = EGFiles::findOrFail($this->logo);
+                Storage::disk('local')->delete($file->location);
+                $file->forceDelete();
+            }
+
+            if (!is_null($this->pdf)) {
+                $file = EGFiles::findOrFail($this->pdf);
+                Storage::disk('local')->delete($file->location);
+                $file->forceDelete();
+            }
+
+            if (!is_null($this->havs_noise_assessment)) {
+                $file = EGFiles::findOrFail($this->havs_noise_assessment);
+                Storage::disk('local')->delete($file->location);
+                $file->forceDelete();
+            }
+
+            if (!is_null($this->coshh_assessment)) {
+                $file = EGFiles::findOrFail($this->coshh_assessment);
+                Storage::disk('local')->delete($file->location);
+                $file->forceDelete();
+            }
+
+            $project = Project::withTrashed()->findOrFail($this->project_id);
+            $vtramsCount = VTram::join('projects', 'vtrams.project_id', '=', 'projects.id')
+                           ->where('vtrams.status', 'AWAITING_EXTERNAL')
+                           ->where('principle_contractor', 1)
+                           ->where('principle_contractor_email', $project->principle_contractor)
+                           ->count();
+
+            if ($vtramsCount == 0) {
+                UniqueLink::where('email', $project->principle_contractor_email)->delete();
+            }
+            
+            foreach ($this->approvals as $approval) {
+                $approval->delete();
+            }
+
+            $hazards = Hazard::where('entity', '=', 'VTRAM')
+                            ->where('entity_id', '=', $this->id)
+                            ->delete();
+
+            $links = DB::table('hazards_methodologies')->whereIn('methodology_id', $this->methodologies->pluck('id'))->delete();
+
+            // Delete Previous
+            VTRAM::where('current_id', $this->id)->delete();
+
+            foreach ($this->methodologies as $meth) {
+                $meth->delete();
+            }   
+        }
+        parent::delete();
     }
 }

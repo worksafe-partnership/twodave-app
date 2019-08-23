@@ -128,7 +128,11 @@ class Project extends Model
 
     public function vtrams()
     {
-        return $this->hasMany(Vtram::class, 'project_id', 'id');
+        if (is_null($this->deleted_at)) {
+            return $this->hasMany(Vtram::class, 'project_id', 'id');
+        } else {
+            return $this->hasMany(Vtram::class, 'project_id', 'id')->withTrashed();
+        }
     }
 
     public function briefings()
@@ -136,4 +140,13 @@ class Project extends Model
         return $this->hasMany(Briefing::class, 'project_id', 'id');
     }
 
+    public function delete()
+    {
+        if (!is_null($this->deleted_at)) {
+            foreach ($this->vtrams as $vtram) {
+                $vtram->delete();
+            }
+        }
+        parent::delete();
+    }
 }

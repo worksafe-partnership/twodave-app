@@ -2,6 +2,8 @@
 
 namespace App;
 
+use EGFiles;
+use Storage;
 use Yajra\DataTables\Datatables;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -107,11 +109,36 @@ class Company extends Model
 
     public function projects()
     {
-        return $this->hasMany(Project::class, 'company_id', 'id');
+        if (is_null($this->deleted_at)) {
+            return $this->hasMany(Project::class, 'company_id', 'id');
+        } else {
+            return $this->hasMany(Project::class, 'company_id', 'id')->withTrashed();
+        }
     }
 
     public function templates()
     {
-        return $this->hasMany(Template::class, 'company_id', 'id');
+        if (is_null($this->deleted_at)) {
+            return $this->hasMany(Template::class, 'company_id', 'id');
+        }
+        return $this->hasMany(Template::class, 'company_id', 'id')->withTrashed();
+    }
+
+    public function delete()
+    {
+        if (!is_null($this->deleted_at)) {
+            foreach ($this->projects as $project) {
+                $project->delete();
+            }
+            foreach ($this->templates as $template) {
+                $template->delete();
+            }
+            if ($this->logo != null) {
+                $file = EGFiles::findOrFail($this->logo);
+                Storage::disk('local')->delete($file->location);
+                $file->forceDelete();
+            }
+        }
+        parent::delete();
     }
 }

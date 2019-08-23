@@ -45,7 +45,6 @@ class CompanyVtramController extends Controller
         if (isset($this->actionButtons['create']['class'])) {
             $this->actionButtons['create']['class'] .= " create_vtram";
         }
-        $this->backButton['path'] = str_replace("vtram", "tracker", $this->backPath);
     }
 
     public function bladeHook()
@@ -171,7 +170,7 @@ class CompanyVtramController extends Controller
             ];
             $this->pillButtons['print_pdf_a3'] = [
                 'label' => 'Print PDF A3',
-                'path' => "javascript: var wnd = window.open('".$this->record->id."/view_a3', '_blank');wnd.print();",
+                'path' => "javascript: var wnd = window.open('".$this->record->id."/view_a3', '_blank'); wnd.onload = function () {wnd.print();}",
                 'icon' => 'print',
                 'order' => 100,
                 'id' => 'print_pdf_a3',
@@ -189,7 +188,7 @@ class CompanyVtramController extends Controller
         ];
         $this->pillButtons['print_pdf'] = [
             'label' => 'Print PDF',
-            'path' => "javascript:var wnd = window.open('".$this->record->id."/view_a4', '_blank');wnd.print();",
+            'path' => "javascript: var wnd = window.open('".$this->record->id."/view_a4', '_blank'); wnd.onload = function () {this.print();}",
             'icon' => 'print',
             'order' => 100,
             'id' => 'print_pdf',
@@ -236,7 +235,7 @@ class CompanyVtramController extends Controller
 
         if (VTLogic::canReview($this->record)) {
             // ALWAYS open for preview in A4 - only print should A3 it.
-            $path = 'javascript: window.open("'.$this->record->id.'/view_a4", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
+            $path = 'javascript: window.open("'.$this->record->id.'/view_a3", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
             $this->pillButtons['approve_vtrams'] = [
                 'label' => 'Approve VTRAMS',
                 'path' => $path,
@@ -564,52 +563,4 @@ class CompanyVtramController extends Controller
         parent::_buildProperties($args);
         return parent::_renderView("layouts.custom");
     }
-
-
-    public function permanentlyDeleted($deletedRecord, $args)
-    {
-        // $record doesn't contain the id???
-        $id = end($args);
-
-        if (!is_null($deletedRecord->logo)) {
-            $file = EGFiles::findOrFail($deletedRecord->logo);
-            Storage::disk('local')->delete($file->location);
-            $file->forceDelete();
-        }
-
-        if (!is_null($deletedRecord->pdf)) {
-            $file = EGFiles::findOrFail($deletedRecord->pdf);
-            Storage::disk('local')->delete($file->location);
-            $file->forceDelete();
-        }
-
-        $project = Project::withTrashed()->findOrFail($deletedRecord->project_id);
-        $vtramsCount = VTram::join('projects', 'vtrams.project_id', '=', 'projects.id')
-                       ->where('vtrams.status', 'AWAITING_EXTERNAL')
-                       ->where('principle_contractor', 1)
-                       ->where('principle_contractor_email', $project->principle_contractor)
-                       ->count();
-
-        if ($vtramsCount == 0) {
-            UniqueLink::where('email', $project->principle_contractor_email)->delete();
-        }
-
-        Approval::where('entity', '=', 'VTRAM')
-                ->where('entity_id', '=', $id)
-                ->forceDelete();
-
-        $hazards = Hazard::where('entity', '=', 'VTRAM')
-                        ->where('entity_id', '=', $id)
-                        ->delete();
-
-        $methodologies = Methodology::where('entity', '=', 'VTRAM')
-                        ->where('entity_id', '=', $id)->pluck('id');
-
-        $links = DB::table('hazards_methodologies')->whereIn('methodology_id', $methodologies)->delete();
-
-        VTRAM::where('current_id', $id)->delete();
-
-        Methodology::whereIn('id', $methodologies)->delete();
-    }
-
 }

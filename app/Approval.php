@@ -2,6 +2,8 @@
 
 namespace App;
 
+use EGFiles;
+use Storage;
 use Carbon;
 use Yajra\DataTables\Datatables;
 use Illuminate\Database\Eloquent\Model;
@@ -146,5 +148,15 @@ class Approval extends Model
             return '';
         }
         return $this->completedByUser->name;
+    }
+
+    public function delete()
+    {
+        if ($this->review_document != null) {
+            $file = EGFiles::findOrFail($this->review_document);
+            Storage::disk('local')->delete($file->location);
+            $file->forceDelete();
+        }
+        parent::delete();
     }
 }

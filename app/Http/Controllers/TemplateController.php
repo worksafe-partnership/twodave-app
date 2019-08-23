@@ -478,39 +478,4 @@ class TemplateController extends Controller
         parent::_buildProperties($args);
         return parent::_renderView("layouts.custom");
     }
-
-    public function permanentlyDeleted($deletedRecord, $args)
-    {
-        // $record doesn't contain the id???
-        $id = end($args);
-
-        if (!is_null($deletedRecord->logo)) {
-            $file = EGFiles::findOrFail($deletedRecord->logo);
-            Storage::disk('local')->delete($file->location);
-            $file->forceDelete();
-        }
-
-        if (!is_null($deletedRecord->pdf)) {
-            $file = EGFiles::findOrFail($deletedRecord->pdf);
-            Storage::disk('local')->delete($file->location);
-            $file->forceDelete();
-        }
-
-        Approval::where('entity', '=', 'TEMPLATE')
-                ->where('entity_id', '=', $id)
-                ->forceDelete();
-
-        $hazards = Hazard::where('entity', '=', 'TEMPLATE')
-                        ->where('entity_id', '=', $id)
-                        ->delete();
-
-        $methodologies = Methodology::where('entity', '=', 'TEMPLATE')
-                        ->where('entity_id', '=', $id)->pluck('id');
-
-        $links = DB::table('hazards_methodologies')->whereIn('methodology_id', $methodologies)->delete();
-
-        Template::where('current_id', $id)->delete();
-
-        Methodology::whereIn('id', $methodologies)->delete();
-    }
 }
