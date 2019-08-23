@@ -26,10 +26,6 @@ class VTForm extends EGForm
 
         $aInp['inp_type'] = "select";
         $aInp = self::setDefaults($key, $aInp, $type);
-        //get the value from the array if it exists
-        if (array_search($aInp['value'], (array) $aInp['list'])) {
-            $aInp['value'] = array_search($aInp['value'], (array) $aInp['list']);
-        }
 
         if ($aInp['type'] == 'view' || !empty($aInp['disabled'])) {
             if (isset($aInp['list'][$aInp['value']])) {

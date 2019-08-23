@@ -152,7 +152,7 @@
     @php
         $oldPC = old('principle_contractor');
     @endphp
-    @if (($oldPC != "1" && $pageType == 'create') || (isset($record) && $record->principle_contractor != "1"))
+    @if (($oldPC != "1" && $pageType == 'create') || (isset($record) && $record->principle_contractor != "1" && ($pageType == 'edit' || $pageType == 'view') && $oldPC != "1"))
         @push('styles')
             <style>
                .principle-contractor-details {

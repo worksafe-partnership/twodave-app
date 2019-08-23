@@ -2,8 +2,11 @@
 
 namespace App;
 
+use DB;
 use Auth;
 use Carbon;
+use EGFiles;
+use Storage;
 use Yajra\DataTables\Datatables;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -251,13 +254,64 @@ class Template extends Model
 
     public function approvals()
     {
+        if ($this->deleted_at == null) {
+            return $this->hasMany(Approval::class, 'entity_id', 'id')
+                ->where('entity', '=', 'TEMPLATE');
+        }
         return $this->hasMany(Approval::class, 'entity_id', 'id')
-            ->where('entity', '=', 'TEMPLATE');
+            ->where('entity', '=', 'TEMPLATE')
+            ->withTrashed();
     }
 
     public function previousTemplates()
     {
         return $this->hasMany(Template::class, 'current_id', 'id')
             ->where('created_from_entity', '=', 'TEMPLATE');
+    }
+
+    public function delete()
+    {
+        if (!is_null($this->deleted_at)) {
+            if (!is_null($this->logo)) {
+                $file = EGFiles::findOrFail($this->logo);
+                Storage::disk('local')->delete($file->location);
+                $file->forceDelete();
+            }
+
+            if (!is_null($this->pdf)) {
+                $file = EGFiles::findOrFail($this->pdf);
+                Storage::disk('local')->delete($file->location);
+                $file->forceDelete();
+            }
+
+            if (!is_null($this->havs_noise_assessment)) {
+                $file = EGFiles::findOrFail($this->havs_noise_assessment);
+                Storage::disk('local')->delete($file->location);
+                $file->forceDelete();
+            }
+
+            if (!is_null($this->coshh_assessment)) {
+                $file = EGFiles::findOrFail($this->coshh_assessment);
+                Storage::disk('local')->delete($file->location);
+                $file->forceDelete();
+            }
+
+            foreach ($this->approvals as $approval) {
+                $approval->delete();
+            }
+
+            $hazards = Hazard::where('entity', '=', 'TEMPLATE')
+                            ->where('entity_id', '=', $this->id)
+                            ->delete();
+
+            $links = DB::table('hazards_methodologies')->whereIn('methodology_id', $this->methodologies->pluck('id'))->delete();
+
+            Template::where('current_id', $this->id)->delete();
+
+            foreach ($this->methodologies as $meth) {
+                $meth->delete();
+            }   
+        }
+        parent::delete();
     }
 }

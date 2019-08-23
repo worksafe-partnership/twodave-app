@@ -2,6 +2,8 @@
 
 namespace App;
 
+use EGFiles;
+use Storage;
 use Yajra\DataTables\Datatables;
 use Illuminate\Database\Eloquent\Model;
 
@@ -67,5 +69,20 @@ class Methodology extends Model
         } else if ($this->entity == 'TEMPLATE') {
             return $this->belongsTo(Template::class, 'entity_id', 'id');
         }
+    }
+
+    public function delete()
+    {
+        if (!is_null($this->image)) {
+            $file = EGFiles::findOrFail($this->image);
+            Storage::disk('local')->delete($file->location);
+            $file->forceDelete();
+        }
+
+        foreach ($this->instructions as $process) {
+            $process->delete();
+        }
+
+        parent::delete();
     }
 }

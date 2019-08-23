@@ -416,7 +416,7 @@
         $oldR = old('show_responsible_person');
         $oldArea = old('show_area');
     @endphp
-    @if (($oldR != "1" && $pageType == 'create') || (isset($record) && $record->show_responsible_person != "1" && $pageType == 'edit' && $oldR != "1"))
+    @if (($oldR != "1" && $pageType == 'create') || (isset($record) && $record->show_responsible_person != "1" && ($pageType == 'edit'  || $pageType == 'view') && $oldR != "1"))
         @push('styles')
             <style>
                .responsible-details {
@@ -425,7 +425,7 @@
             </style>
         @endpush
     @endif
-    @if (($oldArea != "1" && $pageType == 'create') || (isset($record) && $record->show_area != "1" && $pageType == 'edit' && $oldArea != "1"))
+    @if (($oldArea != "1" && $pageType == 'create') || (isset($record) && $record->show_area != "1" && ($pageType == 'edit' || $pageType == 'view') && $oldArea != "1"))
         @push('styles')
             <style>
                .area-details {
@@ -445,6 +445,7 @@
         $('.responsible-check [id^=show_responsible_person]').click(function() {
             var name = $(this).prev().val();
             if (name == "1") {
+                $('#responsible_person').val('');
                 $('.responsible-details').hide();
             } else {
                 $('.responsible-details').show();
@@ -453,6 +454,7 @@
         $('.area-check [id^=show_area]').click(function() {
             var name = $(this).prev().val();
             if (name == "1") {
+                $('#area').val('');
                 $('.area-details').hide();
             } else {
                 $('.area-details').show();

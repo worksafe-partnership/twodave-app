@@ -280,14 +280,6 @@ class TemplateController extends Controller
                 'id' => 'view_pdf_a3',
                 'target' => '_blank',
             ];
-            $this->pillButtons['print_pdf_a3'] = [
-                'label' => 'Print PDF A3',
-                'path' => "javascript: var wnd = window.open('".$this->record->id."/view_a3', '_blank');wnd.print();",
-                'icon' => 'print',
-                'order' => 100,
-                'id' => 'print_pdf_a3',
-                'target' => '_blank',
-            ];
         }
 
         $this->pillButtons['view_pdf'] = [
@@ -296,14 +288,6 @@ class TemplateController extends Controller
             'icon' => 'file-pdf',
             'order' => 100,
             'id' => 'view_pdf',
-            'target' => '_blank',
-        ];
-        $this->pillButtons['print_pdf'] = [
-            'label' => 'Print PDF',
-            'path' => "javascript:var wnd = window.open('".$this->record->id."/view_a4', '_blank');wnd.print();",
-            'icon' => 'print',
-            'order' => 100,
-            'id' => 'print_pdf',
             'target' => '_blank',
         ];
         if (in_array($this->record->status, ['NEW','REJECTED','EXTERNAL_REJECT']) && is_null($this->record['deleted_at'])) {
@@ -477,40 +461,5 @@ class TemplateController extends Controller
         ];
         parent::_buildProperties($args);
         return parent::_renderView("layouts.custom");
-    }
-
-    public function permanentlyDeleted($deletedRecord, $args)
-    {
-        // $record doesn't contain the id???
-        $id = end($args);
-
-        if (!is_null($deletedRecord->logo)) {
-            $file = EGFiles::findOrFail($deletedRecord->logo);
-            Storage::disk('local')->delete($file->location);
-            $file->forceDelete();
-        }
-
-        if (!is_null($deletedRecord->pdf)) {
-            $file = EGFiles::findOrFail($deletedRecord->pdf);
-            Storage::disk('local')->delete($file->location);
-            $file->forceDelete();
-        }
-
-        Approval::where('entity', '=', 'TEMPLATE')
-                ->where('entity_id', '=', $id)
-                ->forceDelete();
-
-        $hazards = Hazard::where('entity', '=', 'TEMPLATE')
-                        ->where('entity_id', '=', $id)
-                        ->delete();
-
-        $methodologies = Methodology::where('entity', '=', 'TEMPLATE')
-                        ->where('entity_id', '=', $id)->pluck('id');
-
-        $links = DB::table('hazards_methodologies')->whereIn('methodology_id', $methodologies)->delete();
-
-        Template::where('current_id', $id)->delete();
-
-        Methodology::whereIn('id', $methodologies)->delete();
     }
 }

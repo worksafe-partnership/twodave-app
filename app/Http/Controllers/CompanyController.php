@@ -125,14 +125,4 @@ class CompanyController extends Controller
         toast()->success('Company Cloned!', 'You\'re now editing the new Company');
         return redirect('/company/'.$newCompany->id.'/edit');
     }
-
-    public function permanentlyDeleted($deletedRecord, $args)
-    {
-        $id = end($args);
-        if (!is_null($deletedRecord->logo)) {
-            $file = EGFiles::findOrFail($deletedRecord->logo);
-            Storage::disk('local')->delete($file->location);
-            $file->forceDelete();
-        }
-    }
 }

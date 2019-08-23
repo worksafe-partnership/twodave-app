@@ -143,13 +143,14 @@
 
 
             $('#show-hide-{{$key}}').click(function() {
-                let table = "#"+$(this).data('table');
-                if ($(table).is(':visible')) {
-                    $(table).hide();
-                    $(table).parent().css("border-bottom", "none");
+                let tablediv = "#"+$(this).data('table');
+                if ($(tablediv).is(':visible')) {
+                    $(tablediv).hide();
+                    $(tablediv).parent().css("border-bottom", "none");
                 } else {
-                    $(table).show();
-                    $(table).parent().css("border-bottom", "5px solid #203878");
+                    $(tablediv).show();
+                    table.responsive.recalc();
+                    $(tablediv).parent().css("border-bottom", "5px solid #203878");
                 }
             })
         });
@@ -164,6 +165,11 @@
             border-right: 5px solid #203878;
             padding: 0;
             margin-bottom: 5px;
+            overflow: scroll;
+            scrollbar-width: none;
+        }
+        ::-webkit-scrollbar {
+            display: none;
         }
 
         .dash-heading {
