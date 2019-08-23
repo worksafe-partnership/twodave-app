@@ -87,9 +87,16 @@ class MethodologyController extends Controller
         return end($returnId);
     }
 
-    public function updated($record, $updated, $request)
+    public function updated($record, $original, $request)
     {
         switch ($record->category) {
+            case "TEXT_IMAGE":
+                if ($record->image != $original->image) {
+                    $file = EGFiles::findOrFail($original->image);
+                    Storage::disk('local')->delete($file->location);
+                    $file->forceDelete();
+                }
+                break;
             case "SIMPLE_TABLE":
                 $this->sortOutTableRows($record, $request);
                 break;
@@ -160,8 +167,18 @@ class MethodologyController extends Controller
             $order++;
             if (!isset($rows[$key]['image'])) {
                 $rows[$key]['image'] = null;
+            } else {
+                $file = EGFiles::findOrFail($rows[$key]['image']);
+                $file->update(['entity' => null]);
             }
         }
+
+        if (!is_null($request['replacedImages']) && !empty($request['replacedImages'])) {
+            $toDelete = explode(",", $request['replacedImages']);
+
+            EGFiles::whereIn('id', $toDelete)->forceDelete();
+        }
+
         Instruction::insert($rows);
     }
 
@@ -289,15 +306,27 @@ class MethodologyController extends Controller
         }
     }
 
+    /*
+        Triggers when user adds a new row to the Process/'Method of Work' table.
+    */
     public function addImage(MethodologyImageRequest $request)
     {
         $data = EGFiles::store($request, ['image' => 'image']);
+        $file = EGFiles::findOrFail($data['image']);
+        $file->update(['entity' => 'REMOVE']);
         return $data['image'];
     }
 
+    /*
+        Triggers when user overwrites an image in the Process/'Method of Work' table.
+        Need to also mark the overwritten image as "Remove" to ensure the Cron picks it up.
+        (As such if you go in, add an image, then replace it nine times, the initial 9 will be removed and the final will be saved)
+    */
     public function editImage(MethodologyImageRequest $request)
     {
         $data = EGFiles::store($request, ['image' => 'image']);
+        $file = EGFiles::findOrFail($data['image']);
+        $file->update(['entity' => 'REMOVE']);
         return $data['image'];
     }
 
