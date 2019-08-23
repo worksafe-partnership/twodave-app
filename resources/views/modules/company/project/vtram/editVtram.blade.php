@@ -1038,6 +1038,7 @@
                                 $('#' + container + ' input[name=type]')[0].checked = false;
                                 $('#' + container + ' input[name=type]')[1].checked = false;
                                 $('#icon_list').prop('selectedIndex',0);
+                                $('#image_preview').attr('src', '/gfx/icons/no_image.png');
                                 $('#words').val('');
                             }
                         }
@@ -1341,7 +1342,6 @@
                     $('#meth_type').val('');
                 },
                 error: function (data) {
-                    debugger;
                     $('#main-methodology-container .submitbutton').attr("disabled", false);
                     if (data.status == 422) {
                         var errorList = JSON.parse(data.responseText);

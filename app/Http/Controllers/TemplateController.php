@@ -59,7 +59,7 @@ class TemplateController extends Controller
 
         if (can('edit', $this->identifierPath) && in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED']) && is_null($this->record['deleted_at'])) {
             $this->actionButtons['methodologies'] = [
-                'label' => 'Hazards & Methodologies',
+                'label' => 'Hazards & Method Statements',
                 'path' => '/template/'.$this->id.'/methodology',
                 'icon' => 'receipt',
                 'order' => '550',
