@@ -714,9 +714,11 @@
         var processes = JSON.parse('{!! str_replace(['\'', '\\'], ['\\\'', '\\\\'], json_encode($processes)) !!}');
         var tableRows = JSON.parse('{!! str_replace(['\'', '\\'], ['\\\'', '\\\\'],json_encode($tableRows)) !!}');
         var icons = JSON.parse('{!! str_replace(['\'', '\\'], ['\\\'', '\\\\'], json_encode($icons)) !!}');
+        var deletedImages = [];
 
         function createMethodology() {
             let type = $('#meth_type').val();
+            deletedImages = [];
             if (type == '') {
                 toastr.error('Please select a Methodology Type');
             } else {
@@ -847,6 +849,7 @@
                 let title = methodology.title;
                 let content = '';
                 let container = 'methodology-text-form-container';
+                deletedImages = [];
                 switch (methodology.category) {
                     case 'TEXT':
                         CKEDITOR.instances.text_content.setData(methodology.text_before);
@@ -1129,6 +1132,7 @@
                     break;
                 case 'PROCESS':
                     form_data.append('title', $('#methodology-process-form-container #title').val());
+                    form_data.append('replacedImages', deletedImages);
 
                     let process_lines = $('#process-table input[name^=row_]');
                     $.each(process_lines, function(key, input) {

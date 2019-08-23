@@ -125,8 +125,8 @@
                     },
                     error: function (data) {
                         if (data.status == 422) {
-                            var errors = '';
-                            $.each(data.responseJSON.errors, function(key,val) {
+                                var errorList = JSON.parse(data.responseText);
+                                $.each(errorList.errors, function(key,val) {
                                 toastr.error(val);
                             });
                         } else if (data.status == 401) {
@@ -298,11 +298,13 @@
             contentType : false,
             processData : false,
             success: function (fileId) {
-                // id is the new one.
-                // find out if an image already exists with this row id
+                // fileId is the new image.
                 let image = $('img[data-process_row="row_'+row+'__image"]');
+                if (image.length > 0) { // if old image exists, add it to the deletedImages array
+                    deletedImages.push(image.attr('data-image_id'));
+                }
 
-                // if so update the source
+                // if image already exists, update the source
                 if (image.length > 0) {
                     image.attr("src","/image/"+fileId);
                     image.attr("data-image_id", fileId);
@@ -320,8 +322,8 @@
             },
             error: function (data) {
                 if (data.status == 422) {
-                    var errors = '';
-                    $.each(data.responseJSON.errors, function(key,val) {
+                    var errorList = JSON.parse(data.responseText);
+                    $.each(errorList.errors, function(key,val) {
                         toastr.error(val);
                     });
                 } else if (data.status == 401) {
@@ -360,8 +362,8 @@
                 },
                 error: function (data) {
                     if (data.status == 422) {
-                        var errors = '';
-                        $.each(data.responseJSON.errors, function(key,val) {
+                            var errorList = JSON.parse(data.responseText);
+                            $.each(errorList.errors, function(key,val) {
                             toastr.error(val);
                         });
                     } else if (data.status == 401) {
