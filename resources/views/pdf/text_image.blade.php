@@ -2,7 +2,7 @@
     <h3>{{$methodology->list_order}}. {!!$methodology->title!!}</h3>
     @php
         $imageSrc = null;
-        if (!is_null($methodology->image)) {
+        if (!is_null($methodology->image) && VTFiles::exists($methodology->image)) {
             $imageSrc = EGFiles::download($methodology->image)->getFile()->getPathName() ?? null;
         }
     @endphp

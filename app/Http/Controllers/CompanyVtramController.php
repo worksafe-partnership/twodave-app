@@ -112,6 +112,18 @@ class CompanyVtramController extends Controller
             ];
         }
 
+        $this->formButtons['back_to_edit'] = [
+            'class' => [
+                'submitbutton',
+                'button',
+                'is-primary',
+            ],
+            'name' => 'back_to_edit',
+            'label' => 'Save',
+            'order' => 150,
+            'value' => true,
+        ];
+
         // reorder the formButtons as EGL doesn't appear to do this for us.
         usort($this->formButtons, function ($a, $b) {
             return $a['order'] <=> $b['order'];
@@ -461,6 +473,15 @@ class CompanyVtramController extends Controller
             'label' => 'Back to VTRAMS',
             'icon' => 'arrow-left',
         ];
+
+        $this->pillButtons[] = [
+            'label' => 'Preview PDF',
+            'path' => 'view_a3',
+            'icon' => 'file-pdf',
+            'order' => 100,
+            'id' => 'view_pdf_a3',
+            'target' => '_blank',
+        ];
         $this->pageType = "custom";
         return parent::_renderView("layouts.custom");
     }
@@ -518,6 +539,9 @@ class CompanyVtramController extends Controller
                 return str_replace("/methodology", "", $request['return_path']);
             }
             return $request['return_path'];
+        }
+        if (isset($request['back_to_edit'])) {
+            return $this->fullPath.'/edit';
         }
     }
 

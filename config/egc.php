@@ -97,13 +97,13 @@ return [
             'example' => 'gfx/methodology/text_image.png',
         ],
         'SIMPLE_TABLE' => [
-            'label' => 'Simple Table',
+            'label' => 'Side Heading Table',
             'view' => 'modules.company.project.methodology.simple_table',
             'pdf_view' => 'pdf.methodology.simple_table',
             'example' => 'gfx/methodology/simple_table.png',
         ],
         'COMPLEX_TABLE' => [
-            'label' => 'Complex Table',
+            'label' => 'Top Heading Table',
             'view' => 'modules.company.project.methodology.complex_table',
             'pdf_view' => 'pdf.methodology.complex_table',
             'example' => 'gfx/methodology/complex_table.png',
@@ -115,7 +115,7 @@ return [
             'example' => 'gfx/methodology/process.png',
         ],
         'ICON' => [
-            'label' => 'Icon',
+            'label' => 'PPE',
             'view' => 'modules.company.project.methodology.icon',
             'pdf_view' => 'pdf.methodology.icon',
             'example' => 'gfx/methodology/icon.png',
@@ -132,10 +132,10 @@ return [
         'ACC_REPORT' => 'Accident Reporting',
         'TEXT' => 'Text',
         'TEXT_IMAGE' => 'Text and Image',
-        'SIMPLE_TABLE' => 'Simple Table',
-        'COMPLEX_TABLE' => 'Complex Table',
+        'SIMPLE_TABLE' => 'Side Heading Table',
+        'COMPLEX_TABLE' => 'Top Heading Table',
         'PROCESS' => 'Method of Work',
-        'ICON' => 'Icon',
+        'ICON' => 'PPE',
     ],
     'first_last' => [
         'FIRST' => 'First',

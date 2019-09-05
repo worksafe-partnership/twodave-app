@@ -49,8 +49,11 @@ class CompanyTemplateController extends TemplateController
 
     public function store(TemplateRequest $request, $companyId = null)
     {
+        $company = Company::findOrFail($companyId ?? $request->company_id);
         $request->merge([
             'company_id' => $companyId,
+            'main_description' => $company->main_description,
+            'post_risk_assessment_text' => $company->post_risk_assessment_text,
         ]);
         return parent::_store(func_get_args());
     }

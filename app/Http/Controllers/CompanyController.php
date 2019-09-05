@@ -17,6 +17,17 @@ class CompanyController extends Controller
     public function editHook()
     {
         $this->customValues['projects'] = Project::where('company_id', $this->id)->pluck('name', 'id');
+        $this->formButtons['back_to_edit'] = [
+            'class' => [
+                'submitbutton',
+                'button',
+                'is-primary',
+            ],
+            'name' => 'back_to_edit',
+            'label' => 'Save',
+            'order' => 150,
+            'value' => true,
+        ];
     }
 
     public function viewHook()
@@ -79,6 +90,9 @@ class CompanyController extends Controller
         $this->setupColour($company->primary_colour, $company->light_text, $company->id);
         if (isset($request['timescale_update']) && $request['timescale_update'] != "forward") {
             $this->overrideTimescales($company->id, $request);
+        }
+        if (isset($request['back_to_edit'])) {
+            return $this->fullPath.'/edit';
         }
     }
 

@@ -26,9 +26,9 @@
                     @php
                         $image = $sources[$icon->image];
                     @endphp
-                    <td style="width:20%;">
+                    <td style="width:20%;vertical-align:top;">
                         @if($image != "gfx/icons/no_image.png")
-                            <image src="{{ public_path($image) }}" style="width: 80px;"></image>
+                            <img src="{{ public_path($image) }}" style="width: 80px;"></img>
                         @else
                             <span style="width: 80%"></span>
                         @endif
@@ -50,5 +50,5 @@
             @endif
         @endforeach
     </table>
-    <p>{{$methodology->text_after}}</p>
+    <p>{!! $methodology->text_after !!}</p>
 </div>

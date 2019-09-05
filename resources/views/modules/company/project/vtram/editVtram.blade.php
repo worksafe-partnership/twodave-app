@@ -7,7 +7,7 @@
     <div class="column is-6 box-container">
         <div class="columns">
             <div class="column is-12">
-                <h2 class="sub-heading inline-block">Method Statements</h2>
+                <h2 class="sub-heading inline-block">Method Statement</h2>
                 <div class="is-pulled-right">
                     <div class="meth-type-selector">
                         {{ EGForm::select('meth_type', [
@@ -130,8 +130,8 @@
     <div class="column is-6 box-container">
         <div class="columns">
             <div class="column is-12">
-                <h2 class="sub-heading inline-block">Hazards</h2>
-                <a href="javascript:createHazard()" class="button is-success is-pulled-right" title="Add Hazard">
+                <h2 class="sub-heading inline-block">Risk Assessment</h2>
+                <a href="javascript:createHazard()" class="button is-success is-pulled-right" title="Add Risk Assessment">
                     {{ icon('plus2') }}<span class="action-text is-hidden-touch"></span>
                 </a>
             </div>
@@ -261,6 +261,10 @@
 
 @push('styles')
     <style>
+        textarea {
+            height: 100%;
+            width: 100%;
+        }
         .meth-type-selector {
             display: inline-block;
             margin-top: -21px;
@@ -816,20 +820,6 @@
                 $('[id^=methodology-][id$=-form-container]').css('display', 'none');
                 $('#methodology-list-container').hide();
                 $('#' + container + ' #title').val(title);
-                /*if ($('#' + container + ' #content')) {
-                    CKEDITOR.instances.content.setData(content);
-//                    $('#' + container + ' #content').val(content);
-                }
-
-                if ($('#' + container + ' #text_before').length) {
-                    CKEDITOR.instances.text_before.setData('');
-//                    $('#' + container + ' #text_before').val('');
-                }
-
-                if ($('#' + container + ' #text_after').length) {
-                    CKEDITOR.instances.text_after.setData('');
-//                    $('#' + container + ' #text_after').val('');
-                }*/
 
                 if ($('#' + container + ' input[name=image_on]').length) {
                     $('#' + container + ' input[name=image_on]')[0].checked = false;
@@ -898,6 +888,14 @@
                                         } else {
                                             newRow += "'></input></td>";
                                         }
+
+                                        newRow += "<td class='column'><input type='text' name='row_"+key+"__col_5' value='";
+                                        if (row.col_5 != null) {
+                                            newRow += row.col_5+"'></input></td>";
+                                        } else {
+                                            newRow += "'></input></td>";
+                                        }
+
                                         newRow += "<td class='column is-1'><a class='handms-icons delete_icon' onclick='deleteSimpleRow("+parseInt(key)+")'><svg class='eg-delete'><use xmlns:xlink='http://www.w3.org/1999/xlink' xlink:href='/eg-icons.svg#eg-delete'></use></svg></a>\
                                         </td>";
                                         newRow += "</tr>";
@@ -946,6 +944,13 @@
                                             newRow += "'></input></td>";
                                         }
 
+                                        newRow += "<td class='column'><input type='text' name='row_"+key+"__col_5' value='";
+                                        if (row.col_5 != null) {
+                                            newRow += row.col_5+"'></input></td>";
+                                        } else {
+                                            newRow += "'></input></td>";
+                                        }
+
 
                                     newRow += "<td class='column is-1'><a class='handms-icons delete_icon' onclick='deleteComplexRow("+parseInt(key)+")'><svg class='eg-delete'><use xmlns:xlink='http://www.w3.org/1999/xlink' xlink:href='/eg-icons.svg#eg-delete'></use></svg></a></td>";
                                     newRow += "</tr>";
@@ -980,7 +985,7 @@
                                     let newRow = "<tr class='columns' data-row='"+key+"' style='margin:0'>";
                                         newRow += "<td class='column is-2'><input type='checkbox' name='row_"+key+"__heading' "+checked+"></input></td>";
                                         newRow += "<td class='column is-1'><input  type='text' name='row_"+key+"__label' value='"+label+"'></input></td>";
-                                        newRow += "<td class='column is-3'><input type='text' name='row_"+key+"__description' value='"+description+"'></input></td>";
+                                        newRow += "<td class='column is-3'><textarea name='row_"+key+"__description'>"+description+"</textarea></td>";
                                         if (row.image) {
                                             newRow += "<td class='column is-3 image-cell'><img class='process-image' src='/image/"+row.image+"' data-image_id='"+row.image+"' data-process_row='row_"+key+"__image'</td>";
                                         } else {
@@ -1261,7 +1266,8 @@
                                     col_1: inputs[0].value,
                                     col_2: inputs[1].value,
                                     col_3: inputs[2].value,
-                                    col_4: inputs[3].value
+                                    col_4: inputs[3].value,
+                                    col_5: inputs[4].value
                                 };
                                 $(row).remove();
                             });
@@ -1276,7 +1282,8 @@
                                     col_1: inputs[0].value,
                                     col_2: inputs[1].value,
                                     col_3: inputs[2].value,
-                                    col_4: inputs[3].value
+                                    col_4: inputs[3].value,
+                                    col_5: inputs[4].value
                                 };
                                 $(row).remove();
                             });

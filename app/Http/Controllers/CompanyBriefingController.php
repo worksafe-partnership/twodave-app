@@ -35,6 +35,21 @@ class CompanyBriefingController extends Controller
         ];
     }
 
+    public function editHook()
+    {
+        $this->formButtons['back_to_edit'] = [
+            'class' => [
+                'submitbutton',
+                'button',
+                'is-primary',
+            ],
+            'name' => 'back_to_edit',
+            'label' => 'Save',
+            'order' => 150,
+            'value' => true,
+        ];
+    }
+
     public function store(BriefingRequest $request, $companyId, $projectId)
     {
         $request->merge([
@@ -46,5 +61,12 @@ class CompanyBriefingController extends Controller
     public function update(BriefingRequest $request)
     {
         return parent::_update(func_get_args());
+    }
+
+    public function updated($record, $orig, $request)
+    {
+        if (isset($request['back_to_edit'])) {
+            return $this->fullPath.'/edit';
+        }
     }
 }

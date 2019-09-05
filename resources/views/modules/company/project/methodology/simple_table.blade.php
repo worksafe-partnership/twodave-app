@@ -72,6 +72,7 @@
             row += "<td class='column'><input type='text' name='row_"+row_id+"__col_2' value=''></input></td>";
             row += "<td class='column'><input type='text' name='row_"+row_id+"__col_3' value=''></input></td>";
             row += "<td class='column'><input type='text' name='row_"+row_id+"__col_4' value=''></input></td>";
+            row += "<td class='column'><input type='text' name='row_"+row_id+"__col_5' value=''></input></td>";
             row += "<td class='column is-1'><a class='handms-icons delete_icon' onclick='deleteSimpleRow("+parseInt(row_id)+")'><svg class='eg-delete'><use xmlns:xlink='http://www.w3.org/1999/xlink' xlink:href='/eg-icons.svg#eg-delete'></use></svg></a>\
             </td>";
         row += "</tr>"
@@ -91,6 +92,7 @@
                 cell.find('[name*="col_2"]').attr('name', 'row_'+index+'__col_2');
                 cell.find('[name*="col_3"]').attr('name', 'row_'+index+'__col_3');
                 cell.find('[name*="col_4"]').attr('name', 'row_'+index+'__col_4');
+                cell.find('[name*="col_5"]').attr('name', 'row_'+index+'__col_5');
                 cell.find('.delete_icon').attr('onclick', 'deleteSimpleRow('+index+')');
             }
         });

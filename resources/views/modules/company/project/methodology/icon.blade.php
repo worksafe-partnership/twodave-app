@@ -65,7 +65,7 @@
     <div class="column is-10 is-offset-1">
         <div class="columns">
             <div class="column">
-                <p class="sub-heading">Add New Icon</p>
+                <p class="sub-heading">Add New PPE Item</p>
                 {{ EGForm::radio('type', [
                     'label' => 'Type',
                     'list' => config('egc.icon_types'),
@@ -109,7 +109,7 @@
         <div class="columns">
             <div class="column is-6">
                 <div class="field">
-                    <button type="button" class="button is-primary" id="add-icon">Add Icon</button>
+                    <button type="button" class="button is-primary" id="add-icon">Add PPE</button>
                 </div>
             </div>
         </div>

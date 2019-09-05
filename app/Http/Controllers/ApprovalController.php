@@ -31,7 +31,7 @@ class ApprovalController extends CompanyApprovalController
         }
     }
 
-    public function view() // blocking soft deleted records being seen by users who can't see sd'ed items
+    public function view()
     {
         $this->args = func_get_args();
         $this->record = Approval::findOrFail(end($this->args));

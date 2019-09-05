@@ -20,9 +20,9 @@ return [
                 'raw' => true,
             ],
             'name' => ['label' => 'Name'],
+            'contact_name' => ['label' => 'Contact Name'],
             'email' => ['label' => 'Contact Email'],
             'phone' => ['label' => 'Phone Number'],
-            'fax' => ['label' => 'Fax Number'],
             'primary_colour' => [
                 'label' => 'Primary Colour',
                 'raw' => true

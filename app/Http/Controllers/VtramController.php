@@ -133,9 +133,8 @@ class VtramController extends CompanyVtramController
         }
     }
 
-    public function postEditHook()
+    public function editHook()
     {
-        $project = $this->args[0];
         if (in_array($this->record->status, ['REJECTED','EXTERNAL_REJECT','NEW'])) {
             $this->formButtons['save_and_submit'] = [
                 'class' => [
@@ -149,12 +148,22 @@ class VtramController extends CompanyVtramController
                 'value' => true,
             ];
         }
+        $this->formButtons['back_to_edit'] = [
+            'class' => [
+                'submitbutton',
+                'button',
+                'is-primary',
+            ],
+            'name' => 'back_to_edit',
+            'label' => 'Save',
+            'order' => 150,
+            'value' => true,
+        ];
+    }
 
-        // reorder the formButtons as EGL doesn't appear to do this for us.
-        usort($this->formButtons, function ($a, $b) {
-            return $a['order'] <=> $b['order'];
-        });
-
+    public function postEditHook()
+    {
+        $project = $this->args[0];
         $this->customValues['path'] = '/project/'.$project.'/vtram/create';
     }
 
@@ -196,6 +205,13 @@ class VtramController extends CompanyVtramController
             'updated_by' => Auth::id(),
         ]);
         return parent::_update(func_get_args());
+    }
+
+    public function updated($record, $orig, $request, $args)
+    {
+        if (isset($request['back_to_edit'])) {
+            return $this->fullPath.'/edit';
+        }
     }
 
     public function editContent($projectId, $vtramId, $otherId = null)

@@ -1,4 +1,7 @@
 <style>
+    * {
+        font-family: "Arial" !important;
+    }
     .top-table {
         width: 440px;
         display: inline-block;

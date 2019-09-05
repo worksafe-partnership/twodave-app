@@ -13,6 +13,21 @@ class CompanyProjectController extends Controller
 {
     protected $identifierPath = 'company.project';
 
+    public function editHook()
+    {
+        $this->formButtons['back_to_edit'] = [
+            'class' => [
+                'submitbutton',
+                'button',
+                'is-primary',
+            ],
+            'name' => 'back_to_edit',
+            'label' => 'Save',
+            'order' => 150,
+            'value' => true,
+        ];
+    }
+
     public function bladeHook()
     {
         $this->customValues['company'] = Company::withTrashed()->findOrFail($this->parentId);
@@ -131,6 +146,9 @@ class CompanyProjectController extends Controller
                 ];
             }
             UserProject::insert($toInsert);
+        }
+        if (isset($request['back_to_edit'])) {
+            return $this->fullPath.'/edit';
         }
     }
 }

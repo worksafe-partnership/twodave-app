@@ -70,4 +70,13 @@ class VTFiles extends EGFiles
             self::withTrashed()->findOrFail($fileId)->delete();
         }
     }
+
+    public static function exists($fileId)
+    {
+        $file = self::find($fileId);
+        if ($file != null) {
+            return true;
+        }
+        return false;
+    }
 }
