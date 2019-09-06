@@ -31,8 +31,7 @@ class TemplateController extends Controller
         }
     }
 
-
-    public function postEditHook()
+    public function editHook()
     {
         if (in_array($this->record->status, ['REJECTED','EXTERNAL_REJECT','NEW']) && is_null($this->record['deleted_at'])) {
             $this->formButtons['save_and_submit'] = [
@@ -46,12 +45,19 @@ class TemplateController extends Controller
                 'order' => 150,
                 'value' => true,
             ];
-
-            // reorder the formButtons as EGL doesn't appear to do this for us.
-            usort($this->formButtons, function ($a, $b) {
-                return $a['order'] <=> $b['order'];
-            });
         }
+
+        $this->formButtons['back_to_edit'] = [
+            'class' => [
+                'submitbutton',
+                'button',
+                'is-primary',
+            ],
+            'name' => 'back_to_edit',
+            'label' => 'Save',
+            'order' => 150,
+            'value' => true,
+        ];
     }
 
     public function viewHook()
@@ -107,6 +113,11 @@ class TemplateController extends Controller
 
     public function store(TemplateRequest $request)
     {
+        $company = Company::findOrFail($request->company_id);
+        $request->merge([
+            'main_description' => $company->main_description,
+            'post_risk_assessment_text' => $company->post_risk_assessment_text,
+        ]);
         return parent::_store(func_get_args());
     }
 
@@ -427,6 +438,10 @@ class TemplateController extends Controller
                 return str_replace("/methodology", "", $request['return_path']);
             }
             return $request['return_path'];
+        }
+
+        if (isset($request['back_to_edit'])) {
+            return $this->fullPath.'/edit';
         }
     }
 

@@ -8,7 +8,7 @@
                 $count = $icons->count();
             @endphp
             @if ($count > 0)
-                <tr>
+                <tr class="no-break">
                     <th colspan='5'>{!! $methodology->{$heading} !!}</th>
                 </tr>
                 @php
@@ -21,16 +21,16 @@
                     $sources = config('egc.icon_images');
                 @endphp
 
-                <tr>
+                <tr class="no-break">
                 @foreach($icons as $key => $icon)
                     @php
                         $image = $sources[$icon->image];
                     @endphp
-                    <td style="width:20%;">
+                    <td style="width:20%;vertical-align:top;">
                         @if($image != "gfx/icons/no_image.png")
-                            <image src="{{ public_path($image) }}" style="width: 80px;"></image>
+                            <img src="{{ public_path($image) }}" style="width: 70px;"></img>
                         @else
-                            <span style="width: 80%"></span>
+                            <span style="width: 70%"></span>
                         @endif
                         @if($icon->text != "null")
                           <p>{!!$icon->text!!}</p>
@@ -38,7 +38,7 @@
                     </td>
                     @if(($loop->index+1) % 5 == 0 && $loop->remaining > 0)
                 </tr>
-                <tr>
+                <tr class="no-break">
                     @endif
                 @endforeach
                 @if ($remainder > 0)
@@ -50,5 +50,5 @@
             @endif
         @endforeach
     </table>
-    <p>{{$methodology->text_after}}</p>
+    <p>{!! $methodology->text_after !!}</p>
 </div>

@@ -1,7 +1,7 @@
 <div class="columns">
     <div class="column is-8 is-offset-2">
         <div class="columns">
-            <div class="column is-4">
+            <div class="column">
                 <div class="field">
                     {{ EGForm::text('name', [
                         'label' => 'Name',
@@ -10,7 +10,7 @@
                     ]) }}
                 </div>
             </div>
-            <div class="column is-4">
+            <div class="column">
                 <div class="field">
                     {{ EGForm::text('short_name', [
                         'label' => 'Short Name',
@@ -19,6 +19,8 @@
                     ]) }}
                 </div>
             </div>
+        </div>
+        <div class="columns">
             <div class="column">
                 <div class="field">
                     {{ EGForm::select('review_timescale', [
@@ -80,6 +82,15 @@
         <div class="columns">
             <div class="column is-4">
                 <div class="field">
+                    {{ EGForm::text('contact_name', [
+                        'label' => 'Contact Name',
+                        'value' => $record["contact_name"],
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+            <div class="column is-4">
+                <div class="field">
                     {{ EGForm::text('email', [
                         'label' => 'Contact Email',
                         'value' => $record["email"],
@@ -92,15 +103,6 @@
                     {{ EGForm::text('phone', [
                         'label' => 'Phone Number',
                         'value' => $record["phone"],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-            <div class="column is-4">
-                <div class="field">
-                    {{ EGForm::text('fax', [
-                        'label' => 'Fax Number',
-                        'value' => $record["fax"],
                         'type' => $pageType
                     ]) }}
                 </div>
@@ -172,7 +174,7 @@
             <div class="column is-4">
                 <div class="field">
                     {{ EGForm::checkbox('light_text', [
-                        'label' => 'Dark Text',
+                        'label' => 'Dark Text<br>(if a light Primary Colour is chosen, tick this box)',
                         'value' => $record->light_text ?? false,
                         'type' => $pageType
                     ]) }}
@@ -228,7 +230,7 @@
             <div class="column is-6">
                 <div class="field">
                     {{ EGForm::ckeditor('main_description', [
-                        'label' => 'Main Description',
+                        'label' => 'Title Block Text',
                         'value' => $record['main_description'],
                         'type' => $pageType
                     ]) }}

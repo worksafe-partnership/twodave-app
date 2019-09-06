@@ -148,7 +148,7 @@
         let row = "<tr class='columns' data-row='"+row_id+"' style='margin:0'>";
             row += "<td class='column is-2'><input type='checkbox' name='row_"+row_id+"__heading' "+checked+"></input></td>";
             row += "<td class='column is-1'><input type='text' name='row_"+row_id+"__label' value='"+$('#new_label').val()+"'></input></td>";
-            row += "<td class='column is-3'><input type='text' name='row_"+row_id+"__description' value='"+$('#new_description').val()+"'></input></td>";
+            row += "<td class='column is-3'><textarea name='row_"+row_id+"__description'>"+$('#new_description').val()+"</textarea></td>";
             if (image_id != '') {
                 row += "<td class='column is-3 image-cell'><img class='process-image' src='/image/"+image_id+"' data-image_id='"+image_id+"' data-process_row='row_"+row_id+"__image'></img></td>";
             } else {

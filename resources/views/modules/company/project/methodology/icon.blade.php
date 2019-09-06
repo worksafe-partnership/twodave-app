@@ -65,7 +65,7 @@
     <div class="column is-10 is-offset-1">
         <div class="columns">
             <div class="column">
-                <p class="sub-heading">Add New Icon</p>
+                <p class="sub-heading">Add New PPE Item</p>
                 {{ EGForm::radio('type', [
                     'label' => 'Type',
                     'list' => config('egc.icon_types'),
@@ -84,9 +84,7 @@
             </div>
             <div class="column is-2">
                 <div>
-                    <image id="image_preview" src="/gfx/icons/no_image.png" class="image-box">
-
-                    </img>
+                    <img id="image_preview" src="/gfx/icons/no_image.png" class="image-box"></img>
                 </div>
             </div>
         </div>
@@ -109,7 +107,7 @@
         <div class="columns">
             <div class="column is-6">
                 <div class="field">
-                    <button type="button" class="button is-primary" id="add-icon">Add Icon</button>
+                    <button type="button" class="button is-primary" id="add-icon">Add PPE Item</button>
                 </div>
             </div>
         </div>
@@ -364,7 +362,6 @@
     }
 </script>
 
-
 @push('styles')
     <style>
         .radio-inline {
@@ -375,6 +372,9 @@
             height: 100px;
             width: 100px;
             border: 1px solid black;
+        }
+        .table {
+            width: 100%;
         }
     </style>
 @endpush

@@ -14,6 +14,21 @@ class ProjectController extends CompanyProjectController
 {
     protected $identifierPath = 'project';
 
+    public function editHook()
+    {
+        $this->formButtons['back_to_edit'] = [
+            'class' => [
+                'submitbutton',
+                'button',
+                'is-primary',
+            ],
+            'name' => 'back_to_edit',
+            'label' => 'Save',
+            'order' => 150,
+            'value' => true,
+        ];
+    }
+
     public function bladeHook()
     {
         if ($this->user->company_id !== null && $this->record !== null) {
@@ -74,6 +89,13 @@ class ProjectController extends CompanyProjectController
             'company_id' => Auth::user()->company_id
         ]);
         return parent::_store(func_get_args());
+    }
+
+    public function updated($record, $orig, $request, $args)
+    {
+        if (isset($request['back_to_edit'])) {
+            return $this->fullPath.'/edit';
+        }
     }
 
     public function update(ProjectRequest $request)

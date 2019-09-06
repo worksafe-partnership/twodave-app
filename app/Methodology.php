@@ -27,7 +27,9 @@ class Methodology extends Model
         'image_on',
         'list_order',
         'icon_main_heading',
-        'icon_sub_heading'
+        'icon_sub_heading',
+        'show_tickbox',
+        'tickbox_answer',
     ];
 
     public static function scopeDatatableAll($query, $parent, $identifier)
@@ -59,7 +61,8 @@ class Methodology extends Model
 
     public function tableRows()
     {
-        return $this->hasMany(TableRow::class, 'methodology_id', 'id');
+        return $this->hasMany(TableRow::class, 'methodology_id', 'id')
+            ->orderBy('list_order', 'ASC');
     }
 
     public function entityRecord()

@@ -30,6 +30,7 @@ class CompanyRequest extends FormRequest
             'vtrams_name' => 'required|max:100',
             'email' => 'required|max:255|email',
             'phone' => 'required',
+            'contact_name' => 'required|max:255',
             'low_risk_character' => 'required|max:1',
             'med_risk_character' => 'required|max:1',
             'high_risk_character' => 'required|max:1',
@@ -47,6 +48,8 @@ class CompanyRequest extends FormRequest
     {
         return [
             'name.required' => 'Please enter a Company Name',
+            'contact_name.required' => 'Please enter a Contact Name',
+            'contact_name.max' => 'The Contact Name cannot be more than 255 characters',
             'short_name.required' => 'Please enter a Company Short Name',
             'name.max' => 'The Company Name cannot be more than 100 character',
             'short_name.max' => 'The Company Short Name cannot be more than 100 character',
