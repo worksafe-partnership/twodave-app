@@ -2,8 +2,10 @@
     * {
         font-family: "Arial" !important;
     }
+    p, td, th {
+        font-size: 13px;
+    }
     .top-table {
-        width: 440px;
         display: inline-block;
         height: 81px;
     }
@@ -14,7 +16,7 @@
         outline: 1px solid #404040;
         padding: 5px;
         text-align: left;
-        font-size: 14px;
+        font-size: 12px;
     }
     .wide-100 {
         width: 110px;
@@ -44,8 +46,8 @@
     .company-names {
         vertical-align: top;
     }
-    .company-names p {
-        font-size: 18px;
+    .company-names p, .company-names b {
+        font-size: 16px;
     }
     .logo {
         float: right;
@@ -83,15 +85,17 @@
     .risk-chart {
         display: inline-block;
         width: 100px;
-        margin-left: 300px;
-        margin-top: -180px
+        margin-left: 160px;
+        font-size: 10px;
+        margin-top: -40px;
     }
     .risk-chart-key {
         display: inline-block;
-        width: 300px;
+        width: 275px;
         float: right;
-        margin-top: -150px;
         margin-right: -00px;
+        font-size: 10px;
+        margin-top: -11px;
     }
     .risk-key {
         width: 100%;
@@ -100,13 +104,16 @@
         outline: 1px solid #404040;
         padding: 5px;
         text-align: center;
-        font-size: 10px;
+        font-size: 8px !important;
     }
     .left {
         text-align: left !important;
     }
     .risk-assessment-table td {
         height: 30px;
+    }
+    .risk-assessment-table td p {
+        font-size: 8px;
     }
     .risk-assessment-table {
         width: 100%;
@@ -124,7 +131,6 @@
         width: 500px;
     }
     .risk-assessment-container {
-        margin-top: -80px;
     }
     .hide-report {
         outline: 1px solid #FFF !important;
@@ -222,35 +228,36 @@
     }
 
     .kp-heading-div {
-        width: 384px;
+        width: 306px;
         height: 50px;
         display:inline-block;
         outline: 1px solid black;
         text-align:center;
-        vertical-align:
-        top;margin-left:-3px;
+        vertical-align: top;
+        margin-left:-3px;
         background-color: #ffc000
     }
 
     .kp-content {
         outline: 1px solid black;
         padding: 10px;
-        background-color: #66ff66
+        background-color: #66ff66;
+        font-size: 13px;
     }
     .column {
-        line-height: 1.25;
-        position: relative;
-        width: 450px;
-        display: inline-block;
-        overflow: hidden;
-        vertical-align: top;
-        margin-right: 10px;
-        margin-bottom: 10px;
+        display: inline;
+        width: 50%;
     }
     .content {
-        width: 450px;
+        column-count: 2;
+        column-fill: auto;
+        padding-bottom: 10px;
     }
     .no-break {
         page-break-inside: avoid !important;
+    }
+    @page { 
+        margin: 20;
+        padding: 0;
     }
 </style>

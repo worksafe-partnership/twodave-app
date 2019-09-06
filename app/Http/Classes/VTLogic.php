@@ -129,39 +129,7 @@ class VTLogic
                 'text_after',
             ]);
         }
-        // First page height calculation
         $height = 120;
-        if ($config->entityType == 'VTRAM' && $config->entity->project->show_contact) {
-            $height += 90;
-        }
-        if ($config->entity->show_responsible_person) {
-            $height += 30;
-        }
-        if (($config->entity->submitted != null && strlen($config->entity->submitted->name) > 26) || ($config->entity->approved != null && strlen($config->entity->approved->name) > 26)) {
-            $tableHeight = 100;
-        }
-        $mainHeight = $height;
-        if (isset($tableHeight)) {
-            $mainHeight += $tableHeight;
-        } else {
-            $mainHeight += 50;
-        }
-        if ($config->entity->show_responsible_person) {
-            $mainHeight += 25;
-        }
-        if ($config->entity->show_area) {
-            $mainHeight += 25;
-        }
-        $mainHeight += 30; // method statements
-        $mainHeight += 60; // task name
-        // Can we improve this to get the html height of the ckeditor field?
-        $titleBlockTextLength = strlen($config->entity->main_description) / 134;
-        $mainHeight += $titleBlockTextLength * 25;
-        $brs = [];
-        preg_match_all("/&nbsp;/", $config->entity->main_description, $brs);
-        $mainHeight += count($brs) * 20;
-        $mainHeight += 250;
-        // End first page height calculation
 
         $data = [
             'entity' => $config->entity,
@@ -175,35 +143,52 @@ class VTLogic
             'riskList' => $riskList,
             'whoIsRisk' => config('egc.hazard_who_risk'),
             'height' => $height,
-            'startingHeight' => $mainHeight,//self::calculateStartingHeight($config),
         ];
 
-        $pdf = \PDF::loadView('pdf.main_report', $data)
-            ->setOption('margin-top', 10)
-            ->setOption('margin-left', 5)
-            ->setOption('margin-right', 5)
-            ->setOption('margin-bottom', 5);
-#        return view('pdf.main_report', $data);
-        $returnStream = $pdf->stream($config->entity->name.'.pdf');
-        $instances = null;
-        preg_match_all('/Count [0-9]+/', $pdf->download()->getContent(), $instances);
-        $count = 0;
-        foreach ($instances[0] as $match) {
-            $m = (int)str_replace('Count ', '', $match);
-            if ($m > $count) {
-                $count = $m;
-            }
-        }
-        $file = VTFiles::saveOrUpdate($pdf->download()->getContent(), $config->entity, $config->entityType);
-        if ($file == null) {
+        $html = view('pdf.main_report', $data)->render();
+        // save html file
+        $now = Carbon::now();
+        $storagePath = "files/".$now->year."/".$now->month."/".$now->day.'/';
+        $htmlFileName = $storagePath.$config->entityType."_".$config->entity->id."_HTML_TEMP.html";
+        $htmlFile = VTFiles::saveA3($html, $htmlFileName);
+        if ($htmlFile == null) {
             toast()->error("Failed to save PDF");
         } else {
-            $res = $config->entity->update([
-                'pdf' => $file->id,
-                'pages_in_pdf' => $count,
-            ]);
+            $pdfFileName = $storagePath.$config->entityType."_".$config->entity->id."_PDF_TEMP.pdf";
+            $c = "google-chrome --headless --disable-gpu --print-to-pdf=".storage_path("app/".$pdfFileName)." --no-margins --no-footer ".storage_path("app/".$htmlFileName);
+            exec($c);
+            chmod(storage_path("app/".$pdfFileName), 0777);
+
+            $pdfContent = Storage::disk('local')->get($pdfFileName);
+            if ($pdfContent === false) {
+                toast()->error("Failed to save PDF");
+            } else {
+                $instances = null;
+                preg_match_all('/Count [0-9]+/', $pdfContent, $instances);
+                $count = 0;
+                foreach ($instances[0] as $match) {
+                    $m = (int)str_replace('Count ', '', $match);
+                    if ($m > $count) {
+                        $count = $m;
+                    }
+                }
+                $file = VTFiles::saveOrUpdate($pdfContent, $config->entity, $config->entityType);
+                if ($file == null) {
+                    toast()->error("Failed to save PDF");
+                } else {
+                    $res = $config->entity->update([
+                        'pdf' => $file->id,
+                        'pages_in_pdf' => $count,
+                    ]);
+                    Storage::disk('local')->delete($htmlFileName);
+                    Storage::disk('local')->delete($pdfFileName);
+                }
+                $response = \Response::make($pdfContent, 200);
+                $response->header('Content-Type', 'application/pdf');
+                $response->header('Content-Disposition', 'filename="'.$config->entity->name.'.pdf"');
+                return $response;
+            }
         }
-        return $returnStream;
     }
 
     public static function calculateStartingHeight($config)

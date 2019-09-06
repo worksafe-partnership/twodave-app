@@ -12,38 +12,32 @@
 
        <table class="complex-table">
         @foreach($rows as $row)
-            <tr>
-                @if($loop->first)
-                    <?php $type = "th"; ?>
-                @else
-                    <?php $type = "td"; ?>
-                @endif
+            @if ($row->cols_filled > 0)
+                <tr class="no-break">
+                    @if($loop->first)
+                        @php $type = "th"; @endphp
+                    @else
+                        @php $type = "td"; @endphp
+                    @endif
 
-                @if($row->col_1)
-                    <{{$type}}>{!!$row->col_1!!}</{{$type}}>
-                @endif
-                @if($row->col_2)
-                    <?php
-                    $colspan = 1;
-                    if ($row->cols_filled == 2 && $maxFilled > 2) {
-                        $colspan = 1+($maxFilled-2);
-                    }
-                    ?>
-                    <{{$type}} colspan="$colspan">{!!$row->col_2!!}</{{$type}}>
-                @endif
-                @if($row->col_3)
-                    <?php
-                    $colspan = 1;
-                    if ($row->cols_filled == 3 && $maxFilled > 2) {
-                        $colspan = 1+($maxFilled-2);
-                    }
-                    ?>
-                    <{{$type}} colspan="$colspan">{!!$row->col_3!!}</{{$type}}>
-                @endif
-                @if($row->col_4)
-                    <{{$type}}>{!!$row->col_4!!}</{{$type}}>
-                @endif
-            </tr>
+                    @for ($i = 1; $i <= $maxFilled; $i++)
+                        @php
+                            $colspan = 1;
+                            if ($row->cols_filled <= $i && $maxFilled > $i) {
+                                $colspan += $maxFilled - $i;
+                            }
+                        @endphp
+                        @if (($i <= $row->cols_filled && $i > 1) || $i <= 2)
+                            @if ($i == 1)
+                                <{{$type}}>
+                            @else
+                                <{{$type}} colspan="{{ $colspan }}">
+                            @endif
+                            {{ $row->{'col_'.$i} ?? '&nbsp;'}}</{{$type}}>
+                        @endif
+                    @endfor
+                </tr>
+            @endif
         @endforeach
         </table>
     @endif

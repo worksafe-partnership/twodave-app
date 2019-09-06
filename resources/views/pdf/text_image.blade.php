@@ -9,7 +9,7 @@
     <div class="image_text_block">
         @if($methodology->image_on == "BEFOR")
             <div>
-                <div class="text-image-div inline"><img src="{{$imageSrc}}" width="100"></div>
+                <div class="text-image-div inline"><img src="{{$imageSrc}}" width="60"></div>
                 <div style="width:340px" class="inline">{!!$methodology->text_before!!}</div>
             </div>
             <br>
@@ -18,7 +18,7 @@
             <div>{!!$methodology->text_before!!}</div>
             <br>
             <div>
-                <div class="text-image-div inline"><img src="{{$imageSrc}}" width="100"></div>
+                <div class="text-image-div inline"><img src="{{$imageSrc}}" width="60"></div>
                 <div style="width:340px" class="inline">{!!$methodology->text_after!!}</div>
             </div>
         @endif

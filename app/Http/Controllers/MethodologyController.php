@@ -127,7 +127,27 @@ class MethodologyController extends Controller
 
         $order = 1;
         foreach ($rows as $key => $row) {
-            $rows[$key]['cols_filled'] = sizeof(array_filter($row));
+            switch (true) {
+                case isset($row['col_5']):
+                    $cols = 5;
+                    break;
+                case isset($row['col_4']):
+                    $cols = 4;
+                    break;
+                case isset($row['col_3']):
+                    $cols = 3;
+                    break;
+                case isset($row['col_2']):
+                    $cols = 2;
+                    break;
+                case isset($row['col_1']):
+                    $cols = 1;
+                    break;
+                default:
+                    $cols = 0;
+            }
+            
+            $rows[$key]['cols_filled'] = $cols;
             $rows[$key]['list_order'] = $order;
             $rows[$key]['methodology_id'] = $record->id;
             $order++;

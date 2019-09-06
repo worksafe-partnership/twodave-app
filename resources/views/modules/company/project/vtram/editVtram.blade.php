@@ -265,6 +265,14 @@
             height: 100%;
             width: 100%;
         }
+        .center {
+            text-align: center !important;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .methodology-list-table, .hazard-list-table, .risk-table {
+            width: 100%;
+        }
         .meth-type-selector {
             display: inline-block;
             margin-top: -21px;
@@ -295,7 +303,7 @@
             height: 1.5rem;
         }
         .handms-actions {
-            text-align: center;
+            text-align: center !important;
             width: 140px;
             height: 30px;
         }
@@ -343,12 +351,12 @@
         });
 
         $('.risk-area .risk-rating').on('click', function () {
-            $('.risk-area .risk-rating').css('border', '1px solid #404040');
-            $(this).css('border', '3px solid blue');
+            $('.risk-area .risk-rating').css('outline', 'none');
+            $(this).css('outline', '3px solid blue');
         });
         $('.r-risk-area .risk-rating').on('click', function () {
-            $('.r-risk-area .risk-rating').css('border', '1px solid #404040');
-            $(this).css('border', '3px solid blue');
+            $('.r-risk-area .risk-rating').css('outline', 'none');
+            $(this).css('outline', '3px solid blue');
         });
 
         // Both
@@ -1139,9 +1147,9 @@
                     form_data.append('title', $('#methodology-process-form-container #title').val());
                     form_data.append('replacedImages', deletedImages);
 
-                    let process_lines = $('#process-table input[name^=row_]');
+                    let process_lines = $('#process-table input[name^=row_], #process-table textarea[name^=row_]');
                     $.each(process_lines, function(key, input) {
-                        if (input.type == "text") {
+                        if (input.type == "text" || input.type == "textarea") {
                             form_data.append(input.name, input.value);
                         } else {
                             form_data.append(input.name, input.checked)
@@ -1293,7 +1301,7 @@
                             let processRows = $('#process-table tbody tr');
                             processes[id] = [];
                             $.each(processRows, function(key, row) {
-                                let inputs = $(row).find("input[name^=row_]");
+                                let inputs = $(row).find("input[name^=row_], textarea[name^=row]");
                                 let checked = 0;
 
                                 if (inputs[0].checked) {

@@ -12,32 +12,31 @@
 
         <table class="simple-table">
         @foreach($rows as $row)
-            <tr>
-                @if($row->col_1)
-                    <th>{!!$row->col_1!!}</th>
-                @endif
-                @if($row->col_2)
-                    <?php
-                    $colspan = 1;
-                    if ($row->cols_filled == 2 && $maxFilled > 2) {
-                        $colspan = 1+($maxFilled-2);
-                    }
-                    ?>
-                    <td colspan="{{$colspan}}">{!!$row->col_2!!}</td>
-                @endif
-                @if($row->col_3)
-                    <?php
-                    $colspan = 1;
-                    if ($row->cols_filled == 3 && $maxFilled > 2) {
-                        $colspan = 1+($maxFilled-2);
-                    }
-                    ?>
-                    <td colspan="{{$colspan}}">{!!$row->col_3!!}</td>
-                @endif
-                @if($row->col_4)
-                    <td>{!!$row->col_4!!}</td>
-                @endif
-            </tr>
+            @if ($row->cols_filled > 0)
+                <tr class="no-break">
+                    @for ($i = 1; $i <= $maxFilled; $i++)
+                        @php
+                            $colspan = 1;
+                            if ($row->cols_filled <= $i && $maxFilled > $i) {
+                                $colspan += $maxFilled - $i;
+                            }
+                        @endphp
+                        @if (($i <= $row->cols_filled && $i > 1) || $i <= 2)
+                            @if ($i == 1)
+                                <th>
+                            @else
+                                <td colspan="{{ $colspan }}">
+                            @endif
+                            {{ $row->{'col_'.$i} }}
+                            @if ($i == 1)
+                                </th>
+                            @else
+                                </td>
+                            @endif
+                        @endif
+                    @endfor
+                </tr>
+            @endif
         @endforeach
         </table>
     @endif

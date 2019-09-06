@@ -2,69 +2,11 @@
     <head>
         @include('pdf.styles')
     </head>
-    <script>
-        function twoColumns() {
-            // get elements
-            var parent = document.querySelector('.parent');
-            var column = document.querySelector('.column');
-            var content = document.querySelector('.content');
-
-            // Set heights
-            //var introHeight = document.querySelector('.introduction').offsetHeight;
-            //document.querySelector('.company-names').innerHtml += introHeight;
-//            var titleHeight = document.getElementById('title-block-text').scrollHeight;
-            var introHeight = {{ $startingHeight }};// + titleHeight;
-            var maxHeight = 1300;
-            var smallHeight = (maxHeight - introHeight) + "px";
-            var bigHeight = maxHeight + "px";
-
-            column.style.height = smallHeight;
-            // calculate height values of column and it's content
-            var columnHeight = column.offsetHeight;
-            var contentHeight = content.offsetHeight;
-
-            // create an array of offset values
-            var offsetValues = [];
-            var counter = 0;
-            for (var i = columnHeight; i < contentHeight; i+= columnHeight) {
-                counter++;
-                if (counter > 1) {
-                    columnHeight = maxHeight;
-                }
-                offsetValues.push(i);
-            }
-
-            // create a new column for each offset value
-            counter = 0;
-            offsetValues.forEach(function(offsetValue, i) {
-                counter++;
-                // init clone and add classes
-                var cloneColumn = document.createElement('div');
-                var cloneContent = document.createElement('div');
-                if (counter > 1) {
-                    cloneColumn.classList.add('column');
-                    cloneColumn.style.height = bigHeight;
-                } else {
-                    cloneColumn.classList.add('column');
-                    cloneColumn.style.height = smallHeight;
-                }
-                cloneContent.classList.add('content');
-                
-                // populate the DOM
-                cloneContent.innerHTML = content.innerHTML;
-                cloneColumn.appendChild(cloneContent);
-                parent.appendChild(cloneColumn); 
-                
-                // apply position and offset styles
-                cloneContent.style.position = 'relative';
-                cloneContent.style.top = '-' + offsetValue + 'px';
-            });
-        }
-    </script>
-    <body onload="twoColumns()">
+    <body>
         <div class="pdf-container">
             <div class="introduction">
                 <div class="columns">
+                    <div class="column">
                     @if (isset($tableHeight))
                         <table class="top-table" style="height: {{ $tableHeight }}px">
                     @else
@@ -72,7 +14,7 @@
                     @endif
                         <tr>
                             <th style="width:90px;">Prepared by: </th>
-                            <td>{{ $entity->submitted->name ?? ''}}</td>
+                            <td style="width:135px">{{ $entity->submitted->name ?? ''}}</td>
                             <th style="width:50px;">Date: </th>
                             <td style="width:50px;">{{ $entity->niceSubmittedDate() }}</td>
                         </tr>
@@ -87,6 +29,8 @@
                             </td>
                         </tr>
                     </table>
+                    </div>
+                    <div class="column">
                     @if (isset($tableHeight))
                         <table class="top-table table-right" style="height: {{ $tableHeight }}px">
                     @else
@@ -94,10 +38,10 @@
                     @endif
                         <tr>
                             <th style="width:90px;">Approved by: </th>
-                            @if ($type == 'VTRAM')
-                                <td>{{ $entity->approved->name ?? $entity->project->principle_contractor_name }}</td>
+                            @if ($type == 'VTRAM' && $entity->approved != null)
+                                <td style="width:135px">{{ $entity->approved->name ?? $entity->project->principle_contractor_name }}</td>
                             @else
-                                <td>{{ $entity->approved->name ?? '' }}</td>
+                                <td style="width:135px">{{ $entity->approved->name ?? '' }}</td>
                             @endif
                             <th style="width:50px;">Date: </th>
                             <td style="width:50px;">{{ $entity->niceApprovedDate() }}</td>
@@ -113,8 +57,8 @@
                             </td>
                         </tr>
                     </table>
+                    </div>
                 </div>
-                <br>
                 <div>
                     <div class="wide-50 company-names">
                         <p><b>Trade Contractor:</b> {{ $entity->company->name  ?? '' }}</p>
@@ -154,57 +98,55 @@
             </div>
             <h2>Method Statement</h2>
             <div class="method-statements parent">
-                <div class="column">
-                    <div class="content">
-                        @foreach($entity->methodologies->sortBy('list_order') as $meth)
-                            @switch($meth->category)
-                                @case('TEXT')
-                                    @include('pdf.text', ['methodology' => $meth])
-                                    @break
-                                @case('TEXT_IMAGE')
-                                    @include('pdf.text_image', ['methodology' => $meth])
-                                    @break
-                                @case('SIMPLE_TABLE')
-                                    @include('pdf.simple_table', ['methodology' => $meth])
-                                    @break
-                                @case('COMPLEX_TABLE')
-                                    @include('pdf.complex_table', ['methodology' => $meth])
-                                    @break
-                                @case('PROCESS')
-                                    @include('pdf.process', ['methodology' => $meth])
-                                    @break
-                                @case('ICON')
-                                    @include('pdf.icon', ['methodology' => $meth])
-                                    @break
-                            @endswitch
-                        @endforeach
-                        @if(!is_null($entity->key_points))
-                            <?php
-                            $keyPointsLogo = public_path('/key_points_logo.png');
-                            ?>
-                            <br>
-                            <div class="key-points width-50">
-                                <div class="kp-heading-row">
-                                    <div class="kp-image-div">
-                                        <img src="{{$keyPointsLogo}}" style="height: 50px; width: 50px;">
-                                    </div>
-                                    <div class="kp-heading-div">
-                                        <h2 style="margin-top: 8px"> Key Points </h2>
-                                    </div>
+                <div class="content">
+                    @foreach($entity->methodologies->sortBy('list_order') as $meth)
+                        @switch($meth->category)
+                            @case('TEXT')
+                                @include('pdf.text', ['methodology' => $meth])
+                                @break
+                            @case('TEXT_IMAGE')
+                                @include('pdf.text_image', ['methodology' => $meth])
+                                @break
+                            @case('SIMPLE_TABLE')
+                                @include('pdf.simple_table', ['methodology' => $meth])
+                                @break
+                            @case('COMPLEX_TABLE')
+                                @include('pdf.complex_table', ['methodology' => $meth])
+                                @break
+                            @case('PROCESS')
+                                @include('pdf.process', ['methodology' => $meth])
+                                @break
+                            @case('ICON')
+                                @include('pdf.icon', ['methodology' => $meth])
+                                @break
+                        @endswitch
+                    @endforeach
+                    @if(!is_null($entity->key_points))
+                        <?php
+                        $keyPointsLogo = public_path('/key_points_logo.png');
+                        ?>
+                        <br>
+                        <div class="key-points width-50 no-break">
+                            <div class="kp-heading-row">
+                                <div class="kp-image-div">
+                                    <img src="{{$keyPointsLogo}}" style="height: 50px; width: 50px;">
                                 </div>
-                                <div class="kp-content">
-                                    {!!$entity->key_points!!}
+                                <div class="kp-heading-div">
+                                    <h2 style="margin-top: 8px"> Key Points </h2>
                                 </div>
                             </div>
-                        @endif
-                    </div>
+                            <div class="kp-content">
+                                {!!$entity->key_points!!}
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
             <div class="page"></div>
             <div class="risk-assessment">
                 <div>
                     <div>
-                        <h2 style="padding-top:80px;">Risk Assessment</h2>
+                        <h2>Risk Assessment</h2>
                     </div>
                     <div class="risk-chart">
                         @include('modules.company.project.vtram.hazard.risk-chart', ['hazardType' => 'risk'])
@@ -299,5 +241,6 @@
                 <p>{!! $postRiskText !!}</p>
             </div>
         </div>
+        <div id="end"><div class="block-footer"></div></div>
     </body>
 </html>

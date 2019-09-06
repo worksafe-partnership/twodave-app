@@ -7,7 +7,7 @@
 
     @if($rows->isNotEmpty())
         <table class="process-table">
-            <tr>
+            <tr class="no-break">
                 <th>No</th>
                 <th>Description</th>
                 @if($hasImage)
@@ -22,7 +22,7 @@
                     }
                 @endphp
                 @if($row->heading)
-                    <tr>
+                    <tr class="no-break">
                         <td class="heading">{{ $row->label }}</td>
                         <td class="heading"
                             @if(is_null($row->image))
@@ -34,7 +34,7 @@
                         @endif
                     </tr>
                 @else
-                    <tr>
+                    <tr class="no-break">
                         <td>{{ $row->label }}</td>
                         <td
                         @if(is_null($row->image))

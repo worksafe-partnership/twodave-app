@@ -24,6 +24,10 @@ class AddingContactNameToCompanies extends Migration
             $table->text('col_3')->nullable()->change();
             $table->text('col_4')->nullable()->change();
         });
+        Schema::table('methodologies', function ($table) {
+            $table->boolean('show_tickbox')->nullable();
+            $table->boolean('tickbox_answer')->nullable();
+        });
     }
 
     /**
@@ -43,6 +47,10 @@ class AddingContactNameToCompanies extends Migration
             $table->string('col_2')->nullable()->change();
             $table->string('col_3')->nullable()->change();
             $table->string('col_4')->nullable()->change();
+        });
+        Schema::table('methodologies', function ($table) {
+            $table->dropColumn('show_tickbox');
+            $table->dropColumn('tickbox_answer');
         });
     }
 }

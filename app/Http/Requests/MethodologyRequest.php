@@ -56,7 +56,6 @@ class MethodologyRequest extends FormRequest
                 break;
             case "PROCESS":
                 $rules['row_0__description'] = 'required';
-                // $rules['image'] = 'mimes:jpg,jpeg,png,bmp,tiff'; // needs more attention, return to after completing other tasks prior to meeting. Need to review EACH image in table and feedback accordingly.
                 break;
             case "ICON":
                 $rules['icon_main_heading'] = 'required';
