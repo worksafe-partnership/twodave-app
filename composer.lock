@@ -677,16 +677,16 @@
         },
         {
             "name": "evergreen/generic",
-            "version": "2.1.4",
+            "version": "2.1.5",
             "source": {
                 "type": "git",
                 "url": "git@github.com:evergreencomputing/laravel-generic.git",
-                "reference": "c5f684a96b5d163c57c0e0a2512db8cac44c297b"
+                "reference": "cfe8a5fbd82d8b8090c3834d5e0df463ae0074d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/evergreencomputing/laravel-generic/zipball/c5f684a96b5d163c57c0e0a2512db8cac44c297b",
-                "reference": "c5f684a96b5d163c57c0e0a2512db8cac44c297b",
+                "url": "https://api.github.com/repos/evergreencomputing/laravel-generic/zipball/cfe8a5fbd82d8b8090c3834d5e0df463ae0074d4",
+                "reference": "cfe8a5fbd82d8b8090c3834d5e0df463ae0074d4",
                 "shasum": ""
             },
             "require": {
@@ -720,10 +720,10 @@
             },
             "description": "Evergreen laravel package",
             "support": {
-                "source": "https://github.com/evergreencomputing/laravel-generic/tree/2.1.4",
+                "source": "https://github.com/evergreencomputing/laravel-generic/tree/2.1.5",
                 "issues": "https://github.com/evergreencomputing/laravel-generic/issues"
             },
-            "time": "2019-09-02T07:56:41+00:00"
+            "time": "2019-09-11T09:29:35+00:00"
         },
         {
             "name": "fideloper/proxy",
@@ -1500,16 +1500,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.24.0",
+            "version": "1.25.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "bfc9ebb28f97e7a24c45bdc3f0ff482e47bb0266"
+                "reference": "70e65a5470a42cfec1a7da00d30edb6e617e8dcf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/bfc9ebb28f97e7a24c45bdc3f0ff482e47bb0266",
-                "reference": "bfc9ebb28f97e7a24c45bdc3f0ff482e47bb0266",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/70e65a5470a42cfec1a7da00d30edb6e617e8dcf",
+                "reference": "70e65a5470a42cfec1a7da00d30edb6e617e8dcf",
                 "shasum": ""
             },
             "require": {
@@ -1574,7 +1574,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2018-11-05T09:00:11+00:00"
+            "time": "2019-09-06T13:49:17+00:00"
         },
         {
             "name": "mtdowling/cron-expression",
