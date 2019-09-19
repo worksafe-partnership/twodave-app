@@ -828,6 +828,7 @@
                 $('[id^=methodology-][id$=-form-container]').css('display', 'none');
                 $('#methodology-list-container').hide();
                 $('#' + container + ' #title').val(title);
+                $('#' + container + ' input[name="tickbox_answer"][value="1"]').attr('checked', true);
 
                 if ($('#' + container + ' input[name=image_on]').length) {
                     $('#' + container + ' input[name=image_on]')[0].checked = false;
@@ -1075,6 +1076,8 @@
                     }
                 }
 
+                $('#' + container + ' input[name="tickbox_answer"][value="' + methodology.tickbox_answer + '"]').prop('checked', true);
+
                 $('#' + container).css('display', 'inherit');
                 $('#' + container + ' .submitbutton').attr("onclick","submitMethodologyForm('"+methodology.category+"',"+id+","+methodology.list_order+")");
                 $('#main-methodology-container .submitbutton').attr("disabled", false);
@@ -1099,10 +1102,12 @@
             switch (category) {
                 case 'TEXT':
                     form_data.append('title', $('#methodology-text-form-container #title').val());
+                    form_data.append('tickbox_answer', $('#methodology-text-form-container [name="tickbox_answer"]:checked').val());
                     form_data.append('text_before', CKEDITOR.instances.text_content.getData());
                     break;
                 case 'TEXT_IMAGE':
-                form_data.append('title', $('#methodology-text-image-form-container #title').val());
+                    form_data.append('tickbox_answer', $('#methodology-text-image-form-container [name="tickbox_answer"]:checked').val());
+                    form_data.append('title', $('#methodology-text-image-form-container #title').val());
                     if ($('#methodology-text-image-form-container #image').prop('files')[0] !== undefined){
                         form_data.append('image', $('#methodology-text-image-form-container #image').prop('files')[0]);
                     }
@@ -1122,6 +1127,7 @@
                     break;
                 case 'SIMPLE_TABLE':
                     form_data.append('title', $('#methodology-simple-table-form-container #title').val());
+                    form_data.append('tickbox_answer', $('#methodology-simple-table-form-container [name="tickbox_answer"]:checked').val());
 
                     // get all inputs within the $('#simple-table') element and attach them?
                     let simple_inputs = $('#simple-table input[name^=row_]');
@@ -1134,6 +1140,7 @@
                     break;
                 case 'COMPLEX_TABLE':
                     form_data.append('title', $('#methodology-complex-table-form-container #title').val());
+                    form_data.append('tickbox_answer', $('#methodology-complex-table-form-container [name="tickbox_answer"]:checked').val());
 
                     let complex_inputs = $('#complex-table input[name^=row_]');
                     $.each(complex_inputs, function(key, input) {
@@ -1145,6 +1152,7 @@
                     break;
                 case 'PROCESS':
                     form_data.append('title', $('#methodology-process-form-container #title').val());
+                    form_data.append('tickbox_answer', $('#methodology-process-form-container [name="tickbox_answer"]:checked').val());
                     form_data.append('replacedImages', deletedImages);
 
                     let process_lines = $('#process-table input[name^=row_], #process-table textarea[name^=row_]');
@@ -1165,6 +1173,7 @@
                     break;
                 case 'ICON':
                     form_data.append('title', $('#methodology-icon-form-container #title').val());
+                    form_data.append('tickbox_answer', $('#methodology-icon-form-container [name="tickbox_answer"]:checked').val());
                     form_data.append('text_after', CKEDITOR.instances.icon_text_after.getData());
 
                     form_data.append('icon_main_heading', $('#methodology-icon-form-container #icon_main_heading').val());
@@ -1218,7 +1227,8 @@
                             image_on: form_data.get('image_on'),
                             text_after: form_data.get('text_after'),
                             icon_main_heading: form_data.get('icon_main_heading'),
-                            icon_sub_heading: form_data.get('icon_sub_heading')
+                            icon_sub_heading: form_data.get('icon_sub_heading'),
+                            tickbox_answer: form_data.get('tickbox_answer')
                         });
                         $('.methodology-list-table').append('<tr id="methodology-' + id + '">\
                                 <td class="has-text-centered methodology-order">' + form_data.get('list_order')+ '</td>\
@@ -1248,6 +1258,7 @@
                                 methodologies[i]['text_after'] = form_data.get('text_after');
                                 methodologies[i]['icon_main_heading'] = form_data.get('icon_main_heading');
                                 methodologies[i]['icon_sub_heading'] = form_data.get('icon_sub_heading');
+                                methodologies[i]['tickbox_answer'] = form_data.get('tickbox_answer');
 
                                 // need to edit methodology table
                                 $('tr#methodology-' + editId + ' .methodology-order').html(form_data.get('list_order'));

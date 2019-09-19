@@ -2,6 +2,17 @@
     <div class="column is-10 is-offset-1">
         <p class="sub-heading">Details</p>
         <div class="field">
+            {{ EGForm::radio('tickbox_answer', [
+                'label' => 'Is this section considered relevant? (if no is selected, then the content will not show on the PDF)',
+                'value' => '',
+                'list' => [
+                    '1' => 'Yes',
+                    '0' => 'No'
+                ],
+                'type' => $pageType
+            ]) }}
+        </div>
+        <div class="field">
             {{ EGForm::text('title', [
                 'label' => 'Title',
                 'value' => '',
