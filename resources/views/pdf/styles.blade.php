@@ -260,4 +260,8 @@
         margin: 20;
         padding: 0;
     }
+    .tickbox {
+        display: flex;
+        align-items: center;
+    }
 </style>
