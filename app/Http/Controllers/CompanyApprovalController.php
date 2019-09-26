@@ -40,8 +40,14 @@ class CompanyApprovalController extends Controller
         }
         $this->user = Auth::user();
         if ($this->user->company_id !== null && $this->vtconfig->entity !== null) {
-            if ($this->user->company_id !== $this->vtconfig->entity->project->company_id) {
-                abort(404);
+            if ($this->vtconfig->entityType == 'VTRAM') {
+                if ($this->user->company_id !== $this->vtconfig->entity->project->company_id) {
+                    abort(404);
+                }
+            } else {
+                if ($this->user->company_id !== $this->vtconfig->entity->company_id) {
+                    abort(404);
+                }
             }
         }
         $request->merge([
@@ -124,8 +130,14 @@ class CompanyApprovalController extends Controller
         }
         $this->user = Auth::user();
         if ($this->user->company_id !== null && $this->customValues['entity'] !== null) {
-            if ($this->user->company_id !== $this->customValues['entity']->project->company_id) {
-                abort(404);
+            if ($type == 'VTRAMS') {
+                if ($this->user->company_id !== $this->customValues['entity']->project->company_id) {
+                    abort(404);
+                }
+            } else {
+                if ($this->user->company_id !== $this->customValues['entity']->company_id) {
+                    abort(404);
+                }
             }
         }
         $this->view = 'modules.company.project.vtram.approveVtram';
