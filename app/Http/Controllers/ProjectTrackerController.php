@@ -17,6 +17,7 @@ class ProjectTrackerController extends Controller
     public function postIndexHook()
     {
         $this->heading = str_replace("VTRAMS Tracker of", "VTRAMS Tracker for", $this->heading);
+        $this->heading = str_replace("VTRAMS", $this->parentRecord->company->vtrams_name ?? "VTRAMS", $this->heading);
         $this->customValues['templates'] = Template::where('company_id', $this->user->company_id)
                                                    ->where('status', 'CURRENT')
                                                    ->pluck('name', 'id');
@@ -32,9 +33,10 @@ class ProjectTrackerController extends Controller
             }
         }
 
+        $this->parentRecord = Project::findOrFail($this->parentId);
         if (can('create', 'project.vtram')) {
             $this->actionButtons['create_vtram'] = [
-                'label' => 'Create VTRAMS',
+                'label' => 'Create '.($this->parentRecord->company->vtrams_name ?? 'VTRAMS'),
                 'path' => '/project/'.$this->parentId.'/vtram/create',
                 'icon' => 'plus2',
                 'order' => '500',

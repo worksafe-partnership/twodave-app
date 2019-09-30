@@ -46,17 +46,18 @@ return [
         12 => '1 Year',
     ],
     'vtram_status' => [
-        'NEW' => 'New',
-        'PENDING' => 'Pending',
+        'NEW' => 'New Revision',
+        'PENDING' => 'Awaiting Approval',
         'AWAITING_EXTERNAL' => 'Awaiting External Approval',
         'EXTERNAL_REJECT' => 'Rejected Externally',
         'REJECTED' => 'Rejected',
-        'CURRENT' => 'Current',
+        'CURRENT' => 'Approved',
         'PREVIOUS' => 'Previous',
     ],
     'approval_type' => [
         'A' => 'Accepted',
-        'AC' => 'Amended',
+        'AC-NS' => 'Amend (No send)',
+        'AC' => 'Amend and Send',
         'R' => 'Rejected',
     ],
     'pc_approval_type' => [

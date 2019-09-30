@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Controller;
 use App\Hazard;
 use App\Company;
+use App\Project;
 use App\Template;
 use App\Methodology;
 use App\Http\Classes\VTLogic;
@@ -45,6 +46,7 @@ class CompanyTemplateController extends TemplateController
         if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
             $this->disableEdit = true;
         }
+        $this->customValues['templatePath'] = '/company/'.$this->record->company_id.'/project/';
     }
 
     public function store(TemplateRequest $request, $companyId = null)

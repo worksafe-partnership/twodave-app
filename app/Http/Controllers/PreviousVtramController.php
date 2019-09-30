@@ -48,6 +48,11 @@ class PreviousVtramController extends CompanyPreviousVtramController
                 abort(404);
             }
         }
+        $company = $this->user->company;
+        $this->config['singular'] = $company->vtrams_name ?? 'VTRAMS';
+        $this->config['plural'] = $company->vtrams_name ?? 'VTRAMS';
+        $this->structure['config']['singular'] = $company->vtrams_name ?? 'VTRAMS';
+        $this->structure['config']['plural'] = $company->vtrams_name ?? 'VTRAMS';
     }
 
     public function bladeHook()
@@ -62,6 +67,11 @@ class PreviousVtramController extends CompanyPreviousVtramController
                 abort(404);
             }
         }
+        $company = $this->user->company;
+        $this->config['singular'] = $company->vtrams_name ?? 'VTRAMS';
+        $this->config['plural'] = $company->vtrams_name ?? 'VTRAMS';
+        $this->structure['config']['singular'] = $company->vtrams_name ?? 'VTRAMS';
+        $this->structure['config']['plural'] = $company->vtrams_name ?? 'VTRAMS';
     }
 
     public function viewA3($projectId, $parentVtramId, $vtramId = null, $otherId = null)

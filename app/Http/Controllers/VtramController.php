@@ -86,6 +86,11 @@ class VtramController extends CompanyVtramController
                                                    ->where('status', 'CURRENT')
                                                    ->pluck('name', 'id');
         $this->customValues['path'] = 'create';
+        $company = $this->user->company;
+        $this->config['singular'] = $company->vtrams_name ?? 'VTRAMS';
+        $this->config['plural'] = $company->vtrams_name ?? 'VTRAMS';
+        $this->structure['config']['singular'] = $company->vtrams_name ?? 'VTRAMS';
+        $this->structure['config']['plural'] = $company->vtrams_name ?? 'VTRAMS';
     }
 
     public function indexHook()
@@ -96,6 +101,11 @@ class VtramController extends CompanyVtramController
                 abort(404);
             }
         }
+        $company = $this->user->company;
+        $this->config['singular'] = $company->vtrams_name ?? 'VTRAMS';
+        $this->config['plural'] = $company->vtrams_name ?? 'VTRAMS';
+        $this->structure['config']['singular'] = $company->vtrams_name ?? 'VTRAMS';
+        $this->structure['config']['plural'] = $company->vtrams_name ?? 'VTRAMS';
     }
 
     public function viewHook()

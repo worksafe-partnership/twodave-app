@@ -115,7 +115,7 @@
         @php
             $oldType = old('type');
         @endphp
-        @if (($oldType != "R") || (isset($record) && $record->type != "R"))
+        @if (($oldType == "A") || (isset($record) && $record->type == "A"))
             @push('styles')
                 <style>
                    .type-details {
@@ -130,7 +130,7 @@
     <script>
         $('.type-check [name^=type]').click(function() {
             var name = $(this).val();
-            if (name != "R") {
+            if (name == "A") {
                 $('.type-details').hide();
             } else {
                 $('.type-details').show();

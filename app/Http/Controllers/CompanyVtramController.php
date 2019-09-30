@@ -170,8 +170,9 @@ class CompanyVtramController extends Controller
 
     public function postViewHook()
     {
+        $company = $this->user->company;
         // Setup Actions
-        if ($this->record->pages_in_pdf == 4) {
+        if (in_array($this->record->pages_in_pdf, [2,3,4])) {
             $this->pillButtons['view_pdf_a3'] = [
                 'label' => 'View PDF A3',
                 'path' => $this->record->id.'/view_a3',
@@ -220,7 +221,7 @@ class CompanyVtramController extends Controller
                 ];
             } else if ($this->record->created_from_entity == 'VTRAMS' && $this->record->created_from_id != null) {
                 $this->pillButtons['view_created_from'] = [
-                    'label' => 'View VTRAMS Created From',
+                    'label' => 'View '.($company->vtrams_name ?? 'VTRAMS').' Created From',
                     'path' => $this->record->id.'/previous/'.$this->record->created_from_id,
                     'icon' => 'call_missed',
                     'order' => 100,
@@ -233,7 +234,7 @@ class CompanyVtramController extends Controller
             // ALWAYS open for preview in A4 - only print should A3 it.
             $path = 'javascript: window.open("'.$this->record->id.'/view_a3", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
             $this->pillButtons['approve_vtrams'] = [
-                'label' => 'Approve VTRAMS',
+                'label' => 'Approve '.($company->vtrams_name ?? 'VTRAMS'),
                 'path' => $path,
                 'icon' => 'playlist_add_check',
                 'id' => 'approve_vtrams',
@@ -289,7 +290,7 @@ class CompanyVtramController extends Controller
         } else {
             $url = '/project/'.$projectId.'/vtram/'.$vtramId;
         }
-        toast()->success("VTRAMS submitted for Approval");
+        toast()->success(($user->company->vtrams_name ?? "VTRAMS")." submitted for Approval");
         return redirect($url);
     }
 
@@ -305,7 +306,7 @@ class CompanyVtramController extends Controller
                 abort(404);
             }
         }
-        if ($vtram->pages_in_pdf == 4) {
+        if (in_array($vtram->pages_in_pdf, [2,3,4])) {
             return VTLogic::createA3Pdf($vtram, null, true);
         }
         return VTLogic::createPdf($vtram, null, true);
@@ -388,7 +389,7 @@ class CompanyVtramController extends Controller
 
         if ($result instanceof Vtram) {
             $this->_buildProperties($this->args);
-            toast()->success("Revision Created, you're now viewing the new VTRAMS");
+            toast()->success("Revision Created, you're now viewing the new ".($user->company->vtrams_name ?? 'VTRAMS'));
             return redirect($this->parentPath.'/'.$result->id);
         }
         toast()->error('Failed to create new Revision');
@@ -470,7 +471,7 @@ class CompanyVtramController extends Controller
         parent::_buildProperties($this->args);
         $this->backButton = [
             'path' => $this->parentPath.'/'.$vtramId,
-            'label' => 'Back to VTRAMS',
+            'label' => 'Back to '.($user->company->vtrams_name ?? 'VTRAMS'),
             'icon' => 'arrow-left',
         ];
 
@@ -549,7 +550,10 @@ class CompanyVtramController extends Controller
     {
         $args = func_get_args();
         $id = end($args);
-        $userCompany = Auth::User()->company_id;
+        if ($this->user == null) {
+            $this->user = Auth::user();
+        }
+        $userCompany = $this->user->company_id;
         $record = Vtram::withTrashed()->findOrFail($id);
 
         if (!is_null($userCompany)) {
@@ -565,7 +569,7 @@ class CompanyVtramController extends Controller
         $url = \URL::current();
         $this->backButton = [
             'path' => str_replace("/comment", "", $url),
-            'label' => 'Back to VTRAMS',
+            'label' => 'Back to '.($this->user->company->vtrams_name ?? 'VTRAMS'),
             'icon' => 'arrow-left',
         ];
         parent::_buildProperties($args);

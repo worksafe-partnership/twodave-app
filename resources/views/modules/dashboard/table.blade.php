@@ -6,11 +6,14 @@
         <div class="dash-table" id="table-{{$key}}" style="display:none">
             <table class="table" id="{{$data['table-id']}}" style="width:100%">
                 <thead>
+                    @php
+                        $vtrams = $data['data'][0] ?? null;
+                    @endphp
                     @if(is_null($companyId))
                         <th>Company</th>
                     @endif
-                    <th>VTRAMS Name</th>
-                    <th>VTRAMS Number</th>
+                    <th>{{ $vtrams->company->vtrams_name ?? 'VTRAMS' }} Name</th>
+                    <th>{{ $vtrams->company->vtrams_name ?? 'VTRAMS' }} Number</th>
                     <th>Status</th>
                     <th>Created By</th>
                     <th>Submitted By</th>

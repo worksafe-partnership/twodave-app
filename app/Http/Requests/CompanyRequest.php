@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CompanyRequest extends FormRequest
@@ -46,6 +47,7 @@ class CompanyRequest extends FormRequest
 
     public function messages()
     {
+        $user = Auth::user();
         return [
             'name.required' => 'Please enter a Company Name',
             'contact_name.required' => 'Please enter a Contact Name',
@@ -54,8 +56,8 @@ class CompanyRequest extends FormRequest
             'name.max' => 'The Company Name cannot be more than 100 character',
             'short_name.max' => 'The Company Short Name cannot be more than 100 character',
             'review_timescale.required' => 'Please select a Review Timescale',
-            'vtrams_name.required' => 'Please enter a VTRAMS Name',
-            'vtrams_name.max' => 'The VTRAMS Name cannot be more than 100 characters',
+            'vtrams_name.required' => 'Please enter a '.($user->company->vtrams_name ?? 'VTRAMS').' Name',
+            'vtrams_name.max' => 'The '.($user->company->vtrams_name ?? 'VTRAMS').' Name cannot be more than 100 characters',
             'email.required' => 'Please enter a Contact Email',
             'email.max' => 'The Contact Email cannot be more than 255 characters',
             'email.email' => 'Please enter a valid Email Address',

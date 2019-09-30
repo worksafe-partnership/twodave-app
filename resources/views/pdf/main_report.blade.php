@@ -7,56 +7,42 @@
             <div class="introduction">
                 <div class="columns">
                     <div class="column">
-                    @if (isset($tableHeight))
-                        <table class="top-table" style="height: {{ $tableHeight }}px">
-                    @else
                         <table class="top-table">
-                    @endif
-                        <tr>
-                            <th style="width:90px;">Prepared by: </th>
-                            <td style="width:135px">{{ $entity->submitted->name ?? ''}}</td>
-                            <th style="width:50px;">Date: </th>
-                            <td style="width:50px;">{{ $entity->niceSubmittedDate() }}</td>
-                        </tr>
-                        <tr>
-                            <th>Position: </th>
-                            <td>{{ $entity->submitted->position ?? '' }}</td>
-                            <th>Signed: </th>
-                            <td>
-                                @if ($submittedSig != null) 
-                                    <img src="{{ $submittedSig }}" height="30px">
+                            <tr>
+                                <th style="width:90px;">Prepared by: </th>
+                                <td style="width:135px">{{ $entity->submitted->name ?? ''}}</td>
+                                <th style="width:50px;">Date: </th>
+                                <td style="width:50px;">{{ $entity->niceSubmittedDate() }}</td>
+                                <td style="outline:none"></td>
+                                <th style="width:90px;">Approved by: </th>
+                                @if ($type == 'VTRAM' && $entity->approved != null)
+                                    <td style="width:135px">{{ $entity->approved->name ?? $entity->project->principle_contractor_name }}</td>
+                                @else
+                                    <td style="width:135px">{{ $entity->approved->name ?? '' }}</td>
                                 @endif
-                            </td>
-                        </tr>
-                    </table>
-                    </div>
-                    <div class="column">
-                    @if (isset($tableHeight))
-                        <table class="top-table table-right" style="height: {{ $tableHeight }}px">
-                    @else
-                        <table class="top-table table-right">
-                    @endif
-                        <tr>
-                            <th style="width:90px;">Approved by: </th>
-                            @if ($type == 'VTRAM' && $entity->approved != null)
-                                <td style="width:135px">{{ $entity->approved->name ?? $entity->project->principle_contractor_name }}</td>
-                            @else
-                                <td style="width:135px">{{ $entity->approved->name ?? '' }}</td>
-                            @endif
-                            <th style="width:50px;">Date: </th>
-                            <td style="width:50px;">{{ $entity->niceApprovedDate() }}</td>
-                        </tr>
-                        <tr>
-                            <th>Position: </th>
-                            <td>{{ $entity->approved->position ?? '' }}</td>
-                            <th>Signed: </th>
-                            <td>
-                                @if ($approvedSig != null) 
-                                    <img src="{{ $approvedSig }}" height="30px">
-                                @endif
-                            </td>
-                        </tr>
-                    </table>
+                                <th style="width:50px;">Date: </th>
+                                <td style="width:50px;">{{ $entity->niceApprovedDate() }}</td>
+                            </tr>
+                            <tr>
+                                <th>Position: </th>
+                                <td>{{ $entity->submitted->position ?? '' }}</td>
+                                <th>Signed: </th>
+                                <td>
+                                    @if ($submittedSig != null) 
+                                        <img src="{{ $submittedSig }}" height="30px">
+                                    @endif
+                                </td>
+                                <td style="outline:none"></td>
+                                <th>Position: </th>
+                                <td>{{ $entity->approved->position ?? '' }}</td>
+                                <th>Signed: </th>
+                                <td>
+                                    @if ($approvedSig != null) 
+                                        <img src="{{ $approvedSig }}" height="30px">
+                                    @endif
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
                 <div>
@@ -86,7 +72,7 @@
                     </div>
                     <div class="wide-50">
                         @if ($logo != null)
-                            <img src="{{ $logo }}" class="logo" style="height: {{ $height }}px;max-width:100%;">
+                            <img src="{{ $logo }}" class="logo" style="max-width:100%;">
                         @endif
                     </div>
                 </div>

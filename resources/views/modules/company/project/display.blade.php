@@ -55,7 +55,7 @@
             <div class="column is-4">
                 <div class="field">
                     {{ EGForm::checkbox('show_contact', [
-                        'label' => 'Show Contact Information on VTRAMS',
+                        'label' => 'Show Contact Information on '.$company->vtrams_name,
                         'value' => $record->show_contact ?? false,
                         'type' => $pageType
                     ]) }}
@@ -197,3 +197,4 @@
         });
     </script>
 @endpush
+@include('modules.company.project.vtram.create-modal')

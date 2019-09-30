@@ -7,7 +7,6 @@
     }
     .top-table {
         display: inline-block;
-        height: 81px;
     }
     .table-right {
         float:right;

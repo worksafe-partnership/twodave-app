@@ -13,6 +13,7 @@ use App\Company;
 use App\TableRow;
 use App\Approval;
 use App\Template;
+use App\Project;
 use App\Instruction;
 use App\Methodology;
 use Illuminate\Http\Request;
@@ -29,6 +30,48 @@ class TemplateController extends Controller
         if ($this->user->roles->first()->slug == "company_admin") {
             unset($this->config['datatable']['columns']['company_id']);
         }
+    }
+
+    public function createHook()
+    {
+        if (strpos($this->identifierPath, 'company') === false) {
+            $company = Company::find($this->user->company_id);
+        } else {
+            $company = Company::findOrFail($this->parentId);
+        }
+
+        if ($company != null) {
+            $this->customValues['main_description'] = $company['main_description'];
+            $this->customValues['post_risk_assessment_text'] = $company['post_risk_assessment_text'];
+            $this->customValues['task_description'] = $company['task_description'];
+            $this->customValues['plant_and_equipment'] = $company['plant_and_equipment'];
+            $this->customValues['disposing_of_waste'] = $company['disposing_of_waste'];
+            $this->customValues['first_aid'] = $company['first_aid'];
+            $this->customValues['noise'] = $company['noise'];
+            $this->customValues['working_at_height'] = $company['working_at_height'];
+            $this->customValues['manual_handling'] = $company['manual_handling'];
+            $this->customValues['accident_reporting'] = $company['accident_reporting'];
+        }
+    }
+
+    public function companyPresets($companyId)
+    {
+        $company = Company::findOrFail($companyId);
+        return json_encode([
+            'status' => 'success',
+            'text' => [
+                'main_description' => $company->main_description,
+                'post_risk_assessment_text' => $company->post_risk_assessment_text,
+                'task_description' => $company->task_description,
+                'plant_and_equipment' => $company->plant_and_equipment,
+                'disposing_of_waste' => $company->disposing_of_waste,
+                'first_aid' => $company->first_aid,
+                'noise' => $company->noise,
+                'working_at_height' => $company->working_at_height,
+                'manual_handling' => $company->manual_handling,
+                'accident_reporting' => $company->accident_reporting,
+            ]
+        ]);
     }
 
     public function editHook()
@@ -91,6 +134,11 @@ class TemplateController extends Controller
         ];
         if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
             $this->disableEdit = true;
+        }
+        if ($this->user->company_id == null) {
+            $this->customValues['templatePath'] = '/company/'.$this->record->company_id.'/project/';
+        } else {
+            $this->customValues['templatePath'] = '/project/';
         }
     }
 
@@ -282,7 +330,7 @@ class TemplateController extends Controller
     public function postViewHook()
     {
         // Setup Actions
-        if ($this->record->pages_in_pdf == 4) {
+        if (in_array($this->record->pages_in_pdf, [2,3,4])) {
             $this->pillButtons['view_pdf_a3'] = [
                 'label' => 'View PDF A3',
                 'path' => $this->record->id.'/view_a3',
@@ -359,6 +407,31 @@ class TemplateController extends Controller
                 'id' => 'create_new_revision',
             ];
         }
+
+        $projects = Project::where('company_id', '=', $this->record->company_id)
+            ->get();
+        $this->customValues['projects'] = [];
+        foreach ($projects as $project) {
+            $this->customValues['projects'][$project->id] = $project->name." (".$project->company->name.")";
+        }
+        if ($this->record->status == 'CURRENT') {
+            $this->pillButtons[] = [
+                'label' => 'Create Blank '.($this->record->company->vtrams_name ?? 'VTRAMS'),
+                'path' => '',
+                'icon' => 'document-add',
+                'order' => '600',
+                'id' => 'createVtrams',
+                'class' => 'create_vtrams_from_template',
+            ];
+            $this->pillButtons[] = [
+                'label' => 'Create '.($this-record->company_vtrams_name ?? 'VTRAMS').' from Template',
+                'path' => '',
+                'icon' => 'document-add',
+                'order' => '600',
+                'id' => 'createVtrams-template',
+                'class' => 'create_vtrams_from_template',
+            ];
+        }
     }
 
     public function edit()
@@ -403,7 +476,7 @@ class TemplateController extends Controller
                 abort(404);
             }
         }
-        if ($template->pages_in_pdf == 4) {
+        if (in_array($template->pages_in_pdf, [2,3,4])) {
             return VTLogic::createA3Pdf($template, null, true);
         }
         return VTLogic::createPdf($template, null, true);

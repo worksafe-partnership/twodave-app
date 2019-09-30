@@ -63,7 +63,7 @@ class CompanyApprovalController extends Controller
 
     public function created($approval, $request, $args)
     {
-        if (in_array($approval->type, ['A','AC'])) {
+        if (in_array($approval->type, ['A','AC','AC-NS'])) {
             if ($this->vtconfig->entityType == 'VTRAM' && $this->vtconfig->entity->project->principle_contractor) {
                 $this->vtconfig->entity->update([
                     'status' => 'AWAITING_EXTERNAL',
@@ -71,7 +71,13 @@ class CompanyApprovalController extends Controller
                     'approved_by' => $this->user->id,
                     'resubmit_by' => null,
                 ]);
-                VTLogic::sendPcApprovalEmail($this->vtconfig);
+                if ($approval->type != 'AC-NS') {
+                    VTLogic::sendPcApprovalEmail($this->vtconfig);
+                } else {
+                    $approval->update([
+                        'type' => 'AC',
+                    ]);
+                }
             } else {
                 $revisionNumber = 1;
                 if ($this->vtconfig->entityType == 'VTRAM') {
@@ -147,6 +153,9 @@ class CompanyApprovalController extends Controller
         $types['A'] = $company->accept_label;
         $types['AC'] = $company->amend_label;
         $types['R'] = $company->reject_label;
+        if ($type == 'VTRAMS' && $this->customValues['entity']->project->principle_contractor == 0) {
+            unset($types['AC-NS']);
+        }
         $this->customValues['approvalTypes'] = $types;
 
         $this->args = func_get_args();

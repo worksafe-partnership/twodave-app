@@ -58,6 +58,7 @@ class DashboardController extends Controller
 
     public function getTables($user, $role)
     {
+        $this->user = Auth::user();
         $statuses = Config('egc.vtram_status');
         unset($statuses['PREVIOUS']);
         if ($role != 'supervisor') {
@@ -117,7 +118,7 @@ class DashboardController extends Controller
             ->get($this->datatableFields);
 
             $this->customValues['tables'][] = [
-                'heading' => 'VTRAMS Tracker ('.$tracker->count().')',
+                'heading' => ($this->user->company->vtrams_id ?? 'VTRAMS').' Tracker ('.$tracker->count().')',
                 'table-id' => 'tracker',
                 'data' => $tracker,
             ];

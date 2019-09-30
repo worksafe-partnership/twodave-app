@@ -22,6 +22,7 @@ CKEDITOR.editorConfig = function( config ) {
 	// not needed in the Standard(s) toolbar.
 	config.removeButtons = 'Underline,Subscript,Superscript,Cut,Copy,Paste,PasteFromWord,PasteText,Styles,FontSize';
     config.extraPlugins = 'font,undo';
+    config.removePlugins = 'elementspath';
 
 	// Set the most common block elements.
 	config.format_tags = 'p;h1;h2;h3;pre';
@@ -30,3 +31,12 @@ CKEDITOR.editorConfig = function( config ) {
 	// Simplify the dialog windows.
 	config.removeDialogTabs = 'image:advanced;link:advanced';
 };
+
+CKEDITOR.on("instanceReady", function (ev) {
+    var editor = ev.editor;
+    editor.on("paste", function (evt) {
+        evt.stop();
+        var data = '<span style="font-family:Arial,Helvetica,sans-serif">' + evt.data.dataValue + '</span>';
+        evt.editor.insertHtml(data);
+    });
+});

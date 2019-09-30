@@ -1,5 +1,6 @@
-<div style="height: 65px;text-align:right;">
-    <div>
+<div>
+    @include('modules.company.project.vtram.ckeditor-key')
+    <div style="height: 65px;text-align:right;">
         <button class="button is-success is-primary" id="comments-button">View Comments ( {{ $comments->count() }} )</button>
     </div>
 </div>
