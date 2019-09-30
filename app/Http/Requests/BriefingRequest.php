@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BriefingRequest extends FormRequest
@@ -32,10 +33,11 @@ class BriefingRequest extends FormRequest
 
     public function messages()
     {
+        $user = Auth::user();
         return [
-            'vtram_id.required' => 'Please select a VTRAMS',
-            'vtram_id.exists' => 'The selected VTRAMS does not exist',
-            'briefed_by.required' => 'Please enter who Briefed the VTRAMS',
+            'vtram_id.required' => 'Please select a '.($user->company->vtrams_name ?? 'VTRAMS'),
+            'vtram_id.exists' => 'The selected '.($user->company_vtrams_name ?? 'VTRAMS').' does not exist',
+            'briefed_by.required' => 'Please enter who Briefed the '.($user->company->vtrams_name ?? 'VTRAMS'),
             'briefed_by.max' => 'Briefed By cannot be more than 100 characters',
             'name.required' => 'Please enter the Briefing Name',
             'name.max' => 'The Briefing Name cannot be more than 100 characters'

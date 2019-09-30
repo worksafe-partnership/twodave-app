@@ -87,3 +87,6 @@ body > aside,
 .dash-button {
     border-color: #FFF !important;
 }
+.pill-buttons {
+    background-color: %COLOUR%;
+}

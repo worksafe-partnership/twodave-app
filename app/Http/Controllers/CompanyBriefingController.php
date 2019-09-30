@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Controller;
 use App\Briefing;
+use App\Project;
 use App\Vtram;
 use App\Http\Requests\BriefingRequest;
 
@@ -21,6 +22,9 @@ class CompanyBriefingController extends Controller
             $this->customValues['vtrams'] = Vtram::withTrashed()->where('project_id', '=', $this->parentId)
                 ->pluck('name', 'id');
         }
+
+        $project = Project::findOrFail($this->parentId);
+        $this->customValues['company'] = $project->company;
     }
 
     public function viewHook()

@@ -8,6 +8,7 @@ use App\UserProject;
 use App\Project;
 use App\Company;
 use App\User;
+use App\Template;
 use App\Http\Requests\ProjectRequest;
 
 class ProjectController extends CompanyProjectController
@@ -69,12 +70,24 @@ class ProjectController extends CompanyProjectController
 
         $trackerConfig = config('structure.project.tracker.config');
         $this->actionButtons['tracker'] = [
-            'label' => "VTRAMS Tracker",
+            'label' => ($this->user->company->vtrams_name ?? "VTRAMS")." Tracker",
             'path' => '/project/'.$this->id.'/tracker',
             'icon' => $trackerConfig['icon'],
             'order' => '600',
             'id' => 'vtramsTracker'
         ];
+
+        $this->actionButtons[] = [
+            'label' => 'Create '.($this->user->company->vtrams_name ?? 'VTRAMS'),
+            'path' => '/project/'.$this->id.'/vtram/create',
+            'icon' => 'document-add',
+            'order' => 700,
+            'id' =>'createVtrams',
+        ];
+        $this->customValues['templates'] = Template::where('company_id', $this->args[0])
+                                                   ->where('status', 'CURRENT')
+                                                   ->pluck('name', 'id');
+        $this->customValues['path'] = $this->id.'/vtram/create';
     }
 
     public function viewEditHook()

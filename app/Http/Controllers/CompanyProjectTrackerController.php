@@ -7,6 +7,7 @@ use Carbon;
 use Controller;
 use App\Vtram;
 use App\Template;
+use App\Project;
 
 class CompanyProjectTrackerController extends Controller
 {
@@ -24,6 +25,7 @@ class CompanyProjectTrackerController extends Controller
 
     public function indexHook()
     {
+        $this->parentRecord = Project::findOrFail($this->parentId);
         if (can('create', 'company.project.vtram')) {
             $this->actionButtons['create_vtram'] = [
                 'label' => 'Create VTRAMS',

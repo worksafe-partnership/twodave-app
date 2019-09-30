@@ -114,44 +114,48 @@
                     ]) }}
                 </div>
             </div>
-            <div class="column is-3">
-                <div class="field responsible-check">
-                    {{ EGForm::checkbox('show_responsible_person', [
-                        'label' => 'Show Responsible Person',
-                        'value' => $record->show_responsible_person ?? false,
-                        'type' => $pageType
-                    ]) }}
+            @if (strpos($identifierPath, 'template') === false)
+                <div class="column is-3">
+                    <div class="field responsible-check">
+                        {{ EGForm::checkbox('show_responsible_person', [
+                            'label' => 'Show Responsible Person',
+                            'value' => $record->show_responsible_person ?? false,
+                            'type' => $pageType
+                        ]) }}
+                    </div>
                 </div>
-            </div>
-            <div class="column is-3">
-                <div class="field responsible-details">
-                    {{ EGForm::text('responsible_person', [
-                        'label' => 'Responsible Person',
-                        'value' => $record["responsible_person"],
-                        'type' => $pageType
-                    ]) }}
+                <div class="column is-3">
+                    <div class="field responsible-details">
+                        {{ EGForm::text('responsible_person', [
+                            'label' => 'Responsible Person',
+                            'value' => $record["responsible_person"],
+                            'type' => $pageType
+                        ]) }}
+                    </div>
                 </div>
-            </div>
+            @endif
         </div>
         <div class="columns">
-            <div class="column is-3">
-                <div class="field area-check">
-                    {{ EGForm::checkbox('show_area', [
-                        'label' => 'Show Area on PDF',
-                        'value' => $record['show_area'],
-                        'type' => $pageType,
-                    ]) }}
+            @if (strpos($identifierPath, 'template') === false)
+                <div class="column is-3">
+                    <div class="field area-check">
+                        {{ EGForm::checkbox('show_area', [
+                            'label' => 'Show Area on PDF',
+                            'value' => $record['show_area'],
+                            'type' => $pageType,
+                        ]) }}
+                    </div>
                 </div>
-            </div>
-            <div class="column is-3">
-                <div class="field area-details">
-                    {{ EGForm::text('area', [
-                        'label' => 'Area Name',
-                        'value' => $record['area'],
-                        'type' => $pageType,
-                    ]) }}
+                <div class="column is-3">
+                    <div class="field area-details">
+                        {{ EGForm::text('area', [
+                            'label' => 'Area Name',
+                            'value' => $record['area'],
+                            'type' => $pageType,
+                        ]) }}
+                    </div>
                 </div>
-            </div>
+            @endif
             @if (strpos($identifierPath, 'vtram') !== false)
                 <div class="column is-3">
                     <div class="field">
@@ -180,6 +184,7 @@
     <div class="columns">
         <div class="column is-8 is-offset-2">
             <h2 class="sub-heading">Configuration</h2>
+            @include('modules.company.project.vtram.ckeditor-key')
             <div class="columns">
                 <div class="column is-6">
                     <div class="field">
@@ -208,6 +213,7 @@
     <div class="columns">
         <div class="column is-8 is-offset-2">
             <h2 class="sub-heading">Configuration</h2>
+            @include('modules.company.project.vtram.ckeditor-key')
             <div class="columns">
                 <div class="column is-6">
                     <div class="field">
@@ -461,6 +467,47 @@
             }
         });
     </script>
+    @if (strpos($identifierPath, 'template') !== false)
+        <script>
+            $('select[name="company_id"]').change(function () {
+                $.ajax({
+                    url: '/company/' + $(this).val() + '/getPresets',
+                    method: 'GET',
+                    success: function (data) {
+                        data = JSON.parse(data);
+                        if (data.status == 'success') {
+                            CKEDITOR.instances.task_description.setData(data.text.task_description);
+                            CKEDITOR.instances.plant_and_equipment.setData(data.text.plant_and_equipment);
+                            CKEDITOR.instances.disposing_of_waste.setData(data.text.disposing_of_waste);
+                            CKEDITOR.instances.first_aid.setData(data.text.first_aid);
+                            CKEDITOR.instances.noise.setData(data.text.noise);
+                            CKEDITOR.instances.working_at_height.setData(data.text.working_at_height);
+                            CKEDITOR.instances.manual_handling.setData(data.text.manual_handling);
+                            CKEDITOR.instances.accident_reporting.setData(data.text.accident_reporting);
+                            toastr.success("New Company Presets applied");
+                        } else {
+                            toastr.error("Failed to get Company Preset values");
+                        }
+                    },
+                    error: function (data) {
+                        if (data.status == 422) {
+                            var errors = '';
+                            $.each(data.responseJSON.errors, function(key,val) {
+                                toastr.error(val);
+                            });
+                        } else if (data.status == 401) {
+                            toastr.error('Your sesson has expired, please refresh the page and login to proceed');
+                        } else {
+                            toastr.error('An error has occured when collecting company presets');
+                        }
+                    }
+                });
+            });
+        </script>
+    @endif
 @endpush
 
 @include('modules.company.project.vtram.create-modal')
+@if ($pageType == 'view' && strpos($identifierPath, 'template') !== false)
+    @include('modules.company.template.create-vtrams-modal')
+@endif

@@ -346,6 +346,7 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => 'can:edit-methodology',
         'uses' => 'MethodologyController@deleteImage'
     ]);
+    Route::get('/company/{id}/getPresets', 'TemplateController@companyPresets');
     Route::get('/', 'DashboardController@view');
     Route::get('/dashboard', function () {
         $user = Auth::user();

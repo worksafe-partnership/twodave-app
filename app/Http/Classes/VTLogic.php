@@ -43,10 +43,14 @@ class VTLogic
         $file = VTFiles::findOrFail($config->entity->pdf);
         $path = storage_path('app/'.$file->location);
         $merger = new Merger;
-        $merger->addFile($path, new Pages(4));
+        if ($config->entity->pages_in_pdf == 4) {
+            $merger->addFile($path, new Pages(4));
+        }
         $merger->addFile($path, new Pages(1));
         $merger->addFile($path, new Pages(2));
-        $merger->addFile($path, new Pages(3));
+        if ($config->entity->pages_in_pdf > 2) {
+            $merger->addFile($path, new Pages(3));
+        }
 
         $now = Carbon::now();
         $storagePath = "files/".$now->year."/".$now->month."/".$now->day.'/';

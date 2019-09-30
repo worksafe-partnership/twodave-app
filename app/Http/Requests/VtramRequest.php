@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
 class VtramRequest extends FormRequest
@@ -34,9 +35,10 @@ class VtramRequest extends FormRequest
 
     public function messages()
     {
+        $user = Auth::user();
         return [
-            'name.required' => 'Please enter a VTRAMS Name',
-            'name.max' => 'The VTRAMS Name cannot be more than 100 characters',
+            'name.required' => 'Please enter a '.($user->company->vtrams_name ?? 'VTRAMS').' Name',
+            'name.max' => 'The '.($user->company->vtrams_name ?? 'VTRAMS').' Name cannot be more than 100 characters',
             'logo.mimes' => 'Only images are allowed to be uploaded for the Logo',
             'reference.required' => 'Please enter a Reference',
             'reference.max' => 'The Reference cannot be more than 100 characters',
