@@ -424,7 +424,7 @@ class TemplateController extends Controller
                 'class' => 'create_vtrams_from_template',
             ];
             $this->pillButtons[] = [
-                'label' => 'Create '.($this-record->company_vtrams_name ?? 'VTRAMS').' from Template',
+                'label' => 'Create '.($this->record->company_vtrams_name ?? 'VTRAMS').' from Template',
                 'path' => '',
                 'icon' => 'document-add',
                 'order' => '600',
