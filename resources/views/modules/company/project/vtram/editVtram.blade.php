@@ -384,8 +384,8 @@
         }
 
         // Hazard Scripts
-        var hazards = JSON.parse('{!! addslashes($hazards->toJson()) !!}');
-        var hazardMethodologies = JSON.parse('{!! addslashes(json_encode($hazard_methodologies)) !!}');
+        var hazards = JSON.parse('{!! str_replace("'", '\'', addslashes($hazards->toJson())) !!}');
+        var hazardMethodologies = JSON.parse('{!! str_replace("'", '\'', addslashes(json_encode($hazard_methodologies))) !!}');
 
         var riskLabels = JSON.parse('{!! json_encode($riskList) !!}');
         function createHazard() {
@@ -721,12 +721,12 @@
         }
 
         // Methodology Scripts
-        var methodologies = JSON.parse('{!! addslashes($methodologies->toJson()) !!}');
-        var company = JSON.parse('{!! addslashes($company->toJson()) !!}');
-        var methTypeList = JSON.parse('{!! addslashes(json_encode($methTypeList)) !!}');
-        var processes = JSON.parse('{!! addslashes(json_encode($processes)) !!}');
-        var tableRows = JSON.parse('{!! addslashes(json_encode($tableRows)) !!}');
-        var icons = JSON.parse('{!! addslashes(json_encode($icons)) !!}');
+        var methodologies = JSON.parse('{!! str_replace("'", '\'',addslashes($methodologies->toJson())) !!}');
+        var company = JSON.parse('{!! str_replace("'", '\'', addslashes($company->toJson())) !!}');
+        var methTypeList = JSON.parse('{!! str_replace("'", '\'', addslashes(json_encode($methTypeList))) !!}');
+        var processes = JSON.parse('{!! str_replace("'", '\'', addslashes(json_encode($processes))) !!}');
+        var tableRows = JSON.parse('{!! str_replace("'", '\'', addslashes(json_encode($tableRows))) !!}');
+        var icons = JSON.parse('{!! str_replace("'", '\'', addslashes(json_encode($icons))) !!}');
         var deletedImages = [];
 
         function createMethodology() {
