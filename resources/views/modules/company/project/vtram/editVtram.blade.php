@@ -846,7 +846,7 @@
             let methodology = methodologies.filter(methodologies => methodologies.id === id)
             if (methodology.length) {
                 methodology = methodology[0];
-                let title = methodology.title;
+                let title = methodology.title.replace('&apos;', "'");
                 let content = '';
                 let container = 'methodology-text-form-container';
                 deletedImages = [];
@@ -1250,20 +1250,40 @@
                         for (let i = 0; i < methodologies.length; i++) {
                             if (methodologies[i]['id'] === editId) {
                                 methodologies[i]['title'] = form_data.get('title');
-                                methodologies[i]['text_before'] = form_data.get('text_before');
+                                var textBefore = form_data.get('text_before');
+                                if (textBefore != null) {
+                                    textBefore = textBefore.replace("'", '&apos;');
+                                }
+                                methodologies[i]['text_before'] = textBefore;
                                 methodologies[i]['list_order'] = form_data.get('list_order');
                                 methodologies[i]['category'] = category;
                                 methodologies[i]['entity'] = form_data.get('entity');
                                 methodologies[i]['image'] = image;
                                 methodologies[i]['image_on'] = form_data.get('image_on');
-                                methodologies[i]['text_after'] = form_data.get('text_after');
-                                methodologies[i]['icon_main_heading'] = form_data.get('icon_main_heading');
-                                methodologies[i]['icon_sub_heading'] = form_data.get('icon_sub_heading');
+                                var textAfter = form_data.get('text_after');
+                                if (textAfter != null) {
+                                    textAfter = textAfter.replace("'", '&apos;');
+                                }
+                                methodologies[i]['text_after'] = textAfter;
+                                var iconMain = form_data.get('icon_main_heading');
+                                if (iconMain != null) {
+                                    iconMain = iconMain.replace("'", '&apos;');
+                                }
+                                methodologies[i]['icon_main_heading'] = iconMain;
+                                var iconSub = form_data.get('icon_sub_heading');
+                                if (iconSub != null) {
+                                    iconSub = iconSub.replace("'", '&apos;');
+                                }
+                                methodologies[i]['icon_sub_heading'] = iconSub;
                                 methodologies[i]['tickbox_answer'] = form_data.get('tickbox_answer');
 
                                 // need to edit methodology table
                                 $('tr#methodology-' + editId + ' .methodology-order').html(form_data.get('list_order'));
-                                $('tr#methodology-' + editId + ' .methodology-title').html(form_data.get('title'));
+                                var methTitle = form_data.get('title');
+                                if (methTitle != null) {
+                                    methTitle = methTitle.replace("'", '&apos;');
+                                }
+                                $('tr#methodology-' + editId + ' .methodology-title').html(methTitle);
                                 $('tr#methodology-' + editId + ' .methodology-category').html(methTypeList[category]);
                                 break;
                             }
@@ -1282,12 +1302,20 @@
                             tableRows[id] = [];
                             $.each(simple_rows, function(key, row) {
                                 let inputs = $(row).find("input[name^=row_]");
+                                let finalInputs = [];
+                                for(let i = 0; i <= 4; i++) {
+                                    var tempCol = inputs[i].value;
+                                    if (tempCol != null) {
+                                        tempCol = tempCol.replace("'", '&apos;');
+                                    }
+                                    finalInputs[i] = tempCol;
+                                }
                                 tableRows[id][key] = {
-                                    col_1: inputs[0].value,
-                                    col_2: inputs[1].value,
-                                    col_3: inputs[2].value,
-                                    col_4: inputs[3].value,
-                                    col_5: inputs[4].value
+                                    col_1: finalInputs[0],
+                                    col_2: finalInputs[1],
+                                    col_3: finalInputs[2],
+                                    col_4: finalInputs[3],
+                                    col_5: finalInputs[4]
                                 };
                                 $(row).remove();
                             });
@@ -1298,12 +1326,20 @@
                             tableRows[id] = [];
                             $.each(complex_rows, function(key, row) {
                                 let inputs = $(row).find("input[name^=row_]");
+                                let finalInputs = [];
+                                for(let i = 0; i <= 4; i++) {
+                                    var tempCol = inputs[i].value;
+                                    if (tempCol != null) {
+                                        tempCol = tempCol.replace("'", '&apos;');
+                                    }
+                                    finalInputs[i] = tempCol;
+                                }
                                 tableRows[id][key] = {
-                                    col_1: inputs[0].value,
-                                    col_2: inputs[1].value,
-                                    col_3: inputs[2].value,
-                                    col_4: inputs[3].value,
-                                    col_5: inputs[4].value
+                                    col_1: finalInputs[0],
+                                    col_2: finalInputs[1],
+                                    col_3: finalInputs[2],
+                                    col_4: finalInputs[3],
+                                    col_5: finalInputs[4]
                                 };
                                 $(row).remove();
                             });
@@ -1326,10 +1362,19 @@
                                     image_id = $(image[0]).attr('data-image_id');
                                 }
 
+                                var label = inputs[1].value;
+                                if (label != null) {
+                                    label = label.replace("'", '&apos;');
+                                }
+                                var description = inputs[2].value;
+                                if (description != null) {
+                                    description = description.replace("'", '&apos;');
+                                }
+
                                 processes[id][key] = {
                                     heading: checked,
-                                    label: inputs[1].value,
-                                    description: inputs[2].value,
+                                    label: label,
+                                    description: description,
                                     image: image_id
                                 }
                                 $(row).remove();
@@ -1342,9 +1387,13 @@
                             let topData = $('#top-body td');
                             $.each(topData, function(key, cell) {
                                 var td = $(cell);
+                                var description = td.find('.wording').val();
+                                if (description != null) {
+                                    description = description.replace("'", '&apos;');
+                                }
                                 top[key] = {
                                     id: key,
-                                    text: td.find('.wording').val(),
+                                    text: description,
                                     image: td.find('.td_icon_list').val(),
                                     list_order: key
                                 }
@@ -1352,11 +1401,16 @@
 
                             let bottom = [];
                             let bottomData = $('#bottom-body td');
+                            
                             $.each(bottomData, function(key, cell) {
                                 var td = $(cell);
+                                var description = td.find('.wording').val();
+                                if (description != null) {
+                                    description = description.replace("'", '&apos;');
+                                }
                                 bottom[key] = {
                                     id: key,
-                                    text: td.find('.wording').val(),
+                                    text: description,
                                     image: td.find('.td_icon_list').val(),
                                     list_order: key
                                 }

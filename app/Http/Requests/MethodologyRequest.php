@@ -55,7 +55,7 @@ class MethodologyRequest extends FormRequest
                 $rules['row_0__col_1'] = 'required';
                 break;
             case "PROCESS":
-                $rules['row_0__description'] = 'required';
+                $rules['row_1__description'] = 'required';
                 break;
             case "ICON":
                 $rules['icon_main_heading'] = 'required';
@@ -95,7 +95,7 @@ class MethodologyRequest extends FormRequest
                 $messages['row_0__col_1.required'] = 'Please add rows to your table';
                 break;
             case "PROCESS":
-                $messages['row_0__description.required'] = 'Please add rows to your table';
+                $messages['row_1__description.required'] = 'Please add rows to your table';
                 break;
             case "ICON":
                 $messages['icon_main_heading.required'] = 'Please enter Main Table heading';
