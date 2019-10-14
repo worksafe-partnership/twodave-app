@@ -722,7 +722,7 @@
 
         // Methodology Scripts
         var methodologies = JSON.parse('{!! str_replace("'", '&apos;',addslashes($methodologies->toJson())) !!}');
-        var company = JSON.parse('{!! str_replace("'", '&apos'', addslashes($company->toJson())) !!}');
+        var company = JSON.parse('{!! str_replace("'", '&apos;', addslashes($company->toJson())) !!}');
         var methTypeList = JSON.parse('{!! str_replace("'", '&apos;', addslashes(json_encode($methTypeList))) !!}');
         var processes = JSON.parse('{!! str_replace("'", '&apos;', addslashes(json_encode($processes))) !!}');
         var tableRows = JSON.parse('{!! str_replace("'", '&apos;', addslashes(json_encode($tableRows))) !!}');
