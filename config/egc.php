@@ -125,6 +125,7 @@ return [
     'methodology_list' => [
         'TASK_DESC' => 'Task Description',
         'PLANT_EQUIP' => 'Plant & Equipment',
+        'CERT_REQ' => 'Certified Skills Required',
         'DISP_WASTE' => 'Disposing of Waste',
         'FIRST_AID' => 'First Aid',
         'NOISE' => 'Noise',

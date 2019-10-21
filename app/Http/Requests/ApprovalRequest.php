@@ -29,7 +29,7 @@ class ApprovalRequest extends FormRequest
         ];
 
         if (isset($this->resubmit_date) && strlen($this->resubmit_date) > 0) {
-            $rules['resubmit_date'] = 'after:today';
+            $rules['resubmit_date'] = 'after:yesterday';
         }
         if ($this->type != 'A') {
             $rules['comment'] = 'required';
@@ -41,7 +41,7 @@ class ApprovalRequest extends FormRequest
     {
         return [
             'review_document.mimes' => 'Only images and PDFs are allowed to be uploaded for the Review Document',
-            'resubmit_date.after' => 'Please enter a Resubmit Date after today',
+            'resubmit_date.after' => 'Please enter a Resubmit Date of today or a date in the future',
             'comment.required' => 'Please enter a Comment',
             'type.required' => 'Please select an Approval Type',
         ];

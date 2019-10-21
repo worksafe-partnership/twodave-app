@@ -374,6 +374,8 @@
                             $('#main-hazard-container label[for="at_risk[{{ $key }}]"').click();
                         }
                     @endforeach
+                    $('.r-risk-area .risk-rating').css('outline', 'none');
+                    $('.risk-area .risk-rating').css('outline', 'none');
                     $('#related_methodologies_div .control select')[0].selectize.clear();
                 } else {
                     $('#methodology-list-container').show();
@@ -404,6 +406,8 @@
                 }
             @endforeach
 
+            $('.r-risk-area .risk-rating').css('outline', 'none');
+            $('.risk-area .risk-rating').css('outline', 'none');
             $('#related_methodologies_div .control select')[0].selectize.clear();
             $('#main-hazard-container .submitbutton').attr("disabled", false);
         }
@@ -440,9 +444,10 @@
 
             $("#hazard-form-container .submitbutton").attr("onclick","submitHazardForm("+id+","+hazard['list_order']+")");
             $('#hazard-list-container').hide();
-            $('.risk-rating').css('border', '1px solid #404040');
-            $('.risk-area td[data-prob=' + hazard['risk_probability'] + '][data-severity=' + hazard['risk_severity'] + ']').css('border', '3px solid blue');
-            $('.r-risk-area td[data-prob=' + hazard['r_risk_probability'] + '][data-severity=' + hazard['r_risk_severity'] + ']').css('border', '3px solid blue');
+            $('.r-risk-area .risk-rating').css('outline', 'none');
+            $('.risk-area .risk-rating').css('outline', 'none');
+            $('.risk-area td[data-prob=' + hazard['risk_probability'] + '][data-severity=' + hazard['risk_severity'] + ']').css('outline', '3px solid blue');
+            $('.r-risk-area td[data-prob=' + hazard['r_risk_probability'] + '][data-severity=' + hazard['r_risk_severity'] + ']').css('outline', '3px solid blue');
             $('#hazard-form-container').css('display', 'inherit');
             $('#main-hazard-container .submitbutton').attr("disabled", false);
         }
@@ -577,6 +582,8 @@
                             $('#main-hazard-container label[for="at_risk[{{ $key }}]"').click();
                         }
                     @endforeach
+                    $('.r-risk-area .risk-rating').css('outline', 'none');
+                    $('.risk-area .risk-rating').css('outline', 'none');
                     $('#hazard-list-container').show();
                 },
                 error: function (data) {
@@ -747,6 +754,15 @@
                     case 'PLANT_EQUIP':
                         title = 'Plant & Equipment';
                         CKEDITOR.instances.text_content.setData(company.plant_and_equipment);
+                        break;
+                    case 'CERT_REQ':
+                        title = 'Certified Skills Required';
+                        container = 'methodology-simple-table-form-container';
+                        cat = 'SIMPLE_TABLE';
+                        $('#simple-table tbody tr').remove();
+                        $('#simple-table').attr('data-next_row', 0);
+                        CKEDITOR.instances.simple_text_before.setData('');
+                        CKEDITOR.instances.simple_text_after.setData('');
                         break;
                     case 'DISP_WASTE':
                         title = 'Disposing of Waste';

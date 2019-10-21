@@ -138,7 +138,7 @@ class CompanyVtramController extends Controller
     {
         if (in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED']) && is_null($this->record['deleted_at'])) {
             $this->actionButtons['methodologies'] = [
-                'label' => 'Hazards & Method Statements',
+                'label' => 'Method Statements & Risk Assessment',
                 'path' => '/company/'.$this->args[0].'/project/'.$this->parentId.'/vtram/'.$this->id.'/methodology',
                 'icon' => 'receipt',
                 'order' => '550',
@@ -184,7 +184,7 @@ class CompanyVtramController extends Controller
         }
 
         $this->pillButtons['view_pdf'] = [
-            'label' => 'View PDF',
+            'label' => 'View PDF A4',
             'path' => $this->record->id.'/view_a4',
             'icon' => 'file-pdf',
             'order' => 100,
@@ -234,7 +234,7 @@ class CompanyVtramController extends Controller
             // ALWAYS open for preview in A4 - only print should A3 it.
             $path = 'javascript: window.open("'.$this->record->id.'/view_a3", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
             $this->pillButtons['approve_vtrams'] = [
-                'label' => 'Approve '.($company->vtrams_name ?? 'VTRAMS'),
+                'label' => 'Review '.($company->vtrams_name ?? 'VTRAMS'),
                 'path' => $path,
                 'icon' => 'playlist_add_check',
                 'id' => 'approve_vtrams',
@@ -399,7 +399,7 @@ class CompanyVtramController extends Controller
     public function editContent($companyId, $projectId, $vtramId)
     {
         $this->record = Vtram::findOrFail($vtramId);
-        $this->heading = 'Adding Hazard and Method Statements to '.$this->record->name;
+        $this->heading = 'Editing Method Statements and Risk Assessment for '.$this->record->name;
         if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
             abort(404);
         }
