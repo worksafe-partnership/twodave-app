@@ -112,7 +112,7 @@ class VtramController extends CompanyVtramController
     {
         if (can('edit', $this->identifierPath) && in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])  && is_null($this->record['deleted_at'])) {
             $this->actionButtons['methodologies'] = [
-                'label' => 'Hazards & Method Statements',
+                'label' => 'Method Statements & Risk Assessment',
                 'path' => '/project/'.$this->parentId.'/vtram/'.$this->id.'/methodology',
                 'icon' => 'receipt',
                 'order' => '500',

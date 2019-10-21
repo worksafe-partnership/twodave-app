@@ -19,7 +19,7 @@ class CompanyTemplateController extends TemplateController
     {
         if (in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
             $this->actionButtons['methodologies'] = [
-                'label' => 'Hazards & Method Statements',
+                'label' => 'Method Statements & Risk Assessment',
                 'path' => '/company/'.$this->parentId.'/template/'.$this->id.'/methodology',
                 'icon' => 'receipt',
                 'order' => '550',

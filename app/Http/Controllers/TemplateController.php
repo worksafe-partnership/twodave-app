@@ -108,7 +108,7 @@ class TemplateController extends Controller
 
         if (can('edit', $this->identifierPath) && in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED']) && is_null($this->record['deleted_at'])) {
             $this->actionButtons['methodologies'] = [
-                'label' => 'Hazards & Method Statements',
+                'label' => 'Method Statements & Risk Assessment',
                 'path' => '/template/'.$this->id.'/methodology',
                 'icon' => 'receipt',
                 'order' => '550',
@@ -188,7 +188,7 @@ class TemplateController extends Controller
     public function editContent($templateId, $otherId = null)
     {
         $this->record = Template::findOrFail($templateId);
-        $this->heading = 'Adding Hazard and Method Statements to '.$this->record->name;
+        $this->heading = 'Editing Method Statements and Risk Assessment for '.$this->record->name;
         if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
             abort(404);
         }
@@ -342,7 +342,7 @@ class TemplateController extends Controller
         }
 
         $this->pillButtons['view_pdf'] = [
-            'label' => 'View PDF',
+            'label' => 'View PDF A4',
             'path' => $this->record->id.'/view_a4',
             'icon' => 'file-pdf',
             'order' => 100,
@@ -387,7 +387,7 @@ class TemplateController extends Controller
             }
             if (is_null($this->record['deleted_at'])) {
                 $this->pillButtons['approve_template'] = [
-                    'label' => 'Approve Template',
+                    'label' => 'Review Template',
                     'path' => $path,
                     'icon' => 'playlist_add_check',
                     'id' => 'approve_template',
