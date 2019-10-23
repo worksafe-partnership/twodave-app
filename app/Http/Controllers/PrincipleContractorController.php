@@ -104,7 +104,7 @@ class PrincipleContractorController extends Controller
         $this->pageType = 'view';
         $this->record = $vtrams;
         // another example where it needs to open in A4 but actually print in A3.
-        $path = 'javascript: window.open("'.$this->record->id.'/view_a4", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
+        $path = 'javascript: window.open("'.$this->record->id.'/view_a3", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
 
         $this->actionButtons['approve_vtrams'] = [
             'label' => 'Approve / Amend / Reject VTRAMS',
@@ -220,7 +220,7 @@ class PrincipleContractorController extends Controller
 
     public function created($approval, $request, $args)
     {
-        if (in_array($approval->type, ['PC_A','PC_AC'])) {
+        if (in_array($approval->type, ['PC_A'])) {
             $revisionNumber = 1;
             if ($this->vtconfig->entityType == 'VTRAM') {
                 if ($this->vtconfig->entity->created_from_entity == 'VTRAM') {
@@ -258,6 +258,11 @@ class PrincipleContractorController extends Controller
         } else if ($approval->type == 'PC_R') {
             $this->vtconfig->entity->update([
                 'status' => 'EXTERNAL_REJECT',
+                'resubmit_by' => $request['resubmit_date'],
+            ]);
+        } else if ($approval->type == 'PC_AC') {
+            $this->vtconfig->entity->update([
+                'status' => 'EXTERNAL_AMEND',
                 'resubmit_by' => $request['resubmit_date'],
             ]);
         }

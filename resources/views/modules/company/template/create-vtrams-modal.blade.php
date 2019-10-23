@@ -23,8 +23,8 @@
                     </div>
                 </section>
             <footer class="modal-card-foot">
-                <button class="button" id="close_modal">Cancel</button>
                 <button onclick="createVtrams()" class="button is-primary">Create {{ $record->company->vtrams_name }}</button>
+                <button class="button" id="close_modal">Cancel</button>
             </footer>
         </div>
     </div>
@@ -40,14 +40,9 @@
             }
         });
 
-        $("#close_modal").click(function() {
-            event.preventDefault();
+        $("#close_modal, .modal-background").click(function() {
             $(".modal").removeClass("is-active");
         });
-
-        $(".modal-background").click(function() {
-            $(".modal").removeClass("is-active");
-        })
 
         function createVtrams() {
             var projId = $('#project_id').val();

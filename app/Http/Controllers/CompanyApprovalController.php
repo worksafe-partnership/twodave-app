@@ -63,7 +63,7 @@ class CompanyApprovalController extends Controller
 
     public function created($approval, $request, $args)
     {
-        if (in_array($approval->type, ['A','AC','AC-NS'])) {
+        if (in_array($approval->type, ['A'])) {
             if ($this->vtconfig->entityType == 'VTRAM' && $this->vtconfig->entity->project->principle_contractor) {
                 $this->vtconfig->entity->update([
                     'status' => 'AWAITING_EXTERNAL',
@@ -71,13 +71,10 @@ class CompanyApprovalController extends Controller
                     'approved_by' => $this->user->id,
                     'resubmit_by' => null,
                 ]);
-                if ($approval->type != 'AC-NS') {
-                    VTLogic::sendPcApprovalEmail($this->vtconfig);
-                } else {
-                    $approval->update([
-                        'type' => 'AC',
-                    ]);
-                }
+                VTLogic::sendPcApprovalEmail($this->vtconfig);
+                $approval->update([
+                    'type' => 'AC',
+                ]);
             } else {
                 $revisionNumber = 1;
                 if ($this->vtconfig->entityType == 'VTRAM') {
@@ -114,6 +111,11 @@ class CompanyApprovalController extends Controller
         } else if ($approval->type == 'R') {
             $this->vtconfig->entity->update([
                 'status' => 'REJECTED',
+                'resubmit_by' => $request['resubmit_date'],
+            ]);
+        } else if ($approval->type == 'AC') {
+            $this->vtconfig->entity->update([
+                'status' => 'AMEND',
                 'resubmit_by' => $request['resubmit_date'],
             ]);
         }
@@ -178,6 +180,44 @@ class CompanyApprovalController extends Controller
         $this->heading = "Viewing Approval Feedback";
         if ($this->record->entity_id != $this->parentId) {
             abort(404);
+        }
+    }
+
+    public function view()
+    {
+        return parent::_view(func_get_args());
+    }
+
+    public function viewHook()
+    {
+        $path = '';
+        switch ($this->identifierPath) {
+            case 'company.template.approval':
+                $path = '/company/'.$this->args[0].'/template/'.$this->parentId.'/methodology';
+                break;
+            case 'template.approval':
+                $path = '/template/'.$this->parentId.'/methodology';
+                break;
+            case 'company.project.vtram.approval':
+                $path = '/company/'.$this->args[0].'/project/'.$this->args[1].'/vtram/'.$this->parentId.'/methodology';
+                break;
+            case 'project.vtram.approval':
+                $path = '/project/'.$this->args[0].'/vtram/'.$this->parentId.'/methodology';
+                break;
+        }
+        if (strpos($this->identifierPath, 'template') !== false) {
+            $record = Template::withTrashed()->findOrFail($this->parentId);
+        } else {
+            $record = Vtram::withTrashed()->findOrFail($this->parentId);
+        }
+        if (can('edit', $this->identifierPath) && in_array($record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND']) && is_null($record['deleted_at'])) {
+            $this->actionButtons['methodologies'] = [
+                'label' => 'Method Statements & Risk Assessment',
+                'path' => $path,
+                'icon' => 'receipt',
+                'order' => '550',
+                'id' => 'methodologyEdit',
+            ];
         }
     }
 }

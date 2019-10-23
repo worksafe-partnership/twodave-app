@@ -82,6 +82,7 @@ class CompanyVtramController extends Controller
             $this->customValues['working_at_height'] = $template['working_at_height'];
             $this->customValues['manual_handling'] = $template['manual_handling'];
             $this->customValues['accident_reporting'] = $template['accident_reporting'];
+            $this->customValues['key_points'] = $template['key_points'];
         } else {
             $this->customValues['main_description'] = $company['main_description'];
             $this->customValues['post_risk_assessment_text'] = $company['post_risk_assessment_text'];
@@ -98,7 +99,7 @@ class CompanyVtramController extends Controller
 
     public function postEditHook()
     {
-        if (in_array($this->record->status, ['REJECTED','EXTERNAL_REJECT','NEW'])) {
+        if (in_array($this->record->status, ['REJECTED','EXTERNAL_REJECT','NEW','AMEND','EXTERNAL_AMEND'])) {
             $this->formButtons['save_and_submit'] = [
                 'class' => [
                     'submitbutton',
@@ -136,7 +137,7 @@ class CompanyVtramController extends Controller
 
     public function viewHook()
     {
-        if (in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED']) && is_null($this->record['deleted_at'])) {
+        if (in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND']) && is_null($this->record['deleted_at'])) {
             $this->actionButtons['methodologies'] = [
                 'label' => 'Method Statements & Risk Assessment',
                 'path' => '/company/'.$this->args[0].'/project/'.$this->parentId.'/vtram/'.$this->id.'/methodology',
@@ -163,7 +164,7 @@ class CompanyVtramController extends Controller
         ];
 
         $this->customValues['comments'] = VTLogic::getComments($this->record->id, $this->record->status, "VTRAM");
-        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
+        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND'])) {
             $this->disableEdit = true;
         }
     }
@@ -191,7 +192,7 @@ class CompanyVtramController extends Controller
             'id' => 'view_pdf',
             'target' => '_blank',
         ];
-        if (in_array($this->record->status, ['NEW','REJECTED','EXTERNAL_REJECT']) && can('edit', $this->identifierPath) && is_null($this->record['deleted_at'])) {
+        if (in_array($this->record->status, ['NEW','REJECTED','EXTERNAL_REJECT','AMEND','EXTERNAL_AMEND']) && can('edit', $this->identifierPath) && is_null($this->record['deleted_at'])) {
             $this->pillButtons['submit_for_approval'] = [
                 'label' => 'Submit for Approval',
                 'path' => $this->record->id.'/submit',
@@ -262,7 +263,7 @@ class CompanyVtramController extends Controller
         $this->args = func_get_args();
         $id = end($this->args);
         $this->record = Vtram::findOrFail($id);
-        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
+        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND'])) {
             abort(404);
         }
         return parent::_edit(func_get_args());
@@ -400,7 +401,7 @@ class CompanyVtramController extends Controller
     {
         $this->record = Vtram::findOrFail($vtramId);
         $this->heading = 'Editing Method Statements and Risk Assessment for '.$this->record->name;
-        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
+        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND'])) {
             abort(404);
         }
         $this->user = Auth::user();
@@ -555,6 +556,15 @@ class CompanyVtramController extends Controller
         }
         $userCompany = $this->user->company_id;
         $record = Vtram::withTrashed()->findOrFail($id);
+        if (can('edit', $this->identifierPath) && in_array($record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND']) && is_null($record['deleted_at'])) {
+            $this->actionButtons['methodologies'] = [
+                'label' => 'Method Statements & Risk Assessment',
+                'path' => 'methodology',
+                'icon' => 'receipt',
+                'order' => '550',
+                'id' => 'methodologyEdit',
+            ];
+        }
 
         if (!is_null($userCompany)) {
             if ($userCompany != $record->company_id) {

@@ -30,6 +30,9 @@ return [
     ],
     'sidebar' => [],
     'permissions' => true,
+    'override_route_actions' => [
+        '_view' => 'view',
+    ],
     'exclude_routes' => [
         'create',
         'edit',

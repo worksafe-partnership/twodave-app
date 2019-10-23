@@ -9,6 +9,12 @@
             'type' => $pageType
         ]) }}
     @endif
+    @if (isset($key_points))
+        {{ EGForm::hidden('key_points', [
+            'value' => $key_points,
+            'type' => 'create',
+        ]) }}
+    @endif
     <div class="column is-8 is-offset-2">
         <div class="columns">
             <div class="column is-3">
@@ -206,7 +212,7 @@
                 </div>
             </div>
         @endif
-        @if ($pageType == 'create')
+        @if ($pageType == 'create' && !isset($_GET['template']))
         </div>
     </div>
     <hr>
@@ -412,9 +418,6 @@
                 </div>
             @endif
         @endif
-
-
-
 	</div>
 </div>
 @push('styles')

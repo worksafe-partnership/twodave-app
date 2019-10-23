@@ -17,7 +17,7 @@ class CompanyTemplateController extends TemplateController
 
     public function viewHook()
     {
-        if (in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
+        if (in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND'])) {
             $this->actionButtons['methodologies'] = [
                 'label' => 'Method Statements & Risk Assessment',
                 'path' => '/company/'.$this->parentId.'/template/'.$this->id.'/methodology',
@@ -43,7 +43,7 @@ class CompanyTemplateController extends TemplateController
             'order' => '570',
             'id' => 'approvalList'
         ];
-        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
+        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND'])) {
             $this->disableEdit = true;
         }
         $this->customValues['templatePath'] = '/company/'.$this->record->company_id.'/project/';
