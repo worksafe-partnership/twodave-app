@@ -118,12 +118,12 @@ class DashboardController extends Controller
             ->get($this->datatableFields);
 
             $this->customValues['tables'][] = [
-                'heading' => ($this->user->company->vtrams_id ?? 'VTRAMS').' Tracker ('.$tracker->count().')',
+                'heading' => ($this->user->company->vtrams_name ?? 'VTRAMS').' Tracker ('.$tracker->count().')',
                 'table-id' => 'tracker',
                 'data' => $tracker,
             ];
 
-            $rejected = Vtram::whereIn('status', ["EXTERNAL_REJECT", "REJECTED"])
+            $rejected = Vtram::whereIn('status', ["EXTERNAL_REJECT", "REJECTED",'AMEND','EXTERNAL_AMEND'])
                             ->when($user->company_id !== null, function ($q) use ($user) {
                                 $q->where('company_id', '=', $user->company_id);
                             })

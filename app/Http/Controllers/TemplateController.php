@@ -76,7 +76,7 @@ class TemplateController extends Controller
 
     public function editHook()
     {
-        if (in_array($this->record->status, ['REJECTED','EXTERNAL_REJECT','NEW']) && is_null($this->record['deleted_at'])) {
+        if (in_array($this->record->status, ['REJECTED','EXTERNAL_REJECT','NEW','AMEND','EXTERNAL_AMEND']) && is_null($this->record['deleted_at'])) {
             $this->formButtons['save_and_submit'] = [
                 'class' => [
                     'submitbutton',
@@ -106,7 +106,7 @@ class TemplateController extends Controller
     public function viewHook()
     {
 
-        if (can('edit', $this->identifierPath) && in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED']) && is_null($this->record['deleted_at'])) {
+        if (can('edit', $this->identifierPath) && in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND']) && is_null($this->record['deleted_at'])) {
             $this->actionButtons['methodologies'] = [
                 'label' => 'Method Statements & Risk Assessment',
                 'path' => '/template/'.$this->id.'/methodology',
@@ -132,7 +132,7 @@ class TemplateController extends Controller
             'order' => '570',
             'id' => 'approvalList'
         ];
-        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
+        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND'])) {
             $this->disableEdit = true;
         }
         if ($this->user->company_id == null) {
@@ -189,7 +189,7 @@ class TemplateController extends Controller
     {
         $this->record = Template::findOrFail($templateId);
         $this->heading = 'Editing Method Statements and Risk Assessment for '.$this->record->name;
-        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
+        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND'])) {
             abort(404);
         }
         $this->user = Auth::user();
@@ -349,7 +349,7 @@ class TemplateController extends Controller
             'id' => 'view_pdf',
             'target' => '_blank',
         ];
-        if (in_array($this->record->status, ['NEW','REJECTED','EXTERNAL_REJECT']) && is_null($this->record['deleted_at'])) {
+        if (in_array($this->record->status, ['NEW','REJECTED','EXTERNAL_REJECT','AMEND','EXTERNAL_AMEND']) && is_null($this->record['deleted_at'])) {
             $this->pillButtons['submit_for_approval'] = [
                 'label' => 'Submit for Approval',
                 'path' => $this->record->id.'/submit',
@@ -424,7 +424,7 @@ class TemplateController extends Controller
                 'class' => 'create_vtrams_from_template',
             ];
             $this->pillButtons[] = [
-                'label' => 'Create '.($this->record->company_vtrams_name ?? 'VTRAMS').' from Template',
+                'label' => 'Create '.($this->record->company->vtrams_name ?? 'VTRAMS').' from Template',
                 'path' => '',
                 'icon' => 'document-add',
                 'order' => '600',
@@ -439,7 +439,7 @@ class TemplateController extends Controller
         $this->args = func_get_args();
         $id = end($this->args);
         $this->record = Template::findOrFail($id);
-        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
+        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND'])) {
             abort(404);
         }
         return parent::_edit(func_get_args());
@@ -530,6 +530,16 @@ class TemplateController extends Controller
         $id = end($args);
         $userCompany = Auth::User()->company_id;
         $record = Template::findOrFail($id);
+
+        if (can('edit', $this->identifierPath) && in_array($record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND']) && is_null($record['deleted_at'])) {
+            $this->actionButtons['methodologies'] = [
+                'label' => 'Method Statements & Risk Assessment',
+                'path' => 'methodology',
+                'icon' => 'receipt',
+                'order' => '550',
+                'id' => 'methodologyEdit',
+            ];
+        }
 
         if (!is_null($userCompany)) {
             if ($userCompany != $record->company_id) {

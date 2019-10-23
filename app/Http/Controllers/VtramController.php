@@ -110,7 +110,7 @@ class VtramController extends CompanyVtramController
 
     public function viewHook()
     {
-        if (can('edit', $this->identifierPath) && in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])  && is_null($this->record['deleted_at'])) {
+        if (can('edit', $this->identifierPath) && in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND'])  && is_null($this->record['deleted_at'])) {
             $this->actionButtons['methodologies'] = [
                 'label' => 'Method Statements & Risk Assessment',
                 'path' => '/project/'.$this->parentId.'/vtram/'.$this->id.'/methodology',
@@ -138,14 +138,14 @@ class VtramController extends CompanyVtramController
                 'id' => 'approvalList'
             ];
         }
-        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED'])) {
+        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND'])) {
             $this->disableEdit = true;
         }
     }
 
     public function editHook()
     {
-        if (in_array($this->record->status, ['REJECTED','EXTERNAL_REJECT','NEW'])) {
+        if (in_array($this->record->status, ['REJECTED','EXTERNAL_REJECT','NEW','AMEND','EXTERNAL_AMEND'])) {
             $this->formButtons['save_and_submit'] = [
                 'class' => [
                     'submitbutton',

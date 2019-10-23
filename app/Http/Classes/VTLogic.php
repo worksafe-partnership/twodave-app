@@ -43,14 +43,22 @@ class VTLogic
         $file = VTFiles::findOrFail($config->entity->pdf);
         $path = storage_path('app/'.$file->location);
         $merger = new Merger;
+        // NEED TO HAVE LAST PAGE FIRST IN 4 OR 2 - if so uncomment below
         if ($config->entity->pages_in_pdf == 4) {
             $merger->addFile($path, new Pages(4));
-        }
-        $merger->addFile($path, new Pages(1));
-        $merger->addFile($path, new Pages(2));
-        if ($config->entity->pages_in_pdf > 2) {
-            $merger->addFile($path, new Pages(3));
-        }
+            /*$merger->addFile($path, new Pages(1));
+            $merger->addFile($path, new Pages(2));
+            $merger->addFile($path, new Pages(3));*/
+        } /*else if ($config->entity->pages_in_pdf == 2) {
+            $merger->addFile($path, new Pages(2));
+            $merger->addFile($path, new Pages(1));
+        } else {*/
+            $merger->addFile($path, new Pages(1));
+            $merger->addFile($path, new Pages(2));
+            if ($config->entity->pages_in_pdf > 2) {
+                $merger->addFile($path, new Pages(3));
+            }
+        //}
 
         $now = Carbon::now();
         $storagePath = "files/".$now->year."/".$now->month."/".$now->day.'/';
@@ -204,9 +212,9 @@ class VTLogic
     {
         $config = new VTConfig($entityId, $entityType);
         self::createPdf($config->entity, null, true);
-        if (in_array($config->entity->status, ['NEW', 'REJECTED'])) {
+        if (in_array($config->entity->status, ['NEW', 'REJECTED','AMEND'])) {
             $newStatus = 'PENDING';
-        } else if (in_array($config->entity->status, ['EXTERNAL_REJECT']) && ($config->entityType == 'VTRAM' && $config->entity->project->principle_contractor)) {
+        } else if (in_array($config->entity->status, ['EXTERNAL_REJECT','EXTERNAL_AMEND']) && ($config->entityType == 'VTRAM' && $config->entity->project->principle_contractor)) {
             $newStatus = 'AWAITING_EXTERNAL';
             self::sendPCApprovalEmail($config);
         }
@@ -246,7 +254,7 @@ class VTLogic
                                 ->get();
         }
 
-        if (!is_null($entityType) && in_array($status, ['REJECTED', 'EXTERNAL_REJECT', 'CURRENT', 'PREVIOUS'])) {
+        if (!is_null($entityType) && in_array($status, ['REJECTED', 'EXTERNAL_REJECT', 'CURRENT', 'PREVIOUS','AMEND','EXTERNAL_AMEND'])) {
             return Approval::withTrashed()->where('entity_id', $config->entityId)
                                 ->where('approvals.entity', $config->entityType)
                                 ->when(in_array($status, ['CURRENT', 'PREVIOUS']), function ($atTime) {

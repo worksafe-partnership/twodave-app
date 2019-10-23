@@ -152,7 +152,7 @@
                             @foreach ($hazards as $hazard)
                                 <tr id="hazard-{{ $hazard->id }}">
                                     <td class="has-text-centered hazard-order">{{ $hazard->list_order }}</td>
-                                    <td class="hazard-desc">{{ $hazard->description }}</td>
+                                    <td class="hazard-desc">{!! $hazard->description !!}</td>
                                     <td class="has-text-centered hazard-risk">{{ $riskList[$hazard->risk] ?? '' }}</td>
                                     <td class="has-text-centered hazard-r-risk">{{ $riskList[$hazard->r_risk] ?? '' }}</td>
                                     <td class="handms-actions">

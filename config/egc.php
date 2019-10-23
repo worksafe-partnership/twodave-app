@@ -50,14 +50,15 @@ return [
         'PENDING' => 'Awaiting Approval',
         'AWAITING_EXTERNAL' => 'Awaiting External Approval',
         'EXTERNAL_REJECT' => 'Rejected Externally',
+        'AMEND' => 'Amend',
+        'EXTERNAL_AMEND' => 'Amend set Externally',
         'REJECTED' => 'Rejected',
         'CURRENT' => 'Approved',
         'PREVIOUS' => 'Previous',
     ],
     'approval_type' => [
         'A' => 'Accepted',
-        'AC-NS' => 'Amend (No send)',
-        'AC' => 'Amend and Send',
+        'AC' => 'Amend',
         'R' => 'Rejected',
     ],
     'pc_approval_type' => [
