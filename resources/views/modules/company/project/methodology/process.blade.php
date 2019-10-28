@@ -19,6 +19,13 @@
                 'type' => $pageType
             ]) }}
         </div>
+        <div class="field">
+            {{ EGForm::checkbox('page_break', [
+                'label' => 'New Page After',
+                'value' => '',
+                'type' => $pageType
+            ]) }}
+        </div>
     </div>
 </div>
 

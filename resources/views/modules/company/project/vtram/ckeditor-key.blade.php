@@ -12,6 +12,10 @@
         <th>&lbrace;&lbrace;company_short_name&rbrace;&rbrace;</th>
         <td>Company Short Name</td>
     </tr>
+    <tr>
+        <th>&lbrace;&lbrace;page_break&rbrace;&rbrace;</th>
+        <td>Inserts a Page Break</td>
+    </tr>
 </table>
 @push('styles')
 <style>

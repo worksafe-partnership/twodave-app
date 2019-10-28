@@ -69,6 +69,7 @@
                         @if ($entity->show_responsible_person)
                             <p><b>Responsible Person: </b>{{ $entity->responsible_person }}</p>
                         @endif
+                        <p><b>Task Name: </b>{{ $entity->name }}</p>
                     </div>
                     <div class="wide-50">
                         @if ($logo != null)
@@ -106,6 +107,9 @@
                                 @include('pdf.icon', ['methodology' => $meth])
                                 @break
                         @endswitch
+                        @if ($meth->page_break)
+                            <div class="page"></div>
+                        @endif
                     @endforeach
                     @if(!is_null($entity->key_points))
                         <?php
@@ -164,7 +168,7 @@
                         @foreach ($entity->hazards->sortBy('list_order') as $hazard)
                             <tr>
                                 <td>{{ $hazard->list_order }}</td>
-                                <td class="hazard-width">{!! $hazard->description !!}</td>
+                                <td class="hazard-width less-indent" style="text-align:left;">{!! $hazard->description !!}</td>
                                 <td class="who-risk-width">
                                 @foreach (array_filter($hazard->at_risk, function ($v) {
                                     return $v == "1";   
@@ -187,7 +191,7 @@
                                 <td class="haz-small-width">{{ $hazard->risk_probability }}</td>
                                 <td class="haz-small-width">{{ $hazard->risk_severity }}</td>
                                 <td class="{{ $hazard->riskClass('risk') }} haz-small-width">{{ $riskList[$hazard->risk] }}</td>
-                                <td class="left control-width">{!! $hazard->control !!}</td>
+                                <td class="left control-width less-indent">{!! $hazard->control !!}</td>
                                 <td class="haz-small-width">{{ $hazard->r_risk_probability }}</td>
                                 <td class="haz-small-width">{{ $hazard->r_risk_severity }}</td>
                                 <td class="{{ $hazard->riskClass('r_risk') }} haz-small-width">{{ $riskList[$hazard->r_risk] }}</td>

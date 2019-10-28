@@ -511,6 +511,7 @@ class VTLogic
             $replacements['{{company_name}}'] = $entity->entityRecord->company->name;
             $replacements['{{company_short_name}}'] = $entity->entityRecord->company->short_name;
         }
+        $replacements['{{page_break}}'] = '<div class="page"></div>';
         if (is_array($fields)) {
             foreach ($fields as $field) {
                 $entity->{$field} = str_replace(array_keys($replacements), array_values($replacements), $entity->{$field});

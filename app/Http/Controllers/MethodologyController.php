@@ -35,6 +35,11 @@ class MethodologyController extends Controller
             'entity' => $request->entityType,
             'entity_id' => end($this->args),
         ]);
+        if ($request->page_break == null) {
+            $request->merge([
+                'page_break' => 0,
+            ]);
+        }
 
         $response = parent::_store(func_get_args());
         $returnId = explode("/", $response->getTargetUrl());
@@ -75,6 +80,11 @@ class MethodologyController extends Controller
             if ($this->user->company_id !== $vtconfig->entity->company_id) {
                 abort(404);
             }
+        }
+        if ($request->page_break == null) {
+            $request->merge([
+                'page_break' => 0,
+            ]);
         }
         $response = parent::_update(func_get_args());
         $returnId = explode("/", $response->getTargetUrl());

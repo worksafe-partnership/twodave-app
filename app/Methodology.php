@@ -30,6 +30,7 @@ class Methodology extends Model
         'icon_sub_heading',
         'show_tickbox',
         'tickbox_answer',
+        'page_break',
     ];
 
     public static function scopeDatatableAll($query, $parent, $identifier)

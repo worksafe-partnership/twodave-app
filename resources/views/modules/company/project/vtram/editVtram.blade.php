@@ -750,10 +750,14 @@
                     case 'TASK_DESC':
                         title = 'Task Description';
                         CKEDITOR.instances.text_content.setData(company.task_description);
+                        $('#' + container + ' #text_page_break').prop('checked', false);
+                        $('#' + container + ' input[name="text_page_break"]').val('');
                         break;
                     case 'PLANT_EQUIP':
                         title = 'Plant & Equipment';
                         CKEDITOR.instances.text_content.setData(company.plant_and_equipment);
+                        $('#' + container + ' #text_page_break').prop('checked', false);
+                        $('#' + container + ' input[name="text_page_break"]').val('');
                         break;
                     case 'CERT_REQ':
                         title = 'Certified Skills Required';
@@ -763,26 +767,38 @@
                         $('#simple-table').attr('data-next_row', 0);
                         CKEDITOR.instances.simple_text_before.setData('');
                         CKEDITOR.instances.simple_text_after.setData('');
+                        $('#' + container + ' #simple_page_break').prop('checked', false);
+                        $('#' + container + ' input[name="simple_page_break"]').val('');
                         break;
                     case 'DISP_WASTE':
                         title = 'Disposing of Waste';
                         CKEDITOR.instances.text_content.setData(company.disposing_of_waste);
+                        $('#' + container + ' #text_page_break').prop('checked', false);
+                        $('#' + container + ' input[name="text_page_break"]').val('');
                         break;
                     case 'NOISE':
                         title = 'Noise';
                         CKEDITOR.instances.text_content.setData(company.noise);
+                        $('#' + container + ' #text_page_break').prop('checked', false);
+                        $('#' + container + ' input[name="text_page_break"]').val('');
                         break;
                     case 'WORK_HIGH':
                         title = 'Working at Height';
                         CKEDITOR.instances.text_content.setData(company.working_at_height);
+                        $('#' + container + ' #text_page_break').prop('checked', false);
+                        $('#' + container + ' input[name="text_page_break"]').val('');
                         break;
                     case 'MAN_HANDLE':
                         title = 'Manual Handling';
                         CKEDITOR.instances.text_content.setData(company.manual_handling);
+                        $('#' + container + ' #text_page_break').prop('checked', false);
+                        $('#' + container + ' input[name="text_page_break"]').val('');
                         break;
                     case 'ACC_REPORT':
                         title = 'Accident Reporting';
                         CKEDITOR.instances.text_content.setData(company.accident_reporting);
+                        $('#' + container + ' #text_page_break').prop('checked', false);
+                        $('#' + container + ' input[name="text_page_break"]').val('');
                         break;
                     case 'FIRST_AID':
                         container = 'methodology-text-image-form-container';
@@ -792,6 +808,8 @@
                         $('.ti_image').html('');
                         CKEDITOR.instances.image_text_before.setData(company.first_aid);
                         CKEDITOR.instances.image_text_after.setData('');
+                        $('#' + container + ' #image_page_break').prop('checked', false);
+                        $('#' + container + ' input[name="image_page_break"]').val('');
                         break;
                     case 'TEXT_IMAGE':
                         container = 'methodology-text-image-form-container';
@@ -800,6 +818,8 @@
                         $('.ti_image').html('');
                         CKEDITOR.instances.image_text_before.setData('');
                         CKEDITOR.instances.image_text_after.setData('');
+                        $('#' + container + ' #image_page_break').prop('checked', false);
+                        $('#' + container + ' input[name="image_page_break"]').val('');
                         break;
                     case 'SIMPLE_TABLE':
                         container = 'methodology-simple-table-form-container';
@@ -808,6 +828,8 @@
                         $('#simple-table').attr('data-next_row', 0);
                         CKEDITOR.instances.simple_text_before.setData('');
                         CKEDITOR.instances.simple_text_after.setData('');
+                        $('#' + container + ' #simple_page_break').prop('checked', false);
+                        $('#' + container + ' input[name="simple_page_break"]').val('');
                         break;
                     case 'COMPLEX_TABLE':
                         container = 'methodology-complex-table-form-container';
@@ -816,6 +838,8 @@
                         $('#complex-table').attr('data-next_row', 0);
                         CKEDITOR.instances.complex_text_before.setData('');
                         CKEDITOR.instances.complex_text_after.setData('');
+                        $('#' + container + ' #complex_page_break').prop('checked', false);
+                        $('#' + container + ' input[name="complex_page_break"]').val('');
                         break;
                     case 'PROCESS':
                         container = 'methodology-process-form-container';
@@ -826,6 +850,8 @@
                         $('#new_label').val('');
                         $('#new_description').val('');
                         $('#' + container + ' #image_id').val('');
+                        $('#' + container + ' #page_break').prop('checked', false);
+                        $('#' + container + ' input[name="page_break"]').val('');
                         break;
                     case 'ICON':
                         container = 'methodology-icon-form-container';
@@ -840,12 +866,16 @@
                         $('#words').val('');
                         CKEDITOR.instances.icon_text_after.setData('');
                         cat = 'ICON';
+                        $('#' + container + ' #icon_page_break').prop('checked', false);
+                        $('#' + container + ' input[name="icon_page_break"]').val('');
                         break;
                 }
                 $('[id^=methodology-][id$=-form-container]').css('display', 'none');
                 $('#methodology-list-container').hide();
                 $('#' + container + ' #title').val(title);
                 $('#' + container + ' input[name="tickbox_answer"][value="1"]').attr('checked', true);
+                $('#' + container + ' #text_page_break').prop('checked', false);
+                $('#' + container + ' input[name="text_page_break"]').val('');
 
                 if ($('#' + container + ' input[name=image_on]').length) {
                     $('#' + container + ' input[name=image_on]')[0].checked = false;
@@ -869,9 +899,23 @@
                 switch (methodology.category) {
                     case 'TEXT':
                         CKEDITOR.instances.text_content.setData(methodology.text_before);
+                        if (methodology.page_break == 1) {
+                            $('#' + container + ' #text_page_break').prop('checked', true);
+                            $('#' + container + ' input[name="text_page_break"]').val('1');
+                        } else {
+                            $('#' + container + ' #text_page_break').prop('checked', false);
+                            $('#' + container + ' input[name="text_page_break"]').val('');
+                        }
                         break;
                     case 'TEXT_IMAGE':
                         container = 'methodology-text-image-form-container';
+                        if (methodology.page_break == 1) {
+                            $('#' + container + ' #image_page_break').prop('checked', true);
+                            $('#' + container + ' input[name="image_page_break"]').val('1');
+                        } else {
+                            $('#' + container + ' #image_page_break').prop('checked', false);
+                            $('#' + container + ' input[name="image_page_break"]').val('');
+                        }
                         var image_on = methodology.image_on;
                         CKEDITOR.instances.image_text_before.setData(methodology.text_before);
                         CKEDITOR.instances.image_text_after.setData(methodology.text_after);
@@ -880,6 +924,13 @@
                         break;
                     case 'SIMPLE_TABLE':
                         container = 'methodology-simple-table-form-container';
+                        if (methodology.page_break == 1) {
+                            $('#' + container + ' #simple_page_break').prop('checked', true);
+                            $('#' + container + ' input[name="simple_page_break"]').val('1');
+                        } else {
+                            $('#' + container + ' #simple_page_break').prop('checked', false);
+                            $('#' + container + ' input[name="simple_page_break"]').val('');
+                        }
                         if (tableRows[methodology.id] !== 'undefined') {
                             let rows = tableRows[methodology.id];
                             $('#simple-table tbody').html('');
@@ -887,39 +938,35 @@
                                 $.each(rows, function(key, row) {
                                     let newRow = "<tr class='columns' data-row='"+key+"'>";
 
-                                        newRow += "<th class='column'><input type='text' name='row_"+key+"__col_1' value='";
+                                        newRow += "<th class='column'><textarea rows='3' name='row_"+key+"__col_1'>";
                                         if (row.col_1 != null) {
-                                            newRow += row.col_1+"'></input></td>";
+                                            newRow += row.col_1+"</textarea></td>";
                                         } else {
-                                            newRow += "'></input></td>";
+                                            newRow += "</textarea></td>";
                                         }
-
-                                        newRow += "<td class='column'><input type='text' name='row_"+key+"__col_2' value='";
+                                        newRow += "<th class='column'><textarea rows='3' name='row_"+key+"__col_2'>";
                                         if (row.col_2 != null) {
-                                            newRow += row.col_2+"'></input></td>";
+                                            newRow += row.col_2+"</textarea></td>";
                                         } else {
-                                            newRow += "'></input></td>";
+                                            newRow += "</textarea></td>";
                                         }
-
-                                        newRow += "<td class='column'><input type='text' name='row_"+key+"__col_3' value='";
+                                        newRow += "<th class='column'><textarea rows='3' name='row_"+key+"__col_3'>";
                                         if (row.col_3 != null) {
-                                            newRow += row.col_3+"'></input></td>";
+                                            newRow += row.col_3+"</textarea></td>";
                                         } else {
-                                            newRow += "'></input></td>";
+                                            newRow += "</textarea></td>";
                                         }
-
-                                        newRow += "<td class='column'><input type='text' name='row_"+key+"__col_4' value='";
+                                        newRow += "<th class='column'><textarea rows='3' name='row_"+key+"__col_4'>";
                                         if (row.col_4 != null) {
-                                            newRow += row.col_4+"'></input></td>";
+                                            newRow += row.col_4+"</textarea></td>";
                                         } else {
-                                            newRow += "'></input></td>";
+                                            newRow += "</textarea></td>";
                                         }
-
-                                        newRow += "<td class='column'><input type='text' name='row_"+key+"__col_5' value='";
+                                        newRow += "<th class='column'><textarea rows='3' name='row_"+key+"__col_5'>";
                                         if (row.col_5 != null) {
-                                            newRow += row.col_5+"'></input></td>";
+                                            newRow += row.col_5+"</textarea></td>";
                                         } else {
-                                            newRow += "'></input></td>";
+                                            newRow += "</textarea></td>";
                                         }
 
                                         newRow += "<td class='column is-1'><a class='handms-icons delete_icon' onclick='deleteSimpleRow("+parseInt(key)+")'><svg class='eg-delete'><use xmlns:xlink='http://www.w3.org/1999/xlink' xlink:href='/eg-icons.svg#eg-delete'></use></svg></a>\
@@ -935,6 +982,13 @@
                         break;
                     case 'COMPLEX_TABLE':
                         container = 'methodology-complex-table-form-container';
+                        if (methodology.page_break == 1) {
+                            $('#' + container + ' #complex_page_break').prop('checked', true);
+                            $('#' + container + ' input[name="complex_page_break"]').val('1');
+                        } else {
+                            $('#' + container + ' #complex_page_break').prop('checked', false);
+                            $('#' + container + ' input[name="complex_page_break"]').val('');
+                        }
                         if (tableRows[methodology.id] !== 'undefined') {
                             let rows = tableRows[methodology.id];
                             $('#complex-table tbody').html('');
@@ -942,41 +996,36 @@
                                 $.each(rows, function(key, row) {
                                     let newRow = "<tr class='columns' data-row='"+key+"'>";
 
-                                        newRow += "<td class='column'><input type='text' name='row_"+key+"__col_1' value='";
+                                        newRow += "<th class='column'><textarea rows='3' name='row_"+key+"__col_1'>";
                                         if (row.col_1 != null) {
-                                            newRow += row.col_1+"'></input></td>";
+                                            newRow += row.col_1+"</textarea></td>";
                                         } else {
-                                            newRow += "'></input></td>";
+                                            newRow += "</textarea></td>";
                                         }
-
-                                        newRow += "<td class='column'><input type='text' name='row_"+key+"__col_2' value='";
+                                        newRow += "<th class='column'><textarea rows='3' name='row_"+key+"__col_2'>";
                                         if (row.col_2 != null) {
-                                            newRow += row.col_2+"'></input></td>";
+                                            newRow += row.col_2+"</textarea></td>";
                                         } else {
-                                            newRow += "'></input></td>";
+                                            newRow += "</textarea></td>";
                                         }
-
-                                        newRow += "<td class='column'><input type='text' name='row_"+key+"__col_3' value='";
+                                        newRow += "<th class='column'><textarea rows='3' name='row_"+key+"__col_3'>";
                                         if (row.col_3 != null) {
-                                            newRow += row.col_3+"'></input></td>";
+                                            newRow += row.col_3+"</textarea></td>";
                                         } else {
-                                            newRow += "'></input></td>";
+                                            newRow += "</textarea></td>";
                                         }
-
-                                        newRow += "<td class='column'><input type='text' name='row_"+key+"__col_4' value='";
+                                        newRow += "<th class='column'><textarea rows='3' name='row_"+key+"__col_4'>";
                                         if (row.col_4 != null) {
-                                            newRow += row.col_4+"'></input></td>";
+                                            newRow += row.col_4+"</textarea></td>";
                                         } else {
-                                            newRow += "'></input></td>";
+                                            newRow += "</textarea></td>";
                                         }
-
-                                        newRow += "<td class='column'><input type='text' name='row_"+key+"__col_5' value='";
+                                        newRow += "<th class='column'><textarea rows='3' name='row_"+key+"__col_5'>";
                                         if (row.col_5 != null) {
-                                            newRow += row.col_5+"'></input></td>";
+                                            newRow += row.col_5+"</textarea></td>";
                                         } else {
-                                            newRow += "'></input></td>";
+                                            newRow += "</textarea></td>";
                                         }
-
 
                                     newRow += "<td class='column is-1'><a class='handms-icons delete_icon' onclick='deleteComplexRow("+parseInt(key)+")'><svg class='eg-delete'><use xmlns:xlink='http://www.w3.org/1999/xlink' xlink:href='/eg-icons.svg#eg-delete'></use></svg></a></td>";
                                     newRow += "</tr>";
@@ -990,6 +1039,13 @@
                         break;
                     case 'PROCESS':
                         container = 'methodology-process-form-container';
+                        if (methodology.page_break == 1) {
+                            $('#' + container + ' #page_break').prop('checked', true);
+                            $('#' + container + ' input[name="page_break"]').val('1');
+                        } else {
+                            $('#' + container + ' #page_break').prop('checked', false);
+                            $('#' + container + ' input[name="page_break"]').val('');
+                        }
                         if (processes[methodology.id] !== 'undefined') {
                             let rows = processes[methodology.id];
                             $('#process-table tbody tr').remove();
@@ -1045,6 +1101,13 @@
                         break;
                     case 'ICON':
                         container = 'methodology-icon-form-container';
+                        if (methodology.page_break == 1) {
+                            $('#' + container + ' #icon_page_break').prop('checked', true);
+                            $('#' + container + ' input[name="icon_page_break"]').val('1');
+                        } else {
+                            $('#' + container + ' #icon_page_break').prop('checked', false);
+                            $('#' + container + ' input[name="icon_page_break"]').val('');
+                        }
                         if (icons[methodology.id] !== 'undefined') {
                             let tables = icons[methodology.id];
                             $('#top-body td').remove();
@@ -1121,6 +1184,7 @@
                     form_data.append('title', $('#methodology-text-form-container #title').val());
                     form_data.append('tickbox_answer', $('#methodology-text-form-container [name="tickbox_answer"]:checked').val());
                     form_data.append('text_before', CKEDITOR.instances.text_content.getData());
+                    form_data.append('page_break', $('#methodology-text-form-container input[type="hidden"][name="text_page_break"]').val());
                     break;
                 case 'TEXT_IMAGE':
                     form_data.append('tickbox_answer', $('#methodology-text-image-form-container [name="tickbox_answer"]:checked').val());
@@ -1141,35 +1205,39 @@
                     }
                     form_data.append('text_before', CKEDITOR.instances.image_text_before.getData());
                     form_data.append('text_after', CKEDITOR.instances.image_text_after.getData());
+                    form_data.append('page_break', $('#methodology-text-image-form-container input[type="hidden"][name="image_page_break"]').val());
                     break;
                 case 'SIMPLE_TABLE':
                     form_data.append('title', $('#methodology-simple-table-form-container #title').val());
                     form_data.append('tickbox_answer', $('#methodology-simple-table-form-container [name="tickbox_answer"]:checked').val());
 
                     // get all inputs within the $('#simple-table') element and attach them?
-                    let simple_inputs = $('#simple-table input[name^=row_]');
+                    let simple_inputs = $('#simple-table textarea[name^=row_]');
                     $.each(simple_inputs, function(key, input) {
                         form_data.append(input.name, input.value);
                     })
 
                     form_data.append('text_before', CKEDITOR.instances.simple_text_before.getData());
                     form_data.append('text_after', CKEDITOR.instances.simple_text_after.getData());
+                    form_data.append('page_break', $('#methodology-simple-table-form-container input[type="hidden"][name="simple_page_break"]').val());
                     break;
                 case 'COMPLEX_TABLE':
                     form_data.append('title', $('#methodology-complex-table-form-container #title').val());
                     form_data.append('tickbox_answer', $('#methodology-complex-table-form-container [name="tickbox_answer"]:checked').val());
 
-                    let complex_inputs = $('#complex-table input[name^=row_]');
+                    let complex_inputs = $('#complex-table textarea[name^=row_]');
                     $.each(complex_inputs, function(key, input) {
                         form_data.append(input.name, input.value);
                     })
 
                     form_data.append('text_before', CKEDITOR.instances.complex_text_before.getData());
                     form_data.append('text_after', CKEDITOR.instances.complex_text_after.getData());
+                    form_data.append('page_break', $('#methodology-complex-table-form-container input[type="hidden"][name="complex_page_break"]').val());
                     break;
                 case 'PROCESS':
                     form_data.append('title', $('#methodology-process-form-container #title').val());
                     form_data.append('tickbox_answer', $('#methodology-process-form-container [name="tickbox_answer"]:checked').val());
+                    form_data.append('page_break', $('#methodology-process-form-container input[type="hidden"][name="page_break"]').val());
                     form_data.append('replacedImages', deletedImages);
 
                     let process_lines = $('#process-table input[name^=row_], #process-table textarea[name^=row_]');
@@ -1203,6 +1271,7 @@
                     $.each($('#methodology-icon-form-container table td select'), function(key, select) {
                         form_data.append(select.name, select.value);
                     });
+                    form_data.append('page_break', $('#methodology-icon-form-container input[type="hidden"][name="icon_page_break"]').val());
                     break;
             }
 
@@ -1245,7 +1314,8 @@
                             text_after: form_data.get('text_after'),
                             icon_main_heading: form_data.get('icon_main_heading'),
                             icon_sub_heading: form_data.get('icon_sub_heading'),
-                            tickbox_answer: form_data.get('tickbox_answer')
+                            tickbox_answer: form_data.get('tickbox_answer'),
+                            page_break: form_data.get('page_break')
                         });
                         $('.methodology-list-table').append('<tr id="methodology-' + id + '">\
                                 <td class="has-text-centered methodology-order">' + form_data.get('list_order')+ '</td>\
@@ -1292,6 +1362,7 @@
                                 }
                                 methodologies[i]['icon_sub_heading'] = iconSub;
                                 methodologies[i]['tickbox_answer'] = form_data.get('tickbox_answer');
+                                methodologies[i]['page_break'] = form_data.get('page_break');
 
                                 // need to edit methodology table
                                 $('tr#methodology-' + editId + ' .methodology-order').html(form_data.get('list_order'));
@@ -1317,7 +1388,7 @@
                             let simple_rows = $('#simple-table tr');
                             tableRows[id] = [];
                             $.each(simple_rows, function(key, row) {
-                                let inputs = $(row).find("input[name^=row_]");
+                                let inputs = $(row).find("textarea[name^=row_]");
                                 let finalInputs = [];
                                 for(let i = 0; i <= 4; i++) {
                                     var tempCol = inputs[i].value;
@@ -1341,7 +1412,7 @@
                             let complex_rows = $('#complex-table tr');
                             tableRows[id] = [];
                             $.each(complex_rows, function(key, row) {
-                                let inputs = $(row).find("input[name^=row_]");
+                                let inputs = $(row).find("textarea[name^=row_]");
                                 let finalInputs = [];
                                 for(let i = 0; i <= 4; i++) {
                                     var tempCol = inputs[i].value;
