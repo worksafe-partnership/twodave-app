@@ -263,4 +263,7 @@
         display: flex;
         align-items: center;
     }
+    .less-indent ul {
+        padding-left: 20px;
+    }
 </style>

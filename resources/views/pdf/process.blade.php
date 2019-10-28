@@ -37,7 +37,7 @@
                                 @endif
                             >{!!$row->description!!}</td>
                             @if(!is_null($imageSrc))
-                                <td><img style="max-width: 200px" src="{{$imageSrc}}"></td>
+                                <td><img style="max-width: 125px" src="{{$imageSrc}}"></td>
                             @endif
                         </tr>
                     @else
@@ -49,7 +49,7 @@
                             @endif
                             >{!!$row->description!!}</td>
                             @if(!is_null($imageSrc))
-                                <td><img style="max-width: 200px" src="{{$imageSrc}}"></td>
+                                <td><img style="max-width: 125px" src="{{$imageSrc}}"></td>
                             @endif
                         </tr>
                     @endif

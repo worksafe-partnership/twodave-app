@@ -288,6 +288,14 @@ class TemplateController extends Controller
             'label' => 'Back to Template',
             'icon' => 'arrow-left',
         ];
+        $this->pillButtons[] = [
+            'label' => 'Preview PDF',
+            'path' => 'view_a3',
+            'icon' => 'file-pdf',
+            'order' => 100,
+            'id' => 'view_pdf_a3',
+            'target' => '_blank',
+        ];
         $this->pageType = 'custom';
         return parent::_renderView("layouts.custom");
     }

@@ -73,17 +73,28 @@
         </div>
     </div>
 </div>
+<div class="columns">
+    <div class="column is-10 is-offset-1">
+        <div class="field">
+            {{ EGForm::checkbox('simple_page_break', [
+                'label' => 'New Page After',
+                'value' => '',
+                'type' => $pageType
+            ]) }}
+        </div>
+    </div>
+</div>
 
 <script>
     $('#add-row-simple').on('click', function() {
         let table = $('#simple-table');
         let row_id = table.attr('data-next_row');
         let row = "<tr class='columns' data-row='"+row_id+"'>";
-            row += "<th class='column'><input type='text' name='row_"+row_id+"__col_1' value=''></input></th>";
-            row += "<td class='column'><input type='text' name='row_"+row_id+"__col_2' value=''></input></td>";
-            row += "<td class='column'><input type='text' name='row_"+row_id+"__col_3' value=''></input></td>";
-            row += "<td class='column'><input type='text' name='row_"+row_id+"__col_4' value=''></input></td>";
-            row += "<td class='column'><input type='text' name='row_"+row_id+"__col_5' value=''></input></td>";
+            row += "<th class='column'><textarea rows='3' name='row_"+row_id+"__col_1'></textarea></th>";
+            row += "<th class='column'><textarea rows='3' name='row_"+row_id+"__col_2'></textarea></th>";
+            row += "<th class='column'><textarea rows='3' name='row_"+row_id+"__col_3'></textarea></th>";
+            row += "<th class='column'><textarea rows='3' name='row_"+row_id+"__col_4'></textarea></th>";
+            row += "<th class='column'><textarea rows='3' name='row_"+row_id+"__col_5'></textarea></th>";
             row += "<td class='column is-1'><a class='handms-icons delete_icon' onclick='deleteSimpleRow("+parseInt(row_id)+")'><svg class='eg-delete'><use xmlns:xlink='http://www.w3.org/1999/xlink' xlink:href='/eg-icons.svg#eg-delete'></use></svg></a>\
             </td>";
         row += "</tr>"

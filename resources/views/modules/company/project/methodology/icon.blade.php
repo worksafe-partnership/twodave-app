@@ -71,6 +71,17 @@
         </div>
     </div>
 </div>
+<div class="columns">
+    <div class="column is-10 is-offset-1">
+        <div class="field">
+            {{ EGForm::checkbox('icon_page_break', [
+                'label' => 'New Page After',
+                'value' => '',
+                'type' => $pageType
+            ]) }}
+        </div>
+    </div>
+</div>
 
 <div class="columns">
     <div class="column is-10 is-offset-1">
