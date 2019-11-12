@@ -223,6 +223,55 @@
     </div>
 </div>
 <hr>
+
+<div class="columns">
+    <div class="column is-8 is-offset-2">
+        <h2 class="sub-heading">PDF Footer Information</h2>
+        <div class="columns">
+            <div class="column">
+                <div class="field">
+                    {{ EGForm::checkbox('show_document_ref_on_pdf', [
+                        'label' => 'Show Document Reference?',
+                        'value' => $record->show_document_ref_on_pdf ?? false,
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+            <div class="column">
+                <div class="field">
+                    {{ EGForm::checkbox('show_revision_no_on_pdf', [
+                        'label' => 'Show Revision Number on PDF?',
+                        'value' => $record->show_revision_no_on_pdf ?? false,
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <div class="field">
+                    {{ EGForm::checkbox('show_message_on_pdf', [
+                        'label' => 'Show Message on PDF?',
+                        'value' => $record->show_message_on_pdf ?? false,
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+            <div class="column">
+                <div class="field">
+                    {{ EGForm::textarea('message', [
+                        'label' => 'Message to Show',
+                        'value' => $record['message'],
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+
+
 <div class="columns">
     <div class="column is-8 is-offset-2">
         <h2 class="sub-heading">VTRAMS Configuration</h2>

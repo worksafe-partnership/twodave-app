@@ -1,6 +1,9 @@
 <html>
     <head>
         @include('pdf.styles')
+        @php
+            $currentPage = 1;
+        @endphp
     </head>
     <body>
         <div class="pdf-container">
@@ -28,7 +31,7 @@
                                 <td>{{ $entity->submitted->position ?? '' }}</td>
                                 <th>Signed: </th>
                                 <td>
-                                    @if ($submittedSig != null) 
+                                    @if ($submittedSig != null)
                                         <img src="{{ $submittedSig }}" height="30px">
                                     @endif
                                 </td>
@@ -37,7 +40,7 @@
                                 <td>{{ $entity->approved->position ?? '' }}</td>
                                 <th>Signed: </th>
                                 <td>
-                                    @if ($approvedSig != null) 
+                                    @if ($approvedSig != null)
                                         <img src="{{ $approvedSig }}" height="30px">
                                     @endif
                                 </td>
@@ -108,7 +111,12 @@
                                 @break
                         @endswitch
                         @if ($meth->page_break)
-                            <div class="page"></div>
+                            <div class="page">
+                                @include('pdf.footer', ['company' => $company, 'count' => $currentPage, 'a3' => $a3])
+                                @php
+                                    $currentPage++;
+                                @endphp
+                            </div>
                         @endif
                     @endforeach
                     @if(!is_null($entity->key_points))
@@ -132,7 +140,12 @@
                     @endif
                 </div>
             </div>
-            <div class="page"></div>
+            <div class="page">
+                @include('pdf.footer', ['company' => $company, 'count' => $currentPage, 'a3' => $a3])
+                @php
+                    $currentPage++;
+                @endphp
+            </div>
             <div class="risk-assessment">
                 <div>
                     <div>
@@ -171,9 +184,9 @@
                                 <td class="hazard-width less-indent" style="text-align:left;">{!! $hazard->description !!}</td>
                                 <td class="who-risk-width">
                                 @foreach (array_filter($hazard->at_risk, function ($v) {
-                                    return $v == "1";   
+                                    return $v == "1";
                                 }) as $key => $risk)
-                                        @if ($loop->last) 
+                                        @if ($loop->last)
                                             @if ($key == 'O')
                                                 {{ $hazard->other_at_risk }}
                                             @else
