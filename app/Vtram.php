@@ -66,6 +66,7 @@ class Vtram extends Model
         'pc_on_pdf',
         'show_area',
         'area',
+        'general_rams',
     ];
 
 
@@ -492,7 +493,7 @@ class Vtram extends Model
             if ($vtramsCount == 0) {
                 UniqueLink::where('email', $project->principle_contractor_email)->delete();
             }
-            
+
             foreach ($this->approvals as $approval) {
                 $approval->delete();
             }
@@ -508,7 +509,7 @@ class Vtram extends Model
 
             foreach ($this->methodologies as $meth) {
                 $meth->delete();
-            }   
+            }
         }
         parent::delete();
     }

@@ -183,6 +183,17 @@
                 </div>
             @endif
         </div>
+        <div class="columns">
+            <div class="column">
+                <div class="field">
+                    {{ EGForm::checkbox('general_rams', [
+                        'label' => 'General RAMS?',
+                        'value' => $record['general_rams'],
+                        'type' => $pageType,
+                    ]) }}
+                </div>
+            </div>
+        </div>
         @if ($pageType != 'create')
         </div>
     </div>

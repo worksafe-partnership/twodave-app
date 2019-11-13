@@ -82,7 +82,11 @@
                 </div>
                 <br>
                 <div id="title-block-text" class="pdf-heading" style="background-color: {{ $entity->company->secondary_colour }}">
-                    <h1>{{ $entity->company->vtrams_name ?? '' }} {{ $type == 'VTRAM' ? $entity->number : '' }}</h1>
+                    @if($entity->general_rams)
+                        <h1> General RAMS {{ $type == 'VTRAM' ? $entity->number : '' }} </h1>
+                    @else
+                        <h1>{{ $entity->company->vtrams_name ?? '' }} {{ $type == 'VTRAM' ? $entity->number : '' }}</h1>
+                    @endif
                     <p>{!! $titleBlockText !!}</p>
                 </div>
             </div>

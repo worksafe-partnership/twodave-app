@@ -16,7 +16,7 @@ class AddIsoFieldsToCompaniesTable extends Migration
         Schema::table('companies', function ($table) {
             $table->boolean('show_document_ref_on_pdf')->nullable();
             $table->boolean('show_message_on_pdf')->nullable();
-            $table->text('message');
+            $table->text('message')->nullable();
             $table->boolean('show_revision_no_on_pdf')->nullable();
         });
     }
