@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Controller;
+use App\ProjectSubcontractor;
 use App\UserProject;
 use App\Template;
 use App\Project;
@@ -31,7 +32,7 @@ class CompanyProjectController extends Controller
 
     public function bladeHook()
     {
-        $this->customValues['company'] = Company::withTrashed()->findOrFail($this->parentId);
+        $this->customValues['company'] = $company = Company::withTrashed()->findOrFail($this->parentId);
         $this->customValues['projectAdmins'] = User::withTrashed()->where('company_id', '=', $this->parentId)
             ->whereHas('roles', function ($q) {
                 $q->where('slug', '=', 'project_admin');
@@ -57,6 +58,9 @@ class CompanyProjectController extends Controller
         }
 
         $this->customValues['timescales'] = $timescales;
+
+        $this->customValues['subcontractors'] = Company::where('id', '!=', $company->id)->pluck('name', 'id');
+        $this->getCurrentSubcontractors();
     }
 
     public function view() // blocking soft deleted records being seen by users who can't see sd'ed items
@@ -85,6 +89,18 @@ class CompanyProjectController extends Controller
             $this->customValues['allUsers'] = User::withTrashed()->where('company_id', '=', $companyId)
                 ->pluck('name', 'id');
         }
+    }
+
+    protected function getCurrentSubcontractors()
+    {
+        $selected = [];
+        if ($this->pageType != 'create') {
+            $subs = ProjectSubcontractor::where('project_id', '=', $this->id)->get();
+            foreach ($subs as $sub) {
+                $selected[$sub->company_id] = true;
+            }
+        }
+        $this->customValues['selectedSubs'] = $selected;
     }
 
     public function viewHook()
@@ -146,6 +162,17 @@ class CompanyProjectController extends Controller
             }
             UserProject::insert($toInsert);
         }
+
+        if (isset($request['subcontractors']) && count($request['subcontractors']) > 0) {
+            $toInsert = [];
+            foreach ($request['subcontractors'] as $sub) {
+                $toInsert[] = [
+                    'company_id' => $sub,
+                    'project_id' => $insert->id,
+                ];
+            }
+            ProjectSubcontractor::insert($toInsert);
+        }
     }
 
     public function updated($updated, $orig, $request, $args)
@@ -161,6 +188,19 @@ class CompanyProjectController extends Controller
             }
             UserProject::insert($toInsert);
         }
+
+        ProjectSubcontractor::where('project_id', '=', $updated->id)->delete();
+        if (isset($request['subcontractors']) && count($request['subcontractors']) > 0) {
+            $toInsert = [];
+            foreach ($request['subcontractors'] as $sub) {
+                $toInsert[] = [
+                    'company_id' => $sub,
+                    'project_id' => $updated->id,
+                ];
+            }
+            ProjectSubcontractor::insert($toInsert);
+        }
+
         if (isset($request['back_to_edit'])) {
             return $this->fullPath.'/edit';
         }

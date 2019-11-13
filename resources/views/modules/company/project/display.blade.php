@@ -136,6 +136,44 @@
         </div>
     </div>
 </div>
+<hr>
+<div class="columns">
+    <div class="column is-8 is-offset-2">
+        <h2 class="sub-heading">Subcontractors</h2>
+        <div class="columns">
+            <div class="column is-12">
+                <div class="field">
+                    @if ($pageType == 'view')
+                        {{ EGForm::multicheckbox('subcontractors', [
+                            'label' => 'Subcontractors',
+                            'values' => $selectedSubs,
+                            'list' => $subcontractors,
+                            'type' => $pageType,
+                            'list-style' => 'multi-block',
+                        ]) }}
+                    @else
+                        @php
+                            $old = old('subcontractors');
+
+                            if (count($old) > 0) {
+                                foreach ($old as $val) {
+                                    $selectedSubs[$val] = true;
+                                }
+                            }
+                        @endphp
+                        {{ VTForm::multiSelect('subcontractors[]', [
+                            'label' => 'Subcontractors',
+                            'value' => $selectedSubs,
+                            'list' => $subcontractors,
+                            'type' => $pageType,
+                        ]) }}
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @push('styles')
     <style>
         .selectize-control {
