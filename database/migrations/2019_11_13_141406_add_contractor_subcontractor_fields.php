@@ -22,7 +22,7 @@ class AddContractorSubcontractorFields extends Migration
             $table->unsignedInteger('project_id');
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->unsignedInteger('company_id');
-            $table->foreign('company_id')->references('id')->on('projects')->onDelete('CASCADE')->onUpdate('CASCADE');
+            $table->foreign('company_id')->references('id')->on('companies')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->timestamps();
         });
     }

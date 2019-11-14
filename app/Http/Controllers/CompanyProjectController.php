@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use Controller;
+use Illuminate\Support\Facades\Mail;
+use Evergreen\Generic\App\Role;
 use App\ProjectSubcontractor;
+use App\Mail\InviteEmail;
 use App\UserProject;
 use App\Template;
 use App\Project;
@@ -152,6 +155,28 @@ class CompanyProjectController extends Controller
 
     public function created($insert, $request, $args)
     {
+        if (isset($add_subcontractor) && $add_subcontractor) {
+            $new = $this->sortOutNewContractor($request, $insert);
+            // add it to the subcontractor array so it's picked up during the SubContractor block.
+            if ($new['company']) {
+                $request['subcontractors'][] = (string) $new['company']->id;
+            }
+            if ($new['user']) {
+                $request['users'][] = $new['user']->id;
+            }
+        }
+
+        if (isset($request['subcontractors']) && count($request['subcontractors']) > 0) {
+            $toInsert = [];
+            foreach ($request['subcontractors'] as $sub) {
+                $toInsert[] = [
+                    'company_id' => $sub,
+                    'project_id' => $insert->id,
+                ];
+            }
+            ProjectSubcontractor::insert($toInsert);
+        }
+
         if (isset($request['users']) && count($request['users']) > 0) {
             $toInsert = [];
             foreach ($request['users'] as $user) {
@@ -177,16 +202,15 @@ class CompanyProjectController extends Controller
 
     public function updated($updated, $orig, $request, $args)
     {
-        UserProject::where('project_id', '=', $updated->id)->delete();
-        if (isset($request['users']) && count($request['users']) > 0) {
-            $toInsert = [];
-            foreach ($request['users'] as $user) {
-                $toInsert[] = [
-                    'user_id' => $user,
-                    'project_id' => $updated->id,
-                ];
+        if (isset($add_subcontractor) && $add_subcontractor) {
+            $new = $this->sortOutNewContractor($request, $updated);
+            // add it to the subcontractor array so it's picked up during the SubContractor block.
+            if ($new['company']) {
+                $request['subcontractors'][] = (string) $new['company']->id;
             }
-            UserProject::insert($toInsert);
+            if ($new['user']) {
+                $request['users'][] = $new['user']->id;
+            }
         }
 
         ProjectSubcontractor::where('project_id', '=', $updated->id)->delete();
@@ -201,8 +225,101 @@ class CompanyProjectController extends Controller
             ProjectSubcontractor::insert($toInsert);
         }
 
+        UserProject::where('project_id', '=', $updated->id)->delete();
+        if (isset($request['users']) && count($request['users']) > 0) {
+            $toInsert = [];
+            foreach ($request['users'] as $user) {
+                $toInsert[] = [
+                    'user_id' => $user,
+                    'project_id' => $updated->id,
+                ];
+            }
+            UserProject::insert($toInsert);
+        }
+
         if (isset($request['back_to_edit'])) {
             return $this->fullPath.'/edit';
         }
+    }
+
+    protected function sortOutNewContractor($request, $update)
+    {
+        $fromCompany = Company::findOrFail($update['company_id']);
+
+        $company = null;
+        $user = null;
+
+        if (isset($request['company_name'])) {
+            $data = [
+                'name' => $request['company_name'],
+                'short_name' => $request['short_name'],
+                'contact_name' => $request['contact_name'],
+                'email' => $request['email'],
+                'phone' => $request['phone'],
+            ];
+
+            $fields = [
+                'review_timescale',
+                'vtrams_name',
+                'low_risk_character',
+                'med_risk_character',
+                'high_risk_character',
+                'no_risk_character',
+                'primary_colour',
+                'secondary_colour',
+                'light_text',
+                'accept_label',
+                'amend_label',
+                'reject_label',
+                'logo',
+                'main_description',
+                'post_risk_assessment_text',
+                'task_description',
+                'plant_and_equipment',
+                'disposing_of_waste',
+                'first_aid',
+                'noise',
+                'working_at_height',
+                'manual_handling',
+                'accident_reporting',
+                'show_document_ref_on_pdf',
+                'show_message_on_pdf',
+                'message',
+                'show_revision_no_on_pdf'
+            ];
+
+            foreach ($fields as $field) {
+                $data[$field] = $fromCompany[$field];
+            }
+
+            $company = Company::create($data);
+
+            if ($company) {
+                $user = User::create([
+                    'name' => $request['company_admin_name'],
+                    'email' => $request['company_admin_email'],
+                    'company_id' => $company['id'],
+                    'password' => 'USER CREATED THROUGH NEW SUBCONTRACTOR - PASSWORD TBC',
+                ]);
+
+                $role = Role::where('slug', 'company_admin')->first();
+                $user->roles()->attach([$role->id]);
+
+                if ($user) {
+                    $this->sendInvite($user);
+                }
+            }
+        }
+        return ['company' => $company, 'user' => $user];
+    }
+
+    protected function sendInvite(User $user)
+    {
+        $token = app('auth.password.broker')->createToken($user);
+
+        Mail::to($user->email)
+        ->send(new InviteEmail($user, $token));
+
+        return back();
     }
 }
