@@ -341,6 +341,7 @@
 @endpush
 @push('scripts')
     <script>
+        // Comments
         $('#comments-button').on('click', function() {
             $('#comments-sidebar').removeClass('hidden');
             $('#comments-button-div').addClass('hidden');
@@ -351,6 +352,7 @@
           $('#comments-button-div').removeClass('hidden');
         });
 
+        // Hazard
         $('.risk-area .risk-rating').on('click', function () {
             $('.risk-area .risk-rating').css('outline', 'none');
             $(this).css('outline', '3px solid blue');
