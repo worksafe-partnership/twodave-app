@@ -89,8 +89,11 @@ class CompanyProjectController extends Controller
                 ->join('users', 'user_projects.user_id', '=', 'users.id')
                 ->join('companies', 'companies.id', '=', 'users.company_id')
                 ->get(['companies.name as company_name', 'users.name', 'users.id']);
+
+            foreach ($users as $user) {
+                $this->customValues['allUsers'][$user['id']] = $user->name . " (" . $user['company_name'] . ")";
+            }
         } else {
-            $this->customValues['allUsers'] = [];
             $users1 = User::withTrashed()
                          ->join('companies', 'users.company_id', '=', 'companies.id')
                          ->where('company_id', '=', $companyId)

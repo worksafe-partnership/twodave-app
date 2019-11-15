@@ -203,6 +203,44 @@
                 ]) }}
             </div>
         </div>
+        <hr>
+        <div class="columns">
+            <div class="column">
+                <h2 class="sub-heading">Users</h2>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column is-12">
+                <div class="field">
+                    @if ($pageType == 'view')
+                        {{ EGForm::multicheckbox('associated_users', [
+                            'label' => 'Associated Users',
+                            'values' => $associatedUsers,
+                            'list' => $projectUsers,
+                            'type' => $pageType,
+                            'list-style' => 'multi-block',
+                        ]) }}
+                    @else
+                        @php
+                            $old = old('associated_users');
+
+                            if (count($old) > 0) {
+                                foreach ($old as $val) {
+                                    $associated_users[$val] = true;
+                                }
+                            }
+                        @endphp
+
+                        {{ VTForm::multiSelect('associated_users[]', [
+                            'label' => 'Associated Users',
+                            'value' => $associatedUsers,
+                            'list' => $projectUsers,
+                            'type' => $pageType,
+                        ]) }}
+                    @endif
+                </div>
+            </div>
+        </div>
         @if ($pageType != 'create')
         </div>
     </div>
@@ -471,6 +509,22 @@
 @endpush
 @push('scripts')
     <script>
+        $('.selectize-multiple').selectize({
+            @if ($pageType == 'edit')
+                onInitialize: function() {
+                    $(this.$control).css('height', '38px');
+                    $(this.$control).css('z-index', 'initial');
+                },
+            @endif
+            onFocus: function() {
+                $(this.$control).css('height', 'initial');
+                $(this.$control).css('z-index', '999');
+            },
+            onBlur: function() {
+                $(this.$control).css('height', '38px');
+                $(this.$control).css('z-index', 'initial');
+            },
+        });
         $('.responsible-check [id^=show_responsible_person]').click(function() {
             var name = $(this).prev().val();
             if (name == "1") {
@@ -534,3 +588,19 @@
 @if ($pageType == 'view' && strpos($identifierPath, 'template') !== false)
     @include('modules.company.template.create-vtrams-modal')
 @endif
+
+
+@push('styles')
+    <style>
+        .selectize-control {
+            min-width:100% !important;
+        }
+        .selectize-input {
+            max-height: 100px;
+            overflow-y: scroll;
+        }
+        .select:not(.is-multiple)::after {
+            right: 1.7em !important;
+        }
+    </style>
+@endpush

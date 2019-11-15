@@ -31,6 +31,15 @@ class AddContractorSubcontractorFields extends Migration
         Schema::table('companies', function (Blueprint $table) {
             $table->boolean('billable')->nullable();
         });
+
+        Schema::create('vtram_users', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('vtrams_id');
+            $table->foreign('vtrams_id')->references('id')->on('vtrams')->onDelete('CASCADE')->onUpdate('CASCADE');
+            $table->unsignedInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('CASCADE')->onUpdate('CASCADE');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -40,6 +49,12 @@ class AddContractorSubcontractorFields extends Migration
      */
     public function down()
     {
+        Schema::table('vtram_users', function ($table) {
+            $table->dropForeign(['vtrams_id']);
+            $table->dropForeign(['user_id']);
+        });
+
+        Schema::drop('vtram_users');
 
         Schema::table('companies', function (Blueprint $table) {
             $table->dropColumn('billable');

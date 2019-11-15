@@ -36,10 +36,10 @@ class ProjectRequest extends FormRequest
             'add_subcontractor' => 'required_with:company_name, short_name, company_admin_email, company_admin_name, contact_name, email, phone',
             'company_name' => 'required_with:add_subcontractor',
             'short_name' => 'required_with:add_subcontractor',
-            'company_admin_email' => 'required_with:add_subcontractor|email',
+            'company_admin_email' => 'required_with:add_subcontractor|nullable|email',
             'company_admin_name' => 'required_with:add_subcontractor',
             'contact_name' => 'required_with:add_subcontractor',
-            'email' => 'required_with:add_subcontractor|email',
+            'email' => 'required_with:add_subcontractor|nullable|email',
             'phone' => 'required_with:add_subcontractor',
         ];
     }
