@@ -85,12 +85,29 @@ class CompanyProjectController extends Controller
         }
         $this->customValues['selectedUsers'] = $selected;
         if ($this->pageType == 'view') {
-            $this->customValues['allUsers'] = UserProject::where('project_id', '=', $this->id)
+            $users = UserProject::where('project_id', '=', $this->id)
                 ->join('users', 'user_projects.user_id', '=', 'users.id')
-                ->pluck('name', 'users.id');
+                ->join('companies', 'companies.id', '=', 'users.company_id')
+                ->get(['companies.name as company_name', 'users.name', 'users.id']);
         } else {
-            $this->customValues['allUsers'] = User::withTrashed()->where('company_id', '=', $companyId)
-                ->pluck('name', 'id');
+            $this->customValues['allUsers'] = [];
+            $users1 = User::withTrashed()
+                         ->join('companies', 'users.company_id', '=', 'companies.id')
+                         ->where('company_id', '=', $companyId)
+                         ->get(['companies.name as c_name', 'users.name', 'users.id']);
+
+            foreach ($users1 as $user) {
+                $this->customValues['allUsers'][$user['id']] = $user->name . " (" . $user['c_name'] . ")";
+            }
+
+            $users2 = ProjectSubcontractor::where('project_id', $this->id)
+                                          ->join('companies', 'project_subcontractors.company_id', '=', 'companies.id')
+                                          ->join('users', 'users.company_id', '=', 'companies.id')
+                                          ->get(['companies.name as company_name', 'users.name', 'users.id']);
+
+            foreach ($users2 as $user) {
+                $this->customValues['allUsers'][$user['id']] = $user->name . " (" . $user->company_name . ")";
+            }
         }
     }
 
