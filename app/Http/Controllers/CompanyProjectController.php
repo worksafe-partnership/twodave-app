@@ -155,7 +155,7 @@ class CompanyProjectController extends Controller
 
     public function created($insert, $request, $args)
     {
-        if (isset($add_subcontractor) && $add_subcontractor) {
+        if (isset($request['add_subcontractor']) && $request['add_subcontractor']) {
             $new = $this->sortOutNewContractor($request, $insert);
             // add it to the subcontractor array so it's picked up during the SubContractor block.
             if ($new['company']) {
@@ -202,7 +202,7 @@ class CompanyProjectController extends Controller
 
     public function updated($updated, $orig, $request, $args)
     {
-        if (isset($add_subcontractor) && $add_subcontractor) {
+        if (isset($request['add_subcontractor']) && $request['add_subcontractor']) {
             $new = $this->sortOutNewContractor($request, $updated);
             // add it to the subcontractor array so it's picked up during the SubContractor block.
             if ($new['company']) {

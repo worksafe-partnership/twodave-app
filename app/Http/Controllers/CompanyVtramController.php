@@ -20,6 +20,7 @@ use App\NextNumber;
 use App\Instruction;
 use App\Methodology;
 use App\UniqueLink;
+use App\ProjectSubcontractor;
 use App\Http\Classes\VTLogic;
 use Illuminate\Http\Request;
 use App\Http\Requests\VtramRequest;
@@ -52,6 +53,16 @@ class CompanyVtramController extends Controller
         $this->customValues['templates'] = Template::where('company_id', $this->args[0])
                                                            ->where('status', 'CURRENT')
                                                            ->pluck('name', 'id');
+
+        $this->customValues['company'] = $company = Company::findOrFail($this->args[0]);
+
+        $this->customValues['compAndContractors'] = ProjectSubContractor::where('project_id', $this->args[1])
+                                                                        ->join('companies', 'companies.id', '=', 'project_subcontractors.company_id')
+                                                                        ->pluck('companies.name', 'companies.id')
+                                                                        ->toArray();
+        $this->customValues['compAndContractors'][$company->id] = $company->name;
+
+        $this->customValues['companyId'] = $company->id;
     }
 
     public function createHook()

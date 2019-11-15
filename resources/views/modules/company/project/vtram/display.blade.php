@@ -193,6 +193,15 @@
                     ]) }}
                 </div>
             </div>
+            <div class="column">
+                {{ EGForm::select('company_logo_id', [
+                    'label' => 'Select Company For Logo',
+                    'value' => $record->company_logo_id ?? $company->id,
+                    'list' => $compAndContractors,
+                    'display_value' => $record->company_logo->name ?? $company->name,
+                    'type' => $pageType,
+                ]) }}
+            </div>
         </div>
         @if ($pageType != 'create')
         </div>

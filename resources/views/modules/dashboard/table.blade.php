@@ -9,9 +9,7 @@
                     @php
                         $vtrams = $data['data'][0] ?? null;
                     @endphp
-                    @if(is_null($companyId))
-                        <th>Company</th>
-                    @endif
+                    <th>Company</th>
                     <th>{{ $vtrams->company->vtrams_name ?? 'VTRAMS' }} Name</th>
                     <th>{{ $vtrams->company->vtrams_name ?? 'VTRAMS' }} Number</th>
                     <th>Status</th>
@@ -26,9 +24,7 @@
                 <tbody>
                     @foreach($data['data'] as $vtram)
                         <tr>
-                            @if(is_null($companyId))
-                                <td> {{ $vtram->companyName() }} </td>
-                            @endif
+                            <td> {{ $vtram->companyName() }} </td>
                             <td>{{ $vtram->name }}</td>
                             <td>{{ $vtram->number }}</td>
                             <td>{{ $vtram->niceStatus() }}</td>

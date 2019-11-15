@@ -222,8 +222,30 @@
         </div>
     </div>
 </div>
+@php
+    $user = Auth::User();
+@endphp
+@if($user->inRole('evergreen') || $user->inRole('admin'))
 <hr>
+<div class="columns">
+    <div class="column is-8 is-offset-2">
+        <h2 class="sub-heading">Billable</h2>
+        <div class="columns">
+            <div class="column">
+                <div class="field">
+                    {{ EGForm::checkbox('billable', [
+                        'label' => 'Billable?',
+                        'value' => $record->billable ?? false,
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 
+<hr>
 <div class="columns">
     <div class="column is-8 is-offset-2">
         <h2 class="sub-heading">PDF Footer Information</h2>

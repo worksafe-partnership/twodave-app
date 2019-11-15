@@ -15,6 +15,8 @@ class AddContractorSubcontractorFields extends Migration
     {
         Schema::table('vtrams', function ($table) {
             $table->boolean('general_rams')->nullable();
+            $table->unsignedInteger('company_logo_id')->nullable();
+            $table->foreign('company_logo_id')->references('id')->on('companies')->onDelete('CASCADE')->onUpdate('CASCADE');
         });
 
         Schema::create('project_subcontractors', function (Blueprint $table) {
@@ -25,6 +27,10 @@ class AddContractorSubcontractorFields extends Migration
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->timestamps();
         });
+
+        Schema::table('companies', function (Blueprint $table) {
+            $table->boolean('billable')->nullable();
+        });
     }
 
     /**
@@ -34,6 +40,11 @@ class AddContractorSubcontractorFields extends Migration
      */
     public function down()
     {
+
+        Schema::table('companies', function (Blueprint $table) {
+            $table->dropColumn('billable');
+        });
+
         Schema::table('project_subcontractors', function ($table) {
             $table->dropForeign(['project_id']);
             $table->dropForeign(['company_id']);
@@ -42,6 +53,8 @@ class AddContractorSubcontractorFields extends Migration
         Schema::drop('project_subcontractors');
 
         Schema::table('vtrams', function ($table) {
+            $table->dropForeign(['company_logo_id']);
+            $table->dropColumn('company_logo_id');
             $table->dropColumn('general_rams');
         });
     }

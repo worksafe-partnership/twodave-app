@@ -97,12 +97,16 @@ class VTLogic
         if ($config->entity->status == 'PREVIOUS' || ($config->entity->pdf != null && !$force)) {
             return EGFiles::image($config->entity->pdf);
         }
+
         $logo = null;
         if ($config->entity->logo !== null) {
             $logo = $config->entity->logo;
+        } else if ($config->entity->company_logo_id != null && $config->entity->companyLogo->logo != null) {
+            $logo = $config->entity->companyLogo->logo;
         } else if ($config->entity->company != null && $config->entity->company->logo != null) {
             $logo = $config->entity->company->logo;
         }
+
         if ($logo != null) {
             $file = EGFiles::download($logo)->getFile()->getPathName() ?? null;
         } else {

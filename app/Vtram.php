@@ -67,6 +67,7 @@ class Vtram extends Model
         'show_area',
         'area',
         'general_rams',
+        'company_logo_id'
     ];
 
 
@@ -100,7 +101,7 @@ class Vtram extends Model
                 'show_responsible_person',
                 'responsible_person',
                 'deleted_at',
-                'number'
+                'number',
             ]);
 
         $query->whereHas('project', function ($q) use ($email) {
@@ -148,10 +149,10 @@ class Vtram extends Model
     public static function scopeDatatableAll($query, $parent, $identifier)
     {
         $query->withTrashed(can('permanentlyDelete', $identifier))->select([
-                'id',
+                'vtrams.id',
                 'project_id',
-                'name',
-                'logo',
+                'vtrams.name',
+                'vtrams.logo',
                 'reference',
                 'key_points',
                 'havs_noise_assessment',
@@ -168,15 +169,17 @@ class Vtram extends Model
                 'approved_by',
                 'date_replaced',
                 'resubmit_by',
-                'post_risk_assessment_text',
-                'dynamic_risk',
+                'vtrams.post_risk_assessment_text',
+                'vtrams.dynamic_risk',
                 'pdf',
                 'pages_in_pdf',
                 'show_responsible_person',
                 'responsible_person',
-                'deleted_at',
-                'number'
-            ]);
+                'vtrams.deleted_at',
+                'number',
+                'companies.name as company_name'
+            ])
+        ->join('companies', 'companies.id', '=', 'vtrams.company_id');
 
         if (in_array($identifier['identifier_path'], ['company.project.vtram.previous', 'project.vtram.previous'])) {
             $query->where('current_id', '=', $parent)
@@ -512,5 +515,10 @@ class Vtram extends Model
             }
         }
         parent::delete();
+    }
+
+    public function companyLogo()
+    {
+        return $this->hasOne(Company::class, 'id', 'company_logo_id');
     }
 }
