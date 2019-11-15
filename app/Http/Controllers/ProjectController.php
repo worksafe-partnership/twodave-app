@@ -43,7 +43,7 @@ class ProjectController extends CompanyProjectController
             }
         }
 
-        $this->customValues['company'] = Company::findOrFail($this->user->company_id);
+        $this->customValues['company'] = $company = Company::findOrFail($this->user->company_id);
         $this->customValues['projectAdmins'] = User::where('company_id', '=', $this->user->company_id)
             ->whereHas('roles', function ($q) {
                 $q->where('slug', '=', 'project_admin');
@@ -55,6 +55,9 @@ class ProjectController extends CompanyProjectController
         $this->customValues['timescales'] = $timescales;
 
         $this->getProjectUsers($this->user->company_id);
+
+        $this->customValues['subcontractors'] = Company::where('id', '!=', $company->id)->pluck('name', 'id');
+        $this->getCurrentSubcontractors();
     }
 
     public function viewHook()
@@ -104,12 +107,13 @@ class ProjectController extends CompanyProjectController
         return parent::_store(func_get_args());
     }
 
-    public function updated($record, $orig, $request, $args)
-    {
-        if (isset($request['back_to_edit'])) {
-            return $this->fullPath.'/edit';
-        }
-    }
+    // commenting this guy out. It goes the eact same as the parent updated() function except the parent does a lot more. Function not required?
+    // public function updated($record, $orig, $request, $args)
+    // {
+    //     if (isset($request['back_to_edit'])) {
+    //         return $this->fullPath.'/edit';
+    //     }
+    // }
 
     public function update(ProjectRequest $request)
     {

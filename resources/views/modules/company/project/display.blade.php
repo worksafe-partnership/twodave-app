@@ -136,6 +136,132 @@
         </div>
     </div>
 </div>
+<hr>
+<div class="columns">
+    <div class="column is-8 is-offset-2">
+        <h2 class="sub-heading">Subcontractors</h2>
+        <div class="columns">
+            <div class="column is-12">
+                <div class="field">
+                    @if ($pageType == 'view')
+                        {{ EGForm::multicheckbox('subcontractors', [
+                            'label' => 'Subcontractors',
+                            'values' => $selectedSubs,
+                            'list' => $subcontractors,
+                            'type' => $pageType,
+                            'list-style' => 'multi-block',
+                        ]) }}
+                    @else
+                        @php
+                            $old = old('subcontractors');
+
+                            if (count($old) > 0) {
+                                foreach ($old as $val) {
+                                    $selectedSubs[$val] = true;
+                                }
+                            }
+                        @endphp
+                        {{ VTForm::multiSelect('subcontractors[]', [
+                            'label' => 'Subcontractors',
+                            'value' => $selectedSubs,
+                            'list' => $subcontractors,
+                            'type' => $pageType,
+                        ]) }}
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if($pageType != 'view')
+<div class="columns">
+    <div class="column is-8 is-offset-2">
+        <h2 class="sub-heading">Add a new Subcontractor</h2>
+        <div class="columns">
+            <div class="column is-4">
+                <div class="field">
+                    {{ EGForm::checkbox('add_subcontractor', [
+                        'label' => 'Add a Subcontractor?',
+                        'value' => false,
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <div class="field">
+                    {{ EGForm::text('company_name', [
+                        'label' => 'Company Name',
+                        'value' => '',
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+            <div class="column">
+                <div class="field">
+                    {{ EGForm::text('short_name', [
+                        'label' => 'Short Name',
+                        'value' => '',
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <div class="field">
+                    {{ EGForm::text('company_admin_email', [
+                        'label' => "Admin User's Email",
+                        'value' => "",
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+            <div class="column">
+                <div class="field">
+                    {{ EGForm::text('company_admin_name', [
+                        'label' => "Admin User's Name",
+                        'value' => "",
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="columns">
+            <div class="column is-4">
+                <div class="field">
+                    {{ EGForm::text('contact_name', [
+                        'label' => 'Contact Name',
+                        'value' => '',
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+            <div class="column is-4">
+                <div class="field">
+                    {{ EGForm::text('email', [
+                        'label' => 'Contact Email',
+                        'value' => '',
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+            <div class="column is-4">
+                <div class="field">
+                    {{ EGForm::text('phone', [
+                        'label' => 'Phone Number',
+                        'value' => '',
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
 @push('styles')
     <style>
         .selectize-control {

@@ -15,6 +15,7 @@ return [
     'datatable' => [
         "columns" => [
             'id' => ['visible' => false, 'searchable' => false, 'label' => 'Id'],
+            'company_name' => ['label' => 'Company'],
             'project_id' => ['label' => 'Project'],
             'number' => ['label' => 'VTRAMS Number'],
             'name' => ['label' => 'Name'],

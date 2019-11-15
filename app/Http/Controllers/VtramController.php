@@ -10,6 +10,7 @@ use App\Project;
 use App\Company;
 use App\Template;
 use App\Methodology;
+use App\ProjectSubcontractor;
 use App\Http\Classes\VTLogic;
 use App\Http\Requests\VtramRequest;
 
@@ -86,11 +87,19 @@ class VtramController extends CompanyVtramController
                                                    ->where('status', 'CURRENT')
                                                    ->pluck('name', 'id');
         $this->customValues['path'] = 'create';
-        $company = $this->user->company;
+        $this->customValues['company'] = $company = $this->user->company;
         $this->config['singular'] = $company->vtrams_name ?? 'VTRAMS';
         $this->config['plural'] = $company->vtrams_name ?? 'VTRAMS';
         $this->structure['config']['singular'] = $company->vtrams_name ?? 'VTRAMS';
         $this->structure['config']['plural'] = $company->vtrams_name ?? 'VTRAMS';
+
+        $this->customValues['compAndContractors'] = ProjectSubContractor::where('project_id', $company->id)
+                                                                        ->join('companies', 'companies.id', '=', 'project_subcontractors.company_id')
+                                                                        ->pluck('companies.name', 'companies.id')
+                                                                        ->toArray();
+        $this->customValues['compAndContractors'][$company->id] = $company->name;
+
+        $this->customValues['companyId'] = $company->id;
     }
 
     public function indexHook()

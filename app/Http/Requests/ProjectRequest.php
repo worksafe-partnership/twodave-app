@@ -30,7 +30,17 @@ class ProjectRequest extends FormRequest
             'principle_contractor_name' => 'required_if:principle_contractor,1|max:255',
             'principle_contractor_email' => 'required_if:principle_contractor,1|max:200|csv',
             'client_name' => 'required|max:150',
-            'review_timescale' => 'required'
+            'review_timescale' => 'required',
+
+            // subcontractor stuff
+            'add_subcontractor' => 'required_with:company_name, short_name, company_admin_email, company_admin_name, contact_name, email, phone',
+            'company_name' => 'required_with:add_subcontractor',
+            'short_name' => 'required_with:add_subcontractor',
+            'company_admin_email' => 'required_with:add_subcontractor|nullable|email',
+            'company_admin_name' => 'required_with:add_subcontractor',
+            'contact_name' => 'required_with:add_subcontractor',
+            'email' => 'required_with:add_subcontractor|nullable|email',
+            'phone' => 'required_with:add_subcontractor',
         ];
     }
 
@@ -50,7 +60,17 @@ class ProjectRequest extends FormRequest
             'principle_contractor_email.csv' => 'Please ensure all emails entered are valid',
             'client_name.required' => 'Please enter the Client Name',
             'client_name.max' => 'The Client Name cannot be more than 150 characters',
-            'review_timescale.required' => 'Please select the Review Timescale'
+            'review_timescale.required' => 'Please select the Review Timescale',
+
+            // subcontractor
+            'add_subcontractor.required_with' => 'You have entered subcontractor details but not selected \'Add a Subcontractor\'',
+            'company_name.required_with' => 'Please populate Company Name',
+            'short_name.required_with' => 'Please populate Short Name',
+            'company_admin_email.required_with' => 'Please populate Admin User\'s Email',
+            'company_admin_name.required_with' => 'Please populate Admin User\s Name',
+            'contact_name.required_with' => 'Please populate Contact Name',
+            'email.required_with' => 'Please populate Contact Email',
+            'phone.required_with' => 'Please populate Phone Number',
         ];
     }
 }

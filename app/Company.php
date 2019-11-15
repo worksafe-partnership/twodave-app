@@ -49,6 +49,11 @@ class Company extends Model
         'working_at_height',
         'manual_handling',
         'accident_reporting',
+        'show_document_ref_on_pdf',
+        'show_message_on_pdf',
+        'message',
+        'show_revision_no_on_pdf',
+        'billable',
     ];
 
     public static function scopeDatatableAll($query, $parent, $identifier)

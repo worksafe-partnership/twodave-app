@@ -41,7 +41,8 @@ class CompanyRequest extends FormRequest
             'accept_label' => 'required|max:20',
             'amend_label' => 'required|max:20',
             'reject_label' => 'required|max:20',
-            'logo' => 'mimes:jpg,jpeg,png,bmp,tiff'
+            'logo' => 'mimes:jpg,jpeg,png,bmp,tiff',
+            'message' => 'max:255'
         ];
     }
 

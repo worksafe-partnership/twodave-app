@@ -14,7 +14,6 @@ class DashboardController extends Controller
         'company_id',
         'number',
         'id',
-        'company_id',
         'project_id',
         'name',
         'status',

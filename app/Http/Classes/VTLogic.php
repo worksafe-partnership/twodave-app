@@ -12,6 +12,7 @@ use Storage;
 use App\Icon;
 use App\Vtram;
 use App\Hazard;
+use App\Company;
 use App\Approval;
 use App\TableRow;
 use App\Template;
@@ -38,7 +39,7 @@ class VTLogic
         $config = new VTConfig($entityId, $entityType);
 
         if ($force) {
-            self::createPdf($config->entity, null, true);
+            self::createPdf($config->entity, null, true, true);
         }
         $file = VTFiles::findOrFail($config->entity->pdf);
         $path = storage_path('app/'.$file->location);
@@ -70,7 +71,7 @@ class VTLogic
         $storageFileName = "app/".$fileName;
         $storageOutputFileName = "app/".$storagePath.$config->entityType."_".$config->entity->id."_A3_FINAL.pdf";
         $outputFileName = $storagePath.$config->entityType."_".$config->entity->id."_A3_FINAL.pdf";
-        
+
         $c = "pdfnup --a3paper --suffix 2up ".storage_path($storageFileName)." --outfile ".storage_path($storageOutputFileName);
 
         exec($c);
@@ -78,7 +79,7 @@ class VTLogic
         if (!file_exists(storage_path($storageOutputFileName))) {
             return back()->withErrors(['Could not create A3 PDF']);
         }
-        
+
         $response = \Response::make(file_get_contents(storage_path($storageOutputFileName)), 200);
         $response->header('Content-Type', 'application/pdf');
         $response->header('Content-Disposition', 'filename="'.$config->entity->name.'.pdf"');
@@ -89,18 +90,23 @@ class VTLogic
         return $response;
     }
 
-    public static function createPdf($entityId, $entityType = null, $force = false)
+    public static function createPdf($entityId, $entityType = null, $force = false, $a3 = false)
     {
         $config = new VTConfig($entityId, $entityType);
+        $company = Company::findOrFail($config->entity->company_id);
         if ($config->entity->status == 'PREVIOUS' || ($config->entity->pdf != null && !$force)) {
             return EGFiles::image($config->entity->pdf);
         }
+
         $logo = null;
         if ($config->entity->logo !== null) {
             $logo = $config->entity->logo;
+        } else if ($config->entity->company_logo_id != null && $config->entity->companyLogo->logo != null) {
+            $logo = $config->entity->companyLogo->logo;
         } else if ($config->entity->company != null && $config->entity->company->logo != null) {
             $logo = $config->entity->company->logo;
         }
+
         if ($logo != null) {
             $file = EGFiles::download($logo)->getFile()->getPathName() ?? null;
         } else {
@@ -155,6 +161,8 @@ class VTLogic
             'riskList' => $riskList,
             'whoIsRisk' => config('egc.hazard_who_risk'),
             'height' => $height,
+            'company' => $company,
+            'a3' => $a3
         ];
 
         $html = view('pdf.main_report', $data)->render();

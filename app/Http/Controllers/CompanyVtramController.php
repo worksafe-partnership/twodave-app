@@ -8,6 +8,7 @@ use Route;
 use EGFiles;
 use Storage;
 use Controller;
+use App\User;
 use App\Icon;
 use App\Vtram;
 use App\Hazard;
@@ -16,10 +17,13 @@ use App\Company;
 use App\Template;
 use App\Approval;
 use App\TableRow;
+use App\VtramUser;
 use App\NextNumber;
+use App\UniqueLink;
 use App\Instruction;
 use App\Methodology;
-use App\UniqueLink;
+use App\UserProject;
+use App\ProjectSubcontractor;
 use App\Http\Classes\VTLogic;
 use Illuminate\Http\Request;
 use App\Http\Requests\VtramRequest;
@@ -52,6 +56,37 @@ class CompanyVtramController extends Controller
         $this->customValues['templates'] = Template::where('company_id', $this->args[0])
                                                            ->where('status', 'CURRENT')
                                                            ->pluck('name', 'id');
+
+        $this->customValues['company'] = $company = Company::findOrFail($this->args[0]);
+
+        $this->customValues['compAndContractors'] = ProjectSubContractor::where('project_id', $this->args[1])
+                                                                        ->join('companies', 'companies.id', '=', 'project_subcontractors.company_id')
+                                                                        ->pluck('companies.name', 'companies.id')
+                                                                        ->toArray();
+        $this->customValues['compAndContractors'][$company->id] = $company->name;
+        $this->customValues['companyId'] = $company->id;
+
+        $projectUsers = UserProject::where('project_id', $this->parentId)
+                              ->join('users', 'user_projects.user_id', '=', 'users.id')
+                              ->join('companies', 'users.company_id', '=', 'companies.id')
+                              ->get([
+                                'users.id',
+                                'users.name',
+                                'companies.name as c_name'
+                              ]);
+
+        $this->customValues['projectUsers'] = [];
+        foreach ($projectUsers as $user) {
+            $this->customValues['projectUsers'][$user->id] = $user->name . " (" . $user->c_name . ")";
+        }
+
+        $this->customValues['associatedUsers'] = [];
+        if ($this->pageType != "create") {
+            $assoc = VtramUser::where('vtrams_id', $this->record->id)->pluck('user_id');
+            foreach ($assoc as $userId) {
+                $this->customValues['associatedUsers'][$userId] = 1;
+            }
+        }
     }
 
     public function createHook()
@@ -514,6 +549,17 @@ class CompanyVtramController extends Controller
             VTLogic::createDefaultMethodologies($insert, "VTRAM");
         }
 
+        if (isset($request['associated_users'])) {
+            $toInsert = [];
+            foreach ($request['associated_users'] as $userId) {
+                $toInsert[] = [
+                    'vtrams_id' => $insert['id'],
+                    'user_id' => $userId
+                ];
+            }
+            VtramUser::insert($toInsert);
+        }
+
         $nextNumber->increment('number');
 
         VTLogic::createPdf($insert, null, true);
@@ -542,6 +588,19 @@ class CompanyVtramController extends Controller
             }
             return $request['return_path'];
         }
+
+        VtramUser::where('vtrams_id', end($args))->delete();
+        if (isset($request['associated_users'])) {
+            $toInsert = [];
+            foreach ($request['associated_users'] as $userId) {
+                $toInsert[] = [
+                    'vtrams_id' => end($args),
+                    'user_id' => $userId
+                ];
+            }
+            VtramUser::insert($toInsert);
+        }
+
         if (isset($request['back_to_edit'])) {
             return $this->fullPath.'/edit';
         }
