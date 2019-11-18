@@ -55,7 +55,7 @@ class Template extends Model
         'main_description',
         'post_risk_assessment_text',
         'pages_in_pdf',
-        'pdf'
+        'pdf',
     ];
 
     public static function scopeDatatableAll($query, $parent, $identifier)
@@ -310,8 +310,13 @@ class Template extends Model
 
             foreach ($this->methodologies as $meth) {
                 $meth->delete();
-            }   
+            }
         }
         parent::delete();
+    }
+
+    public function companyLogo()
+    {
+        return $this->hasOne(Company::class, 'id', 'company_logo_id');
     }
 }

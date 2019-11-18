@@ -3,6 +3,8 @@
 namespace App;
 
 use Auth;
+use App\Company;
+use App\Project;
 use Evergreen\Generic\App\Role;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -112,5 +114,82 @@ class User extends Authenticatable
             return $company->name;
         }
         return '';
+    }
+
+    public function getNonBillableContractorsAttribute()
+    {
+        if (is_null($this->company_id)) { // super admin can do all.
+            return Company::pluck('name', 'id')->toArray();
+        } else {
+            $contractors = Project::where('projects.company_id', $this->company_id)
+                           ->join('project_subcontractors', 'projects.id', '=', 'project_subcontractors.project_id')
+                           ->join('companies', 'project_subcontractors.company_id', '=', 'companies.id')
+                           ->whereNull('billable')
+                           ->pluck('companies.name', 'companies.id')->toArray();
+
+            $contractors[$this->company_id] = $this->companyName;
+            return $contractors;
+        }
+    }
+
+    public function projectCompanyIds()
+    {
+        $isSuper = is_null($this->company_id);
+        $isCompanyAdmin = $this->inRole('company_admin');
+
+        $projects = Project::join('project_subcontractors', 'projects.id', '=', 'project_subcontractors.project_id')
+                           ->unless($isSuper, function ($notSuper) {
+                                $notSuper->where(function ($sub) {
+                                    $sub->where('project_subcontractors.company_id', $this->company_id)
+                                      ->orWhere('projects.company_id', $this->company_id);
+                                });
+                           })
+                           ->with(['users'])
+                           ->get(['projects.id']);
+
+        $permittedProjects = [];
+        foreach ($projects as $project) {
+            $users = $project->users;
+            if ($isSuper || $isCompanyAdmin) {
+                $permittedProjects[] = $project->id;
+            } else if ($users->isEmpty()) {
+                $permittedProjects[] = $project->id;
+            } else if (in_array($this->id, $users->pluck('id')->toArray())) {
+                $permittedProjects[] = $project->id;
+            }
+        }
+
+        return array_unique($permittedProjects);
+    }
+
+    public function vtramsCompanyIds()
+    {
+        $isSuper = is_null($this->company_id);
+        $isCompanyAdmin = $this->inRole('company_admin');
+
+        $vtrams = Vtram::join('projects', 'projects.id', '=', 'vtrams.project_id')
+                        ->leftJoin('project_subcontractors', 'projects.id', '=', 'project_subcontractors.project_id')
+                            ->unless($isSuper, function ($notSuper) {
+                                $notSuper->where(function ($sub) {
+                                    $sub->where('project_subcontractors.company_id', $this->company_id)
+                                      ->orWhere('projects.company_id', $this->company_id);
+                                });
+                            })
+                        ->with(['vtramsUsers'])
+                        ->get(['vtrams.id']);
+
+        $permittedVtrams = [];
+        foreach ($vtrams as $vtram) {
+            $users = $vtram->vtramsUsers;
+            if ($isSuper || $isCompanyAdmin) {
+                $permittedVtrams[] = $vtram->id;
+            } else if ($users->isEmpty()) {
+                $permittedVtrams[] = $vtram->id;
+            } else if (in_array($this->id, $users->pluck('user_id')->toArray())) {
+                $permittedVtrams[] = $vtram->id;
+            }
+        }
+
+        return array_unique($permittedVtrams);
     }
 }

@@ -521,4 +521,9 @@ class Vtram extends Model
     {
         return $this->hasOne(Company::class, 'id', 'company_logo_id');
     }
+
+    public function vtramsUsers()
+    {
+        return $this->hasMany(VtramUser::class, 'vtrams_id', 'id');
+    }
 }
