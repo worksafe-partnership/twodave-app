@@ -290,70 +290,13 @@ class VTLogic
     public static function createDefaultMethodologies($entityId, $entityType)
     {
         $config = new VTConfig($entityId, $entityType);
-
-        $list = [
-            [
-                'type' => 'TEXT',
-                'name' => 'task_description',
-                'title' => 'Task Description',
-            ],
-            [
-                'type' => 'SIMPLE_TABLE',
-                'name' => 'plant_and_equipment',
-                'title' => 'Plant and Equipment',
-            ],
-            [
-                'type' => 'TEXT',
-                'name' => 'disposing_of_waste',
-                'title' => 'Disposing of Waste',
-            ],
-            [
-                'type' => 'TEXT',
-                'name' => 'accident_reporting',
-                'title' => 'Accident Reporting',
-            ],
-            [
-                'type' => 'TEXT_IMAGE',
-                'name' => 'first_aid',
-                'title' => 'First Aid',
-            ],
-            [
-                'type' => 'TEXT',
-                'name' => 'noise',
-                'title' => 'Noise',
-            ],
-            [
-                'type' => 'TEXT',
-                'name' => 'working_at_height',
-                'title' => 'Working at Height',
-            ],
-            [
-                'type' => 'TEXT',
-                'name' => 'manual_handling',
-                'title' => 'Manual Handling',
-            ],
-        ];
-        $order = 1;
-        foreach ($list as $item) {
-            if (strlen($config->entity->{$item['name']}) > 0) {
-                $methodology = [
-                    'title' => $item['title'],
-                    'category' => $item['type'],
-                    'entity' => $config->entityType,
-                    'entity_id' => $config->entityId,
-                    'text_before' => $config->entity->{$item['name']},
-                    'list_order' => $order,
-                ];
-
-                if ($item['name'] == 'first_aid') {
-                    $file = VTFiles::saveNew(file_get_contents(public_path('first_aid_logo.png')), $config->entity, $config->entityType, time().'first_aid.png');
-                    if ($file != false) {
-                        $methodology['image'] = $file->id;
-                    }
-                }
-
-                Methodology::create($methodology);
-                $order++;
+        $methodologies = $config->entity->company->methodologies ?? null;
+        if ($methodologies != null) {
+            foreach ($methodology as $meth) {
+                $newMeth = $meth->replicate();
+                $newMeth->entity = $config->entityType;
+                $newMeth->entity_id = $config->entityId;
+                $newMeth->save();
             }
         }
     }

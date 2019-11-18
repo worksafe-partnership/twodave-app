@@ -109,26 +109,9 @@ class CompanyVtramController extends Controller
 
             $this->customValues['main_description'] = $template['main_description'];
             $this->customValues['post_risk_assessment_text'] = $template['post_risk_assessment_text'];
-            $this->customValues['task_description'] = $template['task_description'];
-            $this->customValues['plant_and_equipment'] = $template['plant_and_equipment'];
-            $this->customValues['disposing_of_waste'] = $template['disposing_of_waste'];
-            $this->customValues['first_aid'] = $template['first_aid'];
-            $this->customValues['noise'] = $template['noise'];
-            $this->customValues['working_at_height'] = $template['working_at_height'];
-            $this->customValues['manual_handling'] = $template['manual_handling'];
-            $this->customValues['accident_reporting'] = $template['accident_reporting'];
-            $this->customValues['key_points'] = $template['key_points'];
         } else {
             $this->customValues['main_description'] = $company['main_description'];
             $this->customValues['post_risk_assessment_text'] = $company['post_risk_assessment_text'];
-            $this->customValues['task_description'] = $company['task_description'];
-            $this->customValues['plant_and_equipment'] = $company['plant_and_equipment'];
-            $this->customValues['disposing_of_waste'] = $company['disposing_of_waste'];
-            $this->customValues['first_aid'] = $company['first_aid'];
-            $this->customValues['noise'] = $company['noise'];
-            $this->customValues['working_at_height'] = $company['working_at_height'];
-            $this->customValues['manual_handling'] = $company['manual_handling'];
-            $this->customValues['accident_reporting'] = $company['accident_reporting'];
         }
     }
 
