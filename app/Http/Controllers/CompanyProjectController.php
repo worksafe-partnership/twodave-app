@@ -83,6 +83,7 @@ class CompanyProjectController extends Controller
                 $selected[$user->user_id] = true;
             }
         }
+        $this->customValues['allUsers'] = [];
         $this->customValues['selectedUsers'] = $selected;
         if ($this->pageType == 'view') {
             $users = UserProject::where('project_id', '=', $this->id)

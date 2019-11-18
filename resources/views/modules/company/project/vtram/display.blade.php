@@ -193,16 +193,19 @@
                     ]) }}
                 </div>
             </div>
+            @if (strpos($identifierPath, 'vtram') !== false)
             <div class="column">
                 {{ EGForm::select('company_logo_id', [
                     'label' => 'Select Company For Logo',
                     'value' => $record->company_logo_id ?? $company->id,
                     'list' => $compAndContractors,
-                    'display_value' => $record->company_logo->name ?? $company->name,
+                    'display_value' => $record->company_logo ? $record->company_logo->name : $company->name,
                     'type' => $pageType,
                 ]) }}
             </div>
+            @endif
         </div>
+        @if (strpos($identifierPath, 'vtram') !== false)
         <hr>
         <div class="columns">
             <div class="column">
@@ -241,6 +244,7 @@
                 </div>
             </div>
         </div>
+        @endif
         @if ($pageType != 'create')
         </div>
     </div>

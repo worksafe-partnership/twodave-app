@@ -149,4 +149,9 @@ class Project extends Model
         }
         parent::delete();
     }
+
+    public function subContractorLinks()
+    {
+        return $this->hasMany(ProjectSubcontractor::class, 'project_id', 'id');
+    }
 }
