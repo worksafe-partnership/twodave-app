@@ -9,7 +9,9 @@ use App\Hazard;
 use App\Project;
 use App\Company;
 use App\Template;
+use App\VtramUser;
 use App\Methodology;
+use App\UserProject;
 use App\ProjectSubcontractor;
 use App\Http\Classes\VTLogic;
 use App\Http\Requests\VtramRequest;
@@ -73,16 +75,11 @@ class VtramController extends CompanyVtramController
 
     public function bladeHook()
     {
-        if ($this->user->company_id !== null && $this->record !== null) {
-            if ($this->user->company_id !== $this->record->project->company_id) {
-                abort(404);
-            }
+        $permittedVTrams = Auth::User()->vtramsCompanyIds();
+        if (!is_null($this->record) && !in_array($this->record->id, $permittedVTrams)) {
+            abort(404);
         }
-        if ($this->user->inRole('supervisor') && $this->record !== null) {
-            if (!$this->record->project->userOnProject($this->user->id)) {
-                abort(404);
-            }
-        }
+
         $this->customValues['templates'] = Template::where('company_id', $this->user->company_id)
                                                    ->where('status', 'CURRENT')
                                                    ->pluck('name', 'id');
@@ -100,16 +97,37 @@ class VtramController extends CompanyVtramController
         $this->customValues['compAndContractors'][$company->id] = $company->name;
 
         $this->customValues['companyId'] = $company->id;
+
+        $projectUsers = UserProject::where('project_id', $this->parentId)
+                              ->join('users', 'user_projects.user_id', '=', 'users.id')
+                              ->join('companies', 'users.company_id', '=', 'companies.id')
+                              ->get([
+                                'users.id',
+                                'users.name',
+                                'companies.name as c_name'
+                              ]);
+
+        $this->customValues['projectUsers'] = [];
+        foreach ($projectUsers as $user) {
+            $this->customValues['projectUsers'][$user->id] = $user->name . " (" . $user->c_name . ")";
+        }
+
+        $this->customValues['associatedUsers'] = [];
+        if ($this->pageType != "create") {
+            $assoc = VtramUser::where('vtrams_id', $this->record->id)->pluck('user_id');
+            foreach ($assoc as $userId) {
+                $this->customValues['associatedUsers'][$userId] = 1;
+            }
+        }
     }
 
     public function indexHook()
     {
-        if ($this->user->company_id !== null) {
-            $project = Project::findOrFail($this->parentId);
-            if ($this->user->company_id !== $project->company_id) {
-                abort(404);
-            }
+        $permittedProjects = Auth::User()->projectCompanyIds();
+        if (!is_null($this->record) && !in_array($this->record->project_id, $permittedProjects)) {
+            abort(404);
         }
+
         $company = $this->user->company;
         $this->config['singular'] = $company->vtrams_name ?? 'VTRAMS';
         $this->config['plural'] = $company->vtrams_name ?? 'VTRAMS';
@@ -220,6 +238,19 @@ class VtramController extends CompanyVtramController
 
     public function update(VtramRequest $request)
     {
+        $args = func_get_args();
+        VtramUser::where('vtrams_id', end($args))->delete();
+        if (isset($request['associated_users'])) {
+            $toInsert = [];
+            foreach ($request['associated_users'] as $userId) {
+                $toInsert[] = [
+                    'vtrams_id' => end($args),
+                    'user_id' => $userId
+                ];
+            }
+            VtramUser::insert($toInsert);
+        }
+
         $request->merge([
             'updated_by' => Auth::id(),
         ]);

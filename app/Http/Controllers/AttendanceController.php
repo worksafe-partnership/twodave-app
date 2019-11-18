@@ -13,10 +13,9 @@ class AttendanceController extends CompanyAttendanceController
 
     public function indexHook()
     {
-        if ($this->user->company_id !== null) {
-            $briefing = Briefing::with('project')
-                ->findOrFail($this->parentId);
-            if ($this->user->company_id !== $briefing->project->company_id) {
+        if ($this->user->company_id !== null && $this->record !== null) {
+            $permittedVTrams = Auth::User()->vtramsCompanyIds();
+            if (!is_null($this->parentId) && !in_array($this->parentId, $permittedVTrams)) {
                 abort(404);
             }
         }
@@ -26,7 +25,7 @@ class AttendanceController extends CompanyAttendanceController
     {
         $this->datatable['href'] = null;
     }
-    
+
     public function store(AttendanceRequest $request, $projectId, $briefingId, $otherId = null)
     {
         $request->merge([

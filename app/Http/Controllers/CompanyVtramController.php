@@ -440,10 +440,9 @@ class CompanyVtramController extends Controller
             abort(404);
         }
         $this->user = Auth::user();
-        if ($this->user->company_id !== null && $this->record !== null) {
-            if ($this->user->company_id !== $this->record->project->company_id) {
-                abort(404);
-            }
+        $permittedVTrams = $this->user->vtramsCompanyIds();
+        if (!is_null($this->record) && !in_array($this->record->id, $permittedVTrams)) {
+            abort(404);
         }
         $company = Company::findOrFail($companyId);
         $this->view = 'modules.company.project.vtram.editVtram';

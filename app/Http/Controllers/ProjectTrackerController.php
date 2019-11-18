@@ -26,11 +26,8 @@ class ProjectTrackerController extends Controller
 
     public function indexHook()
     {
-        if ($this->user->company_id !== null) {
-            $project = Project::withTrashed()->findOrFail($this->parentId);
-            if ($this->user->company_id !== $project->company_id) {
-                abort(404);
-            }
+        if (!in_array($this->parentId, Auth::User()->projectCompanyIds())) {
+            abort(404);
         }
 
         $this->parentRecord = Project::findOrFail($this->parentId);
@@ -52,7 +49,7 @@ class ProjectTrackerController extends Controller
         $args = func_get_args();
         $nowCarbon = Carbon::now();
         $twoWeeksCarbon = $nowCarbon->copy()->addWeeks(2);
-        $query = Vtram::where('company_id', '=', $user->company_id)
+        $query = Vtram::whereIn('id', $user->vtramsCompanyIds())
                         ->where('status', '!=', 'PREVIOUS')
                         ->where('project_id', '=', $args[0])
                         ->get([
