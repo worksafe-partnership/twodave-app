@@ -109,6 +109,7 @@ class CompanyVtramController extends Controller
 
             $this->customValues['main_description'] = $template['main_description'];
             $this->customValues['post_risk_assessment_text'] = $template['post_risk_assessment_text'];
+            $this->customValues['key_points'] = $template['key_points'];
         } else {
             $this->customValues['main_description'] = $company['main_description'];
             $this->customValues['post_risk_assessment_text'] = $company['post_risk_assessment_text'];

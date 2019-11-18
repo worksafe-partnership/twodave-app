@@ -34,6 +34,8 @@ class Project extends Model
 
     public static function scopeDatatableAll($query, $parent, $identifier)
     {
+        $user = Auth::user();
+
         $query->withTrashed(can('permanentlyDelete', $identifier))->select([
                 'id',
                 'name',
@@ -49,16 +51,13 @@ class Project extends Model
                 'deleted_at'
             ]);
 
-        $user = Auth::user();
         if ($identifier['identifier_path'] == 'project') {
-            $query->where('company_id', '=', $user->company_id);
-        } else {
-            $query->where('company_id', '=', $parent);
+            $ids = $user->projectCompanyIds();
+            $query->whereIn('id', $ids);
         }
-        if ($user->inRole('supervisor')) {
-            $query->whereHas('users', function ($q) use ($user) {
-                return $q->where('user_id', '=', $user->id);
-            });
+
+        if ($identifier['identifier_path'] == 'company.project') {
+            $query->where('company_id', '=', $parent);
         }
 
         return app('datatables')->of($query)

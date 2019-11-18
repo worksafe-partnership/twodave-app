@@ -32,16 +32,22 @@ class ProjectController extends CompanyProjectController
 
     public function bladeHook()
     {
-        if ($this->user->company_id !== null && $this->record !== null) {
-            if ($this->user->company_id !== $this->record->company_id) {
-                abort(404);
-            }
+        $permittedProjects = Auth::User()->projectCompanyIds();
+        if (!is_null($this->record) && !in_array($this->record->id, $permittedProjects)) {
+            abort(404);
         }
-        if ($this->user->inRole('supervisor') && $this->record !== null) {
-            if (!$this->record->userOnProject($this->user->id)) {
-                abort(404);
-            }
-        }
+
+        // old access bits, irrelevant now, commenting for now just in case it's needed.
+        // if ($this->user->company_id !== null && $this->record !== null) {
+        //     if ($this->user->company_id !== $this->record->company_id) {
+        //         abort(404);
+        //     }
+        // }
+        // if ($this->user->inRole('supervisor') && $this->record !== null) {
+        //     if (!$this->record->userOnProject($this->user->id)) {
+        //         abort(404);
+        //     }
+        // }
 
         $this->customValues['company'] = $company = Company::findOrFail($this->user->company_id);
         $this->customValues['projectAdmins'] = User::where('company_id', '=', $this->user->company_id)
