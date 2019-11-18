@@ -15,7 +15,7 @@
             'type' => 'create',
         ]) }}
     @endif
-    <div class="column is-8 is-offset-2">
+    <div class="column is-10 is-offset-1">
         <div class="columns">
             <div class="column is-3">
                 <div class="field">
@@ -199,7 +199,7 @@
                     'label' => 'Select Company For Logo',
                     'value' => $record->company_logo_id ?? $company->id,
                     'list' => $compAndContractors,
-                    'display_value' => $record->company_logo ? $record->company_logo->name : $company->name,
+                    'display_value' => isset($record) && $record->company_logo != null ? $record->company_logo->name : $company->name,
                     'type' => $pageType,
                 ]) }}
             </div>
@@ -250,7 +250,7 @@
     </div>
     <hr>
     <div class="columns">
-        <div class="column is-8 is-offset-2">
+        <div class="column is-10 is-offset-1">
             <h2 class="sub-heading">Configuration</h2>
             @include('modules.company.project.vtram.ckeditor-key')
             <div class="columns">
@@ -274,102 +274,79 @@
                 </div>
             </div>
         @endif
-        @if ($pageType == 'create' && !isset($_GET['template']))
+        @if ($pageType == 'edit')
         </div>
     </div>
     <hr>
-    <div class="columns">
-        <div class="column is-8 is-offset-2">
-            <h2 class="sub-heading">Configuration</h2>
-            @include('modules.company.project.vtram.ckeditor-key')
-            <div class="columns">
-                <div class="column is-6">
-                    <div class="field">
-                        {{ EGForm::ckeditor('task_description', [
-                            'label' => 'Task Description',
-                            'value' => isset($task_description) ? $task_description : $record['task_description'],
-                            'type' => $pageType
-                        ]) }}
-                    </div>
-                </div>
-                <div class="column is-6">
-                    <div class="field">
-                        {{ EGForm::ckeditor('plant_and_equipment', [
-                            'label' => 'Plant and Equipment',
-                            'value' => isset($plant_and_equipment) ? $plant_and_equipment : $record['plant_and_equipment'],
-                            'type' => $pageType
-                        ]) }}
-                    </div>
-                </div>
-            </div>
-            <div class="columns">
-                <div class="column is-6">
-                    <div class="field">
-                        {{ EGForm::ckeditor('disposing_of_waste', [
-                            'label' => 'Disposing of Waste',
-                            'value' => isset($disposing_of_waste) ? $disposing_of_waste : $record['disposing_of_waste'],
-                            'type' => $pageType
-                        ]) }}
-                    </div>
-                </div>
-                <div class="column is-6">
-                    <div class="field">
-                        {{ EGForm::ckeditor('first_aid', [
-                            'label' => 'First Aid',
-                            'value' => isset($first_aid) ? $first_aid : $record['first_aid'],
-                            'type' => $pageType
-                        ]) }}
-                    </div>
-                </div>
-            </div>
-            <div class="columns">
-                <div class="column is-6">
-                    <div class="field">
-                        {{ EGForm::ckeditor('noise', [
-                            'label' => 'Noise',
-                            'value' => isset($noise) ? $noise : $record['noise'],
-                            'type' => $pageType
-                        ]) }}
-                    </div>
-                </div>
-                <div class="column is-6">
-                    <div class="field">
-                        {{ EGForm::ckeditor('working_at_height', [
-                            'label' => 'Working at Height',
-                            'value' => isset($working_at_height) ? $working_at_height : $record['working_at_height'],
-                            'type' => $pageType
-                        ]) }}
-                    </div>
-                </div>
-            </div>
-            <div class="columns">
-                <div class="column is-6">
-                    <div class="field">
-                        {{ EGForm::ckeditor('manual_handling', [
-                            'label' => 'Manual Handling',
-                            'value' => isset($manual_handling) ? $manual_handling : $record['manual_handling'],
-                            'type' => $pageType
-                        ]) }}
-                    </div>
-                </div>
-                <div class="column is-6">
-                    <div class="field">
-                        {{ EGForm::ckeditor('accident_reporting', [
-                            'label' => 'Accident Reporting',
-                            'value' => isset($accident_reporting) ? $accident_reporting : $record['accident_reporting'],
-                            'type' => $pageType
-                        ]) }}
-                    </div>
-                </div>
-            </div>
+    <div class="columns is-multiline">
+        <div class="column is-6 box-container">
+            @include('modules.company.project.vtram.methodstatements')
+            <hr>
+        </div>
+        <div class="column is-6 box-container">
+            @include('modules.company.project.vtram.hazards')
+            <hr>
+        </div>
+    </div>
+        @include('modules.company.project.vtram.script_style_for_both')
         @endif
+
+        <div class="columns">
+            <div class="column is-6">
+                <div class="field">
+                    <a download="Noise Vibration Assessment.xls" href="/Noise_Vibration_Assessment.xls" class="button">Download HAVS/Noise Assessment</a>
+                </div>
+            </div>
+            <div class="column is-6">
+                @if (strpos($identifierPath, 'vtram') !== false)
+                    <div class="field">
+                        {{ EGForm::checkbox('dynamic_risk', [
+                            'label' => 'Dynamic Risk (Adds Dynamic Risk boxes to the Risk Assessment)',
+                            'value' => $record['dynamic_risk'] ?? false,
+                            'type' => $pageType
+                        ]) }}
+                    </div>
+                @endif
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column is-6">
+                <div class="field">
+                    {{ EGForm::file('coshh_assessment', [
+                        'label' => 'COSHH Assessment Document',
+                        'value' => $record["coshh_assessment"],
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+            <div class="column is-6">
+                <div class="field">
+                    {{ EGForm::file('havs_noise_assessment', [
+                        'label' => 'HAVS/Noise Assessment Document',
+                        'value' => $record["havs_noise_assessment"],
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <div class="field">
+                    {{ EGForm::ckeditor('key_points', [
+                        'label' => 'Key Points',
+                        'value' => $record["key_points"],
+                        'type' => 'edit'
+                    ]) }}
+                </div>
+            </div>
+        </div>
         @if ($pageType == 'view')
             @if(isset($comments) && $comments->isNotEmpty())
             </div>
         </div>
         <hr>
         <div class="columns">
-            <div class="column is-8 is-offset-2">
+            <div class="column is-10 is-offset-1">
                 <h2 class="sub-heading">Comments</h2>
                 <div class="columns">
                     <div class="column">
@@ -383,7 +360,7 @@
     </div>
     <hr>
     <div class="columns">
-        <div class="column is-8 is-offset-2">
+        <div class="column is-10 is-offset-1">
             <h2 class="sub-heading">Approval Information</h2>
             <div class="columns">
                 <div class="column is-3">
@@ -548,44 +525,6 @@
             }
         });
     </script>
-    @if (strpos($identifierPath, 'template') !== false)
-        <script>
-            $('select[name="company_id"]').change(function () {
-                $.ajax({
-                    url: '/company/' + $(this).val() + '/getPresets',
-                    method: 'GET',
-                    success: function (data) {
-                        data = JSON.parse(data);
-                        if (data.status == 'success') {
-                            CKEDITOR.instances.task_description.setData(data.text.task_description);
-                            CKEDITOR.instances.plant_and_equipment.setData(data.text.plant_and_equipment);
-                            CKEDITOR.instances.disposing_of_waste.setData(data.text.disposing_of_waste);
-                            CKEDITOR.instances.first_aid.setData(data.text.first_aid);
-                            CKEDITOR.instances.noise.setData(data.text.noise);
-                            CKEDITOR.instances.working_at_height.setData(data.text.working_at_height);
-                            CKEDITOR.instances.manual_handling.setData(data.text.manual_handling);
-                            CKEDITOR.instances.accident_reporting.setData(data.text.accident_reporting);
-                            toastr.success("New Company Presets applied");
-                        } else {
-                            toastr.error("Failed to get Company Preset values");
-                        }
-                    },
-                    error: function (data) {
-                        if (data.status == 422) {
-                            var errors = '';
-                            $.each(data.responseJSON.errors, function(key,val) {
-                                toastr.error(val);
-                            });
-                        } else if (data.status == 401) {
-                            toastr.error('Your sesson has expired, please refresh the page and login to proceed');
-                        } else {
-                            toastr.error('An error has occured when collecting company presets');
-                        }
-                    }
-                });
-            });
-        </script>
-    @endif
 @endpush
 
 @include('modules.company.project.vtram.create-modal')

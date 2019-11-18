@@ -35,7 +35,7 @@ class IconRequest extends FormRequest
         return [
             'text.required' => 'Please enter the Text',
             'text.max' => 'The Text cannot be more than 255 characters',
-            'methodology_id.exists' => 'The selected Methodology does not exist'
+            'methodology_id.exists' => 'The selected Method Statement does not exist'
         ];
     }
 }

@@ -28,6 +28,7 @@ class TableRowRequest extends FormRequest
             'col_2' => 'max:255',
             'col_3' => 'max:255',
             'col_4' => 'max:255',
+            'col_5' => 'max:255',
             'methodology_id' => 'exists:methodologies,id'
         ];
     }
@@ -39,7 +40,8 @@ class TableRowRequest extends FormRequest
             'col_2.max' => 'Column 2 cannot be more than 255 characters',
             'col_3.max' => 'Column 3 cannot be more than 255 characters',
             'col_4.max' => 'Column 4 cannot be more than 255 characters',
-            'methodology_id.exists' => 'The selected Methodology does not exist'
+            'col_5.max' => 'Column 5 cannot be more than 255 characters',
+            'methodology_id.exists' => 'The selected Method Statement does not exist'
         ];
     }
 }

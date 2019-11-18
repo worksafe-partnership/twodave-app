@@ -1,5 +1,5 @@
 <div class="columns">
-    <div class="column is-8 is-offset-2">
+    <div class="column is-10 is-offset-1">
         <div class="columns">
             <div class="column">
                 <div class="field">
@@ -77,7 +77,7 @@
 </div>
 <hr>
 <div class="columns">
-    <div class="column is-8 is-offset-2">
+    <div class="column is-10 is-offset-1">
         <h2 class="sub-heading">Contact Information</h2>
         <div class="columns">
             <div class="column is-4">
@@ -112,7 +112,7 @@
 </div>
 <hr>
 <div class="columns">
-    <div class="column is-8 is-offset-2">
+    <div class="column is-10 is-offset-1">
         <h2 class="sub-heading">Colours, Labels and Logo</h2>
         <div class="columns">
             <div class="column is-3">
@@ -228,7 +228,7 @@
 @if($user->inRole('evergreen') || $user->inRole('admin'))
 <hr>
 <div class="columns">
-    <div class="column is-8 is-offset-2">
+    <div class="column is-10 is-offset-1">
         <h2 class="sub-heading">Billable</h2>
         <div class="columns">
             <div class="column">
@@ -247,7 +247,7 @@
 
 <hr>
 <div class="columns">
-    <div class="column is-8 is-offset-2">
+    <div class="column is-10 is-offset-1">
         <h2 class="sub-heading">PDF Footer Information</h2>
         <div class="columns">
             <div class="column">
@@ -292,10 +292,8 @@
     </div>
 </div>
 <hr>
-
-
 <div class="columns">
-    <div class="column is-8 is-offset-2">
+    <div class="column is-10 is-offset-1">
         <h2 class="sub-heading">VTRAMS Configuration</h2>
         <div class="columns">
             <div class="column is-6">
@@ -317,91 +315,15 @@
                 </div>
             </div>
         </div>
-        <div class="columns">
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::ckeditor('task_description', [
-                        'label' => 'Task Description',
-                        'value' => $record['task_description'],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::ckeditor('plant_and_equipment', [
-                        'label' => 'Plant and Equipment',
-                        'value' => $record['plant_and_equipment'],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-        </div>
-        <div class="columns">
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::ckeditor('disposing_of_waste', [
-                        'label' => 'Disposing of Waste',
-                        'value' => $record['disposing_of_waste'],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::ckeditor('first_aid', [
-                        'label' => 'First Aid',
-                        'value' => $record['first_aid'],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-        </div>
-        <div class="columns">
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::ckeditor('noise', [
-                        'label' => 'Noise',
-                        'value' => $record['noise'],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::ckeditor('working_at_height', [
-                        'label' => 'Working at Height',
-                        'value' => $record['working_at_height'],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-        </div>
-        <div class="columns">
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::ckeditor('manual_handling', [
-                        'label' => 'Manual Handling',
-                        'value' => $record['manual_handling'],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::ckeditor('accident_reporting', [
-                        'label' => 'Accident Reporting',
-                        'value' => $record['accident_reporting'],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-        </div>
 	</div>
 </div>
-
-
-@if($pageType == "edit")
+@if ($pageType == 'edit')
+    <div class="columns">
+        <div class="column is-10 is-offset-1">
+            @include('modules.company.project.vtram.methodstatements')
+            @include('modules.company.project.vtram.script_style_for_both')
+        </div>
+    </div>
     @push('scripts')
         <script>
             $('#review_timescale').change(function() {
