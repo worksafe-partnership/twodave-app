@@ -1,5 +1,5 @@
 <div class="columns">
-    <div class="column is-8 is-offset-2">
+    <div class="column is-10 is-offset-1">
         <form method="POST" enctype="multipart/form-data" id="approval-form">
             {{ csrf_field() }}
             <div class="columns">

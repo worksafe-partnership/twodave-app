@@ -65,11 +65,6 @@ class CompanyTemplateController extends TemplateController
         return parent::_update(func_get_args());
     }
 
-    public function editContent($companyId, $templateId = null)
-    {
-        return parent::editContent($templateId, $companyId);
-    }
-
     public function submitForApproval($companyId, $templateId = null)
     {
         return parent::submitForApproval($templateId, $companyId);

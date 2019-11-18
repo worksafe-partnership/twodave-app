@@ -216,9 +216,4 @@ class VtramController extends CompanyVtramController
             return $this->fullPath.'/edit';
         }
     }
-
-    public function editContent($projectId, $vtramId, $otherId = null)
-    {
-        return parent::editContent(Auth::User()->company_id, $projectId, $vtramId);
-    }
 }

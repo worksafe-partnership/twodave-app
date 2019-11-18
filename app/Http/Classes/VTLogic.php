@@ -292,7 +292,7 @@ class VTLogic
         $config = new VTConfig($entityId, $entityType);
         $methodologies = $config->entity->company->methodologies ?? null;
         if ($methodologies != null) {
-            foreach ($methodology as $meth) {
+            foreach ($methodologies as $meth) {
                 $newMeth = $meth->replicate();
                 $newMeth->entity = $config->entityType;
                 $newMeth->entity_id = $config->entityId;

@@ -61,7 +61,7 @@
     });
 
     var hazards = JSON.parse('{!! str_replace("'", '&apos;', addslashes($hazards->toJson())) !!}');
-    var hazardMethodologies = JSON.parse('{!! str_replace("'", '&apos;', addslashes(json_encode($hazard_methodologies))) !!}');
+    window.hazardMethodologies = JSON.parse('{!! str_replace("'", '&apos;', addslashes(json_encode($hazard_methodologies))) !!}');
 
     var riskLabels = JSON.parse('{!! json_encode($riskList) !!}');
     function createHazard() {
@@ -111,9 +111,9 @@
         $('#hazard-form-container [name="r_risk_probability"]').val(hazard['r_risk_probability']);
 
         // add all methodologies relevant to the hazard as selected to the selectize.
-        if (hazardMethodologies[hazard['id']] !== "undefined") {
+        if (window.hazardMethodologies[hazard['id']] !== "undefined") {
             var selectize = $('#related_methodologies_div .control select')[0].selectize;
-            selectize.setValue(hazardMethodologies[hazard['id']]);
+            selectize.setValue(window.hazardMethodologies[hazard['id']]);
         }
 
         $("#hazard-form-container .submitbutton").attr("onclick","submitHazardForm("+id+","+hazard['list_order']+")");
@@ -231,10 +231,10 @@
                 }
 
                 // wipe out and update the related methodologies in local storage (saved in back end above ajax)
-                delete hazardMethodologies[id];
-                hazardMethodologies[id] = [];
+                delete window.hazardMethodologies[id];
+                window.hazardMethodologies[id] = [];
                 $.each(selectedMethodologies, function(key, value) {
-                    hazardMethodologies[id].push(parseInt(value));
+                    window.hazardMethodologies[id].push(parseInt(value));
                 });
 
                 // remove all previously selected for next view
@@ -270,7 +270,7 @@
                 } else if (data.status == 401) {
                     toastr.error('Your sesson has expired, please refresh the page and login to proceed');
                 } else {
-                    toastr.error('An error has occured when saving the hazard');
+                    toastr.error('An error has occured when saving the Risk Assessment');
                 }
             }
         });
@@ -305,9 +305,9 @@
                         hazards = hazards.filter(function (item) {
                             return item !== undefined;
                         });
-                        toastr.success('Hazard was deleted');
+                        toastr.success('Risk Assessment was deleted');
                     } else {
-                        toastr.error('An error has occured when deleting the hazard');
+                        toastr.error('An error has occured when deleting the Risk Assessment');
                     }
                 },
                 error: function (data) {
@@ -319,7 +319,7 @@
                     } else if (data.status == 401) {
                         toastr.error('Your sesson has expired, please refresh the page and login to proceed');
                     } else {
-                        toastr.error('An error has occured when deleting the hazard');
+                        toastr.error('An error has occured when deleting the Risk Assessment');
                     }
                 }
             });
@@ -365,9 +365,9 @@
                         }
                     }
                     hazards = bubbleSort(hazards, 'list_order');
-                    toastr.success('Hazard was moved');
+                    toastr.success('Risk Assessment was moved');
                 } else {
-                    toastr.error('An error has occured when moving the hazard');
+                    toastr.error('An error has occured when moving the Risk Assessment');
                 }
             },
             error: function (data) {
@@ -379,7 +379,7 @@
                 } else if (data.status == 401) {
                     toastr.error('Your sesson has expired, please refresh the page and login to proceed');
                 } else {
-                    toastr.error('An error has occured when moving the hazard');
+                    toastr.error('An error has occured when moving the Risk Assessment');
                 }
             }
         });

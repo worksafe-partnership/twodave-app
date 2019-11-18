@@ -133,7 +133,7 @@
         let type = $('#meth_type').val();
         deletedImages = [];
         if (type == '') {
-            toastr.error('Please select a Methodology Type');
+            toastr.error('Please select a Method Statement Type');
         } else {
             let title = '';
             let content = '';
@@ -142,13 +142,13 @@
             switch (type) {
                 case 'TASK_DESC':
                     title = 'Task Description';
-                    CKEDITOR.instances.text_content.setData(company.task_description);
+                    CKEDITOR.instances.text_content.setData('');
                     $('#' + container + ' #text_page_break').prop('checked', false);
                     $('#' + container + ' input[name="text_page_break"]').val('');
                     break;
                 case 'PLANT_EQUIP':
                     title = 'Plant & Equipment';
-                    CKEDITOR.instances.text_content.setData(company.plant_and_equipment);
+                    CKEDITOR.instances.text_content.setData('');
                     $('#' + container + ' #text_page_break').prop('checked', false);
                     $('#' + container + ' input[name="text_page_break"]').val('');
                     break;
@@ -165,31 +165,31 @@
                     break;
                 case 'DISP_WASTE':
                     title = 'Disposing of Waste';
-                    CKEDITOR.instances.text_content.setData(company.disposing_of_waste);
+                    CKEDITOR.instances.text_content.setData('');
                     $('#' + container + ' #text_page_break').prop('checked', false);
                     $('#' + container + ' input[name="text_page_break"]').val('');
                     break;
                 case 'NOISE':
                     title = 'Noise';
-                    CKEDITOR.instances.text_content.setData(company.noise);
+                    CKEDITOR.instances.text_content.setData('');
                     $('#' + container + ' #text_page_break').prop('checked', false);
                     $('#' + container + ' input[name="text_page_break"]').val('');
                     break;
                 case 'WORK_HIGH':
                     title = 'Working at Height';
-                    CKEDITOR.instances.text_content.setData(company.working_at_height);
+                    CKEDITOR.instances.text_content.setData('');
                     $('#' + container + ' #text_page_break').prop('checked', false);
                     $('#' + container + ' input[name="text_page_break"]').val('');
                     break;
                 case 'MAN_HANDLE':
                     title = 'Manual Handling';
-                    CKEDITOR.instances.text_content.setData(company.manual_handling);
+                    CKEDITOR.instances.text_content.setData('');
                     $('#' + container + ' #text_page_break').prop('checked', false);
                     $('#' + container + ' input[name="text_page_break"]').val('');
                     break;
                 case 'ACC_REPORT':
                     title = 'Accident Reporting';
-                    CKEDITOR.instances.text_content.setData(company.accident_reporting);
+                    CKEDITOR.instances.text_content.setData();
                     $('#' + container + ' #text_page_break').prop('checked', false);
                     $('#' + container + ' input[name="text_page_break"]').val('');
                     break;
@@ -199,7 +199,7 @@
                     title = 'First Aid';
                     $('#'+container+' #image').val('');
                     $('.ti_image').html('');
-                    CKEDITOR.instances.image_text_before.setData(company.first_aid);
+                    CKEDITOR.instances.image_text_before.setData('');
                     CKEDITOR.instances.image_text_after.setData('');
                     $('#' + container + ' #image_page_break').prop('checked', false);
                     $('#' + container + ' input[name="image_page_break"]').val('');
@@ -922,14 +922,14 @@
                 } else if (data.status == 401) {
                     toastr.error('Your sesson has expired, please refresh the page and login to proceed');
                 } else {
-                    toastr.error('An error has occured when saving the methodology');
+                    toastr.error('An error has occured when saving the Method Statement');
                 }
             }
         });
     }
 
     function deleteMethodology(id) {
-        if (confirm("Are you sure you want delete this methodology?")) {
+        if (confirm("Are you sure you want delete this Method Statement?")) {
             var data = {
                 _token: '{{ csrf_token() }}',
                 methodology_id: id,
@@ -965,15 +965,15 @@
                         }
 
                         // loop through each of the hazard methodology's data array and wipe out any instances of the deleted key.
-                        $.each(hazardMethodologies, function (key, methodologyArray) {
-                            hazardMethodologies[key] = methodologyArray.filter(function(methodologyKey) {
+                        $.each(window.hazardMethodologies, function (key, methodologyArray) {
+                            window.hazardMethodologies[key] = methodologyArray.filter(function(methodologyKey) {
                                 return methodologyKey != id;
                             })
                         })
 
-                        toastr.success('Methodology was deleted');
+                        toastr.success('Method Statement was deleted');
                     } else {
-                        toastr.error('An error has occured when deleting the hazard');
+                        toastr.error('An error has occured when deleting the Method Statement');
                     }
                 },
                 error: function (data) {
@@ -985,7 +985,7 @@
                     } else if (data.status == 401) {
                         toastr.error('Your sesson has expired, please refresh the page and login to proceed');
                     } else {
-                        toastr.error('An error has occured when deleting the methodology');
+                        toastr.error('An error has occured when deleting the Method Statement');
                     }
                 }
             });
@@ -1031,9 +1031,9 @@
                         }
                     }
                     methodologies = bubbleSort(methodologies, 'list_order');
-                    toastr.success('Methodology was moved');
+                    toastr.success('Method Statement was moved');
                 } else {
-                    toastr.error('An error has occured when moving the methodology');
+                    toastr.error('An error has occured when moving the Method Statement');
                 }
             },
             error: function (data) {
@@ -1045,7 +1045,7 @@
                 } else if (data.status == 401) {
                     toastr.error('Your sesson has expired, please refresh the page and login to proceed');
                 } else {
-                    toastr.error('An error has occured when moving the methodology');
+                    toastr.error('An error has occured when moving the Method Statement');
                 }
             }
         });

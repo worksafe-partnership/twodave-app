@@ -3,7 +3,7 @@
     "type" => $pageType
 ])}}
 <div class="columns">
-    <div class="column is-8 is-offset-2">
+    <div class="column is-10 is-offset-1">
         <div class="columns">
             <div class="column is-4">
                 <div class="field">
@@ -78,7 +78,7 @@
         </div>
         <hr>
         <div class="columns">
-            <div class="column is-8 is-offset-2">
+            <div class="column is-10 is-offset-1">
                 <h2 class="sub-heading">Roles</h2>
                 <div class="columns">
                     @if (Auth::user()->company_id == null)

@@ -1,5 +1,5 @@
 <div class="columns">
-    <div class="column is-8 is-offset-2">
+    <div class="column is-10 is-offset-1">
         <div class="columns">
             <div class="column">
                 <div class="field">
@@ -77,7 +77,7 @@
 </div>
 <hr>
 <div class="columns">
-    <div class="column is-8 is-offset-2">
+    <div class="column is-10 is-offset-1">
         <h2 class="sub-heading">Contact Information</h2>
         <div class="columns">
             <div class="column is-4">
@@ -112,7 +112,7 @@
 </div>
 <hr>
 <div class="columns">
-    <div class="column is-8 is-offset-2">
+    <div class="column is-10 is-offset-1">
         <h2 class="sub-heading">Colours, Labels and Logo</h2>
         <div class="columns">
             <div class="column is-3">
@@ -228,7 +228,7 @@
 @if($user->inRole('evergreen') || $user->inRole('admin'))
 <hr>
 <div class="columns">
-    <div class="column is-8 is-offset-2">
+    <div class="column is-10 is-offset-1">
         <h2 class="sub-heading">Billable</h2>
         <div class="columns">
             <div class="column">
@@ -247,7 +247,7 @@
 
 <hr>
 <div class="columns">
-    <div class="column is-8 is-offset-2">
+    <div class="column is-10 is-offset-1">
         <h2 class="sub-heading">PDF Footer Information</h2>
         <div class="columns">
             <div class="column">
@@ -293,7 +293,7 @@
 </div>
 <hr>
 <div class="columns">
-    <div class="column is-8 is-offset-2">
+    <div class="column is-10 is-offset-1">
         <h2 class="sub-heading">VTRAMS Configuration</h2>
         <div class="columns">
             <div class="column is-6">
@@ -319,7 +319,7 @@
 </div>
 @if ($pageType == 'edit')
     <div class="columns">
-        <div class="column is-8 is-offset-2">
+        <div class="column is-10 is-offset-1">
             @include('modules.company.project.vtram.methodstatements')
             @include('modules.company.project.vtram.script_style_for_both')
         </div>

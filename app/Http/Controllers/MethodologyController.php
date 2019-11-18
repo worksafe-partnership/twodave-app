@@ -331,7 +331,7 @@ class MethodologyController extends Controller
             $decrement->decrement('list_order');
             return 'allow';
         } else {
-            toast()->error('Cannot move this Methodology');
+            toast()->error('Cannot move this Method Statement');
             return 'disallow';
         }
     }

@@ -13,23 +13,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/', function () {
         return redirect('/dashboard');
     });
-    // Edits
-    Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/methodology', [
-        'middleware' => 'can:edit-company.project.vtram',
-        'uses' => 'CompanyVtramController@editContent'
-    ]);
-    Route::get('/company/{company_id}/template/{template_id}/methodology', [
-        'middleware' => 'can:edit-company.template',
-        'uses' => 'CompanyTemplateController@editContent'
-    ]);
-    Route::get('/template/{template_id}/methodology', [
-        'middleware' => 'can:edit-template',
-        'uses' => 'TemplateController@editContent'
-    ]);
-    Route::get('/project/{project_id}/vtram/{vtram_id}/methodology', [
-        'middleware' => 'can:edit-project.vtram',
-        'uses' => 'VtramController@editContent'
-    ]);
     // Revisions
     Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/revision', [
         'middleware' => 'can:create-company.project.vtram',

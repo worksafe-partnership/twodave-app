@@ -1,5 +1,5 @@
 <div class="columns">
-    <div class="column is-8 is-offset-2">
+    <div class="column is-10 is-offset-1">
         <div class="columns">
             <div class="column is-4">
                 <div class="field">
@@ -66,7 +66,7 @@
 </div>
 <hr>
 <div class="columns">
-    <div class="column is-8 is-offset-2">
+    <div class="column is-10 is-offset-1">
         <h2 class="sub-heading">Principal Contractor</h2>
         <div class="columns">
             <div class="column is-4">
@@ -101,7 +101,7 @@
 </div>
 <hr>
 <div class="columns">
-    <div class="column is-8 is-offset-2">
+    <div class="column is-10 is-offset-1">
         <h2 class="sub-heading">Users</h2>
         <div class="columns">
             <div class="column is-12">
@@ -138,7 +138,7 @@
 </div>
 <hr>
 <div class="columns">
-    <div class="column is-8 is-offset-2">
+    <div class="column is-10 is-offset-1">
         <h2 class="sub-heading">Subcontractors</h2>
         <div class="columns">
             <div class="column is-12">
@@ -175,7 +175,7 @@
 </div>
 @if($pageType != 'view')
 <div class="columns">
-    <div class="column is-8 is-offset-2">
+    <div class="column is-10 is-offset-1">
         <h2 class="sub-heading">Add a new Subcontractor</h2>
         <div class="columns">
             <div class="column is-4">

@@ -85,21 +85,72 @@ class TemplateController extends Controller
             'order' => 150,
             'value' => true,
         ];
+        $company = Company::find($this->record->company_id);
+        if ($company != null) {
+            $this->customValues['riskList'] = [
+                0 => $company->no_risk_character,
+                1 => $company->low_risk_character,
+                2 => $company->med_risk_character,
+                3 => $company->high_risk_character,
+            ];
+        } else {
+            $this->customValues['riskList'] = [
+                0 => '#',
+                1 => 'L',
+                2 => 'M',
+                3 => 'H',
+            ];
+            $company = collect([]); // blade requires a company for the TEXT methodology company defaults
+        }
+        $this->customValues['whoList'] = config('egc.hazard_who_risk');
+        $this->customValues['methTypeList'] = config('egc.methodology_list');
+        $this->customValues['hazards'] = Hazard::where('entity', '=', 'TEMPLATE')
+            ->where('entity_id', '=', $this->id)
+            ->orderBy('list_order')
+            ->get();
+        $this->customValues['methodologies'] = Methodology::where('entity', '=', 'TEMPLATE')
+            ->where('entity_id', '=', $this->id)
+            ->orderBy('list_order')
+            ->get();
+
+        $this->customValues['comments'] = VTLogic::getComments($this->record->id, $this->record->status, 'TEMPLATE');
+        $this->customValues['entityType'] = 'TEMPLATE';
+
+        // Start of Methodology Specific Items //
+        $this->customValues['iconSelect'] = config('egc.icons');
+        $this->customValues['iconImages'] = json_encode(config('egc.icon_images'));
+        $this->customValues['company'] = $company;
+
+        $methodologyIds = $this->customValues['methodologies']->pluck('id');
+
+        $this->customValues['tableRows'] = [];
+        $tableRows = TableRow::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
+        foreach ($tableRows as $row) {
+            $this->customValues['tableRows'][$row->methodology_id][] = $row;
+        }
+
+        $this->customValues['processes'] = [];
+        $instructions = Instruction::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
+        foreach ($instructions as $instruction) {
+            $this->customValues['processes'][$instruction->methodology_id][] = $instruction;
+        }
+
+        $this->customValues['icons'] = [];
+        $icons = Icon::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
+        foreach ($icons as $icon) {
+            $this->customValues['icons'][$icon->methodology_id][$icon->type][] = $icon;
+        }
+        // End of Methodology Specific Items //
+
+        $this->customValues['hazard_methodologies'] = [];
+        $hms = DB::table('hazards_methodologies')->whereIn('hazard_id', $this->customValues['hazards']->pluck('id'))->get();
+        foreach ($hms as $hm) {
+            $this->customValues['hazard_methodologies'][$hm->hazard_id][] = $hm->methodology_id;
+        }
     }
 
     public function viewHook()
     {
-
-        if (can('edit', $this->identifierPath) && in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND']) && is_null($this->record['deleted_at'])) {
-            $this->actionButtons['methodologies'] = [
-                'label' => 'Method Statements & Risk Assessment',
-                'path' => '/template/'.$this->id.'/methodology',
-                'icon' => 'receipt',
-                'order' => '550',
-                'id' => 'methodologyEdit',
-            ];
-        }
-
         $prevConfig = config('structure.template.previous.config');
         $this->actionButtons['previous'] = [
             'label' => ucfirst($this->pageType)." ".$prevConfig['plural'],
@@ -167,121 +218,6 @@ class TemplateController extends Controller
         ]);
 
         return parent::_update(func_get_args());
-    }
-
-    public function editContent($templateId, $otherId = null)
-    {
-        $this->record = Template::findOrFail($templateId);
-        $this->heading = 'Editing Method Statements and Risk Assessment for '.$this->record->name;
-        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND'])) {
-            abort(404);
-        }
-        $this->user = Auth::user();
-        if ($this->user->company_id !== null && $this->record !== null && $this->record->company_id !== null) {
-            if ($this->user->company_id !== $this->record->company_id) {
-                abort(404);
-            }
-        }
-        if (is_null($otherId)) {
-            $otherId = $this->user->company_id;
-        }
-
-        $company = Company::find($otherId);
-        if ($company != null) {
-            $this->customValues['riskList'] = [
-                0 => $company->no_risk_character,
-                1 => $company->low_risk_character,
-                2 => $company->med_risk_character,
-                3 => $company->high_risk_character,
-            ];
-        } else {
-            $this->customValues['riskList'] = [
-                0 => '#',
-                1 => 'L',
-                2 => 'M',
-                3 => 'H',
-            ];
-            $company = collect([]); // blade requires a company for the TEXT methodology company defaults
-        }
-        $this->view = 'modules.company.project.vtram.editVtram';
-        $this->parentId = $templateId;
-        $this->customValues['whoList'] = config('egc.hazard_who_risk');
-        $this->customValues['methTypeList'] = config('egc.methodology_list');
-        $this->customValues['hazards'] = Hazard::where('entity', '=', 'TEMPLATE')
-            ->where('entity_id', '=', $templateId)
-            ->orderBy('list_order')
-            ->get();
-        $this->customValues['methodologies'] = Methodology::where('entity', '=', 'TEMPLATE')
-            ->where('entity_id', '=', $templateId)
-            ->orderBy('list_order')
-            ->get();
-
-        $this->customValues['comments'] = VTLogic::getComments($this->record->id, $this->record->status, 'TEMPLATE');
-        $this->customValues['entityType'] = 'TEMPLATE';
-
-        // Start of Methodology Specific Items //
-        $this->customValues['iconSelect'] = config('egc.icons');
-        $this->customValues['iconImages'] = json_encode(config('egc.icon_images'));
-        $this->customValues['company'] = $company;
-
-        $methodologyIds = $this->customValues['methodologies']->pluck('id');
-
-        $this->customValues['tableRows'] = [];
-        $tableRows = TableRow::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
-        foreach ($tableRows as $row) {
-            $this->customValues['tableRows'][$row->methodology_id][] = $row;
-        }
-
-        $this->customValues['processes'] = [];
-        $instructions = Instruction::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
-        foreach ($instructions as $instruction) {
-            $this->customValues['processes'][$instruction->methodology_id][] = $instruction;
-        }
-
-        $this->customValues['icons'] = [];
-        $icons = Icon::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
-        foreach ($icons as $icon) {
-            $this->customValues['icons'][$icon->methodology_id][$icon->type][] = $icon;
-        }
-        // End of Methodology Specific Items //
-
-        $this->customValues['hazard_methodologies'] = [];
-        $hms = DB::table('hazards_methodologies')->whereIn('hazard_id', $this->customValues['hazards']->pluck('id'))->get();
-        foreach ($hms as $hm) {
-            $this->customValues['hazard_methodologies'][$hm->hazard_id][] = $hm->methodology_id;
-        }
-
-        $this->args = func_get_args();
-        $this->id = $templateId;
-        $this->parentId = $otherId;
-        parent::setup();
-
-        // because the ids come in backwards for this route, you need to flip them before they go into buildProperties
-        if ($this->identifierPath == 'company.template') {
-            $temp = $this->args[0];
-            $this->args[0] = $this->args[1];
-            $this->args[1] = $temp;
-        }
-
-        parent::_buildProperties($this->args);
-        if ($this->parentPath == '') {
-            $this->parentPath = '/template';
-        }
-        $this->backButton = [
-            'path' => $this->parentPath.'/'.$templateId,
-            'label' => 'Back to Template',
-            'icon' => 'arrow-left',
-        ];
-        $this->pillButtons[] = [
-            'label' => 'Preview PDF',
-            'path' => 'view_a3',
-            'icon' => 'file-pdf',
-            'order' => 100,
-            'id' => 'view_pdf_a3',
-            'target' => '_blank',
-        ];
-        $this->pageType = 'custom';
-        return parent::_renderView("layouts.custom");
     }
 
     public function createRevision()
@@ -522,16 +458,6 @@ class TemplateController extends Controller
         $id = end($args);
         $userCompany = Auth::User()->company_id;
         $record = Template::findOrFail($id);
-
-        if (can('edit', $this->identifierPath) && in_array($record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND']) && is_null($record['deleted_at'])) {
-            $this->actionButtons['methodologies'] = [
-                'label' => 'Method Statements & Risk Assessment',
-                'path' => 'methodology',
-                'icon' => 'receipt',
-                'order' => '550',
-                'id' => 'methodologyEdit',
-            ];
-        }
 
         if (!is_null($userCompany)) {
             if ($userCompany != $record->company_id) {

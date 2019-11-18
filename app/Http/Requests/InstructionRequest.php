@@ -37,7 +37,7 @@ class InstructionRequest extends FormRequest
             'description.required' => 'Please enter a Description',
             'label.max' => 'The Label cannot be more than 5 characters',
             'image.mimes' => 'Only images are allowed to be uploaded',
-            'methodology_id.exists' => 'The selected Methodology does not exist'
+            'methodology_id.exists' => 'The selected Method Statement does not exist'
         ];
     }
 }

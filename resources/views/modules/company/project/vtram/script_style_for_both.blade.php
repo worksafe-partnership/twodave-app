@@ -81,6 +81,7 @@
     <script>
         // Both
         function cancelForm(type) {
+            event.preventDefault();
             if (confirm("Any unsaved changes will be lost, are you sure?")) {
                 if (type == 'hazard') {
                     $('#hazard-form-container').css('display', 'none');
@@ -96,6 +97,7 @@
                     $('.r-risk-area .risk-rating').css('outline', 'none');
                     $('.risk-area .risk-rating').css('outline', 'none');
                     $('#related_methodologies_div .control select')[0].selectize.clear();
+                    debugger
                 } else {
                     $('#methodology-list-container').show();
                     $('[id^=methodology-][id$=-form-container]').css('display', 'none');
