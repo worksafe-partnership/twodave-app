@@ -86,15 +86,17 @@ class Template extends Model
         $user = Auth::user();
         if ($identifier['identifier_path'] == 'company.template' || $user->company_id !== null) {
             if ($user->company_id !== null) {
-                $companyId = $user->company_id;
+                $companyIds = $user->getAccessCompanies();
             } else {
-                $companyId = $parent;
+                $companyIds = [$parent];
             }
-            $query->where(function ($q) use ($companyId) {
-                $q->where('company_id', '=', $companyId)
+            $query->where(function ($q) use ($companyIds) {
+                $q->whereIn('company_id', $companyIds)
                    ->orWhereNull('company_id');
             });
+
         }
+
 
         if (in_array($identifier['identifier_path'], ['template.previous', 'company.template.previous'])) {
             $query->where('current_id', '=', $parent)

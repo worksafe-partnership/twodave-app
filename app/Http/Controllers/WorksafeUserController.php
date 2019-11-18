@@ -45,8 +45,13 @@ class WorksafeUserController extends Controller
                                               $companyUsers->whereNotIn('id', [1,2]);
                                            })
                                            ->pluck("name", "id");
-        $this->customValues['companies'] = Company::orderBy('name', 'ASC')->withTrashed()
-            ->pluck('name', 'id');
+
+        $this->customValues['companies'] = Company::orderBy('name', 'ASC')
+                                                    ->withTrashed()
+                                                    ->when(!is_null($this->user->company_id), function ($drilldown) {
+                                                        $drilldown->whereIn('companies.id', array_keys($this->user->nonBillableContractors()));
+                                                    })
+                                                    ->pluck('name', 'id');
         $this->customValues['userPage'] = true;
 
         $currentRoles = [];
