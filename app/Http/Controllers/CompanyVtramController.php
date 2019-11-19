@@ -72,6 +72,7 @@ class CompanyVtramController extends Controller
         foreach ($templates as $template) {
             $this->customValues['templates'][$template->id] = $template->name . " (" . $template->company_name .")";
         }
+        $this->customValues['saveAsTemplates'] = ['' => 'No, make a new template'] + $this->customValues['templates'];
         $this->customValues['templates'] = collect($this->customValues['templates']);
 
         $this->customValues['company'] = $company = Company::findOrFail($this->args[0]);
@@ -346,6 +347,16 @@ class CompanyVtramController extends Controller
                 'id' => 'create_new_revision',
             ];
         }
+
+        if ($this->record['status'] == 'CURRENT' && (is_null($this->user->company_id) || $this->user->inRole('company_admin'))) {
+            $this->pillButtons['save_as_template'] = [
+                'label' => "Save as Template",
+                'path' => '#',
+                'icon' => 'save',
+                'order' => '600',
+                'id' => 'save_as_template_pill'
+            ];
+        }
     }
 
     public function edit()
@@ -607,5 +618,18 @@ class CompanyVtramController extends Controller
         ];
         parent::_buildProperties($args);
         return parent::_renderView("layouts.custom");
+    }
+
+    public function saveAsTemplate(Request $request)
+    {
+        $vtram = VTram::findOrFail($request->vtram);
+        $replaceTemplate = null;
+        if ($request->template_id) {
+            $replaceTemplate = Template::findOrFail($request->template_id);
+        }
+
+        $newTemplate = VTLogic::saveAsTemplate($vtram, $replaceTemplate);
+        toast()->success('Record Cloned!', 'You\'re now viewing the new Template');
+        return '/template/'.$newTemplate->id;
     }
 }
