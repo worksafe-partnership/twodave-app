@@ -21,10 +21,10 @@
                 {!!$company->message!!}
             </div>
         @endif
+        @if ($company->show_revision_no_on_pdf && !is_null($entity->revision_number))
             <div class="footer-ref">
                 Doc No: {{$entity->revision_number}}
             </div>
-        @if ($company->show_revision_no_on_pdf && !is_null($entity->revision_number))
         @endif
     </div>
 @endif
