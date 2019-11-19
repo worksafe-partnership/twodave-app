@@ -348,6 +348,9 @@ Route::group(['middleware' => ['auth']], function () {
         }
         return Redirect::action('DashboardController@view');
     });
+
+    Route::post('company/{id}/project/{pid}/vtram/{vtid}/save_as_template', 'CompanyVtramController@saveAsTemplate');
+    Route::post('project/{pid}/vtram/{vtid}/save_as_template', 'CompanyVtramController@saveAsTemplate');
 });
 // Principle Contractor Approval Routes
 Route::group(['prefix' => '{unique_link}/vtrams', 'middleware' => ['validate_link']], function () {

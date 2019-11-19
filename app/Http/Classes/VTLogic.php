@@ -471,4 +471,103 @@ class VTLogic
         }
         return str_replace(array_keys($replacements), array_values($replacements), $entity->{$fields});
     }
+
+
+    public static function saveAsTemplate($vtram, $templateToSupercede)
+    {
+        return DB::transaction(function () use ($vtram, $templateToSupercede) {
+
+            $template = [];
+            $template['company_id'] = $vtram['company_id'];
+            $template['name'] = $vtram->name;
+            $template['logo'] = $vtram->logo;
+            $template['reference'] = $vtram->reference;
+            $template['key_points'] = $vtram->key_points;
+            $template['havs_noise_assessment'] = $vtram['havs_noise_assessment'];
+            $template['coshh_assessment'] = $vtram['coshh_assessment'];
+            $template['review_due'] = null;
+            $template['approved_date'] = $vtram['approved_date'];
+            $template['current_id'] = null;
+            $template['status'] = "NEW";
+            $template['created_by'] = Auth::User()->id;
+            $template['submitted_by'] = null;
+            $template['approved_by'] = null;
+            $template['date_replaced'] = null;
+            $template['resubmit_by'] = null;
+            $template['show_area'] = $vtram['show_area'];
+            $template['area'] = $vtram['area'];
+            $template['main_description'] = $vtram['main_description'];
+            $template['post_risk_assessment_text'] = $vtram['post_risk_assessment_text'];
+            $template['pages_in_pdf'] = $vtram['pages_in_pdf'];
+            $template['pdf'] = $vtram['pdf'];
+
+            $template['created_from_entity'] = "VTRAM";
+            $template['created_from_id'] = $vtram->id;
+            $template['created_from'] = $vtram->id;
+
+            $newTemplate = Template::create($template);
+
+            if ($templateToSupercede) {
+                $templateToSupercede->update([
+                    'current_id' => $newTemplate->id,
+                    'status' => 'PREVIOUS'
+                ]);
+            }
+
+            $hazardOld = [];
+            foreach ($vtram->hazards as $hazard) {
+                $newHazard = $hazard->toArray();
+                unset($newHazard['id']);
+                $newHazard['entity'] = 'TEMPLATE';
+                $newHazard['entity_id'] = $newTemplate->id;
+                $copy = Hazard::create($newHazard);
+                $hazardOld[$hazard->id] = $copy->id;
+            }
+
+            $insertIcons = [];
+            $insertTableRows = [];
+            $insertInstructions = [];
+            $insertHazMethLink = [];
+            foreach ($vtram->methodologies as $methodology) {
+                $newMeth = $methodology->toArray();
+                unset($newMeth['id']);
+                $newMeth['entity'] = 'TEMPLATE';
+                $newMeth['entity_id'] = $newTemplate->id;
+                $meth = Methodology::create($newMeth);
+                $hms = DB::table('hazards_methodologies')
+                    ->where('methodology_id', '=', $methodology->id)
+                    ->get();
+                foreach ($hms as $hm) {
+                    $insertHazMethLink[] = [
+                        'hazard_id' => $hazardOld[$hm->hazard_id],
+                        'methodology_id' => $meth->id,
+                    ];
+                }
+                foreach ($methodology->icons as $icon) {
+                    $newIcon = $icon->toArray();
+                    unset($newIcon['id']);
+                    $newIcon['methodology_id'] = $meth->id;
+                    $insertIcons[] = $newIcon;
+                }
+                foreach ($methodology->instructions as $instruction) {
+                    $newInstruction = $instruction->toArray();
+                    unset($newInstruction['id']);
+                    $newInstruction['methodology_id'] = $meth->id;
+                    $insertInstructions[] = $newInstruction;
+                }
+                foreach ($methodology->tableRows as $row) {
+                    $newRow = $row->toArray();
+                    unset($newRow['id']);
+                    $newRow['methodology_id'] = $meth->id;
+                    $insertTableRows[] = $newRow;
+                }
+            }
+            Icon::insert($insertIcons);
+            TableRow::insert($insertTableRows);
+            Instruction::insert($insertInstructions);
+            DB::table('hazards_methodologies')
+                ->insert($insertHazMethLink);
+            return $newTemplate;
+        });
+    }
 }

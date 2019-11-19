@@ -459,6 +459,33 @@
         @endif
 	</div>
 </div>
+<div class="modal" id="save_as_template_modal">
+        <div class="modal-background" style="background-color: rgba(10, 10, 10, 0.4)"></div>
+        <div class="modal-card" style="width:500px">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Save as Template...</p>
+            </header>
+                <section class="modal-card-body">
+                    <div class="columns">
+                        <div class="column is-12">
+
+                        <div class="column">
+                            {{ EGForm::select('save_as_template_id', [
+                                'label' => 'Would you like to make a new revision of an existing template?',
+                                'value' => "",
+                                'list' => isset($saveAsTemplates) ? $saveAsTemplates : [],
+                                'type' => 'edit',
+                            ]) }}
+                        </div>
+                    </div>
+                </section>
+            <footer class="modal-card-foot">
+                <button class="button is-success" id="save_new_template_button">Save</button>
+                <button class="button" id="close_modal">Cancel</button>
+            </footer>
+        </div>
+    </div>
+</div>
 @push('styles')
     @php
         $oldR = old('show_responsible_person');
@@ -524,6 +551,29 @@
                 $('.area-details').show();
             }
         });
+
+        $('#save_as_template_pill').on('click', function() {
+            $('#save_as_template_modal').addClass('is-active');
+        })
+
+        $('#save_new_template_button').on('click', function() {
+            $.ajax({
+                url: '{{$record->id}}/save_as_template',
+                type: 'POST',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    vtram : "{{$record->id}}",
+                    template_id: $('#save_as_template_id').val()
+                },
+                success: function(url) {
+                    window.location.href = url;
+                },
+                error: function() {
+                    toastr.error('Something went wrong!');
+                }
+            });
+
+        })
     </script>
 @endpush
 
@@ -531,7 +581,6 @@
 @if ($pageType == 'view' && strpos($identifierPath, 'template') !== false)
     @include('modules.company.template.create-vtrams-modal')
 @endif
-
 
 @push('styles')
     <style>
