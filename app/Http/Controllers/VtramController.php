@@ -52,18 +52,20 @@ class VtramController extends CompanyVtramController
             $this->actionButtons['create']['class'] .= " create_vtram";
         }
 
-        $project = Project::findOrFail($this->parentId);
-        $templates = Template::whereIn('company_id', [$project->company_id, $this->user->company_id])
-                                                   ->join('companies', 'templates.company_id', '=', 'companies.id')
-                                                   ->where('status', 'CURRENT')
-                                                   ->get([
-                                                        'companies.name as company_name', 'templates.name', 'templates.id'
-                                                    ]);
-        $this->customValues['templates'] = [];
-        foreach ($templates as $template) {
-            $this->customValues['templates'][$template->id] = $template->name . " (" . $template->company_name .")";
+        if (!strpos($this->identifierPath, "previous")) {
+            $project = Project::findOrFail($this->parentId);
+            $templates = Template::whereIn('company_id', [$project->company_id, $this->user->company_id])
+                                                       ->join('companies', 'templates.company_id', '=', 'companies.id')
+                                                       ->where('status', 'CURRENT')
+                                                       ->get([
+                                                            'companies.name as company_name', 'templates.name', 'templates.id'
+                                                        ]);
+            $this->customValues['templates'] = [];
+            foreach ($templates as $template) {
+                $this->customValues['templates'][$template->id] = $template->name . " (" . $template->company_name .")";
+            }
+            $this->customValues['templates'] = collect($this->customValues['templates']);
         }
-        $this->customValues['templates'] = collect($this->customValues['templates']);
 
         $this->customValues['path'] = 'vtram/create';
     }
@@ -152,14 +154,16 @@ class VtramController extends CompanyVtramController
             ];
         }
         if (can('edit', $this->identifierPath)) {
-            $prevConfig = config('structure.project.vtram.previous.config');
-            $this->actionButtons['previous'] = [
-                'label' => ucfirst($this->pageType)." ".$prevConfig['plural'],
-                'path' => '/project/'.$this->parentId.'/vtram/'.$this->id.'/previous',
-                'icon' => $prevConfig['icon'],
-                'order' => '600',
-                'id' => 'previousList'
-            ];
+            if ($this->record->company_id == $this->user->company_id) {
+                $prevConfig = config('structure.project.vtram.previous.config');
+                $this->actionButtons['previous'] = [
+                    'label' => ucfirst($this->pageType)." ".$prevConfig['plural'],
+                    'path' => '/project/'.$this->parentId.'/vtram/'.$this->id.'/previous',
+                    'icon' => $prevConfig['icon'],
+                    'order' => '600',
+                    'id' => 'previousList'
+                ];
+            }
             // moving this into /edit also to stop supervisors seeing the approve button
             $approvalConfig = config('structure.project.vtram.approval.config');
             $this->actionButtons['approval'] = [
@@ -172,6 +176,9 @@ class VtramController extends CompanyVtramController
         }
         if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND'])) {
             $this->disableEdit = true;
+        }
+        if ($this->record->company_id != $this->user->company_id) {
+            $this->disableDelete = true;
         }
     }
 
