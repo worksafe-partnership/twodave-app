@@ -38,6 +38,15 @@ class VTLogic
     {
         $config = new VTConfig($entityId, $entityType);
 
+        // if it's a PDF, just return it straight away.
+        if ($config->entityType == "VTRAM" && $config->entity->vtram_is_file) {
+            $file = EGFiles::findOrFail($config->entity->vtram_file);
+            $response = \Response::make(file_get_contents(storage_path()."/app/".$file->location), 200);
+            $response->header('Content-Type', 'application/pdf');
+            $response->header('Content-Disposition', 'filename="'.$file->filename.'.pdf"');
+            return $response;
+        }
+
         if ($force) {
             self::createPdf($config->entity, null, true, true);
         }
@@ -93,6 +102,16 @@ class VTLogic
     public static function createPdf($entityId, $entityType = null, $force = false, $a3 = false)
     {
         $config = new VTConfig($entityId, $entityType);
+
+        // if it's a PDF, just return it straight away.
+        if ($config->entityType == "VTRAM" && $config->entity->vtram_is_file) {
+            $file = EGFiles::findOrFail($config->entity->vtram_file);
+            $response = \Response::make(file_get_contents(storage_path()."/app/".$file->location), 200);
+            $response->header('Content-Type', 'application/pdf');
+            $response->header('Content-Disposition', 'filename="'.$file->filename.'.pdf"');
+            return $response;
+        }
+
         $company = Company::findOrFail($config->entity->company_id);
         if ($config->entity->status == 'PREVIOUS' || ($config->entity->pdf != null && !$force)) {
             return EGFiles::image($config->entity->pdf);

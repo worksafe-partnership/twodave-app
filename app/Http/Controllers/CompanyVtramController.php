@@ -410,9 +410,6 @@ class CompanyVtramController extends Controller
             $companyId = $user->companyId;
         }
         $vtram = Vtram::findOrFail($vtramId);
-        if ($vtram->vtram_is_file) {
-            return redirect('/download/'.$vtram->vtram_file);
-        }
 
         if ($user->company_id !== null) {
             if ($user->company_id !== $vtram->company_id) {
@@ -433,10 +430,6 @@ class CompanyVtramController extends Controller
             $companyId = $user->companyId;
         }
         $vtram = Vtram::findOrFail($vtramId);
-
-        if ($vtram->vtram_is_file) {
-            return redirect('/download/'.$vtram->vtram_file);
-        }
 
         if ($user->company_id !== null) {
             if ($user->company_id !== $vtram->company_id) {
