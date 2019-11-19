@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use Controller;
 use App\Vtram;
 use App\Template;
