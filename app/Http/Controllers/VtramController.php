@@ -126,6 +126,13 @@ class VtramController extends CompanyVtramController
                 $this->customValues['associatedUsers'][$userId] = 1;
             }
         }
+
+        $this->customValues['is_file_vtram'] = 0;
+        if ($_GET && isset($_GET['file_upload'])) {
+            $this->customValues['is_file_vtram'] = 1;
+        } else if ($this->pageType != "create" && $this->record->vtram_is_file) {
+            $this->customValues['is_file_vtram'] = 1;
+        }
     }
 
     public function indexHook()
@@ -242,26 +249,33 @@ class VtramController extends CompanyVtramController
         $methodologyIds = $this->customValues['methodologies']->pluck('id');
 
         $this->customValues['tableRows'] = [];
-        $tableRows = TableRow::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
-        foreach ($tableRows as $row) {
-            $this->customValues['tableRows'][$row->methodology_id][] = $row;
+        if (!$this->record->vtram_is_file) {
+            $tableRows = TableRow::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
+            foreach ($tableRows as $row) {
+                $this->customValues['tableRows'][$row->methodology_id][] = $row;
+            }
         }
 
         $this->customValues['processes'] = [];
-        $instructions = Instruction::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
-        foreach ($instructions as $instruction) {
-            $this->customValues['processes'][$instruction->methodology_id][] = $instruction;
+        if (!$this->record->vtram_is_file) {
+            $instructions = Instruction::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
+            foreach ($instructions as $instruction) {
+                $this->customValues['processes'][$instruction->methodology_id][] = $instruction;
+            }
         }
 
+
         $this->customValues['icons'] = [];
-        $icons = Icon::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
-        foreach ($icons as $icon) {
-            $this->customValues['icons'][$icon->methodology_id][$icon->type][] = $icon;
+        if (!$this->record->vtram_is_file) {
+            $icons = Icon::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
+            foreach ($icons as $icon) {
+                $this->customValues['icons'][$icon->methodology_id][$icon->type][] = $icon;
+            }
         }
         // End of Methodology Specific Items //
 
         $this->customValues['hazard_methodologies'] = [];
-        $hms = DB::table('hazards_methodologies')->whereIn('hazard_id', $this->customValues['hazards']->pluck('id'))->get();
+        $hms = \DB::table('hazards_methodologies')->whereIn('hazard_id', $this->customValues['hazards']->pluck('id'))->get();
         foreach ($hms as $hm) {
             $this->customValues['hazard_methodologies'][$hm->hazard_id][] = $hm->methodology_id;
         }
@@ -299,6 +313,11 @@ class VtramController extends CompanyVtramController
             'post_risk_assessment_text' => $company->post_risk_assessment_text,
             'created_by' => $user->id,
         ]);
+
+        if ($request->vtram_file) {
+            $request->merge(['vtram_is_file' => 1]);
+        }
+
         return parent::_store([
             $request,
             $projectId

@@ -46,6 +46,7 @@ class Company extends Model
         'message',
         'show_revision_no_on_pdf',
         'billable',
+        'allow_file_uploads'
     ];
 
     public static function scopeDatatableAll($query, $parent, $identifier)

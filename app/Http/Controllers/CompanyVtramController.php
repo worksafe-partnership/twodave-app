@@ -105,6 +105,13 @@ class CompanyVtramController extends Controller
                 $this->customValues['associatedUsers'][$userId] = 1;
             }
         }
+
+        $this->customValues['is_file_vtram'] = 0;
+        if ($_GET && isset($_GET['file_upload'])) {
+            $this->customValues['is_file_vtram'] = 1;
+        } else if ($this->pageType != "create" && $this->record->vtram_is_file) {
+            $this->customValues['is_file_vtram'] = 1;
+        }
     }
 
     public function createHook()
@@ -264,7 +271,7 @@ class CompanyVtramController extends Controller
     {
         $company = $this->user->company;
         // Setup Actions
-        if (in_array($this->record->pages_in_pdf, [2,3,4])) {
+        if (in_array($this->record->pages_in_pdf, [2,3,4]) && !$this->record->vtram_is_file) {
             $this->pillButtons['view_pdf_a3'] = [
                 'label' => 'View PDF A3',
                 'path' => $this->record->id.'/view_a3',
@@ -403,11 +410,16 @@ class CompanyVtramController extends Controller
             $companyId = $user->companyId;
         }
         $vtram = Vtram::findOrFail($vtramId);
+        if ($vtram->vtram_is_file) {
+            return redirect('/download/'.$vtram->vtram_file);
+        }
+
         if ($user->company_id !== null) {
             if ($user->company_id !== $vtram->company_id) {
                 abort(404);
             }
         }
+
         if (in_array($vtram->pages_in_pdf, [2,3,4])) {
             return VTLogic::createA3Pdf($vtram, null, true);
         }
@@ -421,6 +433,11 @@ class CompanyVtramController extends Controller
             $companyId = $user->companyId;
         }
         $vtram = Vtram::findOrFail($vtramId);
+
+        if ($vtram->vtram_is_file) {
+            return redirect('/download/'.$vtram->vtram_file);
+        }
+
         if ($user->company_id !== null) {
             if ($user->company_id !== $vtram->company_id) {
                 abort(404);
@@ -439,6 +456,10 @@ class CompanyVtramController extends Controller
             'post_risk_assessment_text' => $company->post_risk_assessment_text,
             'created_by' => Auth::id(),
         ]);
+
+        if ($request->vtram_file) {
+            $request->merge(['vtram_is_file' => 1]);
+        }
 
         return parent::_store(func_get_args());
     }

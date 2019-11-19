@@ -110,6 +110,18 @@
                     ]) }}
                 </div>
             </div>
+            @if(isset($is_file_vtram) && $is_file_vtram)
+            <div class="column is-3">
+                <div class="field">
+                    {{ EGForm::file('vtram_file', [
+                        'label' => 'VTRAM PDF',
+                        'value' => $record["vtram_file"],
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+            @endif
+            @if(isset($is_file_vtram) && !$is_file_vtram)
             <div class="column is-3">
                 <div class="field">
                     {{ EGForm::file('logo', [
@@ -120,91 +132,94 @@
                     ]) }}
                 </div>
             </div>
-            @if (strpos($identifierPath, 'template') === false)
-                <div class="column is-3">
-                    <div class="field responsible-check">
-                        {{ EGForm::checkbox('show_responsible_person', [
-                            'label' => 'Show Responsible Person',
-                            'value' => $record->show_responsible_person ?? false,
-                            'type' => $pageType
-                        ]) }}
+                @if (strpos($identifierPath, 'template') === false)
+                    <div class="column is-3">
+                        <div class="field responsible-check">
+                            {{ EGForm::checkbox('show_responsible_person', [
+                                'label' => 'Show Responsible Person',
+                                'value' => $record->show_responsible_person ?? false,
+                                'type' => $pageType
+                            ]) }}
+                        </div>
                     </div>
-                </div>
-                <div class="column is-3">
-                    <div class="field responsible-details">
-                        {{ EGForm::text('responsible_person', [
-                            'label' => 'Responsible Person',
-                            'value' => $record["responsible_person"],
-                            'type' => $pageType
-                        ]) }}
+                    <div class="column is-3">
+                        <div class="field responsible-details">
+                            {{ EGForm::text('responsible_person', [
+                                'label' => 'Responsible Person',
+                                'value' => $record["responsible_person"],
+                                'type' => $pageType
+                            ]) }}
+                        </div>
                     </div>
-                </div>
+                @endif
             @endif
         </div>
-        <div class="columns">
-            @if (strpos($identifierPath, 'template') === false)
-                <div class="column is-3">
-                    <div class="field area-check">
-                        {{ EGForm::checkbox('show_area', [
-                            'label' => 'Show Area on PDF',
-                            'value' => $record['show_area'],
-                            'type' => $pageType,
-                        ]) }}
+        @if(isset($is_file_vtram) && !$is_file_vtram)
+            <div class="columns">
+                @if (strpos($identifierPath, 'template') === false)
+                    <div class="column is-3">
+                        <div class="field area-check">
+                            {{ EGForm::checkbox('show_area', [
+                                'label' => 'Show Area on PDF',
+                                'value' => $record['show_area'],
+                                'type' => $pageType,
+                            ]) }}
+                        </div>
                     </div>
-                </div>
-                <div class="column is-3">
-                    <div class="field area-details">
-                        {{ EGForm::text('area', [
-                            'label' => 'Area Name',
-                            'value' => $record['area'],
-                            'type' => $pageType,
-                        ]) }}
+                    <div class="column is-3">
+                        <div class="field area-details">
+                            {{ EGForm::text('area', [
+                                'label' => 'Area Name',
+                                'value' => $record['area'],
+                                'type' => $pageType,
+                            ]) }}
+                        </div>
                     </div>
-                </div>
-            @endif
-            @if (strpos($identifierPath, 'vtram') !== false)
-                <div class="column is-3">
+                @endif
+                @if (strpos($identifierPath, 'vtram') !== false)
+                    <div class="column is-3">
+                        <div class="field">
+                            {{ EGForm::checkbox('client_on_pdf', [
+                                'label' => 'Show Client Name on PDF',
+                                'value' => $record['client_on_pdf'],
+                                'type' => $pageType,
+                            ]) }}
+                        </div>
+                    </div>
+                    <div class="column is-3">
+                        <div class="field">
+                            {{ EGForm::checkbox('pc_on_pdf', [
+                                'label' => 'Show Principal Contractor Name on PDF (if applicable)',
+                                'value' => $record['pc_on_pdf'],
+                                'type' => $pageType,
+                            ]) }}
+                        </div>
+                    </div>
+                @endif
+            </div>
+            <div class="columns">
+                <div class="column">
                     <div class="field">
-                        {{ EGForm::checkbox('client_on_pdf', [
-                            'label' => 'Show Client Name on PDF',
-                            'value' => $record['client_on_pdf'],
+                        {{ EGForm::checkbox('general_rams', [
+                            'label' => 'General RAMS?',
+                            'value' => $record['general_rams'],
                             'type' => $pageType,
                         ]) }}
                     </div>
                 </div>
-                <div class="column is-3">
-                    <div class="field">
-                        {{ EGForm::checkbox('pc_on_pdf', [
-                            'label' => 'Show Principal Contractor Name on PDF (if applicable)',
-                            'value' => $record['pc_on_pdf'],
-                            'type' => $pageType,
-                        ]) }}
-                    </div>
-                </div>
-            @endif
-        </div>
-        <div class="columns">
-            <div class="column">
-                <div class="field">
-                    {{ EGForm::checkbox('general_rams', [
-                        'label' => 'General RAMS?',
-                        'value' => $record['general_rams'],
+                @if (strpos($identifierPath, 'vtram') !== false)
+                <div class="column">
+                    {{ EGForm::select('company_logo_id', [
+                        'label' => 'Select Company For Logo',
+                        'value' => $record->company_logo_id ?? $company->id,
+                        'list' => $compAndContractors,
+                        'display_value' => isset($record) && $record->company_logo != null ? $record->company_logo->name : $company->name,
                         'type' => $pageType,
                     ]) }}
                 </div>
+                @endif
             </div>
-            @if (strpos($identifierPath, 'vtram') !== false)
-            <div class="column">
-                {{ EGForm::select('company_logo_id', [
-                    'label' => 'Select Company For Logo',
-                    'value' => $record->company_logo_id ?? $company->id,
-                    'list' => $compAndContractors,
-                    'display_value' => isset($record) && $record->company_logo != null ? $record->company_logo->name : $company->name,
-                    'type' => $pageType,
-                ]) }}
-            </div>
-            @endif
-        </div>
+        @endif
         @if (strpos($identifierPath, 'vtram') !== false)
         <hr>
         <div class="columns">
@@ -248,6 +263,7 @@
         @if ($pageType != 'create')
         </div>
     </div>
+    @if(isset($is_file_vtram) && !$is_file_vtram)
     <hr>
     <div class="columns">
         <div class="column is-10 is-offset-1">
@@ -273,30 +289,38 @@
                     </div>
                 </div>
             </div>
-        @endif
+        @endif {{-- end vtrams check--}}
         @if ($pageType == 'edit')
         </div>
     </div>
-    <hr>
-    <div class="columns is-multiline">
-        <div class="column is-6 box-container">
-            @include('modules.company.project.vtram.methodstatements')
-            <hr>
+    @if(isset($is_file_vtram) && !$is_file_vtram)
+        <hr>
+        <div class="columns is-multiline">
+            <div class="column is-6 box-container">
+                @include('modules.company.project.vtram.methodstatements')
+                <hr>
+            </div>
+            <div class="column is-6 box-container">
+                @include('modules.company.project.vtram.hazards')
+                <hr>
+            </div>
         </div>
-        <div class="column is-6 box-container">
-            @include('modules.company.project.vtram.hazards')
-            <hr>
-        </div>
-    </div>
+    @endif
         @include('modules.company.project.vtram.script_style_for_both')
-        @endif
+        @endif {{-- end if edit --}}
+    @endif {{-- end if not vtrams file --}}
 
         <div class="columns">
-            <div class="column is-6">
+            @if($pageType == "view")
+                <div class="column is-6 is-offset-1">
+            @else
+                <div class="column is-6">
+            @endif
                 <div class="field">
                     <a download="Noise Vibration Assessment.xls" href="/Noise_Vibration_Assessment.xls" class="button">Download HAVS/Noise Assessment</a>
                 </div>
             </div>
+            @if(isset($is_file_vtram) && !$is_file_vtram)
             <div class="column is-6">
                 @if (strpos($identifierPath, 'vtram') !== false)
                     <div class="field">
@@ -308,9 +332,14 @@
                     </div>
                 @endif
             </div>
+            @endif
         </div>
         <div class="columns">
-            <div class="column is-6">
+                @if($pageType == "view")
+                    <div class="column is-6 is-offset-1">
+                @else
+                    <div class="column is-6">
+                @endif
                 <div class="field">
                     {{ EGForm::file('coshh_assessment', [
                         'label' => 'COSHH Assessment Document',
@@ -329,6 +358,7 @@
                 </div>
             </div>
         </div>
+        @if(isset($is_file_vtram) && !$is_file_vtram)
         <div class="columns">
             <div class="column">
                 <div class="field">
@@ -340,6 +370,7 @@
                 </div>
             </div>
         </div>
+        @endif
         @if ($pageType == 'view')
             @if(isset($comments) && $comments->isNotEmpty())
             </div>
@@ -562,6 +593,7 @@
             $('.modal').removeClass('is-active');
         })
 
+        @if($pageType != "create")
         $('#save_new_template_button').on('click', function() {
             $.ajax({
                 url: '{{$record->id}}/save_as_template',
@@ -580,6 +612,7 @@
             });
 
         })
+        @endif
     </script>
 @endpush
 

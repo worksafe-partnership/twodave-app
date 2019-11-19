@@ -59,7 +59,9 @@ class Vtram extends Model
         'show_area',
         'area',
         'general_rams',
-        'company_logo_id'
+        'company_logo_id',
+        'vtram_is_file',
+        'vtram_file'
     ];
 
 

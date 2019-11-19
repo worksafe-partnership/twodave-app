@@ -123,7 +123,7 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
     Route::get('/project/{project_id}/vtram/{vtram_id}/view_a4', [
         'middleware' => 'can:view-project.vtram',
-        'uses' => 'VtramController@viewA3'
+        'uses' => 'VtramController@viewA4'
     ]);
     Route::get('/project/{project_id}/vtram/{vtram_id}/previous/{previous_id}/view_a4', [
         'middleware' => 'can:view-project.vtram.previous',

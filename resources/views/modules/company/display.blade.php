@@ -245,6 +245,26 @@
 </div>
 @endif
 
+@if($user->inRole('evergreen') || $user->inRole('admin'))
+<hr>
+<div class="columns">
+    <div class="column is-10 is-offset-1">
+        <h2 class="sub-heading">PDF Document Uploads</h2>
+        <div class="columns">
+            <div class="column">
+                <div class="field">
+                    {{ EGForm::checkbox('allow_file_uploads', [
+                        'label' => 'Allow Users to Upload VTrams as PDFs?',
+                        'value' => $record->allow_file_uploads ?? false,
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
 <hr>
 <div class="columns">
     <div class="column is-10 is-offset-1">

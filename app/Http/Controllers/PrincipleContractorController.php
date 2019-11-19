@@ -137,6 +137,8 @@ class PrincipleContractorController extends Controller
             'icon' => 'arrow-left',
         ];
         $this->breadcrumbs = null;
+        $this->customValues['associatedUsers'] = [];
+        $this->customValues['projectUsers'] = [];
         return parent::_renderView("layouts.custom");
     }
 
@@ -288,6 +290,10 @@ class PrincipleContractorController extends Controller
             })
             ->where('status', '=', 'AWAITING_EXTERNAL')
             ->firstOrFail();
+
+        if ($vtrams->vtram_is_file) {
+            return redirect('/download/'.$vtrams->vtram_file);
+        }
 
         if (in_array($vtrams->pages_in_pdf, [2,3,4])) {
             return VTLogic::createA3Pdf($vtrams);
