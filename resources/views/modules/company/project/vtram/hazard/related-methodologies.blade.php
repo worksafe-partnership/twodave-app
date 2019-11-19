@@ -23,24 +23,3 @@
         }
     </style>
 @endpush
-@push('scripts')
-    <script>
-        $('.selectize-multiple').selectize({
-            onInitialize: function() {
-                $(this.$control).css('height', '38px');
-                $(this.$control).css('z-index', 'initial');
-            },
-            onFocus: function() {
-                $(this.$control).css('height', 'initial');
-                $(this.$control).css('z-index', '999');
-            },
-            onBlur: function() {
-                $(this.$control).css('height', '38px');
-                $(this.$control).css('z-index', 'initial');
-            },
-        });
-        $(document).on('DOMSubtreeModified', '.selectize-input', function () {
-            this.scrollTop = this.scrollHeight;
-        });
-    </script>
-@endpush
