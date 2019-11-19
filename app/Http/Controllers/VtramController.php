@@ -121,15 +121,6 @@ class VtramController extends CompanyVtramController
 
     public function viewHook()
     {
-        if (can('edit', $this->identifierPath) && in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND'])  && is_null($this->record['deleted_at'])) {
-            $this->actionButtons['methodologies'] = [
-                'label' => 'Method Statements & Risk Assessment',
-                'path' => '/project/'.$this->parentId.'/vtram/'.$this->id.'/methodology',
-                'icon' => 'receipt',
-                'order' => '500',
-                'id' => 'methodologyEdit',
-            ];
-        }
         if (can('edit', $this->identifierPath)) {
             $prevConfig = config('structure.project.vtram.previous.config');
             $this->actionButtons['previous'] = [
@@ -180,6 +171,72 @@ class VtramController extends CompanyVtramController
             'order' => 150,
             'value' => true,
         ];
+
+        $project = $this->args[0];
+        $this->customValues['path'] = '/project/'.$project.'/vtram/create';
+
+        $company = Company::find($this->record->company_id);
+        if ($company != null) {
+            $this->customValues['riskList'] = [
+                0 => $company->no_risk_character,
+                1 => $company->low_risk_character,
+                2 => $company->med_risk_character,
+                3 => $company->high_risk_character,
+            ];
+        } else {
+            $this->customValues['riskList'] = [
+                0 => '#',
+                1 => 'L',
+                2 => 'M',
+                3 => 'H',
+            ];
+            $company = collect([]); // blade requires a company for the TEXT methodology company defaults
+        }
+        $this->customValues['whoList'] = config('egc.hazard_who_risk');
+        $this->customValues['methTypeList'] = config('egc.methodology_list');
+        $this->customValues['hazards'] = Hazard::where('entity', '=', 'VTRAM')
+            ->where('entity_id', '=', $this->id)
+            ->orderBy('list_order')
+            ->get();
+        $this->customValues['methodologies'] = Methodology::where('entity', '=', 'VTRAM')
+            ->where('entity_id', '=', $this->id)
+            ->orderBy('list_order')
+            ->get();
+
+        $this->customValues['comments'] = VTLogic::getComments($this->record->id, $this->record->status, 'VTRAM');
+        $this->customValues['entityType'] = 'VTRAM';
+
+        // Start of Methodology Specific Items //
+        $this->customValues['iconSelect'] = config('egc.icons');
+        $this->customValues['iconImages'] = json_encode(config('egc.icon_images'));
+        $this->customValues['company'] = $company;
+
+        $methodologyIds = $this->customValues['methodologies']->pluck('id');
+
+        $this->customValues['tableRows'] = [];
+        $tableRows = TableRow::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
+        foreach ($tableRows as $row) {
+            $this->customValues['tableRows'][$row->methodology_id][] = $row;
+        }
+
+        $this->customValues['processes'] = [];
+        $instructions = Instruction::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
+        foreach ($instructions as $instruction) {
+            $this->customValues['processes'][$instruction->methodology_id][] = $instruction;
+        }
+
+        $this->customValues['icons'] = [];
+        $icons = Icon::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
+        foreach ($icons as $icon) {
+            $this->customValues['icons'][$icon->methodology_id][$icon->type][] = $icon;
+        }
+        // End of Methodology Specific Items //
+
+        $this->customValues['hazard_methodologies'] = [];
+        $hms = DB::table('hazards_methodologies')->whereIn('hazard_id', $this->customValues['hazards']->pluck('id'))->get();
+        foreach ($hms as $hm) {
+            $this->customValues['hazard_methodologies'][$hm->hazard_id][] = $hm->methodology_id;
+        }
     }
 
     public function postEditHook()

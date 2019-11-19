@@ -210,14 +210,5 @@ class CompanyApprovalController extends Controller
         } else {
             $record = Vtram::withTrashed()->findOrFail($this->parentId);
         }
-        if (can('edit', $this->identifierPath) && in_array($record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND']) && is_null($record['deleted_at'])) {
-            $this->actionButtons['methodologies'] = [
-                'label' => 'Method Statements & Risk Assessment',
-                'path' => $path,
-                'icon' => 'receipt',
-                'order' => '550',
-                'id' => 'methodologyEdit',
-            ];
-        }
     }
 }
