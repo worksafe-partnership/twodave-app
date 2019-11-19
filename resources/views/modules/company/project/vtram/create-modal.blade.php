@@ -22,7 +22,7 @@
                     </div>
                 </section>
             <footer class="modal-card-foot">
-                <button class="button" id="close_modal">Cancel</button>
+                <button class="button close_modal">Cancel AAAAAAA</button>
             </footer>
         </div>
     </div>
@@ -37,6 +37,10 @@
 
         $("#close_modal").click(function() {
             event.preventDefault();
+            $(".modal").removeClass("is-active");
+        });
+
+        $(".close_modal").click(function() {
             $(".modal").removeClass("is-active");
         });
 
