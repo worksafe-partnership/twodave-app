@@ -116,7 +116,7 @@ class User extends Authenticatable
         return '';
     }
 
-    // gets a list of all companies where I have access to a project
+    // gets a list of all companies where I have access to a project - mostly used for template bits.
     public function getAccessCompanies()
     {
         if (is_null($this->company_id)) { // super admin can do all.
