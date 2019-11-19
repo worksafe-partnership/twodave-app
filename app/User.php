@@ -116,7 +116,21 @@ class User extends Authenticatable
         return '';
     }
 
-    public function getNonBillableContractorsAttribute()
+    // gets a list of all companies where I have access to a project - mostly used for template bits.
+    public function getAccessCompanies()
+    {
+        if (is_null($this->company_id)) { // super admin can do all.
+            return Company::pluck('name', 'id')->toArray();
+        } else {
+            $companies = Project::join('project_subcontractors', 'projects.id', '=', 'project_subcontractors.project_id')
+                           ->where('project_subcontractors.company_id', $this->company_id)
+                           ->pluck('projects.company_id')->toArray();
+            $companies[] = $this->company_id;
+            return $companies;
+        }
+    }
+
+    public function nonBillableContractors()
     {
         if (is_null($this->company_id)) { // super admin can do all.
             return Company::pluck('name', 'id')->toArray();

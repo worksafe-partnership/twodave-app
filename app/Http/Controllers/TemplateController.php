@@ -180,7 +180,7 @@ class TemplateController extends Controller
     public function viewEditHook()
     {
         // don't let company admins see templates that don't belong to them.
-        if (!is_null($this->user->company_id) && $this->user->company_id != $this->record->company_id) {
+        if (!is_null($this->user->company_id) && !in_array($this->user->company_id, $this->user->getAccessCompanies())) {
             abort(404);
         }
     }

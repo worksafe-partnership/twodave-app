@@ -35,9 +35,18 @@ class CompanyVtramController extends Controller
 
     public function postIndexHook()
     {
-        $this->customValues['templates'] = Template::where('company_id', $this->args[0])
+        $templates = Template::whereIn('company_id', [$this->args[0], $this->user->company_id])
+                                                   ->join('companies', 'templates.company_id', '=', 'companies.id')
                                                    ->where('status', 'CURRENT')
-                                                   ->pluck('name', 'id');
+                                                   ->get([
+                                                        'companies.name as company_name', 'templates.name', 'templates.id'
+                                                    ]);
+        $this->customValues['templates'] = [];
+        foreach ($templates as $template) {
+            $this->customValues['templates'][$template->id] = $template->name . " (" . $template->company_name .")";
+        }
+        $this->customValues['templates'] = collect($this->customValues['templates']);
+
         if (isset($this->actionButtons['create']['class'])) {
             $this->actionButtons['create']['class'] .= " create_vtram";
         }
@@ -53,9 +62,17 @@ class CompanyVtramController extends Controller
 
     public function bladeHook()
     {
-        $this->customValues['templates'] = Template::where('company_id', $this->args[0])
-                                                           ->where('status', 'CURRENT')
-                                                           ->pluck('name', 'id');
+        $templates = Template::whereIn('company_id', [$this->args[0], $this->user->company_id])
+                                                   ->join('companies', 'templates.company_id', '=', 'companies.id')
+                                                   ->where('status', 'CURRENT')
+                                                   ->get([
+                                                        'companies.name as company_name', 'templates.name', 'templates.id'
+                                                    ]);
+        $this->customValues['templates'] = [];
+        foreach ($templates as $template) {
+            $this->customValues['templates'][$template->id] = $template->name . " (" . $template->company_name .")";
+        }
+        $this->customValues['templates'] = collect($this->customValues['templates']);
 
         $this->customValues['company'] = $company = Company::findOrFail($this->args[0]);
 

@@ -51,9 +51,20 @@ class VtramController extends CompanyVtramController
         if (isset($this->actionButtons['create']['class'])) {
             $this->actionButtons['create']['class'] .= " create_vtram";
         }
-        $this->customValues['templates'] = Template::where('company_id', $this->user->company_id)
+
+        $project = Project::findOrFail($this->parentId);
+        $templates = Template::whereIn('company_id', [$project->company_id, $this->user->company_id])
+                                                   ->join('companies', 'templates.company_id', '=', 'companies.id')
                                                    ->where('status', 'CURRENT')
-                                                   ->pluck('name', 'id');
+                                                   ->get([
+                                                        'companies.name as company_name', 'templates.name', 'templates.id'
+                                                    ]);
+        $this->customValues['templates'] = [];
+        foreach ($templates as $template) {
+            $this->customValues['templates'][$template->id] = $template->name . " (" . $template->company_name .")";
+        }
+        $this->customValues['templates'] = collect($this->customValues['templates']);
+
         $this->customValues['path'] = 'vtram/create';
     }
 
@@ -64,9 +75,19 @@ class VtramController extends CompanyVtramController
             abort(404);
         }
 
-        $this->customValues['templates'] = Template::where('company_id', $this->user->company_id)
+        $project = Project::findOrFail($this->parentId);
+        $templates = Template::whereIn('company_id', [$project->company_id, $this->user->company_id])
+                                                   ->join('companies', 'templates.company_id', '=', 'companies.id')
                                                    ->where('status', 'CURRENT')
-                                                   ->pluck('name', 'id');
+                                                   ->get([
+                                                        'companies.name as company_name', 'templates.name', 'templates.id'
+                                                    ]);
+        $this->customValues['templates'] = [];
+        foreach ($templates as $template) {
+            $this->customValues['templates'][$template->id] = $template->name . " (" . $template->company_name .")";
+        }
+        $this->customValues['templates'] = collect($this->customValues['templates']);
+
         $this->customValues['path'] = 'create';
         $this->customValues['company'] = $company = $this->user->company;
         $this->config['singular'] = $company->vtrams_name ?? 'VTRAMS';
@@ -74,7 +95,7 @@ class VtramController extends CompanyVtramController
         $this->structure['config']['singular'] = $company->vtrams_name ?? 'VTRAMS';
         $this->structure['config']['plural'] = $company->vtrams_name ?? 'VTRAMS';
 
-        $this->customValues['compAndContractors'] = ProjectSubContractor::where('project_id', $company->id)
+        $this->customValues['compAndContractors'] = ProjectSubContractor::where('project_id', $this->parentId)
                                                                         ->join('companies', 'companies.id', '=', 'project_subcontractors.company_id')
                                                                         ->pluck('companies.name', 'companies.id')
                                                                         ->toArray();

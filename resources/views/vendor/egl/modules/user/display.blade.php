@@ -81,33 +81,18 @@
             <div class="column is-10 is-offset-1">
                 <h2 class="sub-heading">Roles</h2>
                 <div class="columns">
-                    @if (Auth::user()->company_id == null)
-                        <div class="column is-6">
-                            <div class="field company-field">
-                                {{ EGForm::autocomplete('company_id', [
-                                    "label" => "Company",
-                                    "type" => $pageType,
-                                    "list" => $companies,
-                                    "value" => $record['company_id'] ?? '',
-                                    "selector" => true,
-                                    "display_value" => $record->company->name ?? '',
-                                ]) }}
-                            </div>
+                    <div class="column is-6">
+                        <div class="field company-field">
+                            {{ EGForm::autocomplete('company_id', [
+                                "label" => "Company",
+                                "type" => $pageType,
+                                "list" => $companies,
+                                "value" => $record['company_id'] ?? '',
+                                "selector" => true,
+                                "display_value" => $record->company->name ?? '',
+                            ]) }}
                         </div>
-                    @else
-                        <div class="column is-6">
-                            <div class="field company-field">
-                                {{ EGForm::autocomplete('company_id', [
-                                    "label" => "Company",
-                                    "type" => 'view',
-                                    "list" => $companies,
-                                    "value" => $record['company_id'] ?? '',
-                                    "selector" => true,
-                                    "display_value" => $record->company->name ?? '',
-                                ]) }}
-                            </div>
-                        </div>
-                    @endif
+                    </div>
                     <div class="column is-6">
                         <div class="field roles">
                             {{ EGForm::multiCheckbox("roles", [
