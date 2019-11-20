@@ -617,7 +617,7 @@
 @endpush
 
 @include('modules.company.project.vtram.create-modal')
-@if ($pageType == 'view' && strpos($identifierPath, 'template') !== false)
+@if ($pageType == 'view' && strpos($identifierPath, 'template') !== false && strpos($identifierPath, 'previous') === false)
     @include('modules.company.template.create-vtrams-modal')
 @endif
 

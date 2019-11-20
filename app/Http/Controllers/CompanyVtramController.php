@@ -643,7 +643,7 @@ class CompanyVtramController extends Controller
         }
 
         $newTemplate = VTLogic::saveAsTemplate($vtram, $replaceTemplate);
-        toast()->success('Record Cloned!', 'You\'re now viewing the new Template');
+        toast()->success('Template Created', 'You\'re now viewing the new Template');
         return '/template/'.$newTemplate->id;
     }
 }
