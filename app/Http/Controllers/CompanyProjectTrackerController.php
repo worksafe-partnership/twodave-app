@@ -7,6 +7,7 @@ use Carbon;
 use Controller;
 use App\Vtram;
 use App\Template;
+use App\Company;
 use App\Project;
 
 class CompanyProjectTrackerController extends Controller

@@ -254,7 +254,7 @@
             <div class="column">
                 <div class="field">
                     {{ EGForm::checkbox('allow_file_uploads', [
-                        'label' => 'Allow Users to Upload VTrams as PDFs?',
+                        'label' => 'Allow Users to Upload VTRAMS as PDFs?',
                         'value' => $record->allow_file_uploads ?? false,
                         'type' => $pageType
                     ]) }}

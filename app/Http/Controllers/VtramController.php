@@ -9,6 +9,9 @@ use App\Hazard;
 use App\Project;
 use App\Company;
 use App\Template;
+use App\TableRow;
+use App\Instruction;
+use App\Icon;
 use App\VtramUser;
 use App\Methodology;
 use App\UserProject;
@@ -27,7 +30,8 @@ class VtramController extends CompanyVtramController
             $template = Template::findOrFail($_GET['template']);
             $this->customValues['createdFromEntity'] = "TEMPLATE";
             $this->customValues['createdFromId'] = $_GET['template'];
-            if ($template->company_id != $this->user->company_id) {
+            $project = Project::findOrFail($this->parentId);
+            if (!in_array($project->id, $this->user->projectCompanyIds())) {
                 abort(404);
             }
             if ($template->status != "CURRENT") {
@@ -102,7 +106,8 @@ class VtramController extends CompanyVtramController
                                                                         ->join('companies', 'companies.id', '=', 'project_subcontractors.company_id')
                                                                         ->pluck('companies.name', 'companies.id')
                                                                         ->toArray();
-        $this->customValues['compAndContractors'][$company->id] = $company->name;
+        $projCompany = $project->company;
+        $this->customValues['compAndContractors'][$projCompany->id] = $projCompany->name;
 
         $this->customValues['companyId'] = $company->id;
 
@@ -122,9 +127,14 @@ class VtramController extends CompanyVtramController
 
         $this->customValues['associatedUsers'] = [];
         if ($this->pageType != "create") {
-            $assoc = VtramUser::where('vtrams_id', $this->record->id)->pluck('user_id');
+            $assoc = VtramUser::where('vtrams_id', $this->record->id)->pluck('user_id')->toArray();
             foreach ($assoc as $userId) {
                 $this->customValues['associatedUsers'][$userId] = 1;
+            }
+            if (count($assoc) > 0) {
+                if (!in_array($this->user->id, $assoc)) {
+                    abort(404);
+                }
             }
         }
 

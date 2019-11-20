@@ -47,7 +47,7 @@ class VtramRequest extends FormRequest
             'responsible_person.required_if' => 'Please enter the Responsible Person',
             'area.max' => 'The Area Name cannot be more than 100 charcters',
             'area.required_if' => 'Please enter the Area Name',
-            'vtram_file.mimes' => 'VTram uploaded document must be a PDF'
+            'vtram_file.mimes' => ($user->company->vtrams_name ?? 'VTRAMS').' uploaded document must be a PDF'
         ];
     }
 }

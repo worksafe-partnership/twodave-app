@@ -60,14 +60,16 @@ class ProjectTrackerController extends Controller
         $args = func_get_args();
         $nowCarbon = Carbon::now();
         $twoWeeksCarbon = $nowCarbon->copy()->addWeeks(2);
-        $query = Vtram::whereIn('id', $user->vtramsCompanyIds())
+        $query = Vtram::whereIn('vtrams.id', $user->vtramsCompanyIds())
+                        ->join('companies', 'companies.id', '=', 'vtrams.company_id')
                         ->where('status', '!=', 'PREVIOUS')
                         ->where('project_id', '=', $args[0])
-                        ->get([
-                            'id',
+                        ->select([
+                            'vtrams.id',
                             'number',
                             'project_id',
-                            'name',
+                            'companies.name AS company_name',
+                            'vtrams.name',
                             'status',
                             'created_by',
                             'submitted_by',

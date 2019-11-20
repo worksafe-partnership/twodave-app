@@ -63,7 +63,7 @@ class CompanyVtramController extends Controller
 
     public function bladeHook()
     {
-        $this->customValues['company'] = Company::findOrFail($this->args[0]);
+        $this->customValues['company'] = $company = Company::findOrFail($this->args[0]);
         $templates = Template::whereIn('company_id', [$this->args[0], $this->user->company_id])
                                                    ->join('companies', 'templates.company_id', '=', 'companies.id')
                                                    ->where('status', 'CURRENT')
@@ -76,8 +76,6 @@ class CompanyVtramController extends Controller
         }
         $this->customValues['saveAsTemplates'] = ['' => 'No, make a new template'] + $this->customValues['templates'];
         $this->customValues['templates'] = collect($this->customValues['templates']);
-
-        $this->customValues['company'] = $company = Company::findOrFail($this->args[0]);
 
         $this->customValues['compAndContractors'] = ProjectSubContractor::where('project_id', $this->args[1])
                                                                         ->join('companies', 'companies.id', '=', 'project_subcontractors.company_id')
@@ -414,7 +412,7 @@ class CompanyVtramController extends Controller
         $vtram = Vtram::findOrFail($vtramId);
 
         if ($user->company_id !== null) {
-            if ($user->company_id !== $vtram->company_id) {
+            if (!in_array($vtram->id, $user->vtramsCompanyIds())) {
                 abort(404);
             }
         }
@@ -434,7 +432,7 @@ class CompanyVtramController extends Controller
         $vtram = Vtram::findOrFail($vtramId);
 
         if ($user->company_id !== null) {
-            if ($user->company_id !== $vtram->company_id) {
+            if (!in_array($vtram->id, $user->vtramsCompanyIds())) {
                 abort(404);
             }
         }

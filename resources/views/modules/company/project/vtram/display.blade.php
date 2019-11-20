@@ -110,18 +110,18 @@
                     ]) }}
                 </div>
             </div>
-            @if(isset($is_file_vtram) && $is_file_vtram)
+            @if((isset($is_file_vtram) && !$is_file_vtram))
             <div class="column is-3">
                 <div class="field">
                     {{ EGForm::file('vtram_file', [
-                        'label' => 'VTRAM PDF',
+                        'label' => (Auth::user()->company->vtram_name ?? 'VTRAMS').' PDF',
                         'value' => $record["vtram_file"],
                         'type' => $pageType
                     ]) }}
                 </div>
             </div>
             @endif
-            @if(isset($is_file_vtram) && !$is_file_vtram)
+            @if((isset($is_file_vtram) && !$is_file_vtram) || strpos($identifierPath, 'template') !== false)
             <div class="column is-3">
                 <div class="field">
                     {{ EGForm::file('logo', [
@@ -154,7 +154,7 @@
                 @endif
             @endif
         </div>
-        @if(isset($is_file_vtram) && !$is_file_vtram)
+        @if((isset($is_file_vtram) && !$is_file_vtram) || strpos($identifierPath, 'template') !== false)
             <div class="columns">
                 @if (strpos($identifierPath, 'template') === false)
                     <div class="column is-3">
@@ -223,11 +223,6 @@
         @if (strpos($identifierPath, 'vtram') !== false)
         <hr>
         <div class="columns">
-            <div class="column">
-                <h2 class="sub-heading">Users</h2>
-            </div>
-        </div>
-        <div class="columns">
             <div class="column is-12">
                 <div class="field">
                     @if ($pageType == 'view')
@@ -263,7 +258,7 @@
         @if ($pageType != 'create')
         </div>
     </div>
-    @if(isset($is_file_vtram) && !$is_file_vtram)
+    @if((isset($is_file_vtram) && !$is_file_vtram) || strpos($identifierPath, 'template') !== false)
     <hr>
     <div class="columns">
         <div class="column is-10 is-offset-1">
@@ -293,7 +288,7 @@
         @if ($pageType == 'edit')
         </div>
     </div>
-    @if(isset($is_file_vtram) && !$is_file_vtram)
+    @if((isset($is_file_vtram) && !$is_file_vtram) || strpos($identifierPath, 'template') !== false)
         <hr>
         <div class="columns is-multiline">
             <div class="column is-6 box-container">
@@ -311,17 +306,21 @@
     @endif {{-- end if not vtrams file --}}
 
         <div class="columns">
-            @if($pageType == "view")
-                <div class="column is-6 is-offset-1">
-            @else
+            @if ($pageType != 'edit')
                 <div class="column is-6">
+            @else 
+                <div class="column is-6 is-offset-1">
             @endif
                 <div class="field">
                     <a download="Noise Vibration Assessment.xls" href="/Noise_Vibration_Assessment.xls" class="button">Download HAVS/Noise Assessment</a>
                 </div>
             </div>
-            @if(isset($is_file_vtram) && !$is_file_vtram)
-            <div class="column is-6">
+            @if((isset($is_file_vtram) && !$is_file_vtram) || strpos($identifierPath, 'template') !== false)
+            @if ($pageType != 'edit')
+                <div class="column is-6">
+            @else 
+                <div class="column is-5">
+            @endif
                 @if (strpos($identifierPath, 'vtram') !== false)
                     <div class="field">
                         {{ EGForm::checkbox('dynamic_risk', [
@@ -335,32 +334,40 @@
             @endif
         </div>
         <div class="columns">
-                @if($pageType == "view")
-                    <div class="column is-6 is-offset-1">
-                @else
+            @if ($pageType != 'edit')
+                <div class="column is-12">
+            @else 
+                <div class="column is-10 is-offset-1">
+            @endif
+                <div class="columns">
                     <div class="column is-6">
-                @endif
-                <div class="field">
-                    {{ EGForm::file('coshh_assessment', [
-                        'label' => 'COSHH Assessment Document',
-                        'value' => $record["coshh_assessment"],
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-            <div class="column is-6">
-                <div class="field">
-                    {{ EGForm::file('havs_noise_assessment', [
-                        'label' => 'HAVS/Noise Assessment Document',
-                        'value' => $record["havs_noise_assessment"],
-                        'type' => $pageType
-                    ]) }}
+                        <div class="field">
+                            {{ EGForm::file('coshh_assessment', [
+                                'label' => 'COSHH Assessment Document',
+                                'value' => $record["coshh_assessment"],
+                                'type' => $pageType
+                            ]) }}
+                        </div>
+                    </div>
+                    <div class="column is-6">
+                        <div class="field">
+                            {{ EGForm::file('havs_noise_assessment', [
+                                'label' => 'HAVS/Noise Assessment Document',
+                                'value' => $record["havs_noise_assessment"],
+                                'type' => $pageType
+                            ]) }}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        @if(isset($is_file_vtram) && !$is_file_vtram)
+        @if((isset($is_file_vtram) && !$is_file_vtram) || strpos($identifierPath, 'template') !== false)
         <div class="columns">
-            <div class="column">
+            @if ($pageType != 'edit')
+                <div class="column is-12">
+            @else 
+                <div class="column is-10 is-offset-1">
+            @endif
                 <div class="field">
                     {{ EGForm::ckeditor('key_points', [
                         'label' => 'Key Points',

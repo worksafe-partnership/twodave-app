@@ -49,7 +49,7 @@ class User extends Authenticatable
         });
 
         if ($user->company_id !== null) {
-            $query->where('company_id', '=', $user->company_id);
+            $query->whereIn('company_id', $this->getAccessCompanies(true, true));
         }
 
         $data = $query->withTrashed(can('permanentlyDelete', $config))->select(
@@ -117,15 +117,27 @@ class User extends Authenticatable
     }
 
     // gets a list of all companies where I have access to a project - mostly used for template bits.
-    public function getAccessCompanies()
+    public function getAccessCompanies($billableCheck = false, $inList = false)
     {
-        if (is_null($this->company_id)) { // super admin can do all.
+        $user = Auth::user();
+        if ($inList) {
+            if ($user->company_id == null) {
+                return Company::pluck('name', 'id')->toArray();
+            }
+        }
+        if (is_null($this->company_id) && !$inList) { // super admin can do all.
             return Company::pluck('name', 'id')->toArray();
         } else {
-            $companies = Project::join('project_subcontractors', 'projects.id', '=', 'project_subcontractors.project_id')
-                           ->where('project_subcontractors.company_id', $this->company_id)
-                           ->pluck('projects.company_id')->toArray();
-            $companies[] = $this->company_id;
+            $companies = ProjectSubcontractor::whereHas('project', function ($projQ) use ($inList, $user) {
+                    $projQ->where('company_id', '=', $inList && $user->company_id != null ? $user->company_id : $this->company_id);
+                })
+                ->when($billableCheck, function ($billQ) {
+                    $billQ->whereHas('company', function ($compQ) {
+                        $compQ->whereNull('billable');
+                    });
+                })
+                ->pluck('company_id')->toArray();
+            $companies[] = $inList && $user->company_id != null ? $user->company_id : $this->company_id;
             return $companies;
         }
     }
@@ -151,7 +163,7 @@ class User extends Authenticatable
         $isSuper = is_null($this->company_id);
         $isCompanyAdmin = $this->inRole('company_admin');
 
-        $projects = Project::join('project_subcontractors', 'projects.id', '=', 'project_subcontractors.project_id')
+        $projects = Project::leftJoin('project_subcontractors', 'projects.id', '=', 'project_subcontractors.project_id')
                            ->unless($isSuper, function ($notSuper) {
                                 $notSuper->where(function ($sub) {
                                     $sub->where('project_subcontractors.company_id', $this->company_id)

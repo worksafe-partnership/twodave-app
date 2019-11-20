@@ -102,7 +102,6 @@
 <hr>
 <div class="columns">
     <div class="column is-10 is-offset-1">
-        <h2 class="sub-heading">Users</h2>
         <div class="columns">
             <div class="column is-12">
                 <div class="field">
