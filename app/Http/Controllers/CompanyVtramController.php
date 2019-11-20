@@ -35,6 +35,7 @@ class CompanyVtramController extends Controller
 
     public function postIndexHook()
     {
+        $this->customValues['company'] = Company::findOrFail($this->args[0]);
         $templates = Template::whereIn('company_id', [$this->args[0], $this->user->company_id])
                                                    ->join('companies', 'templates.company_id', '=', 'companies.id')
                                                    ->where('status', 'CURRENT')
@@ -62,6 +63,7 @@ class CompanyVtramController extends Controller
 
     public function bladeHook()
     {
+        $this->customValues['company'] = Company::findOrFail($this->args[0]);
         $templates = Template::whereIn('company_id', [$this->args[0], $this->user->company_id])
                                                    ->join('companies', 'templates.company_id', '=', 'companies.id')
                                                    ->where('status', 'CURRENT')

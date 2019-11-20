@@ -93,6 +93,8 @@ class ProjectController extends CompanyProjectController
             'order' => 700,
             'id' =>'createVtrams',
         ];
+
+        $this->customValues['company'] = $this->user->company;
         $templates = Template::whereIn('company_id', [$this->record->company_id, $this->user->company_id])
                                                    ->join('companies', 'templates.company_id', '=', 'companies.id')
                                                    ->where('status', 'CURRENT')

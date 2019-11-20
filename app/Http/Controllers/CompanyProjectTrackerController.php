@@ -23,6 +23,7 @@ class CompanyProjectTrackerController extends Controller
                                                    ->get([
                                                         'companies.name as company_name', 'templates.name', 'templates.id'
                                                     ]);
+        $this->customValues['company'] = Company::findOrFail($this->args[0]);
         $this->customValues['templates'] = [];
         foreach ($templates as $template) {
             $this->customValues['templates'][$template->id] = $template->name . " (" . $template->company_name .")";

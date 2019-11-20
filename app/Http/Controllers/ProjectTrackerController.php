@@ -19,6 +19,7 @@ class ProjectTrackerController extends Controller
         $this->heading = str_replace("VTRAMS Tracker of", "VTRAMS Tracker for", $this->heading);
         $this->heading = str_replace("VTRAMS", $this->parentRecord->company->vtrams_name ?? "VTRAMS", $this->heading);
         $project = Project::findOrFail($this->parentId);
+        $this->customValues['company'] = $this->user->company;
         $templates = Template::whereIn('company_id', [$project->company_id, $this->user->company_id])
                                                    ->join('companies', 'templates.company_id', '=', 'companies.id')
                                                    ->where('status', 'CURRENT')

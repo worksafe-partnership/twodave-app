@@ -54,6 +54,7 @@ class VtramController extends CompanyVtramController
 
         if (!strpos($this->identifierPath, "previous")) {
             $project = Project::findOrFail($this->parentId);
+            $this->customValues['company'] = $this->user->company;
             $templates = Template::whereIn('company_id', [$project->company_id, $this->user->company_id])
                                                        ->join('companies', 'templates.company_id', '=', 'companies.id')
                                                        ->where('status', 'CURRENT')
@@ -78,6 +79,7 @@ class VtramController extends CompanyVtramController
         }
 
         $project = Project::findOrFail($this->parentId);
+        $this->customValues['company'] = $company = $this->user->company;
         $templates = Template::whereIn('company_id', [$project->company_id, $this->user->company_id])
                                                    ->join('companies', 'templates.company_id', '=', 'companies.id')
                                                    ->where('status', 'CURRENT')
@@ -91,7 +93,6 @@ class VtramController extends CompanyVtramController
         $this->customValues['templates'] = collect($this->customValues['templates']);
 
         $this->customValues['path'] = 'create';
-        $this->customValues['company'] = $company = $this->user->company;
         $this->config['singular'] = $company->vtrams_name ?? 'VTRAMS';
         $this->config['plural'] = $company->vtrams_name ?? 'VTRAMS';
         $this->structure['config']['singular'] = $company->vtrams_name ?? 'VTRAMS';
