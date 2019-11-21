@@ -2,6 +2,7 @@
 
 namespace App\Http\Classes;
 
+use App\Company;
 use App\Template;
 use App\Vtram;
 
@@ -24,10 +25,18 @@ class VTConfig
                 $this->entityId = $e->id;
                 $this->entityType = 'TEMPLATE';
                 break;
-            case is_int((int)$e) && $type != null && in_array($type, ['VTRAM', 'TEMPLATE']):
+            case $e instanceof Company:
+                $this->entity = $e;
+                $this->entityId = $e->id;
+                $this->entityType = 'COMPANY';
+                break;
+            case is_int((int)$e) && $type != null && in_array($type, ['VTRAM', 'TEMPLATE','COMPANY']):
                 if ($type == 'VTRAM') {
                     $this->entity = Vtram::withTrashed()->findOrFail($e);
                     $this->entityType = 'VTRAM';
+                } else if ($type == 'COMPANY') {
+                    $this->entity = Company::withTrashed()->findOrFail($e);
+                    $this->entityType = 'COMPANY';
                 } else {
                     $this->entity = Template::withTrashed()->findOrFail($e);
                     $this->entityType = 'TEMPLATE';

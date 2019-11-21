@@ -118,7 +118,52 @@ class CompanyApprovalController extends Controller
                 'status' => 'AMEND',
                 'resubmit_by' => $request['resubmit_date'],
             ]);
+        } else if (in_array($approval->type, ['PC_A'])) {
+            $revisionNumber = 1;
+            if ($this->vtconfig->entityType == 'VTRAM') {
+                if ($this->vtconfig->entity->created_from_entity == 'VTRAM') {
+                    $vtram = Vtram::find($this->vtconfig->entity->created_from_id);
+                    if ($vtram != null && $vtram->revision_number != null) {
+                        $revisionNumber = $vtram->revision_number + 1;
+                        $vtram->update([
+                            'status' => 'PREVIOUS',
+                            'date_replaced' => date('Y-m-d'),
+                        ]);
+                    }
+                }
+            } else {
+                $template = Template::find($this->vtconfig->entity->created_from);
+                if ($template != null && $template->revision_number != null) {
+                    $revisionNumber = $template->revision_number + 1;
+                    $template->update([
+                        'status' => 'PREVIOUS',
+                        'date_replaced' => date('Y-m-d'),
+                    ]);
+                }
+            }
+            $update = [
+                'status' => 'CURRENT',
+                'approved_date' => date('Y-m-d'),
+                'revision_number' => $revisionNumber,
+            ];
+
+            // if accept, remove resubmit by date.
+            if ($approval->type == 'PC_A') {
+                $update['resubmit_by'] = null;
+            }
+            $this->vtconfig->entity->update($update);
+        } else if ($approval->type == 'PC_R') {
+            $this->vtconfig->entity->update([
+                'status' => 'EXTERNAL_REJECT',
+                'resubmit_by' => $request['resubmit_date'],
+            ]);
+        } else if ($approval->type == 'PC_AC') {
+            $this->vtconfig->entity->update([
+                'status' => 'EXTERNAL_AMEND',
+                'resubmit_by' => $request['resubmit_date'],
+            ]);
         }
+
         return $this->parentPath;
     }
 
@@ -151,10 +196,18 @@ class CompanyApprovalController extends Controller
         $this->view = 'modules.company.project.vtram.approveVtram';
         $company = Company::findOrFail($this->user->company_id ?? $this->customValues['entity']->company_id);
         $this->customValues['company'] = $company;
-        $types = config('egc.approval_type');
-        $types['A'] = $company->accept_label;
-        $types['AC'] = $company->amend_label;
-        $types['R'] = $company->reject_label;
+
+        if (($this->user->company_id == $company->id || is_null($user->company)) && $company->is_principal_contractor && $this->customValues['entity']->status == 'AWAITING_EXTERNAL') {
+            $types = config('egc.pc_approval_type');
+            $types['PC_A'] = $company->accept_label;
+            $types['PC_AC'] = $company->amend_label;
+            $types['PC_R'] = $company->reject_label;
+        } else {
+            $types = config('egc.approval_type');
+            $types['A'] = $company->accept_label;
+            $types['AC'] = $company->amend_label;
+            $types['R'] = $company->reject_label;
+        }
         if ($type == 'VTRAMS' && $this->customValues['entity']->project->principle_contractor == 0) {
             unset($types['AC-NS']);
         }
@@ -209,15 +262,6 @@ class CompanyApprovalController extends Controller
             $record = Template::withTrashed()->findOrFail($this->parentId);
         } else {
             $record = Vtram::withTrashed()->findOrFail($this->parentId);
-        }
-        if (can('edit', $this->identifierPath) && in_array($record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND']) && is_null($record['deleted_at'])) {
-            $this->actionButtons['methodologies'] = [
-                'label' => 'Method Statements & Risk Assessment',
-                'path' => $path,
-                'icon' => 'receipt',
-                'order' => '550',
-                'id' => 'methodologyEdit',
-            ];
         }
     }
 }

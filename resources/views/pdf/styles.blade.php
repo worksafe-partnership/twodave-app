@@ -35,6 +35,25 @@
         overflow: hidden;
         page-break-after: always;
     }
+
+    .page-footer {
+        font-size: 10pt;
+        bottom: 0;
+        position:fixed;
+        width: 95%;
+        left: 0;
+    }
+
+    .footer-ref {
+        width: 20%;
+        display:inline-block;
+    }
+
+    .footer-message {
+        width: 40%;
+        display:inline-block;
+    }
+
     .wide-50 {
         width: 49%;
         display: inline-block;
@@ -255,7 +274,7 @@
     .no-break {
         page-break-inside: avoid !important;
     }
-    @page { 
+    @page {
         margin: 20;
         padding: 0;
     }

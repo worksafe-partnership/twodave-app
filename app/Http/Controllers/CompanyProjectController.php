@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use Controller;
+use Illuminate\Support\Facades\Mail;
+use Evergreen\Generic\App\Role;
+use App\ProjectSubcontractor;
+use App\Mail\InviteEmail;
 use App\UserProject;
 use App\Template;
 use App\Project;
@@ -31,14 +36,22 @@ class CompanyProjectController extends Controller
 
     public function bladeHook()
     {
-        $this->customValues['company'] = Company::withTrashed()->findOrFail($this->parentId);
+
+        $this->customValues['company'] = $company = Company::withTrashed()->findOrFail($this->parentId);
+        $this->customValues['isPrincipalContractor'] = false;
+        $ownerCompany = $company;
+
+        if ($ownerCompany->is_principal_contractor && ($this->user->company_id == $ownerCompany->id || is_null($this->user->company_id))) {
+            $this->customValues['isPrincipalContractor'] = true;
+        }
+
         $this->customValues['projectAdmins'] = User::withTrashed()->where('company_id', '=', $this->parentId)
             ->whereHas('roles', function ($q) {
                 $q->where('slug', '=', 'project_admin');
             })
             ->pluck('name', 'id');
 
-        $this->getProjectUsers($this->parentId);
+        $this->getProjectUsers($this->parentId, $this->customValues['isPrincipalContractor']);
 
         $timescales = config('egc.review_timescales');
         $timescales[0] = "Use Company Schedule";
@@ -57,6 +70,16 @@ class CompanyProjectController extends Controller
         }
 
         $this->customValues['timescales'] = $timescales;
+
+        $this->customValues['otherCompanies'] = Company::where('id', '!=', $company->id)->pluck('name', 'id');
+        $this->getCurrentSubcontractors();
+        $this->getCurrentContractors();
+
+        $this->customValues['isContractor'] = false;
+        $role = $this->user->roles()->first()->slug;
+        if (in_array($this->user->company_id, array_merge((isset($this->record) ? [$this->record->company_id] : []), array_keys($this->customValues['selectedContractors']))) && $role != "supervisor") {
+            $this->customValues['isContractor'] = true;
+        }
     }
 
     public function view() // blocking soft deleted records being seen by users who can't see sd'ed items
@@ -66,8 +89,10 @@ class CompanyProjectController extends Controller
         return parent::_view($this->args);
     }
 
-    protected function getProjectUsers($companyId)
+    protected function getProjectUsers($companyId, $isPrincipalContractor)
     {
+        $companiesOnProject = ProjectSubcontractor::where('project_id', $this->id)->pluck('contractor_or_sub', 'company_id');
+        $translation = ["CONTRACTOR" => " (C)", "SUBCONTRACTOR" => " (S)"];
         $selected = [];
         if ($this->pageType != 'create') {
             $users = UserProject::where('project_id', '=', $this->id)
@@ -76,15 +101,77 @@ class CompanyProjectController extends Controller
                 $selected[$user->user_id] = true;
             }
         }
+        $this->customValues['allUsers'] = [];
         $this->customValues['selectedUsers'] = $selected;
         if ($this->pageType == 'view') {
-            $this->customValues['allUsers'] = UserProject::where('project_id', '=', $this->id)
-                ->join('users', 'user_projects.user_id', '=', 'users.id')
-                ->pluck('name', 'users.id');
+            $users = UserProject::where('project_id', $this->id)
+                              ->join('users', 'user_projects.user_id', '=', 'users.id')
+                              ->join('companies', 'companies.id', '=', 'users.company_id')
+                              ->get(['companies.name as company_name', 'users.name', 'users.id', 'users.company_id']);
+
+            foreach ($users as $user) {
+                $temp = $user->name . " (" . $user['company_name'] . ")";
+                if ($isPrincipalContractor && isset($companiesOnProject[$user->company_id])) {
+                    $temp .= $translation[$companiesOnProject[$user->company_id]];
+                }
+                $this->customValues['allUsers'][$user['id']] = $temp;
+            }
         } else {
-            $this->customValues['allUsers'] = User::withTrashed()->where('company_id', '=', $companyId)
-                ->pluck('name', 'id');
+            // get all users for this company
+            $users1 = User::withTrashed()
+                         ->join('companies', 'users.company_id', '=', 'companies.id')
+                         ->where('company_id', '=', $companyId)
+                         ->get(['companies.name as c_name', 'users.name', 'users.id']);
+
+            foreach ($users1 as $user) {
+                $this->customValues['allUsers'][$user['id']] = $user->name . " (" . $user['c_name'] . ")";
+            }
+
+
+            // get all users for this project (on create $this->id will be null so will return nothing)
+            $users2 = ProjectSubcontractor::where('project_id', $this->id)
+                                          ->join('companies', 'project_subcontractors.company_id', '=', 'companies.id')
+                                          ->join('users', 'users.company_id', '=', 'companies.id')
+                                          ->get(['companies.name as company_name', 'users.name', 'users.id', 'users.company_id']);
+
+            foreach ($users2 as $user) {
+                $temp = $user->name . " (" . $user['company_name'] . ")";
+                if ($isPrincipalContractor && isset($companiesOnProject[$user->company_id])) {
+                    $temp .= $translation[$companiesOnProject[$user->company_id]];
+                }
+                $this->customValues['allUsers'][$user['id']] = $temp;
+            }
         }
+    }
+
+    protected function getCurrentSubcontractors()
+    {
+        $selected = [];
+        if ($this->pageType != 'create') {
+            $subs = ProjectSubcontractor::where([
+                'project_id' => $this->id,
+                'contractor_or_sub' => 'SUBCONTRACTOR'
+            ])->get();
+            foreach ($subs as $sub) {
+                $selected[$sub->company_id] = true;
+            }
+        }
+        $this->customValues['selectedSubs'] = $selected;
+    }
+
+    public function getCurrentContractors()
+    {
+        $selected = [];
+        if ($this->pageType != 'create') {
+            $subs = ProjectSubcontractor::where([
+                'project_id' => $this->id,
+                'contractor_or_sub' => 'CONTRACTOR'
+            ])->get();
+            foreach ($subs as $sub) {
+                $selected[$sub->company_id] = true;
+            }
+        }
+        $this->customValues['selectedContractors'] = $selected;
     }
 
     public function viewHook()
@@ -115,9 +202,20 @@ class CompanyProjectController extends Controller
             'id' =>'createVtrams',
             'class' => 'create_vtram',
         ];
-        $this->customValues['templates'] = Template::where('company_id', $this->args[0])
+
+        // NO CHANGES REQUIRED FOR TEMPLATE ACCESS ON THIS CONTROLLER - USER WILL ALWAYS BE ADMIN, AND USE RECORD'S COMPANY ID!
+        $templates = Template::whereIn('company_id', [$this->args[0], $this->user->company_id])
+                                                   ->join('companies', 'templates.company_id', '=', 'companies.id')
                                                    ->where('status', 'CURRENT')
-                                                   ->pluck('name', 'id');
+                                                   ->get([
+                                                        'companies.name as company_name', 'templates.name', 'templates.id'
+                                                    ]);
+        $this->customValues['templates'] = [];
+        foreach ($templates as $template) {
+            $this->customValues['templates'][$template->id] = $template->name . " (" . $template->company_name .")";
+        }
+        $this->customValues['templates'] = collect($this->customValues['templates']);
+
         $this->customValues['path'] = $this->id.'/vtram/create';
     }
 
@@ -136,6 +234,52 @@ class CompanyProjectController extends Controller
 
     public function created($insert, $request, $args)
     {
+        if (isset($request['add_contractor']) && $request['add_contractor']) {
+            $newContractor = $this->sortOutNewContractor($request, $insert);
+            // add it to the contractor array so it's picked up during the SubContractor block.
+            if ($newContractor['company']) {
+                $request['contractors'][] = (string) $newContractor['company']->id;
+            }
+            if ($newContractor['user']) {
+                $request['users'][] = $newContractor['user']->id;
+            }
+        }
+
+        if (isset($request['contractors']) && count($request['contractors']) > 0) {
+            $toInsert = [];
+            foreach ($request['contractors'] as $con) {
+                $toInsert[] = [
+                    'company_id' => $con,
+                    'project_id' => $insert->id,
+                    'contractor_or_sub' => 'CONTRACTOR'
+                ];
+            }
+            ProjectSubcontractor::insert($toInsert);
+        }
+
+        if (isset($request['add_subcontractor']) && $request['add_subcontractor']) {
+            $newSub = $this->sortOutNewSubContractor($request, $insert);
+            // add it to the subcontractor array so it's picked up during the SubContractor block.
+            if ($newSub['company']) {
+                $request['subcontractors'][] = (string) $newSub['company']->id;
+            }
+            if ($newSub['user']) {
+                $request['users'][] = $newSub['user']->id;
+            }
+        }
+
+        if (isset($request['subcontractors']) && count($request['subcontractors']) > 0) {
+            $toInsert = [];
+            foreach ($request['subcontractors'] as $sub) {
+                $toInsert[] = [
+                    'company_id' => $sub,
+                    'project_id' => $insert->id,
+                    'contractor_or_sub' => 'SUBCONTRACTOR'
+                ];
+            }
+            ProjectSubcontractor::insert($toInsert);
+        }
+
         if (isset($request['users']) && count($request['users']) > 0) {
             $toInsert = [];
             foreach ($request['users'] as $user) {
@@ -146,10 +290,95 @@ class CompanyProjectController extends Controller
             }
             UserProject::insert($toInsert);
         }
+
+        if (isset($request['contractors']) && count($request['contractors']) > 0) {
+            $toInsert = [];
+            foreach ($request['contractors'] as $con) {
+                $toInsert[] = [
+                    'company_id' => $con,
+                    'project_id' => $insert->id,
+                    'contractor_or_sub' => 'CONTRACTOR'
+                ];
+            }
+            ProjectSubcontractor::insert($toInsert);
+        }
+
+        if (isset($request['subcontractors']) && count($request['subcontractors']) > 0) {
+            $toInsert = [];
+            foreach ($request['subcontractors'] as $sub) {
+                $toInsert[] = [
+                    'company_id' => $sub,
+                    'project_id' => $insert->id,
+                    'contractor_or_sub' => 'SUBCONTRACTOR'
+                ];
+            }
+            ProjectSubcontractor::insert($toInsert);
+        }
     }
 
     public function updated($updated, $orig, $request, $args)
     {
+        $user = Auth::user();
+        if (is_null($user->company_id)) {
+            ProjectSubcontractor::where('project_id', $updated->id)->delete();
+        } else if ($updated->company_id == $user->company_id) {
+            ProjectSubcontractor::where('project_id', $updated->id)->delete();
+        } else {
+            $contractor = ProjectSubcontractor::where([
+                                                    'project_id' => $updated->id,
+                                                    'company_id' => $user->company_id,
+                                                    'contractor_or_sub' => 'CONTRACTOR'
+                                                ])->count();
+            if ($contractor) {
+                ProjectSubcontractor::where('project_id', $updated->id)->where('contractor_or_sub', 'SUBCONTRACTOR')->delete();
+            }
+        }
+
+        if (isset($request['add_contractor']) && $request['add_contractor']) {
+            $newContractor = $this->sortOutNewContractor($request, $updated);
+            // add it to the contractor array so it's picked up during the SubContractor block.
+            if ($newContractor['company']) {
+                $request['contractors'][] = (string) $newContractor['company']->id;
+            }
+            if ($newContractor['user']) {
+                $request['users'][] = $newContractor['user']->id;
+            }
+        }
+        if (isset($request['contractors']) && count($request['contractors']) > 0) {
+            $toInsert = [];
+            foreach ($request['contractors'] as $con) {
+                $toInsert[] = [
+                    'company_id' => $con,
+                    'project_id' => $updated->id,
+                    'contractor_or_sub' => 'CONTRACTOR'
+                ];
+            }
+            ProjectSubcontractor::insert($toInsert);
+        }
+
+        if (isset($request['add_subcontractor']) && $request['add_subcontractor']) {
+            $newSub = $this->sortOutNewSubContractor($request, $updated);
+            // add it to the subcontractor array so it's picked up during the SubContractor block.
+            if ($newSub['company']) {
+                $request['subcontractors'][] = (string) $newSub['company']->id;
+            }
+            if ($newSub['user']) {
+                $request['users'][] = $newSub['user']->id;
+            }
+        }
+
+        if (isset($request['subcontractors']) && count($request['subcontractors']) > 0) {
+            $toInsert = [];
+            foreach ($request['subcontractors'] as $sub) {
+                $toInsert[] = [
+                    'company_id' => $sub,
+                    'project_id' => $updated->id,
+                    'contractor_or_sub' => 'SUBCONTRACTOR'
+                ];
+            }
+            ProjectSubcontractor::insert($toInsert);
+        }
+
         UserProject::where('project_id', '=', $updated->id)->delete();
         if (isset($request['users']) && count($request['users']) > 0) {
             $toInsert = [];
@@ -161,8 +390,145 @@ class CompanyProjectController extends Controller
             }
             UserProject::insert($toInsert);
         }
+
         if (isset($request['back_to_edit'])) {
             return $this->fullPath.'/edit';
         }
+    }
+
+    protected function sortOutNewContractor($request, $update)
+    {
+        $fromCompany = Company::findOrFail($update['company_id']);
+
+        $company = null;
+        $user = null;
+
+        if (isset($request['company_name_con'])) {
+            $data = [
+                'name' => $request['company_name_con'],
+                'short_name' => $request['short_name_con'],
+                'contact_name' => $request['contact_name_con'],
+                'email' => $request['email_con'],
+                'phone' => $request['phone_con'],
+            ];
+
+            $fields = [
+                'review_timescale',
+                'vtrams_name',
+                'low_risk_character',
+                'med_risk_character',
+                'high_risk_character',
+                'no_risk_character',
+                'primary_colour',
+                'secondary_colour',
+                'light_text',
+                'accept_label',
+                'amend_label',
+                'reject_label',
+                'logo',
+                'main_description',
+                'post_risk_assessment_text',
+                'show_document_ref_on_pdf',
+                'show_message_on_pdf',
+                'message',
+                'show_revision_no_on_pdf'
+            ];
+
+            foreach ($fields as $field) {
+                $data[$field] = $fromCompany[$field];
+            }
+
+            $company = Company::create($data);
+
+            if ($company) {
+                $user = User::create([
+                    'name' => $request['company_admin_name_con'],
+                    'email' => $request['company_admin_email_con'],
+                    'company_id' => $company['id'],
+                    'password' => 'USER CREATED THROUGH NEW CONTRACTOR - PASSWORD TBC',
+                ]);
+
+                $role = Role::where('slug', 'company_admin')->first();
+                $user->roles()->attach([$role->id]);
+
+                if ($user) {
+                    $this->sendInvite($user);
+                }
+            }
+        }
+        return ['company' => $company, 'user' => $user];
+    }
+
+    protected function sortOutNewSubContractor($request, $update)
+    {
+        $fromCompany = Company::findOrFail($update['company_id']);
+
+        $company = null;
+        $user = null;
+
+        if (isset($request['company_name'])) {
+            $data = [
+                'name' => $request['company_name'],
+                'short_name' => $request['short_name'],
+                'contact_name' => $request['contact_name'],
+                'email' => $request['email'],
+                'phone' => $request['phone'],
+            ];
+
+            $fields = [
+                'review_timescale',
+                'vtrams_name',
+                'low_risk_character',
+                'med_risk_character',
+                'high_risk_character',
+                'no_risk_character',
+                'primary_colour',
+                'secondary_colour',
+                'light_text',
+                'accept_label',
+                'amend_label',
+                'reject_label',
+                'logo',
+                'main_description',
+                'post_risk_assessment_text',
+                'show_document_ref_on_pdf',
+                'show_message_on_pdf',
+                'message',
+                'show_revision_no_on_pdf'
+            ];
+
+            foreach ($fields as $field) {
+                $data[$field] = $fromCompany[$field];
+            }
+
+            $company = Company::create($data);
+
+            if ($company) {
+                $user = User::create([
+                    'name' => $request['company_admin_name'],
+                    'email' => $request['company_admin_email'],
+                    'company_id' => $company['id'],
+                    'password' => 'USER CREATED THROUGH NEW SUBCONTRACTOR - PASSWORD TBC',
+                ]);
+
+                $role = Role::where('slug', 'company_admin')->first();
+                $user->roles()->attach([$role->id]);
+
+                if ($user) {
+                    $this->sendInvite($user);
+                }
+            }
+        }
+        return ['company' => $company, 'user' => $user];
+    }
+
+    protected function sendInvite(User $user)
+    {
+        $token = app('auth.password.broker')->createToken($user);
+
+        Mail::to($user->email)
+        ->send(new InviteEmail($user, $token));
+
+        return back();
     }
 }

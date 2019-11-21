@@ -6,8 +6,13 @@ use Storage;
 use Controller;
 // use File;
 use EGFiles;
+use App\Icon;
 use App\Company;
 use App\Project;
+use App\TableRow;
+use App\Instruction;
+use App\Methodology;
+use App\ProjectSubcontractor;
 use App\Http\Requests\CompanyRequest;
 
 class CompanyController extends Controller
@@ -28,6 +33,36 @@ class CompanyController extends Controller
             'order' => 150,
             'value' => true,
         ];
+
+        $this->customValues['methTypeList'] = config('egc.methodology_list');
+        $this->customValues['methodologies'] = Methodology::where('entity', '=', 'COMPANY')
+            ->where('entity_id', '=', $this->id)
+            ->orderBy('list_order')
+            ->get();
+        $this->customValues['entityType'] = 'COMPANY';
+        $this->customValues['iconSelect'] = config('egc.icons');
+        $this->customValues['iconImages'] = json_encode(config('egc.icon_images'));
+        $this->customValues['company'] = $this->record;
+        $this->customValues['whoList'] = config('egc.hazard_who_risk');
+        $methodologyIds = $this->customValues['methodologies']->pluck('id');
+
+        $this->customValues['tableRows'] = [];
+        $tableRows = TableRow::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
+        foreach ($tableRows as $row) {
+            $this->customValues['tableRows'][$row->methodology_id][] = $row;
+        }
+
+        $this->customValues['processes'] = [];
+        $instructions = Instruction::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
+        foreach ($instructions as $instruction) {
+            $this->customValues['processes'][$instruction->methodology_id][] = $instruction;
+        }
+
+        $this->customValues['icons'] = [];
+        $icons = Icon::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
+        foreach ($icons as $icon) {
+            $this->customValues['icons'][$icon->methodology_id][$icon->type][] = $icon;
+        }
     }
 
     public function viewHook()
@@ -93,6 +128,12 @@ class CompanyController extends Controller
         }
         if (isset($request['back_to_edit'])) {
             return $this->fullPath.'/edit';
+        }
+        if (!$company->is_principal_contractor) {
+            ProjectSubcontractor::join('projects', 'projects.id', '=', 'project_subcontractors.project_id')
+                ->where('contractor_or_sub', '=', 'CONTRACTOR')
+                ->where('projects.company_id', '=', $company->id)
+                ->delete();            
         }
     }
 

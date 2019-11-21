@@ -12,6 +12,7 @@ use Storage;
 use App\Icon;
 use App\Vtram;
 use App\Hazard;
+use App\Company;
 use App\Approval;
 use App\TableRow;
 use App\Template;
@@ -37,8 +38,17 @@ class VTLogic
     {
         $config = new VTConfig($entityId, $entityType);
 
+        // if it's a PDF, just return it straight away.
+        if ($config->entityType == "VTRAM" && $config->entity->vtram_is_file) {
+            $file = EGFiles::findOrFail($config->entity->vtram_file);
+            $response = \Response::make(file_get_contents(storage_path()."/app/".$file->location), 200);
+            $response->header('Content-Type', 'application/pdf');
+            $response->header('Content-Disposition', 'filename="'.$file->filename.'.pdf"');
+            return $response;
+        }
+
         if ($force) {
-            self::createPdf($config->entity, null, true);
+            self::createPdf($config->entity, null, true, true);
         }
         $file = VTFiles::findOrFail($config->entity->pdf);
         $path = storage_path('app/'.$file->location);
@@ -70,7 +80,7 @@ class VTLogic
         $storageFileName = "app/".$fileName;
         $storageOutputFileName = "app/".$storagePath.$config->entityType."_".$config->entity->id."_A3_FINAL.pdf";
         $outputFileName = $storagePath.$config->entityType."_".$config->entity->id."_A3_FINAL.pdf";
-        
+
         $c = "pdfnup --a3paper --suffix 2up ".storage_path($storageFileName)." --outfile ".storage_path($storageOutputFileName);
 
         exec($c);
@@ -78,7 +88,7 @@ class VTLogic
         if (!file_exists(storage_path($storageOutputFileName))) {
             return back()->withErrors(['Could not create A3 PDF']);
         }
-        
+
         $response = \Response::make(file_get_contents(storage_path($storageOutputFileName)), 200);
         $response->header('Content-Type', 'application/pdf');
         $response->header('Content-Disposition', 'filename="'.$config->entity->name.'.pdf"');
@@ -89,18 +99,33 @@ class VTLogic
         return $response;
     }
 
-    public static function createPdf($entityId, $entityType = null, $force = false)
+    public static function createPdf($entityId, $entityType = null, $force = false, $a3 = false)
     {
         $config = new VTConfig($entityId, $entityType);
+
+        // if it's a PDF, just return it straight away.
+        if ($config->entityType == "VTRAM" && $config->entity->vtram_is_file) {
+            $file = EGFiles::findOrFail($config->entity->vtram_file);
+            $response = \Response::make(file_get_contents(storage_path()."/app/".$file->location), 200);
+            $response->header('Content-Type', 'application/pdf');
+            $response->header('Content-Disposition', 'filename="'.$file->filename.'.pdf"');
+            return $response;
+        }
+
+        $company = Company::findOrFail($config->entity->company_id);
         if ($config->entity->status == 'PREVIOUS' || ($config->entity->pdf != null && !$force)) {
             return EGFiles::image($config->entity->pdf);
         }
+
         $logo = null;
         if ($config->entity->logo !== null) {
             $logo = $config->entity->logo;
+        } else if ($config->entity->company_logo_id != null && $config->entity->companyLogo->logo != null) {
+            $logo = $config->entity->companyLogo->logo;
         } else if ($config->entity->company != null && $config->entity->company->logo != null) {
             $logo = $config->entity->company->logo;
         }
+
         if ($logo != null) {
             $file = EGFiles::download($logo)->getFile()->getPathName() ?? null;
         } else {
@@ -155,6 +180,8 @@ class VTLogic
             'riskList' => $riskList,
             'whoIsRisk' => config('egc.hazard_who_risk'),
             'height' => $height,
+            'company' => $company,
+            'a3' => $a3
         ];
 
         $html = view('pdf.main_report', $data)->render();
@@ -282,70 +309,13 @@ class VTLogic
     public static function createDefaultMethodologies($entityId, $entityType)
     {
         $config = new VTConfig($entityId, $entityType);
-
-        $list = [
-            [
-                'type' => 'TEXT',
-                'name' => 'task_description',
-                'title' => 'Task Description',
-            ],
-            [
-                'type' => 'SIMPLE_TABLE',
-                'name' => 'plant_and_equipment',
-                'title' => 'Plant and Equipment',
-            ],
-            [
-                'type' => 'TEXT',
-                'name' => 'disposing_of_waste',
-                'title' => 'Disposing of Waste',
-            ],
-            [
-                'type' => 'TEXT',
-                'name' => 'accident_reporting',
-                'title' => 'Accident Reporting',
-            ],
-            [
-                'type' => 'TEXT_IMAGE',
-                'name' => 'first_aid',
-                'title' => 'First Aid',
-            ],
-            [
-                'type' => 'TEXT',
-                'name' => 'noise',
-                'title' => 'Noise',
-            ],
-            [
-                'type' => 'TEXT',
-                'name' => 'working_at_height',
-                'title' => 'Working at Height',
-            ],
-            [
-                'type' => 'TEXT',
-                'name' => 'manual_handling',
-                'title' => 'Manual Handling',
-            ],
-        ];
-        $order = 1;
-        foreach ($list as $item) {
-            if (strlen($config->entity->{$item['name']}) > 0) {
-                $methodology = [
-                    'title' => $item['title'],
-                    'category' => $item['type'],
-                    'entity' => $config->entityType,
-                    'entity_id' => $config->entityId,
-                    'text_before' => $config->entity->{$item['name']},
-                    'list_order' => $order,
-                ];
-
-                if ($item['name'] == 'first_aid') {
-                    $file = VTFiles::saveNew(file_get_contents(public_path('first_aid_logo.png')), $config->entity, $config->entityType, time().'first_aid.png');
-                    if ($file != false) {
-                        $methodology['image'] = $file->id;
-                    }
-                }
-
-                Methodology::create($methodology);
-                $order++;
+        $methodologies = $config->entity->company->methodologies ?? null;
+        if ($methodologies != null) {
+            foreach ($methodologies as $meth) {
+                $newMeth = $meth->replicate();
+                $newMeth->entity = $config->entityType;
+                $newMeth->entity_id = $config->entityId;
+                $newMeth->save();
             }
         }
     }
@@ -353,6 +323,12 @@ class VTLogic
     public static function canReview($entityId, $entityType = null, $status = ['PENDING'])
     {
         $user = Auth::user();
+        $isPrincipalContractor = false;
+        if (is_null($user->company_id) || $user->company->is_principal_contractor) {
+            $isPrincipalContractor = true;
+            $status[] = 'AWAITING_EXTERNAL';
+        }
+
         $config = new VTConfig($entityId, $entityType);
         if (!in_array($config->entity->status, $status)) {
             return false;
@@ -519,5 +495,104 @@ class VTLogic
             return $entity;
         }
         return str_replace(array_keys($replacements), array_values($replacements), $entity->{$fields});
+    }
+
+
+    public static function saveAsTemplate($vtram, $templateToSupercede)
+    {
+        return DB::transaction(function () use ($vtram, $templateToSupercede) {
+
+            $template = [];
+            $template['company_id'] = $vtram['company_id'];
+            $template['name'] = $vtram->name;
+            $template['logo'] = $vtram->logo;
+            $template['reference'] = $vtram->reference;
+            $template['key_points'] = $vtram->key_points;
+            $template['havs_noise_assessment'] = $vtram['havs_noise_assessment'];
+            $template['coshh_assessment'] = $vtram['coshh_assessment'];
+            $template['review_due'] = null;
+            $template['approved_date'] = $vtram['approved_date'];
+            $template['current_id'] = null;
+            $template['status'] = "NEW";
+            $template['created_by'] = Auth::User()->id;
+            $template['submitted_by'] = null;
+            $template['approved_by'] = null;
+            $template['date_replaced'] = null;
+            $template['resubmit_by'] = null;
+            $template['show_area'] = $vtram['show_area'];
+            $template['area'] = $vtram['area'];
+            $template['main_description'] = $vtram['main_description'];
+            $template['post_risk_assessment_text'] = $vtram['post_risk_assessment_text'];
+            $template['pages_in_pdf'] = $vtram['pages_in_pdf'];
+            $template['pdf'] = $vtram['pdf'];
+
+            $template['created_from_entity'] = "VTRAM";
+            $template['created_from_id'] = $vtram->id;
+            $template['created_from'] = $vtram->id;
+
+            $newTemplate = Template::create($template);
+
+            if ($templateToSupercede) {
+                $templateToSupercede->update([
+                    'current_id' => $newTemplate->id,
+                    'status' => 'PREVIOUS'
+                ]);
+            }
+
+            $hazardOld = [];
+            foreach ($vtram->hazards as $hazard) {
+                $newHazard = $hazard->toArray();
+                unset($newHazard['id']);
+                $newHazard['entity'] = 'TEMPLATE';
+                $newHazard['entity_id'] = $newTemplate->id;
+                $copy = Hazard::create($newHazard);
+                $hazardOld[$hazard->id] = $copy->id;
+            }
+
+            $insertIcons = [];
+            $insertTableRows = [];
+            $insertInstructions = [];
+            $insertHazMethLink = [];
+            foreach ($vtram->methodologies as $methodology) {
+                $newMeth = $methodology->toArray();
+                unset($newMeth['id']);
+                $newMeth['entity'] = 'TEMPLATE';
+                $newMeth['entity_id'] = $newTemplate->id;
+                $meth = Methodology::create($newMeth);
+                $hms = DB::table('hazards_methodologies')
+                    ->where('methodology_id', '=', $methodology->id)
+                    ->get();
+                foreach ($hms as $hm) {
+                    $insertHazMethLink[] = [
+                        'hazard_id' => $hazardOld[$hm->hazard_id],
+                        'methodology_id' => $meth->id,
+                    ];
+                }
+                foreach ($methodology->icons as $icon) {
+                    $newIcon = $icon->toArray();
+                    unset($newIcon['id']);
+                    $newIcon['methodology_id'] = $meth->id;
+                    $insertIcons[] = $newIcon;
+                }
+                foreach ($methodology->instructions as $instruction) {
+                    $newInstruction = $instruction->toArray();
+                    unset($newInstruction['id']);
+                    $newInstruction['methodology_id'] = $meth->id;
+                    $insertInstructions[] = $newInstruction;
+                }
+                foreach ($methodology->tableRows as $row) {
+                    $newRow = $row->toArray();
+                    unset($newRow['id']);
+                    $newRow['methodology_id'] = $meth->id;
+                    $insertTableRows[] = $newRow;
+                }
+            }
+            Icon::insert($insertIcons);
+            TableRow::insert($insertTableRows);
+            Instruction::insert($insertInstructions);
+            DB::table('hazards_methodologies')
+                ->insert($insertHazMethLink);
+            return $newTemplate;
+        });
     }
 }

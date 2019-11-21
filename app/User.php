@@ -3,6 +3,8 @@
 namespace App;
 
 use Auth;
+use App\Company;
+use App\Project;
 use Evergreen\Generic\App\Role;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -47,7 +49,7 @@ class User extends Authenticatable
         });
 
         if ($user->company_id !== null) {
-            $query->where('company_id', '=', $user->company_id);
+            $query->whereIn('company_id', $this->getAccessCompanies(true, true));
         }
 
         $data = $query->withTrashed(can('permanentlyDelete', $config))->select(
@@ -112,5 +114,143 @@ class User extends Authenticatable
             return $company->name;
         }
         return '';
+    }
+
+    // gets a list of all companies where I have access to a project - mostly used for template bits.
+    /*
+        $billableCheck = whether you need to remove non-billable companies from the list
+        $inList = whether you are calling this from an index page.
+    */
+    public function getAccessCompanies($billableCheck = false, $inList = false)
+    {
+        $user = Auth::user();
+        if ($inList) {
+            if ($user->company_id == null) {
+                return Company::pluck('name', 'id')->toArray();
+            }
+        }
+        if (is_null($this->company_id) && !$inList) { // super admin can do all.
+            return Company::pluck('name', 'id')->toArray();
+        } else {
+            $companies = ProjectSubcontractor::whereHas('project', function ($projQ) use ($inList, $user) {
+                $projQ->where('company_id', '=', $inList && $user->company_id != null ? $user->company_id : $this->company_id);
+            })
+                ->when($billableCheck, function ($billQ) {
+                    $billQ->whereHas('company', function ($compQ) {
+                        $compQ->whereNull('billable');
+                    });
+                })
+                ->pluck('company_id')->toArray();
+
+            $companies[] = $inList && $user->company_id != null ? $user->company_id : $this->company_id;
+            return $companies;
+        }
+    }
+
+    public function nonBillableContractors()
+    {
+        if (is_null($this->company_id)) { // super admin can do all.
+            return Company::pluck('name', 'id')->toArray();
+        } else {
+            $contractors = Project::where('projects.company_id', $this->company_id)
+                           ->join('project_subcontractors', 'projects.id', '=', 'project_subcontractors.project_id')
+                           ->join('companies', 'project_subcontractors.company_id', '=', 'companies.id')
+                           ->whereNull('billable')
+                           ->pluck('companies.name', 'companies.id')->toArray();
+
+            $contractors[$this->company_id] = $this->companyName;
+            return $contractors;
+        }
+    }
+
+    public function projectCompanyIds()
+    {
+        $isSuper = is_null($this->company_id);
+        $isCompanyAdmin = $this->inRole('company_admin');
+
+        $projects = Project::leftJoin('project_subcontractors', 'projects.id', '=', 'project_subcontractors.project_id')
+                           ->unless($isSuper, function ($notSuper) {
+                                $notSuper->where(function ($sub) {
+                                    $sub->where('project_subcontractors.company_id', $this->company_id)
+                                      ->orWhere('projects.company_id', $this->company_id);
+                                });
+                           })
+                           ->with(['users'])
+                           ->get(['projects.id']);
+
+        $permittedProjects = [];
+        foreach ($projects as $project) {
+            $users = $project->users;
+            if ($isSuper || $isCompanyAdmin) {
+                $permittedProjects[] = $project->id;
+            } else if ($users->isEmpty()) {
+                $permittedProjects[] = $project->id;
+            } else if (in_array($this->id, $users->pluck('id')->toArray())) {
+                $permittedProjects[] = $project->id;
+            }
+        }
+
+        return array_unique($permittedProjects);
+    }
+
+    public function vtramsCompanyIds()
+    {
+        if (isset($this->id)) {
+            $user = $this;
+        } else {
+            $user = Auth::user();
+        }
+        $isSuper = is_null($user->company_id);
+        $isCompanyAdmin = $user->inRole('company_admin');
+
+        $vtrams = Vtram::join('projects', 'projects.id', '=', 'vtrams.project_id')
+                        ->leftJoin('project_subcontractors', 'projects.id', '=', 'project_subcontractors.project_id')
+                            ->unless($isSuper, function ($notSuper) use ($user) {
+                                $notSuper->where(function ($sub) use ($user) {
+                                    $sub->where('project_subcontractors.company_id', $user->company_id)
+                                      ->orWhere('projects.company_id', $user->company_id);
+                                });
+                            })
+                        ->with(['vtramsUsers'])
+                        ->get(['vtrams.id']);
+
+        $permittedVtrams = [];
+        foreach ($vtrams as $vtram) {
+            $users = $vtram->vtramsUsers;
+            if ($isSuper || $isCompanyAdmin) {
+                $permittedVtrams[] = $vtram->id;
+            } else if ($users->isEmpty()) {
+                $permittedVtrams[] = $vtram->id;
+            } else if (in_array($this->id, $users->pluck('user_id')->toArray())) {
+                $permittedVtrams[] = $vtram->id;
+            }
+        }
+
+        return array_unique($permittedVtrams);
+    }
+
+    // Deals with Contractor and Secondary Contractor Companies
+    public function getContractorIds()
+    {
+        $companies = [];
+        // get the projects that your company is on.
+        $projects = ProjectSubcontractor::where('company_id', $this->company_id)->get();
+
+        // get a listing of all the project owner companies and then return these.
+        $primaryContractorIds = Project::whereIn('id', $projects->pluck('project_id'))
+                                       ->pluck('company_id');
+        foreach ($primaryContractorIds as $id) {
+            $companies[] = $id;
+        }
+
+        // get a listing of all projects where your company is a SUBcontractor and then get the contractor companies
+        $subConctractorProjectIds = $projects->where('contractor_or_sub', 'SUBCONTRACTOR')->pluck('project_id');
+        $contractorIds = ProjectSubcontractor::whereIn('project_id', $subConctractorProjectIds)->where('contractor_or_sub', 'CONTRACTOR')->pluck('company_id');
+
+        foreach ($contractorIds as $id) {
+            $companies[] = $id;
+        }
+
+        return array_unique($companies);
     }
 }

@@ -15,7 +15,7 @@
             'type' => 'create',
         ]) }}
     @endif
-    <div class="column is-8 is-offset-2">
+    <div class="column is-10 is-offset-1">
         <div class="columns">
             <div class="column is-3">
                 <div class="field">
@@ -110,6 +110,18 @@
                     ]) }}
                 </div>
             </div>
+            @if((isset($is_file_vtram) && !$is_file_vtram))
+            <div class="column is-3">
+                <div class="field">
+                    {{ EGForm::file('vtram_file', [
+                        'label' => (Auth::user()->company->vtram_name ?? 'VTRAMS').' PDF',
+                        'value' => $record["vtram_file"],
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+            @endif
+            @if((isset($is_file_vtram) && !$is_file_vtram) || strpos($identifierPath, 'template') !== false)
             <div class="column is-3">
                 <div class="field">
                     {{ EGForm::file('logo', [
@@ -120,75 +132,136 @@
                     ]) }}
                 </div>
             </div>
-            @if (strpos($identifierPath, 'template') === false)
-                <div class="column is-3">
-                    <div class="field responsible-check">
-                        {{ EGForm::checkbox('show_responsible_person', [
-                            'label' => 'Show Responsible Person',
-                            'value' => $record->show_responsible_person ?? false,
-                            'type' => $pageType
-                        ]) }}
+                @if (strpos($identifierPath, 'template') === false)
+                    <div class="column is-3">
+                        <div class="field responsible-check">
+                            {{ EGForm::checkbox('show_responsible_person', [
+                                'label' => 'Show Responsible Person',
+                                'value' => $record->show_responsible_person ?? false,
+                                'type' => $pageType
+                            ]) }}
+                        </div>
                     </div>
-                </div>
-                <div class="column is-3">
-                    <div class="field responsible-details">
-                        {{ EGForm::text('responsible_person', [
-                            'label' => 'Responsible Person',
-                            'value' => $record["responsible_person"],
-                            'type' => $pageType
-                        ]) }}
+                    <div class="column is-3">
+                        <div class="field responsible-details">
+                            {{ EGForm::text('responsible_person', [
+                                'label' => 'Responsible Person',
+                                'value' => $record["responsible_person"],
+                                'type' => $pageType
+                            ]) }}
+                        </div>
                     </div>
-                </div>
+                @endif
             @endif
         </div>
+        @if((isset($is_file_vtram) && !$is_file_vtram) || strpos($identifierPath, 'template') !== false)
+            <div class="columns">
+                @if (strpos($identifierPath, 'template') === false)
+                    <div class="column is-3">
+                        <div class="field area-check">
+                            {{ EGForm::checkbox('show_area', [
+                                'label' => 'Show Area on PDF',
+                                'value' => $record['show_area'],
+                                'type' => $pageType,
+                            ]) }}
+                        </div>
+                    </div>
+                    <div class="column is-3">
+                        <div class="field area-details">
+                            {{ EGForm::text('area', [
+                                'label' => 'Area Name',
+                                'value' => $record['area'],
+                                'type' => $pageType,
+                            ]) }}
+                        </div>
+                    </div>
+                @endif
+                @if (strpos($identifierPath, 'vtram') !== false)
+                    <div class="column is-3">
+                        <div class="field">
+                            {{ EGForm::checkbox('client_on_pdf', [
+                                'label' => 'Show Client Name on PDF',
+                                'value' => $record['client_on_pdf'],
+                                'type' => $pageType,
+                            ]) }}
+                        </div>
+                    </div>
+                    <div class="column is-3">
+                        <div class="field">
+                            {{ EGForm::checkbox('pc_on_pdf', [
+                                'label' => 'Show Principal Contractor Name on PDF (if applicable)',
+                                'value' => $record['pc_on_pdf'],
+                                'type' => $pageType,
+                            ]) }}
+                        </div>
+                    </div>
+                @endif
+            </div>
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        {{ EGForm::checkbox('general_rams', [
+                            'label' => 'General RAMS?',
+                            'value' => $record['general_rams'],
+                            'type' => $pageType,
+                        ]) }}
+                    </div>
+                </div>
+                @if (strpos($identifierPath, 'vtram') !== false)
+                <div class="column">
+                    {{ EGForm::select('company_logo_id', [
+                        'label' => 'Select Company For Logo',
+                        'value' => $record->company_logo_id ?? $company->id,
+                        'list' => $compAndContractors,
+                        'display_value' => isset($record) && $record->company_logo != null ? $record->company_logo->name : $company->name,
+                        'type' => $pageType,
+                    ]) }}
+                </div>
+                @endif
+            </div>
+        @endif
+        @if (strpos($identifierPath, 'vtram') !== false)
+        <hr>
         <div class="columns">
-            @if (strpos($identifierPath, 'template') === false)
-                <div class="column is-3">
-                    <div class="field area-check">
-                        {{ EGForm::checkbox('show_area', [
-                            'label' => 'Show Area on PDF',
-                            'value' => $record['show_area'],
+            <div class="column is-12">
+                <div class="field">
+                    @if ($pageType == 'view')
+                        {{ EGForm::multicheckbox('associated_users', [
+                            'label' => 'Associated Users',
+                            'values' => $associatedUsers,
+                            'list' => $projectUsers,
+                            'type' => $pageType,
+                            'list-style' => 'multi-block',
+                        ]) }}
+                    @else
+                        @php
+                            $old = old('associated_users');
+
+                            if (count($old) > 0) {
+                                foreach ($old as $val) {
+                                    $associated_users[$val] = true;
+                                }
+                            }
+                        @endphp
+
+                        {{ VTForm::multiSelect('associated_users[]', [
+                            'label' => 'Associated Users',
+                            'value' => $associatedUsers,
+                            'list' => $projectUsers,
                             'type' => $pageType,
                         ]) }}
-                    </div>
+                    @endif
                 </div>
-                <div class="column is-3">
-                    <div class="field area-details">
-                        {{ EGForm::text('area', [
-                            'label' => 'Area Name',
-                            'value' => $record['area'],
-                            'type' => $pageType,
-                        ]) }}
-                    </div>
-                </div>
-            @endif
-            @if (strpos($identifierPath, 'vtram') !== false)
-                <div class="column is-3">
-                    <div class="field">
-                        {{ EGForm::checkbox('client_on_pdf', [
-                            'label' => 'Show Client Name on PDF',
-                            'value' => $record['client_on_pdf'],
-                            'type' => $pageType,
-                        ]) }}
-                    </div>
-                </div>
-                <div class="column is-3">
-                    <div class="field">
-                        {{ EGForm::checkbox('pc_on_pdf', [
-                            'label' => 'Show Principal Contractor Name on PDF (if applicable)',
-                            'value' => $record['pc_on_pdf'],
-                            'type' => $pageType,
-                        ]) }}
-                    </div>
-                </div>
-            @endif
+            </div>
         </div>
+        @endif
         @if ($pageType != 'create')
         </div>
     </div>
+    @if((isset($is_file_vtram) && !$is_file_vtram) || strpos($identifierPath, 'template') !== false)
     <hr>
     <div class="columns">
-        <div class="column is-8 is-offset-2">
+        <div class="column is-10 is-offset-1">
             <h2 class="sub-heading">Configuration</h2>
             @include('modules.company.project.vtram.ckeditor-key')
             <div class="columns">
@@ -211,95 +284,99 @@
                     </div>
                 </div>
             </div>
-        @endif
-        @if ($pageType == 'create' && !isset($_GET['template']))
+        @endif {{-- end vtrams check--}}
+        @if ($pageType == 'edit')
         </div>
     </div>
-    <hr>
-    <div class="columns">
-        <div class="column is-8 is-offset-2">
-            <h2 class="sub-heading">Configuration</h2>
-            @include('modules.company.project.vtram.ckeditor-key')
-            <div class="columns">
+    @if((isset($is_file_vtram) && !$is_file_vtram) || strpos($identifierPath, 'template') !== false)
+        <hr>
+        <div class="columns is-multiline">
+            <div class="column is-6 box-container">
+                @include('modules.company.project.vtram.methodstatements')
+                <hr>
+            </div>
+            <div class="column is-6 box-container">
+                @include('modules.company.project.vtram.hazards')
+                <hr>
+            </div>
+        </div>
+    @endif
+        @include('modules.company.project.vtram.script_style_for_both')
+        @endif {{-- end if edit --}}
+    @endif {{-- end if not vtrams file --}}
+
+        <div class="columns">
+            @if ($pageType != 'edit')
                 <div class="column is-6">
+            @else 
+                <div class="column is-6 is-offset-1">
+            @endif
+                <div class="field">
+                    <a download="Noise Vibration Assessment.xls" href="/Noise_Vibration_Assessment.xls" class="button">Download HAVS/Noise Assessment</a>
+                </div>
+            </div>
+            @if((isset($is_file_vtram) && !$is_file_vtram) || strpos($identifierPath, 'template') !== false)
+            @if ($pageType != 'edit')
+                <div class="column is-6">
+            @else 
+                <div class="column is-5">
+            @endif
+                @if (strpos($identifierPath, 'vtram') !== false)
                     <div class="field">
-                        {{ EGForm::ckeditor('task_description', [
-                            'label' => 'Task Description',
-                            'value' => isset($task_description) ? $task_description : $record['task_description'],
+                        {{ EGForm::checkbox('dynamic_risk', [
+                            'label' => 'Dynamic Risk (Adds Dynamic Risk boxes to the Risk Assessment)',
+                            'value' => $record['dynamic_risk'] ?? false,
                             'type' => $pageType
                         ]) }}
                     </div>
-                </div>
-                <div class="column is-6">
-                    <div class="field">
-                        {{ EGForm::ckeditor('plant_and_equipment', [
-                            'label' => 'Plant and Equipment',
-                            'value' => isset($plant_and_equipment) ? $plant_and_equipment : $record['plant_and_equipment'],
-                            'type' => $pageType
-                        ]) }}
+                @endif
+            </div>
+            @endif
+        </div>
+        <div class="columns">
+            @if ($pageType != 'edit')
+                <div class="column is-12">
+            @else 
+                <div class="column is-10 is-offset-1">
+            @endif
+                <div class="columns">
+                    <div class="column is-6">
+                        <div class="field">
+                            {{ EGForm::file('coshh_assessment', [
+                                'label' => 'COSHH Assessment Document',
+                                'value' => $record["coshh_assessment"],
+                                'type' => $pageType
+                            ]) }}
+                        </div>
+                    </div>
+                    <div class="column is-6">
+                        <div class="field">
+                            {{ EGForm::file('havs_noise_assessment', [
+                                'label' => 'HAVS/Noise Assessment Document',
+                                'value' => $record["havs_noise_assessment"],
+                                'type' => $pageType
+                            ]) }}
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="columns">
-                <div class="column is-6">
-                    <div class="field">
-                        {{ EGForm::ckeditor('disposing_of_waste', [
-                            'label' => 'Disposing of Waste',
-                            'value' => isset($disposing_of_waste) ? $disposing_of_waste : $record['disposing_of_waste'],
-                            'type' => $pageType
-                        ]) }}
-                    </div>
-                </div>
-                <div class="column is-6">
-                    <div class="field">
-                        {{ EGForm::ckeditor('first_aid', [
-                            'label' => 'First Aid',
-                            'value' => isset($first_aid) ? $first_aid : $record['first_aid'],
-                            'type' => $pageType
-                        ]) }}
-                    </div>
+        </div>
+        @if((isset($is_file_vtram) && !$is_file_vtram) || strpos($identifierPath, 'template') !== false)
+        <div class="columns">
+            @if ($pageType != 'edit')
+                <div class="column is-12">
+            @else 
+                <div class="column is-10 is-offset-1">
+            @endif
+                <div class="field">
+                    {{ EGForm::ckeditor('key_points', [
+                        'label' => 'Key Points',
+                        'value' => $record["key_points"],
+                        'type' => 'edit'
+                    ]) }}
                 </div>
             </div>
-            <div class="columns">
-                <div class="column is-6">
-                    <div class="field">
-                        {{ EGForm::ckeditor('noise', [
-                            'label' => 'Noise',
-                            'value' => isset($noise) ? $noise : $record['noise'],
-                            'type' => $pageType
-                        ]) }}
-                    </div>
-                </div>
-                <div class="column is-6">
-                    <div class="field">
-                        {{ EGForm::ckeditor('working_at_height', [
-                            'label' => 'Working at Height',
-                            'value' => isset($working_at_height) ? $working_at_height : $record['working_at_height'],
-                            'type' => $pageType
-                        ]) }}
-                    </div>
-                </div>
-            </div>
-            <div class="columns">
-                <div class="column is-6">
-                    <div class="field">
-                        {{ EGForm::ckeditor('manual_handling', [
-                            'label' => 'Manual Handling',
-                            'value' => isset($manual_handling) ? $manual_handling : $record['manual_handling'],
-                            'type' => $pageType
-                        ]) }}
-                    </div>
-                </div>
-                <div class="column is-6">
-                    <div class="field">
-                        {{ EGForm::ckeditor('accident_reporting', [
-                            'label' => 'Accident Reporting',
-                            'value' => isset($accident_reporting) ? $accident_reporting : $record['accident_reporting'],
-                            'type' => $pageType
-                        ]) }}
-                    </div>
-                </div>
-            </div>
+        </div>
         @endif
         @if ($pageType == 'view')
             @if(isset($comments) && $comments->isNotEmpty())
@@ -307,7 +384,7 @@
         </div>
         <hr>
         <div class="columns">
-            <div class="column is-8 is-offset-2">
+            <div class="column is-10 is-offset-1">
                 <h2 class="sub-heading">Comments</h2>
                 <div class="columns">
                     <div class="column">
@@ -321,7 +398,7 @@
     </div>
     <hr>
     <div class="columns">
-        <div class="column is-8 is-offset-2">
+        <div class="column is-10 is-offset-1">
             <h2 class="sub-heading">Approval Information</h2>
             <div class="columns">
                 <div class="column is-3">
@@ -420,6 +497,35 @@
         @endif
 	</div>
 </div>
+@if($pageType != "create")
+    <div class="modal" id="save_as_template_modal">
+            <div class="modal-background" style="background-color: rgba(10, 10, 10, 0.4)"></div>
+            <div class="modal-card" style="width:500px">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Save as Template...</p>
+                </header>
+                    <section class="modal-card-body">
+                        <div class="columns">
+                            <div class="column is-12">
+
+                            <div class="column">
+                                {{ EGForm::select('save_as_template_id', [
+                                    'label' => 'Would you like to make a new revision of an existing template?',
+                                    'value' => "",
+                                    'list' => isset($saveAsTemplates) ? $saveAsTemplates : [],
+                                    'type' => 'edit',
+                                ]) }}
+                            </div>
+                        </div>
+                    </section>
+                <footer class="modal-card-foot">
+                    <button class="button is-success" id="save_new_template_button">Save</button>
+                    <button class="button" id="close_modal">Cancel</button>
+                </footer>
+            </div>
+        </div>
+    </div>
+@endif
 @push('styles')
     @php
         $oldR = old('show_responsible_person');
@@ -451,6 +557,22 @@
 @endpush
 @push('scripts')
     <script>
+        $('.selectize-multiple').selectize({
+            @if ($pageType == 'edit')
+                onInitialize: function() {
+                    $(this.$control).css('height', '38px');
+                    $(this.$control).css('z-index', 'initial');
+                },
+            @endif
+            onFocus: function() {
+                $(this.$control).css('height', 'initial');
+                $(this.$control).css('z-index', '999');
+            },
+            onBlur: function() {
+                $(this.$control).css('height', '38px');
+                $(this.$control).css('z-index', 'initial');
+            },
+        });
         $('.responsible-check [id^=show_responsible_person]').click(function() {
             var name = $(this).prev().val();
             if (name == "1") {
@@ -469,48 +591,54 @@
                 $('.area-details').show();
             }
         });
-    </script>
-    @if (strpos($identifierPath, 'template') !== false)
-        <script>
-            $('select[name="company_id"]').change(function () {
-                $.ajax({
-                    url: '/company/' + $(this).val() + '/getPresets',
-                    method: 'GET',
-                    success: function (data) {
-                        data = JSON.parse(data);
-                        if (data.status == 'success') {
-                            CKEDITOR.instances.task_description.setData(data.text.task_description);
-                            CKEDITOR.instances.plant_and_equipment.setData(data.text.plant_and_equipment);
-                            CKEDITOR.instances.disposing_of_waste.setData(data.text.disposing_of_waste);
-                            CKEDITOR.instances.first_aid.setData(data.text.first_aid);
-                            CKEDITOR.instances.noise.setData(data.text.noise);
-                            CKEDITOR.instances.working_at_height.setData(data.text.working_at_height);
-                            CKEDITOR.instances.manual_handling.setData(data.text.manual_handling);
-                            CKEDITOR.instances.accident_reporting.setData(data.text.accident_reporting);
-                            toastr.success("New Company Presets applied");
-                        } else {
-                            toastr.error("Failed to get Company Preset values");
-                        }
-                    },
-                    error: function (data) {
-                        if (data.status == 422) {
-                            var errors = '';
-                            $.each(data.responseJSON.errors, function(key,val) {
-                                toastr.error(val);
-                            });
-                        } else if (data.status == 401) {
-                            toastr.error('Your sesson has expired, please refresh the page and login to proceed');
-                        } else {
-                            toastr.error('An error has occured when collecting company presets');
-                        }
-                    }
-                });
+
+        $('#save_as_template_pill').on('click', function() {
+            $('#save_as_template_modal').addClass('is-active');
+        })
+
+        $(".close_modal").on('click', function() {
+            $('.modal').removeClass('is-active');
+        })
+
+        @if($pageType != "create")
+        $('#save_new_template_button').on('click', function() {
+            $.ajax({
+                url: '{{$record->id}}/save_as_template',
+                type: 'POST',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    vtram : "{{$record->id}}",
+                    template_id: $('#save_as_template_id').val()
+                },
+                success: function(url) {
+                    window.location.href = url;
+                },
+                error: function() {
+                    toastr.error('Something went wrong!');
+                }
             });
-        </script>
-    @endif
+
+        })
+        @endif
+    </script>
 @endpush
 
 @include('modules.company.project.vtram.create-modal')
-@if ($pageType == 'view' && strpos($identifierPath, 'template') !== false)
+@if ($pageType == 'view' && strpos($identifierPath, 'template') !== false && strpos($identifierPath, 'previous') === false)
     @include('modules.company.template.create-vtrams-modal')
 @endif
+
+@push('styles')
+    <style>
+        .selectize-control {
+            min-width:100% !important;
+        }
+        .selectize-input {
+            max-height: 100px;
+            overflow-y: scroll;
+        }
+        .select:not(.is-multiple)::after {
+            right: 1.7em !important;
+        }
+    </style>
+@endpush

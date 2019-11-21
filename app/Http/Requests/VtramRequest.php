@@ -30,6 +30,7 @@ class VtramRequest extends FormRequest
             'reference' => 'required|max:100',
             'responsible_person' => 'max:100|required_if:show_responsible_person,1',
             'area' => 'max:100|required_if:show_area,1',
+            'vtram_file' => 'nullable|mimes:pdf',
         ];
     }
 
@@ -45,7 +46,8 @@ class VtramRequest extends FormRequest
             'responsible_person.max' => 'The Responsible Person cannot be more than 100 charcters',
             'responsible_person.required_if' => 'Please enter the Responsible Person',
             'area.max' => 'The Area Name cannot be more than 100 charcters',
-            'area.required_if' => 'Please enter the Area Name'
+            'area.required_if' => 'Please enter the Area Name',
+            'vtram_file.mimes' => ($user->company->vtrams_name ?? 'VTRAMS').' uploaded document must be a PDF'
         ];
     }
 }

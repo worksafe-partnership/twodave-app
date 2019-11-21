@@ -8,6 +8,7 @@ use Route;
 use EGFiles;
 use Storage;
 use Controller;
+use App\User;
 use App\Icon;
 use App\Vtram;
 use App\Hazard;
@@ -16,10 +17,13 @@ use App\Company;
 use App\Template;
 use App\Approval;
 use App\TableRow;
+use App\VtramUser;
 use App\NextNumber;
+use App\UniqueLink;
 use App\Instruction;
 use App\Methodology;
-use App\UniqueLink;
+use App\UserProject;
+use App\ProjectSubcontractor;
 use App\Http\Classes\VTLogic;
 use Illuminate\Http\Request;
 use App\Http\Requests\VtramRequest;
@@ -31,9 +35,19 @@ class CompanyVtramController extends Controller
 
     public function postIndexHook()
     {
-        $this->customValues['templates'] = Template::where('company_id', $this->args[0])
+        $this->customValues['company'] = Company::findOrFail($this->args[0]);
+        $templates = Template::whereIn('company_id', [$this->args[0], $this->user->company_id])
+                                                   ->join('companies', 'templates.company_id', '=', 'companies.id')
                                                    ->where('status', 'CURRENT')
-                                                   ->pluck('name', 'id');
+                                                   ->get([
+                                                        'companies.name as company_name', 'templates.name', 'templates.id'
+                                                    ]);
+        $this->customValues['templates'] = [];
+        foreach ($templates as $template) {
+            $this->customValues['templates'][$template->id] = $template->name . " (" . $template->company_name .")";
+        }
+        $this->customValues['templates'] = collect($this->customValues['templates']);
+
         if (isset($this->actionButtons['create']['class'])) {
             $this->actionButtons['create']['class'] .= " create_vtram";
         }
@@ -49,9 +63,69 @@ class CompanyVtramController extends Controller
 
     public function bladeHook()
     {
-        $this->customValues['templates'] = Template::where('company_id', $this->args[0])
-                                                           ->where('status', 'CURRENT')
-                                                           ->pluck('name', 'id');
+        $translation = ["CONTRACTOR" => " (C)", "SUBCONTRACTOR" => " (S)"];
+        $this->customValues['company'] = $company = Company::findOrFail($this->args[0]);
+        $templates = Template::whereIn('company_id', [$this->args[0], $this->user->company_id])
+                                                   ->join('companies', 'templates.company_id', '=', 'companies.id')
+                                                   ->where('status', 'CURRENT')
+                                                   ->get([
+                                                        'companies.name as company_name', 'templates.name', 'templates.id'
+                                                    ]);
+        $this->customValues['templates'] = [];
+        foreach ($templates as $template) {
+            $this->customValues['templates'][$template->id] = $template->name . " (" . $template->company_name .")";
+        }
+        $this->customValues['saveAsTemplates'] = ['' => 'No, make a new template'] + $this->customValues['templates'];
+        $this->customValues['templates'] = collect($this->customValues['templates']);
+
+        $compAndContractors = ProjectSubContractor::where('project_id', $this->args[1])
+                                                    ->join('companies', 'companies.id', '=', 'project_subcontractors.company_id')
+                                                    ->get(['companies.name', 'companies.id', 'project_subcontractors.contractor_or_sub']);
+        foreach ($compAndContractors as $c) {
+            if ($company->is_principal_contractor) {
+                $this->customValues['compAndContractors'][$c->id] = $c->name . $translation[$c->contractor_or_sub];
+            } else {
+                $this->customValues['compAndContractors'][$c->id] = $c->name;
+            }
+        }
+        $this->customValues['compAndContractors'][$company->id] = $company->name;
+        $this->customValues['companyId'] = $company->id;
+
+        $companiesOnProject = ProjectSubcontractor::where('project_id', $this->parentId)->pluck('contractor_or_sub', 'company_id');
+        $projectUsers = UserProject::where('project_id', $this->parentId)
+                              ->join('users', 'user_projects.user_id', '=', 'users.id')
+                              ->join('companies', 'users.company_id', '=', 'companies.id')
+                              ->get([
+                                'users.id',
+                                'users.name',
+                                'companies.id as company_id',
+                                'companies.name as c_name'
+                              ]);
+
+        $this->customValues['projectUsers'] = [];
+        foreach ($projectUsers as $user) {
+            if ($company->is_principal_contractor && isset($companiesOnProject[$user->company_id])) { // don't do a user check as it's only supes that can see this
+
+                $this->customValues['projectUsers'][$user->id] = $user->name . " (" . $user->c_name . ")" . $translation[$companiesOnProject[$user->company_id]];
+            } else {
+                $this->customValues['projectUsers'][$user->id] = $user->name . " (" . $user->c_name . ")";
+            }
+        }
+
+        $this->customValues['associatedUsers'] = [];
+        if ($this->pageType != "create") {
+            $assoc = VtramUser::where('vtrams_id', $this->record->id)->pluck('user_id');
+            foreach ($assoc as $userId) {
+                $this->customValues['associatedUsers'][$userId] = 1;
+            }
+        }
+
+        $this->customValues['is_file_vtram'] = 0;
+        if ($_GET && isset($_GET['file_upload'])) {
+            $this->customValues['is_file_vtram'] = 1;
+        } else if ($this->pageType != "create" && $this->record->vtram_is_file) {
+            $this->customValues['is_file_vtram'] = 1;
+        }
     }
 
     public function createHook()
@@ -74,26 +148,10 @@ class CompanyVtramController extends Controller
 
             $this->customValues['main_description'] = $template['main_description'];
             $this->customValues['post_risk_assessment_text'] = $template['post_risk_assessment_text'];
-            $this->customValues['task_description'] = $template['task_description'];
-            $this->customValues['plant_and_equipment'] = $template['plant_and_equipment'];
-            $this->customValues['disposing_of_waste'] = $template['disposing_of_waste'];
-            $this->customValues['first_aid'] = $template['first_aid'];
-            $this->customValues['noise'] = $template['noise'];
-            $this->customValues['working_at_height'] = $template['working_at_height'];
-            $this->customValues['manual_handling'] = $template['manual_handling'];
-            $this->customValues['accident_reporting'] = $template['accident_reporting'];
             $this->customValues['key_points'] = $template['key_points'];
         } else {
             $this->customValues['main_description'] = $company['main_description'];
             $this->customValues['post_risk_assessment_text'] = $company['post_risk_assessment_text'];
-            $this->customValues['task_description'] = $company['task_description'];
-            $this->customValues['plant_and_equipment'] = $company['plant_and_equipment'];
-            $this->customValues['disposing_of_waste'] = $company['disposing_of_waste'];
-            $this->customValues['first_aid'] = $company['first_aid'];
-            $this->customValues['noise'] = $company['noise'];
-            $this->customValues['working_at_height'] = $company['working_at_height'];
-            $this->customValues['manual_handling'] = $company['manual_handling'];
-            $this->customValues['accident_reporting'] = $company['accident_reporting'];
         }
     }
 
@@ -133,19 +191,73 @@ class CompanyVtramController extends Controller
         $company = $this->args[0];
         $project = $this->args[1];
         $this->customValues['path'] = '/company/'.$company.'/project/'.$project.'/vtram/create';
+
+        $company = Company::find($this->record->company_id);
+        if ($company != null) {
+            $this->customValues['riskList'] = [
+                0 => $company->no_risk_character,
+                1 => $company->low_risk_character,
+                2 => $company->med_risk_character,
+                3 => $company->high_risk_character,
+            ];
+        } else {
+            $this->customValues['riskList'] = [
+                0 => '#',
+                1 => 'L',
+                2 => 'M',
+                3 => 'H',
+            ];
+            $company = collect([]); // blade requires a company for the TEXT methodology company defaults
+        }
+        $this->customValues['whoList'] = config('egc.hazard_who_risk');
+        $this->customValues['methTypeList'] = config('egc.methodology_list');
+        $this->customValues['hazards'] = Hazard::where('entity', '=', 'VTRAM')
+            ->where('entity_id', '=', $this->id)
+            ->orderBy('list_order')
+            ->get();
+        $this->customValues['methodologies'] = Methodology::where('entity', '=', 'VTRAM')
+            ->where('entity_id', '=', $this->id)
+            ->orderBy('list_order')
+            ->get();
+
+        $this->customValues['comments'] = VTLogic::getComments($this->record->id, $this->record->status, 'VTRAM');
+        $this->customValues['entityType'] = 'VTRAM';
+
+        // Start of Methodology Specific Items //
+        $this->customValues['iconSelect'] = config('egc.icons');
+        $this->customValues['iconImages'] = json_encode(config('egc.icon_images'));
+        $this->customValues['company'] = $company;
+
+        $methodologyIds = $this->customValues['methodologies']->pluck('id');
+
+        $this->customValues['tableRows'] = [];
+        $tableRows = TableRow::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
+        foreach ($tableRows as $row) {
+            $this->customValues['tableRows'][$row->methodology_id][] = $row;
+        }
+
+        $this->customValues['processes'] = [];
+        $instructions = Instruction::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
+        foreach ($instructions as $instruction) {
+            $this->customValues['processes'][$instruction->methodology_id][] = $instruction;
+        }
+
+        $this->customValues['icons'] = [];
+        $icons = Icon::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
+        foreach ($icons as $icon) {
+            $this->customValues['icons'][$icon->methodology_id][$icon->type][] = $icon;
+        }
+        // End of Methodology Specific Items //
+
+        $this->customValues['hazard_methodologies'] = [];
+        $hms = DB::table('hazards_methodologies')->whereIn('hazard_id', $this->customValues['hazards']->pluck('id'))->get();
+        foreach ($hms as $hm) {
+            $this->customValues['hazard_methodologies'][$hm->hazard_id][] = $hm->methodology_id;
+        }
     }
 
     public function viewHook()
     {
-        if (in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND']) && is_null($this->record['deleted_at'])) {
-            $this->actionButtons['methodologies'] = [
-                'label' => 'Method Statements & Risk Assessment',
-                'path' => '/company/'.$this->args[0].'/project/'.$this->parentId.'/vtram/'.$this->id.'/methodology',
-                'icon' => 'receipt',
-                'order' => '550',
-                'id' => 'methodologyEdit',
-            ];
-        }
         $prevConfig = config('structure.company.project.vtram.previous.config');
         $this->actionButtons['previous'] = [
             'label' => ucfirst($this->pageType)." ".$prevConfig['plural'],
@@ -173,7 +285,7 @@ class CompanyVtramController extends Controller
     {
         $company = $this->user->company;
         // Setup Actions
-        if (in_array($this->record->pages_in_pdf, [2,3,4])) {
+        if (in_array($this->record->pages_in_pdf, [2,3,4]) && !$this->record->vtram_is_file) {
             $this->pillButtons['view_pdf_a3'] = [
                 'label' => 'View PDF A3',
                 'path' => $this->record->id.'/view_a3',
@@ -256,6 +368,16 @@ class CompanyVtramController extends Controller
                 'id' => 'create_new_revision',
             ];
         }
+
+        if ($this->record['status'] == 'CURRENT' && (is_null($this->user->company_id) || $this->user->inRole('company_admin'))) {
+            $this->pillButtons['save_as_template'] = [
+                'label' => "Save as Template",
+                'path' => '#',
+                'icon' => 'save',
+                'order' => '600',
+                'id' => 'save_as_template_pill'
+            ];
+        }
     }
 
     public function edit()
@@ -302,11 +424,13 @@ class CompanyVtramController extends Controller
             $companyId = $user->companyId;
         }
         $vtram = Vtram::findOrFail($vtramId);
+
         if ($user->company_id !== null) {
-            if ($user->company_id !== $vtram->company_id) {
+            if (!in_array($vtram->id, $user->vtramsCompanyIds())) {
                 abort(404);
             }
         }
+
         if (in_array($vtram->pages_in_pdf, [2,3,4])) {
             return VTLogic::createA3Pdf($vtram, null, true);
         }
@@ -320,8 +444,9 @@ class CompanyVtramController extends Controller
             $companyId = $user->companyId;
         }
         $vtram = Vtram::findOrFail($vtramId);
+
         if ($user->company_id !== null) {
-            if ($user->company_id !== $vtram->company_id) {
+            if (!in_array($vtram->id, $user->vtramsCompanyIds())) {
                 abort(404);
             }
         }
@@ -338,6 +463,10 @@ class CompanyVtramController extends Controller
             'post_risk_assessment_text' => $company->post_risk_assessment_text,
             'created_by' => Auth::id(),
         ]);
+
+        if ($request->vtram_file) {
+            $request->merge(['vtram_is_file' => 1]);
+        }
 
         return parent::_store(func_get_args());
     }
@@ -397,97 +526,6 @@ class CompanyVtramController extends Controller
         return back();
     }
 
-    public function editContent($companyId, $projectId, $vtramId)
-    {
-        $this->record = Vtram::findOrFail($vtramId);
-        $this->heading = 'Editing Method Statements and Risk Assessment for '.$this->record->name;
-        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND'])) {
-            abort(404);
-        }
-        $this->user = Auth::user();
-        if ($this->user->company_id !== null && $this->record !== null) {
-            if ($this->user->company_id !== $this->record->project->company_id) {
-                abort(404);
-            }
-        }
-        $company = Company::findOrFail($companyId);
-        $this->view = 'modules.company.project.vtram.editVtram';
-        $this->parentId = $vtramId;
-        $this->customValues['whoList'] = config('egc.hazard_who_risk');
-        $this->customValues['methTypeList'] = config('egc.methodology_list');
-        $this->customValues['riskList'] = [
-            0 => $company->no_risk_character,
-            1 => $company->low_risk_character,
-            2 => $company->med_risk_character,
-            3 => $company->high_risk_character,
-        ];
-        $this->customValues['hazards'] = Hazard::where('entity', '=', 'VTRAM')
-            ->where('entity_id', '=', $vtramId)
-            ->orderBy('list_order')
-            ->get();
-        $this->customValues['methodologies'] = Methodology::where('entity', '=', 'VTRAM')
-            ->where('entity_id', '=', $vtramId)
-            ->orderBy('list_order')
-            ->get();
-
-        $this->customValues['comments'] = VTLogic::getComments($this->record, $this->record->status, "VTRAM");
-        $this->customValues['entityType'] = 'VTRAM';
-
-        // Start of Methodology Specific Items
-        $this->customValues['iconSelect'] = config('egc.icons');
-        $this->customValues['iconImages'] = json_encode(config('egc.icon_images'));
-        $this->customValues['company'] = $company;
-
-        $methodologyIds = $this->customValues['methodologies']->pluck('id');
-
-        $this->customValues['tableRows'] = [];
-        $tableRows = TableRow::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
-        foreach ($tableRows as $row) {
-            $this->customValues['tableRows'][$row->methodology_id][] = $row;
-        }
-
-        $this->customValues['processes'] = [];
-        $instructions = Instruction::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
-        foreach ($instructions as $instruction) {
-            $this->customValues['processes'][$instruction->methodology_id][] = $instruction;
-        }
-
-        $this->customValues['icons'] = [];
-        $icons = Icon::whereIn('methodology_id', $methodologyIds)->orderBy('list_order')->get();
-        foreach ($icons as $icon) {
-            $this->customValues['icons'][$icon->methodology_id][$icon->type][] = $icon;
-        }
-        // End of Methodology Specific Items //
-
-        $this->customValues['hazard_methodologies'] = [];
-        $hms = DB::table('hazards_methodologies')->whereIn('hazard_id', $this->customValues['hazards']->pluck('id'))->get();
-        foreach ($hms as $hm) {
-            $this->customValues['hazard_methodologies'][$hm->hazard_id][] = $hm->methodology_id;
-        }
-
-        $this->args = func_get_args();
-        $this->id = $vtramId;
-        $this->parentId = $projectId;
-        parent::setup();
-        parent::_buildProperties($this->args);
-        $this->backButton = [
-            'path' => $this->parentPath.'/'.$vtramId,
-            'label' => 'Back to '.($user->company->vtrams_name ?? 'VTRAMS'),
-            'icon' => 'arrow-left',
-        ];
-
-        $this->pillButtons[] = [
-            'label' => 'Preview PDF',
-            'path' => 'view_a3',
-            'icon' => 'file-pdf',
-            'order' => 100,
-            'id' => 'view_pdf_a3',
-            'target' => '_blank',
-        ];
-        $this->pageType = "custom";
-        return parent::_renderView("layouts.custom");
-    }
-
     public function created($insert, $request, $args)
     {
         $nextNumber = NextNumber::where('company_id', '=', $insert->company_id)
@@ -512,6 +550,17 @@ class CompanyVtramController extends Controller
             VTLogic::copyEntity($original, $insert);
         } else {
             VTLogic::createDefaultMethodologies($insert, "VTRAM");
+        }
+
+        if (isset($request['associated_users'])) {
+            $toInsert = [];
+            foreach ($request['associated_users'] as $userId) {
+                $toInsert[] = [
+                    'vtrams_id' => $insert['id'],
+                    'user_id' => $userId
+                ];
+            }
+            VtramUser::insert($toInsert);
         }
 
         $nextNumber->increment('number');
@@ -542,6 +591,19 @@ class CompanyVtramController extends Controller
             }
             return $request['return_path'];
         }
+
+        VtramUser::where('vtrams_id', end($args))->delete();
+        if (isset($request['associated_users'])) {
+            $toInsert = [];
+            foreach ($request['associated_users'] as $userId) {
+                $toInsert[] = [
+                    'vtrams_id' => end($args),
+                    'user_id' => $userId
+                ];
+            }
+            VtramUser::insert($toInsert);
+        }
+
         if (isset($request['back_to_edit'])) {
             return $this->fullPath.'/edit';
         }
@@ -558,8 +620,8 @@ class CompanyVtramController extends Controller
         $record = Vtram::withTrashed()->findOrFail($id);
         if (can('edit', $this->identifierPath) && in_array($record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND']) && is_null($record['deleted_at'])) {
             $this->actionButtons['methodologies'] = [
-                'label' => 'Method Statements & Risk Assessment',
-                'path' => 'methodology',
+                'label' => 'Edit',
+                'path' => 'edit',
                 'icon' => 'receipt',
                 'order' => '550',
                 'id' => 'methodologyEdit',
@@ -584,5 +646,18 @@ class CompanyVtramController extends Controller
         ];
         parent::_buildProperties($args);
         return parent::_renderView("layouts.custom");
+    }
+
+    public function saveAsTemplate(Request $request)
+    {
+        $vtram = VTram::findOrFail($request->vtram);
+        $replaceTemplate = null;
+        if ($request->template_id) {
+            $replaceTemplate = Template::findOrFail($request->template_id);
+        }
+
+        $newTemplate = VTLogic::saveAsTemplate($vtram, $replaceTemplate);
+        toast()->success('Template Created', 'You\'re now viewing the new Template');
+        return '/template/'.$newTemplate->id;
     }
 }

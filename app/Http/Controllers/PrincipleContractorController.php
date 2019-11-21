@@ -137,6 +137,8 @@ class PrincipleContractorController extends Controller
             'icon' => 'arrow-left',
         ];
         $this->breadcrumbs = null;
+        $this->customValues['associatedUsers'] = [];
+        $this->customValues['projectUsers'] = [];
         return parent::_renderView("layouts.custom");
     }
 

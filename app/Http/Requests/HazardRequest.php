@@ -45,9 +45,9 @@ class HazardRequest extends FormRequest
     {
         return [
             'description.required' => 'Please enter a Description',
-            'control.required' => 'Please enter the Control for this Hazard',
-            'risk.required' => 'Please select the Hazard\'s Risk',
-            'r_risk.required' => 'Please select the Hazard\'s Reduced Risk',
+            'control.required' => 'Please enter the Control for this Risk Assessment',
+            'risk.required' => 'Please select the Risk Assessment\'s Risk',
+            'r_risk.required' => 'Please select the Risk Assessment\'s Reduced Risk',
             'at_risk.required' => 'Please select who is at risk',
             'other_at_risk.required' => 'Please specify who is at risk',
             'r_risk_severity.required' => 'Please select the Risk Severity',

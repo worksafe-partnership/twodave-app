@@ -144,7 +144,7 @@ class HazardController extends Controller
             $decrement->decrement('list_order');
             return 'allow';
         } else {
-            toast()->error('Cannot move this Hazard');
+            toast()->error('Cannot move this Risk Assessment');
             return 'disallow';
         }
     }

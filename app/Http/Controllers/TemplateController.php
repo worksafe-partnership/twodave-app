@@ -25,13 +25,6 @@ class TemplateController extends Controller
 {
     protected $identifierPath = 'template';
 
-    public function indexHook()
-    {
-        if ($this->user->roles->first()->slug == "company_admin") {
-            unset($this->config['datatable']['columns']['company_id']);
-        }
-    }
-
     public function createHook()
     {
         if (strpos($this->identifierPath, 'company') === false) {
@@ -43,14 +36,6 @@ class TemplateController extends Controller
         if ($company != null) {
             $this->customValues['main_description'] = $company['main_description'];
             $this->customValues['post_risk_assessment_text'] = $company['post_risk_assessment_text'];
-            $this->customValues['task_description'] = $company['task_description'];
-            $this->customValues['plant_and_equipment'] = $company['plant_and_equipment'];
-            $this->customValues['disposing_of_waste'] = $company['disposing_of_waste'];
-            $this->customValues['first_aid'] = $company['first_aid'];
-            $this->customValues['noise'] = $company['noise'];
-            $this->customValues['working_at_height'] = $company['working_at_height'];
-            $this->customValues['manual_handling'] = $company['manual_handling'];
-            $this->customValues['accident_reporting'] = $company['accident_reporting'];
         }
     }
 
@@ -62,14 +47,6 @@ class TemplateController extends Controller
             'text' => [
                 'main_description' => $company->main_description,
                 'post_risk_assessment_text' => $company->post_risk_assessment_text,
-                'task_description' => $company->task_description,
-                'plant_and_equipment' => $company->plant_and_equipment,
-                'disposing_of_waste' => $company->disposing_of_waste,
-                'first_aid' => $company->first_aid,
-                'noise' => $company->noise,
-                'working_at_height' => $company->working_at_height,
-                'manual_handling' => $company->manual_handling,
-                'accident_reporting' => $company->accident_reporting,
             ]
         ]);
     }
@@ -101,108 +78,7 @@ class TemplateController extends Controller
             'order' => 150,
             'value' => true,
         ];
-    }
-
-    public function viewHook()
-    {
-
-        if (can('edit', $this->identifierPath) && in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND']) && is_null($this->record['deleted_at'])) {
-            $this->actionButtons['methodologies'] = [
-                'label' => 'Method Statements & Risk Assessment',
-                'path' => '/template/'.$this->id.'/methodology',
-                'icon' => 'receipt',
-                'order' => '550',
-                'id' => 'methodologyEdit',
-            ];
-        }
-
-        $prevConfig = config('structure.template.previous.config');
-        $this->actionButtons['previous'] = [
-            'label' => ucfirst($this->pageType)." ".$prevConfig['plural'],
-            'path' => '/template/'.$this->id.'/previous',
-            'icon' => $prevConfig['icon'],
-            'order' => '560',
-            'id' => 'previousList'
-        ];
-        $approvalConfig = config('structure.template.approval.config');
-        $this->actionButtons['approval'] = [
-            'label' => ucfirst($this->pageType)." ".$approvalConfig['plural'],
-            'path' => '/template/'.$this->id.'/approval',
-            'icon' => $approvalConfig['icon'],
-            'order' => '570',
-            'id' => 'approvalList'
-        ];
-        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND'])) {
-            $this->disableEdit = true;
-        }
-        if ($this->user->company_id == null) {
-            $this->customValues['templatePath'] = '/company/'.$this->record->company_id.'/project/';
-        } else {
-            $this->customValues['templatePath'] = '/project/';
-        }
-    }
-
-    public function viewEditHook()
-    {
-        // don't let company admins see templates that don't belong to them.
-        if (!is_null($this->user->company_id) && $this->user->company_id != $this->record->company_id) {
-            abort(404);
-        }
-    }
-
-    public function bladeHook()
-    {
-        $this->customValues['companies'] = Company::when(!is_null($this->user->company_id), function ($sub) {
-            $sub->where('id', $this->user->company_id);
-        })->orderBy('name', 'ASC')
-        ->withTrashed()
-        ->pluck('name', 'id');
-    }
-
-    public function store(TemplateRequest $request)
-    {
-        $company = Company::findOrFail($request->company_id);
-        $request->merge([
-            'main_description' => $company->main_description,
-            'post_risk_assessment_text' => $company->post_risk_assessment_text,
-        ]);
-        return parent::_store(func_get_args());
-    }
-
-    public function update(TemplateRequest $request, $companyId)
-    {
-        return parent::_update(func_get_args());
-    }
-
-    public function updateFromMethodology(EditVtramRequest $request)
-    {
-        $request->merge([
-            'updated_by' => Auth::id(),
-            'from_methodology' => true, // used for override in update function.
-            'return_path' => str_replace("edit_extra", "methodology", $request->path())
-        ]);
-
-        return parent::_update(func_get_args());
-    }
-
-    public function editContent($templateId, $otherId = null)
-    {
-        $this->record = Template::findOrFail($templateId);
-        $this->heading = 'Editing Method Statements and Risk Assessment for '.$this->record->name;
-        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND'])) {
-            abort(404);
-        }
-        $this->user = Auth::user();
-        if ($this->user->company_id !== null && $this->record !== null && $this->record->company_id !== null) {
-            if ($this->user->company_id !== $this->record->company_id) {
-                abort(404);
-            }
-        }
-        if (is_null($otherId)) {
-            $otherId = $this->user->company_id;
-        }
-
-        $company = Company::find($otherId);
+        $company = Company::find($this->record->company_id);
         if ($company != null) {
             $this->customValues['riskList'] = [
                 0 => $company->no_risk_character,
@@ -219,16 +95,14 @@ class TemplateController extends Controller
             ];
             $company = collect([]); // blade requires a company for the TEXT methodology company defaults
         }
-        $this->view = 'modules.company.project.vtram.editVtram';
-        $this->parentId = $templateId;
         $this->customValues['whoList'] = config('egc.hazard_who_risk');
         $this->customValues['methTypeList'] = config('egc.methodology_list');
         $this->customValues['hazards'] = Hazard::where('entity', '=', 'TEMPLATE')
-            ->where('entity_id', '=', $templateId)
+            ->where('entity_id', '=', $this->id)
             ->orderBy('list_order')
             ->get();
         $this->customValues['methodologies'] = Methodology::where('entity', '=', 'TEMPLATE')
-            ->where('entity_id', '=', $templateId)
+            ->where('entity_id', '=', $this->id)
             ->orderBy('list_order')
             ->get();
 
@@ -266,38 +140,77 @@ class TemplateController extends Controller
         foreach ($hms as $hm) {
             $this->customValues['hazard_methodologies'][$hm->hazard_id][] = $hm->methodology_id;
         }
+    }
 
-        $this->args = func_get_args();
-        $this->id = $templateId;
-        $this->parentId = $otherId;
-        parent::setup();
-
-        // because the ids come in backwards for this route, you need to flip them before they go into buildProperties
-        if ($this->identifierPath == 'company.template') {
-            $temp = $this->args[0];
-            $this->args[0] = $this->args[1];
-            $this->args[1] = $temp;
-        }
-
-        parent::_buildProperties($this->args);
-        if ($this->parentPath == '') {
-            $this->parentPath = '/template';
-        }
-        $this->backButton = [
-            'path' => $this->parentPath.'/'.$templateId,
-            'label' => 'Back to Template',
-            'icon' => 'arrow-left',
+    public function viewHook()
+    {
+        $prevConfig = config('structure.template.previous.config');
+        $this->actionButtons['previous'] = [
+            'label' => ucfirst($this->pageType)." ".$prevConfig['plural'],
+            'path' => '/template/'.$this->id.'/previous',
+            'icon' => $prevConfig['icon'],
+            'order' => '560',
+            'id' => 'previousList'
         ];
-        $this->pillButtons[] = [
-            'label' => 'Preview PDF',
-            'path' => 'view_a3',
-            'icon' => 'file-pdf',
-            'order' => 100,
-            'id' => 'view_pdf_a3',
-            'target' => '_blank',
+        $approvalConfig = config('structure.template.approval.config');
+        $this->actionButtons['approval'] = [
+            'label' => ucfirst($this->pageType)." ".$approvalConfig['plural'],
+            'path' => '/template/'.$this->id.'/approval',
+            'icon' => $approvalConfig['icon'],
+            'order' => '570',
+            'id' => 'approvalList'
         ];
-        $this->pageType = 'custom';
-        return parent::_renderView("layouts.custom");
+        if (!in_array($this->record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND'])) {
+            $this->disableEdit = true;
+        }
+        if ($this->user->company_id == null) {
+            $this->customValues['templatePath'] = '/company/'.$this->record->company_id.'/project/';
+        } else {
+            $this->customValues['templatePath'] = '/project/';
+        }
+    }
+
+    public function viewEditHook()
+    {
+        // don't let company admins see templates that don't belong to them.
+        if (!is_null($this->user->company_id) && !in_array($this->user->company_id, $this->user->getAccessCompanies())) {
+            abort(404);
+        }
+    }
+
+    public function bladeHook()
+    {
+        $this->customValues['companies'] = Company::when(!is_null($this->user->company_id), function ($sub) {
+            $sub->where('id', $this->user->company_id);
+        })->orderBy('name', 'ASC')
+        ->withTrashed()
+        ->pluck('name', 'id');
+    }
+
+    public function store(TemplateRequest $request)
+    {
+        $company = Company::findOrFail($request->company_id);
+        $request->merge([
+            'main_description' => $company->main_description,
+            'post_risk_assessment_text' => $company->post_risk_assessment_text,
+        ]);
+        return parent::_store(func_get_args());
+    }
+
+    public function update(TemplateRequest $request, $companyId)
+    {
+        return parent::_update(func_get_args());
+    }
+
+    public function updateFromMethodology(EditVtramRequest $request)
+    {
+        $request->merge([
+            'updated_by' => Auth::id(),
+            'from_methodology' => true, // used for override in update function.
+            'return_path' => str_replace("edit_extra", "methodology", $request->path())
+        ]);
+
+        return parent::_update(func_get_args());
     }
 
     public function createRevision()
@@ -538,16 +451,6 @@ class TemplateController extends Controller
         $id = end($args);
         $userCompany = Auth::User()->company_id;
         $record = Template::findOrFail($id);
-
-        if (can('edit', $this->identifierPath) && in_array($record->status, ['NEW','EXTERNAL_REJECT','REJECTED','AMEND','EXTERNAL_AMEND']) && is_null($record['deleted_at'])) {
-            $this->actionButtons['methodologies'] = [
-                'label' => 'Method Statements & Risk Assessment',
-                'path' => 'methodology',
-                'icon' => 'receipt',
-                'order' => '550',
-                'id' => 'methodologyEdit',
-            ];
-        }
 
         if (!is_null($userCompany)) {
             if ($userCompany != $record->company_id) {

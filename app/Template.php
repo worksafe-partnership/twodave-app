@@ -42,20 +42,12 @@ class Template extends Model
         'approved_by',
         'date_replaced',
         'resubmit_by',
-        'task_description',
-        'plant_and_equipment',
-        'disposing_of_waste',
-        'first_aid',
-        'noise',
-        'working_at_height',
-        'manual_handling',
-        'accident_reporting',
         'show_area',
         'area',
         'main_description',
         'post_risk_assessment_text',
         'pages_in_pdf',
-        'pdf'
+        'pdf',
     ];
 
     public static function scopeDatatableAll($query, $parent, $identifier)
@@ -84,23 +76,29 @@ class Template extends Model
             ]);
 
         $user = Auth::user();
-        if ($identifier['identifier_path'] == 'company.template' || $user->company_id !== null) {
-            if ($user->company_id !== null) {
-                $companyId = $user->company_id;
-            } else {
-                $companyId = $parent;
-            }
-            $query->where(function ($q) use ($companyId) {
-                $q->where('company_id', '=', $companyId)
-                   ->orWhereNull('company_id');
-            });
-        }
 
-        if (in_array($identifier['identifier_path'], ['template.previous', 'company.template.previous'])) {
+        if ($identifier['identifier_path'] == 'company.template') {
+            $query->where('status', '!=', 'PREVIOUS')
+                  ->where(function ($q) use ($parent) {
+                    $q->where('company_id', $parent)
+                    ->orWhereNull('company_id');
+                  });
+        } else if (in_array($identifier['identifier_path'], ['template.previous', 'company.template.previous'])) {
             $query->where('current_id', '=', $parent)
                 ->where('status', '=', 'PREVIOUS');
         } else {
-            $query->where('status', '!=', 'PREVIOUS');
+            if (is_null($user->company_id)) {
+                $query->where('status', '!=', 'PREVIOUS');
+            } else {
+                $query->where(function ($myId) use ($user) {
+                    $myId->where('company_id', $user->company_id)
+                         ->where('status', '!=', 'PREVIOUS');
+                })
+                ->orWhere(function ($notMyId) use ($user) {
+                    $notMyId->whereIn('company_id', $user->getContractorIds())
+                            ->where('status', 'CURRENT');
+                });
+            }
         }
 
         return app('datatables')->of($query)
@@ -310,8 +308,13 @@ class Template extends Model
 
             foreach ($this->methodologies as $meth) {
                 $meth->delete();
-            }   
+            }
         }
         parent::delete();
+    }
+
+    public function companyLogo()
+    {
+        return $this->hasOne(Company::class, 'id', 'company_logo_id');
     }
 }

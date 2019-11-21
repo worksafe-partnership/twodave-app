@@ -16,18 +16,10 @@ class WorksafeUserController extends Controller
 {
     protected $identifierPath = "user";
 
-    public function indexHook()
-    {
-        if ($this->user->roles->first()->slug == "company_admin") {
-            unset($this->config['datatable']['columns']['company_name']);
-        }
-    }
-
-
     public function bladeHook()
     {
         if ($this->user->company_id !== null && $this->record !== null) {
-            if ($this->user->company_id !== $this->record->company_id) {
+            if (!in_array($this->record->company_id, $this->user->getAccessCompanies(true))) {
                 abort(404);
             }
         }
@@ -45,8 +37,13 @@ class WorksafeUserController extends Controller
                                               $companyUsers->whereNotIn('id', [1,2]);
                                            })
                                            ->pluck("name", "id");
-        $this->customValues['companies'] = Company::orderBy('name', 'ASC')->withTrashed()
-            ->pluck('name', 'id');
+
+        $this->customValues['companies'] = Company::orderBy('name', 'ASC')
+                                                    ->withTrashed()
+                                                    ->when(!is_null($this->user->company_id), function ($drilldown) {
+                                                        $drilldown->whereIn('companies.id', array_keys($this->user->nonBillableContractors()));
+                                                    })
+                                                    ->pluck('name', 'id');
         $this->customValues['userPage'] = true;
 
         $currentRoles = [];
@@ -70,7 +67,7 @@ class WorksafeUserController extends Controller
                 'company_id' => null,
             ]);
         }
-        if (!is_null($this->user->company_id)) {
+        if (!is_null($this->user->company_id) && empty($request->company_id)) {
             $request->merge([
                 'company_id' => $this->user->company_id,
             ]);
@@ -100,7 +97,7 @@ class WorksafeUserController extends Controller
                 'company_id' => null,
             ]);
         }
-        if (!is_null($this->user->company_id)) {
+        if (!is_null($this->user->company_id) && empty($request->company_id)) {
             $request->merge([
                 'company_id' => $this->user->company_id,
             ]);

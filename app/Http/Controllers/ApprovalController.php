@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use Controller;
 use App\Vtram;
 use App\Template;
@@ -16,9 +17,8 @@ class ApprovalController extends CompanyApprovalController
     {
         if ($this->user->company_id !== null) {
             if (strpos($this->identifierPath, "vtram") !== false) {
-                $vtram = Vtram::with('project')
-                               ->findOrFail($this->parentId);
-                if ($this->user->company_id !== $vtram->project->company_id) {
+                $permittedVTrams = Auth::User()->vtramsCompanyIds();
+                if (!is_null($this->parentId) && !in_array($this->parentId, $permittedVTrams)) {
                     abort(404);
                 }
             } else { // template
@@ -26,7 +26,6 @@ class ApprovalController extends CompanyApprovalController
                 if ($this->user->company_id !== $template->company_id) {
                     abort(404);
                 }
-
             }
         }
     }
@@ -41,19 +40,10 @@ class ApprovalController extends CompanyApprovalController
     public function bladeHook()
     {
         $this->heading = "Viewing Approval Feedback";
+
         if ($this->user->company_id !== null && $this->record !== null) {
-            if (strpos($this->identifierPath, "vtram") !== false) {
-                if ($this->user->company_id !== $this->record->vtram->project->company_id) {
-                    abort(404);
-                }
-            } else {
-                if ($this->user->company_id !== $this->record->vtram->company_id) { // vtram getter returns a template??
-                    abort(404);
-                }
-            }
-        }
-        if ($this->user->inRole('supervisor') && $this->record !== null) {
-            if (!$this->record->vtram->project->userOnProject($this->user->id)) {
+            $permittedVTrams = Auth::User()->vtramsCompanyIds();
+            if (!is_null($this->parentId) && !in_array($this->parentId, $permittedVTrams)) {
                 abort(404);
             }
         }

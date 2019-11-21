@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use Controller;
 use App\Briefing;
 use App\Vtram;
@@ -14,16 +15,11 @@ class BriefingController extends CompanyBriefingController
 
     public function bladeHook()
     {
-        if ($this->user->company_id !== null && $this->record !== null) {
-            if ($this->user->company_id !== $this->record->project->company_id) {
-                abort(404);
-            }
+        $permittedProjects = Auth::User()->projectCompanyIds();
+        if (!is_null($this->record) && !in_array($this->record->project_id, $permittedProjects)) {
+            abort(404);
         }
-        if ($this->user->inRole('supervisor') && $this->record !== null) {
-            if (!$this->record->project->userOnProject($this->user->id)) {
-                abort(404);
-            }
-        }
+
         parent::bladeHook();
     }
 
@@ -35,11 +31,8 @@ class BriefingController extends CompanyBriefingController
 
     public function indexHook()
     {
-        if ($this->user->company_id !== null) {
-            $project = Project::findOrFail($this->parentId);
-            if ($this->user->company_id !== $project->company_id) {
-                abort(404);
-            }
+        if (!in_array($this->parentId, Auth::User()->projectCompanyIds())) {
+            abort(404);
         }
     }
 

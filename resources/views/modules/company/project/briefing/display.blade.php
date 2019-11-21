@@ -1,5 +1,5 @@
 <div class="columns">
-    <div class="column is-8 is-offset-2">
+    <div class="column is-10 is-offset-1">
         <div class="columns">
             <div class="column is-4">
                 <div class="field">

@@ -41,14 +41,13 @@ class Company extends Model
         'logo',
         'main_description',
         'post_risk_assessment_text',
-        'task_description',
-        'plant_and_equipment',
-        'disposing_of_waste',
-        'first_aid',
-        'noise',
-        'working_at_height',
-        'manual_handling',
-        'accident_reporting',
+        'show_document_ref_on_pdf',
+        'show_message_on_pdf',
+        'message',
+        'show_revision_no_on_pdf',
+        'billable',
+        'allow_file_uploads',
+        'is_principal_contractor'
     ];
 
     public static function scopeDatatableAll($query, $parent, $identifier)
@@ -91,6 +90,12 @@ class Company extends Model
                 return '<div style="background-color:'.$item->primary_colour.';height:30px;width:100%;"></div>';
             })
             ->make("query");
+    }
+
+    public function methodologies()
+    {
+        return $this->hasMany(Methodology::class, 'entity_id', 'id')
+            ->where('entity', '=', 'COMPANY');
     }
 
     public function reviewTimeScaleName()

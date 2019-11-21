@@ -8,6 +8,7 @@ use Controller;
 use App\Vtram;
 use App\Project;
 use App\Template;
+use App\ProjectSubcontractor;
 
 class ProjectTrackerController extends Controller
 {
@@ -18,19 +19,45 @@ class ProjectTrackerController extends Controller
     {
         $this->heading = str_replace("VTRAMS Tracker of", "VTRAMS Tracker for", $this->heading);
         $this->heading = str_replace("VTRAMS", $this->parentRecord->company->vtrams_name ?? "VTRAMS", $this->heading);
-        $this->customValues['templates'] = Template::where('company_id', $this->user->company_id)
+        $project = Project::findOrFail($this->parentId);
+        $this->customValues['company'] = $this->user->company;
+        $companies = [$project->company_id, $this->user->company_id];
+        if ($this->user->company_id != $project->company_id) {
+            $companiesWithAccess = ProjectSubcontractor::where('project_id', $this->parentId)->get();
+            $myAccess = $companiesWithAccess->where('company_id', $this->user->company_id)->first();
+            if ($myAccess) {
+                if ($myAccess->contractor_or_sub = "SUBCONTRACTOR") {
+                    $contractorIds = $companiesWithAccess->where('contractor_or_sub', 'CONTRACTOR')->pluck('company_id')->toArray();
+                    foreach ($contractorIds as $id) {
+                        $companies[] = $id;
+                    }
+                }
+            }
+        }
+        $companies = array_unique($companies);
+
+        $templates = Template::whereIn('company_id', $companies)
+                                                   ->join('companies', 'templates.company_id', '=', 'companies.id')
                                                    ->where('status', 'CURRENT')
-                                                   ->pluck('name', 'id');
+                                                   ->get([
+                                                        'companies.name as company_name', 'templates.name', 'templates.id'
+                                                    ]);
+
+
+
+        $this->customValues['templates'] = [];
+        foreach ($templates as $template) {
+            $this->customValues['templates'][$template->id] = $template->name . " (" . $template->company_name .")";
+        }
+        $this->customValues['templates'] = collect($this->customValues['templates']);
+
         $this->customValues['path'] = 'vtram/create';
     }
 
     public function indexHook()
     {
-        if ($this->user->company_id !== null) {
-            $project = Project::withTrashed()->findOrFail($this->parentId);
-            if ($this->user->company_id !== $project->company_id) {
-                abort(404);
-            }
+        if (!in_array($this->parentId, Auth::User()->projectCompanyIds())) {
+            abort(404);
         }
 
         $this->parentRecord = Project::findOrFail($this->parentId);
@@ -52,14 +79,16 @@ class ProjectTrackerController extends Controller
         $args = func_get_args();
         $nowCarbon = Carbon::now();
         $twoWeeksCarbon = $nowCarbon->copy()->addWeeks(2);
-        $query = Vtram::where('company_id', '=', $user->company_id)
+        $query = Vtram::whereIn('vtrams.id', $user->vtramsCompanyIds())
+                        ->join('companies', 'companies.id', '=', 'vtrams.company_id')
                         ->where('status', '!=', 'PREVIOUS')
                         ->where('project_id', '=', $args[0])
-                        ->get([
-                            'id',
+                        ->select([
+                            'vtrams.id',
                             'number',
                             'project_id',
-                            'name',
+                            'companies.name AS company_name',
+                            'vtrams.name',
                             'status',
                             'created_by',
                             'submitted_by',
