@@ -323,6 +323,12 @@ class VTLogic
     public static function canReview($entityId, $entityType = null, $status = ['PENDING'])
     {
         $user = Auth::user();
+        $isPrincipalContractor = false;
+        if (is_null($user->company_id) || $user->company->is_principal_contractor) {
+            $isPrincipalContractor = true;
+            $status[] = 'AWAITING_EXTERNAL';
+        }
+
         $config = new VTConfig($entityId, $entityType);
         if (!in_array($config->entity->status, $status)) {
             return false;

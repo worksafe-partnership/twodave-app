@@ -95,7 +95,7 @@ class Template extends Model
                          ->where('status', '!=', 'PREVIOUS');
                 })
                 ->orWhere(function ($notMyId) use ($user) {
-                    $notMyId->whereIn('company_id', $user->getAccessCompanies())
+                    $notMyId->whereIn('company_id', $user->getContractorIds())
                             ->where('status', 'CURRENT');
                 });
             }

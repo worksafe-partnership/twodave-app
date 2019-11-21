@@ -63,6 +63,7 @@ class CompanyVtramController extends Controller
 
     public function bladeHook()
     {
+        $translation = ["CONTRACTOR" => " (C)", "SUBCONTRACTOR" => " (S)"];
         $this->customValues['company'] = $company = Company::findOrFail($this->args[0]);
         $templates = Template::whereIn('company_id', [$this->args[0], $this->user->company_id])
                                                    ->join('companies', 'templates.company_id', '=', 'companies.id')
@@ -77,25 +78,38 @@ class CompanyVtramController extends Controller
         $this->customValues['saveAsTemplates'] = ['' => 'No, make a new template'] + $this->customValues['templates'];
         $this->customValues['templates'] = collect($this->customValues['templates']);
 
-        $this->customValues['compAndContractors'] = ProjectSubContractor::where('project_id', $this->args[1])
-                                                                        ->join('companies', 'companies.id', '=', 'project_subcontractors.company_id')
-                                                                        ->pluck('companies.name', 'companies.id')
-                                                                        ->toArray();
+        $compAndContractors = ProjectSubContractor::where('project_id', $this->args[1])
+                                                    ->join('companies', 'companies.id', '=', 'project_subcontractors.company_id')
+                                                    ->get(['companies.name', 'companies.id', 'project_subcontractors.contractor_or_sub']);
+        foreach ($compAndContractors as $c) {
+            if ($company->is_principal_contractor) {
+                $this->customValues['compAndContractors'][$c->id] = $c->name . $translation[$c->contractor_or_sub];
+            } else {
+                $this->customValues['compAndContractors'][$c->id] = $c->name;
+            }
+        }
         $this->customValues['compAndContractors'][$company->id] = $company->name;
         $this->customValues['companyId'] = $company->id;
 
+        $companiesOnProject = ProjectSubcontractor::where('project_id', $this->parentId)->pluck('contractor_or_sub', 'company_id');
         $projectUsers = UserProject::where('project_id', $this->parentId)
                               ->join('users', 'user_projects.user_id', '=', 'users.id')
                               ->join('companies', 'users.company_id', '=', 'companies.id')
                               ->get([
                                 'users.id',
                                 'users.name',
+                                'companies.id as company_id',
                                 'companies.name as c_name'
                               ]);
 
         $this->customValues['projectUsers'] = [];
         foreach ($projectUsers as $user) {
-            $this->customValues['projectUsers'][$user->id] = $user->name . " (" . $user->c_name . ")";
+            if ($company->is_principal_contractor && isset($companiesOnProject[$user->company_id])) { // don't do a user check as it's only supes that can see this
+
+                $this->customValues['projectUsers'][$user->id] = $user->name . " (" . $user->c_name . ")" . $translation[$companiesOnProject[$user->company_id]];
+            } else {
+                $this->customValues['projectUsers'][$user->id] = $user->name . " (" . $user->c_name . ")";
+            }
         }
 
         $this->customValues['associatedUsers'] = [];

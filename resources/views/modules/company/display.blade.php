@@ -243,6 +243,23 @@
         </div>
     </div>
 </div>
+<hr>
+<div class="columns">
+    <div class="column is-10 is-offset-1">
+        <h2 class="sub-heading">Is Principal Contractor</h2>
+        <div class="columns">
+            <div class="column">
+                <div class="field">
+                    {{ EGForm::checkbox('is_principal_contractor', [
+                        'label' => 'Is Principal Contractor?',
+                        'value' => $record->is_principal_contractor ?? false,
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endif
 
 @if($user->inRole('evergreen') || $user->inRole('admin'))

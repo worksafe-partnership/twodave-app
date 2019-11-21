@@ -117,6 +117,10 @@ class User extends Authenticatable
     }
 
     // gets a list of all companies where I have access to a project - mostly used for template bits.
+    /*
+        $billableCheck = whether you need to remove non-billable companies from the list
+        $inList = whether you are calling this from an index page.
+    */
     public function getAccessCompanies($billableCheck = false, $inList = false)
     {
         $user = Auth::user();
@@ -129,14 +133,15 @@ class User extends Authenticatable
             return Company::pluck('name', 'id')->toArray();
         } else {
             $companies = ProjectSubcontractor::whereHas('project', function ($projQ) use ($inList, $user) {
-                    $projQ->where('company_id', '=', $inList && $user->company_id != null ? $user->company_id : $this->company_id);
-                })
+                $projQ->where('company_id', '=', $inList && $user->company_id != null ? $user->company_id : $this->company_id);
+            })
                 ->when($billableCheck, function ($billQ) {
                     $billQ->whereHas('company', function ($compQ) {
                         $compQ->whereNull('billable');
                     });
                 })
                 ->pluck('company_id')->toArray();
+
             $companies[] = $inList && $user->company_id != null ? $user->company_id : $this->company_id;
             return $companies;
         }
@@ -217,5 +222,30 @@ class User extends Authenticatable
         }
 
         return array_unique($permittedVtrams);
+    }
+
+    // Deals with Contractor and Secondary Contractor Companies
+    public function getContractorIds()
+    {
+        $companies = [];
+        // get the projects that your company is on.
+        $projects = ProjectSubcontractor::where('company_id', $this->company_id)->get();
+
+        // get a listing of all the project owner companies and then return these.
+        $primaryContractorIds = Project::whereIn('id', $projects->pluck('project_id'))
+                                       ->pluck('company_id');
+        foreach ($primaryContractorIds as $id) {
+            $companies[] = $id;
+        }
+
+        // get a listing of all projects where your company is a SUBcontractor and then get the contractor companies
+        $subConctractorProjectIds = $projects->where('contractor_or_sub', 'SUBCONTRACTOR')->pluck('project_id');
+        $contractorIds = ProjectSubcontractor::whereIn('project_id', $subConctractorProjectIds)->where('contractor_or_sub', 'CONTRACTOR')->pluck('company_id');
+
+        foreach ($contractorIds as $id) {
+            $companies[] = $id;
+        }
+
+        return array_unique($companies);
     }
 }

@@ -16,6 +16,7 @@ return [
         "columns" => [
             'id' => ['visible' => false, 'searchable' => false, 'label' => 'Id'],
             'client_name' => ['label' => 'Client'],
+            'company_id' => ['label' => 'Company'],
             'name' => ['label' => 'Name'],
             'ref' => ['label' => 'Reference'],
             'project_admin' => ['label' => 'Project Admin'],

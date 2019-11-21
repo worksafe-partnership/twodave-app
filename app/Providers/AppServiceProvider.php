@@ -63,6 +63,21 @@ class AppServiceProvider extends ServiceProvider
             }
             return true;
         });
+
+        // this guy helps on the Projects page, where a Principle Contract Company user can select Contractors and Subcontractors per project.
+        // It stops you selecting the same company for both Contractor and Sub.
+        Validator::extend('noConflictWithSubs', function ($attribute, $value, $parameters, $validator) {
+            $data = $validator->getData();
+            if (isset($data['contractors']) && isset($data['subcontractors'])) {
+                foreach ($data['contractors'] as $c) {
+                    if (in_array($c, $data['subcontractors'])) {
+                        return false;
+                    }
+                }
+            }
+            // if they're not both set there can't be a conflict.
+            return true;
+        });
     }
 
     /**

@@ -8,6 +8,7 @@ use Controller;
 use App\Vtram;
 use App\Project;
 use App\Template;
+use App\ProjectSubcontractor;
 
 class ProjectTrackerController extends Controller
 {
@@ -20,12 +21,30 @@ class ProjectTrackerController extends Controller
         $this->heading = str_replace("VTRAMS", $this->parentRecord->company->vtrams_name ?? "VTRAMS", $this->heading);
         $project = Project::findOrFail($this->parentId);
         $this->customValues['company'] = $this->user->company;
-        $templates = Template::whereIn('company_id', [$project->company_id, $this->user->company_id])
+        $companies = [$project->company_id, $this->user->company_id];
+        if ($this->user->company_id != $project->company_id) {
+            $companiesWithAccess = ProjectSubcontractor::where('project_id', $this->parentId)->get();
+            $myAccess = $companiesWithAccess->where('company_id', $this->user->company_id)->first();
+            if ($myAccess) {
+                if ($myAccess->contractor_or_sub = "SUBCONTRACTOR") {
+                    $contractorIds = $companiesWithAccess->where('contractor_or_sub', 'CONTRACTOR')->pluck('company_id')->toArray();
+                    foreach ($contractorIds as $id) {
+                        $companies[] = $id;
+                    }
+                }
+            }
+        }
+        $companies = array_unique($companies);
+
+        $templates = Template::whereIn('company_id', $companies)
                                                    ->join('companies', 'templates.company_id', '=', 'companies.id')
                                                    ->where('status', 'CURRENT')
                                                    ->get([
                                                         'companies.name as company_name', 'templates.name', 'templates.id'
                                                     ]);
+
+
+
         $this->customValues['templates'] = [];
         foreach ($templates as $template) {
             $this->customValues['templates'][$template->id] = $template->name . " (" . $template->company_name .")";

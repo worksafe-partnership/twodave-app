@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Auth;
 use Controller;
+use App\ProjectSubcontractor;
 use App\UserProject;
 use App\Project;
 use App\Company;
@@ -32,22 +33,21 @@ class ProjectController extends CompanyProjectController
 
     public function bladeHook()
     {
+
         $permittedProjects = Auth::User()->projectCompanyIds();
         if (!is_null($this->record) && !in_array($this->record->id, $permittedProjects)) {
             abort(404);
         }
 
-        // old access bits, irrelevant now, commenting for now just in case it's needed.
-        // if ($this->user->company_id !== null && $this->record !== null) {
-        //     if ($this->user->company_id !== $this->record->company_id) {
-        //         abort(404);
-        //     }
-        // }
-        // if ($this->user->inRole('supervisor') && $this->record !== null) {
-        //     if (!$this->record->userOnProject($this->user->id)) {
-        //         abort(404);
-        //     }
-        // }
+        $this->customValues['isPrincipalContractor'] = false;
+        if ($this->pageType == 'create') { // there's no record, owner company must be your company.
+            $ownerCompany = Company::findOrFail($this->user->company_id);
+        } else {
+            $ownerCompany = Company::findOrFail($this->record->company_id);
+        }
+        if ($ownerCompany->is_principal_contractor && $this->user->company_id == $ownerCompany->id) {
+            $this->customValues['isPrincipalContractor'] = true;
+        }
 
         $this->customValues['company'] = $company = Company::findOrFail($this->user->company_id);
         $this->customValues['projectAdmins'] = User::where('company_id', '=', $this->user->company_id)
@@ -60,10 +60,17 @@ class ProjectController extends CompanyProjectController
         $timescales[0] = "Use Company Schedule";
         $this->customValues['timescales'] = $timescales;
 
-        $this->getProjectUsers($this->user->company_id);
+        $this->getProjectUsers($this->user->company_id, $this->customValues['isPrincipalContractor']);
 
-        $this->customValues['subcontractors'] = Company::where('id', '!=', $company->id)->pluck('name', 'id');
+        $this->customValues['otherCompanies'] = Company::where('id', '!=', $company->id)->pluck('name', 'id');
         $this->getCurrentSubcontractors();
+        $this->getCurrentContractors();
+
+        $role = $this->user->roles()->first()->slug;
+        $this->customValues['isContractor'] = false;
+        if (in_array($this->user->company_id, array_keys($this->customValues['selectedContractors'])) && $role != "supervisor") {
+            $this->customValues['isContractor'] = true;
+        }
     }
 
     public function viewHook()
@@ -95,7 +102,22 @@ class ProjectController extends CompanyProjectController
         ];
 
         $this->customValues['company'] = $this->user->company;
-        $templates = Template::whereIn('company_id', [$this->record->company_id, $this->user->company_id])
+
+        $companies = [$this->record->company_id, $this->user->company_id];
+        if ($this->user->company_id != $this->record->company_id) {
+            $companiesWithAccess = ProjectSubcontractor::where('project_id', $this->id)->get();
+            $myAccess = $companiesWithAccess->where('company_id', $this->user->company_id)->first();
+            if ($myAccess) {
+                if ($myAccess->contractor_or_sub = "SUBCONTRACTOR") {
+                    $contractorIds = $companiesWithAccess->where('contractor_or_sub', 'CONTRACTOR')->pluck('company_id')->toArray();
+                    foreach ($contractorIds as $id) {
+                        $companies[] = $id;
+                    }
+                }
+            }
+        }
+        $companies = array_unique($companies);
+        $templates = Template::whereIn('company_id', $companies)
                                                    ->join('companies', 'templates.company_id', '=', 'companies.id')
                                                    ->where('status', 'CURRENT')
                                                    ->get([
@@ -107,6 +129,7 @@ class ProjectController extends CompanyProjectController
         }
         $this->customValues['templates'] = collect($this->customValues['templates']);
         $this->customValues['path'] = $this->id.'/vtram/create';
+        // END TEMPLATES
     }
 
     public function viewEditHook()

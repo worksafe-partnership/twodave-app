@@ -19,7 +19,7 @@
 
                             @if(isset($templates) && $templates->isNotEmpty())
                                 @foreach($templates as $key => $name)
-                                    <a class="button is-success" href="{{$path}}?template={{$key}}">{{$name}}</a>
+                                    <a class="button is-success" href="{{$path}}?template={{$key}}" style="margin: 1px">{{$name}}</a>
                                 @endforeach
                             @endif
                         </div>

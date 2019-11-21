@@ -84,7 +84,23 @@ class VtramController extends CompanyVtramController
 
         $project = Project::findOrFail($this->parentId);
         $this->customValues['company'] = $company = $this->user->company;
-        $templates = Template::whereIn('company_id', [$project->company_id, $this->user->company_id])
+
+        $companies = [$project->company_id, $this->user->company_id];
+        if ($this->user->company_id != $project->company_id) {
+            $companiesWithAccess = ProjectSubcontractor::where('project_id', $this->id)->get();
+            $myAccess = $companiesWithAccess->where('company_id', $this->user->company_id)->first();
+            if ($myAccess) {
+                if ($myAccess->contractor_or_sub = "SUBCONTRACTOR") {
+                    $contractorIds = $companiesWithAccess->where('contractor_or_sub', 'CONTRACTOR')->pluck('company_id')->toArray();
+                    foreach ($contractorIds as $id) {
+                        $companies[] = $id;
+                    }
+                }
+            }
+        }
+        $companies = array_unique($companies);
+
+        $templates = Template::whereIn('company_id', $companies)
                                                    ->join('companies', 'templates.company_id', '=', 'companies.id')
                                                    ->where('status', 'CURRENT')
                                                    ->get([
@@ -102,27 +118,41 @@ class VtramController extends CompanyVtramController
         $this->structure['config']['singular'] = $company->vtrams_name ?? 'VTRAMS';
         $this->structure['config']['plural'] = $company->vtrams_name ?? 'VTRAMS';
 
-        $this->customValues['compAndContractors'] = ProjectSubContractor::where('project_id', $this->parentId)
-                                                                        ->join('companies', 'companies.id', '=', 'project_subcontractors.company_id')
-                                                                        ->pluck('companies.name', 'companies.id')
-                                                                        ->toArray();
+        $translation = ["CONTRACTOR" => " (C)", "SUBCONTRACTOR" => " (S)"];
+        $compAndContractors = ProjectSubContractor::where('project_id', $this->args[0])
+                                                    ->join('companies', 'companies.id', '=', 'project_subcontractors.company_id')
+                                                    ->get(['companies.name', 'companies.id', 'project_subcontractors.contractor_or_sub']);
+        foreach ($compAndContractors as $c) {
+            if ($company->is_principal_contractor) {
+                $this->customValues['compAndContractors'][$c->id] = $c->name . $translation[$c->contractor_or_sub];
+            } else {
+                $this->customValues['compAndContractors'][$c->id] = $c->name;
+            }
+        }
         $projCompany = $project->company;
         $this->customValues['compAndContractors'][$projCompany->id] = $projCompany->name;
 
         $this->customValues['companyId'] = $company->id;
 
+        $companiesOnProject = ProjectSubcontractor::where('project_id', $this->parentId)->pluck('contractor_or_sub', 'company_id');
         $projectUsers = UserProject::where('project_id', $this->parentId)
                               ->join('users', 'user_projects.user_id', '=', 'users.id')
                               ->join('companies', 'users.company_id', '=', 'companies.id')
                               ->get([
                                 'users.id',
                                 'users.name',
+                                'companies.id as company_id',
                                 'companies.name as c_name'
+
                               ]);
 
         $this->customValues['projectUsers'] = [];
         foreach ($projectUsers as $user) {
-            $this->customValues['projectUsers'][$user->id] = $user->name . " (" . $user->c_name . ")";
+            if ($projCompany->is_principal_contractor && $this->user->company_id == $projCompany->id && isset($companiesOnProject[$user->company_id])) {
+                $this->customValues['projectUsers'][$user->id] = $user->name . " (" . $user->c_name . ")" . $translation[$companiesOnProject[$user->company_id]];
+            } else {
+                $this->customValues['projectUsers'][$user->id] = $user->name . " (" . $user->c_name . ")";
+            }
         }
 
         $this->customValues['associatedUsers'] = [];
