@@ -33,7 +33,6 @@ class ProjectController extends CompanyProjectController
 
     public function bladeHook()
     {
-
         $permittedProjects = Auth::User()->projectCompanyIds();
         if (!is_null($this->record) && !in_array($this->record->id, $permittedProjects)) {
             abort(404);
@@ -68,7 +67,7 @@ class ProjectController extends CompanyProjectController
 
         $role = $this->user->roles()->first()->slug;
         $this->customValues['isContractor'] = false;
-        if (in_array($this->user->company_id, array_keys($this->customValues['selectedContractors'])) && $role != "supervisor") {
+        if (in_array($this->user->company_id, array_merge((isset($this->record) ? [$this->record->company_id] : []), array_keys($this->customValues['selectedContractors']))) && $role != "supervisor") {
             $this->customValues['isContractor'] = true;
         }
     }
@@ -145,14 +144,6 @@ class ProjectController extends CompanyProjectController
         ]);
         return parent::_store(func_get_args());
     }
-
-    // commenting this guy out. It goes the eact same as the parent updated() function except the parent does a lot more. Function not required?
-    // public function updated($record, $orig, $request, $args)
-    // {
-    //     if (isset($request['back_to_edit'])) {
-    //         return $this->fullPath.'/edit';
-    //     }
-    // }
 
     public function update(ProjectRequest $request)
     {

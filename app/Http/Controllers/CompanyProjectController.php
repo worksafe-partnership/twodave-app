@@ -77,7 +77,7 @@ class CompanyProjectController extends Controller
 
         $this->customValues['isContractor'] = false;
         $role = $this->user->roles()->first()->slug;
-        if (in_array($this->user->company_id, array_keys($this->customValues['selectedContractors'])) && $role != "supervisor") {
+        if (in_array($this->user->company_id, array_merge((isset($this->record) ? [$this->record->company_id] : []), array_keys($this->customValues['selectedContractors']))) && $role != "supervisor") {
             $this->customValues['isContractor'] = true;
         }
     }

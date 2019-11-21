@@ -12,6 +12,7 @@ use App\Project;
 use App\TableRow;
 use App\Instruction;
 use App\Methodology;
+use App\ProjectSubcontractor;
 use App\Http\Requests\CompanyRequest;
 
 class CompanyController extends Controller
@@ -127,6 +128,12 @@ class CompanyController extends Controller
         }
         if (isset($request['back_to_edit'])) {
             return $this->fullPath.'/edit';
+        }
+        if (!$company->is_principal_contractor) {
+            ProjectSubcontractor::join('projects', 'projects.id', '=', 'project_subcontractors.project_id')
+                ->where('contractor_or_sub', '=', 'CONTRACTOR')
+                ->where('projects.company_id', '=', $company->id)
+                ->delete();            
         }
     }
 

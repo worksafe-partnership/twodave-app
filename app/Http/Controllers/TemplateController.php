@@ -25,13 +25,6 @@ class TemplateController extends Controller
 {
     protected $identifierPath = 'template';
 
-    public function indexHook()
-    {
-        if ($this->user->roles->first()->slug == "company_admin") {
-            unset($this->config['datatable']['columns']['company_id']);
-        }
-    }
-
     public function createHook()
     {
         if (strpos($this->identifierPath, 'company') === false) {

@@ -197,7 +197,7 @@ class CompanyApprovalController extends Controller
         $company = Company::findOrFail($this->user->company_id ?? $this->customValues['entity']->company_id);
         $this->customValues['company'] = $company;
 
-        if (($this->user->company_id == $company->id || is_null($user->company)) && $company->is_principal_contractor) {
+        if (($this->user->company_id == $company->id || is_null($user->company)) && $company->is_principal_contractor && $this->customValues['entity']->status == 'AWAITING_EXTERNAL') {
             $types = config('egc.pc_approval_type');
             $types['PC_A'] = $company->accept_label;
             $types['PC_AC'] = $company->amend_label;
