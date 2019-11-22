@@ -31,6 +31,8 @@ use App\Http\Requests\EditVtramRequest;
 
 class CompanyVtramController extends Controller
 {
+    // THIS IS THE BASE CONTROLLER FOR A LOT OF THE CONTROLLERS. CHECK WHAT EXTENDS IT BEFORE CHANGING TOO MUCH OR ELSE UNFORESEEN ISSUES MAY ARISE!
+
     protected $identifierPath = 'company.project.vtram';
 
     public function postIndexHook()
@@ -104,8 +106,7 @@ class CompanyVtramController extends Controller
 
         $this->customValues['projectUsers'] = [];
         foreach ($projectUsers as $user) {
-            if ($company->is_principal_contractor && isset($companiesOnProject[$user->company_id])) { // don't do a user check as it's only supes that can see this
-
+            if ($company->is_principal_contractor && isset($companiesOnProject[$user->company_id])) {// don't do a user check as it's only supes that can see this
                 $this->customValues['projectUsers'][$user->id] = $user->name . " (" . $user->c_name . ")" . $translation[$companiesOnProject[$user->company_id]];
             } else {
                 $this->customValues['projectUsers'][$user->id] = $user->name . " (" . $user->c_name . ")";

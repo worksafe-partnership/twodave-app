@@ -6,6 +6,7 @@ use Auth;
 use Carbon;
 use Controller;
 use App\Vtram;
+use App\VtramUser;
 use App\Project;
 use App\Template;
 use App\ProjectSubcontractor;
@@ -83,6 +84,16 @@ class ProjectTrackerController extends Controller
                         ->join('companies', 'companies.id', '=', 'vtrams.company_id')
                         ->where('status', '!=', 'PREVIOUS')
                         ->where('project_id', '=', $args[0])
+                        ->when(!is_null($user->company_id), function ($accessCheck) use ($user) {
+                            // check the vtram has no vtram users (VtramUser) attached to it
+                            $accessCheck->where(function ($noUsers) {
+                                $noUsers->whereIn('vtrams.id', Vtram::doesntHave('vtramsUsers')->pluck('vtrams.id'));
+                            });
+                            // or the user id is in the VTramUser list for the project
+                            $accessCheck->orWhere(function ($myProjects) use ($user) {
+                                $myProjects->whereIn('vtrams.id', VtramUser::where('user_id', $user->id)->pluck('vtrams_id')->toArray());
+                            });
+                        })
                         ->select([
                             'vtrams.id',
                             'number',
