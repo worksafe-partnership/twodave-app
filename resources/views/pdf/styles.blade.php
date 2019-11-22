@@ -40,9 +40,10 @@
         font-size: 10pt;
         bottom: 0;
         position:fixed;
-        width: 95%;
+        width: 100%;
         left: 0;
         background-color: #FFF;
+        height: 30px;
     }
 
     .footer-ref {
