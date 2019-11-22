@@ -289,6 +289,10 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => 'can:create-methodology',
         'uses' => 'MethodologyController@store'
     ]);
+    Route::post('/your_company/methodology/create', [
+        'middleware' => 'can:create-methodology',
+        'uses' => 'MethodologyController@store'
+    ]);
     // edit
     Route::post('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/methodology/{methodology_id}/edit', [
         'middleware' => 'can:edit-methodology',
@@ -307,6 +311,10 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'MethodologyController@update'
     ]);
     Route::post('/company/{company_id}/methodology/{methodology_id}/edit', [
+        'middleware' => 'can:edit-methodology',
+        'uses' => 'MethodologyController@update'
+    ]);
+    Route::post('/your_company/methodology/{methodology_id}/edit', [
         'middleware' => 'can:edit-methodology',
         'uses' => 'MethodologyController@update'
     ]);

@@ -24,16 +24,30 @@ class MethodologyController extends Controller
     public function store(MethodologyRequest $request)
     {
         $this->args = func_get_args();
-        $vtconfig = new VTConfig((int)end($this->args), $request->entityType);
         $this->user = Auth::user();
+        if (is_numeric(end($this->args))) {
+            $vtconfig = new VTConfig((int)end($this->args), $request->entityType);
+        } else {
+            $vtconfig = new VTConfig($this->user->company_id, $request->entityType);
+        }
         if ($this->user->company_id !== null && $vtconfig->entity !== null && $vtconfig->entity->company_id !== null) {
-            if ($this->user->company_id !== $vtconfig->entity->company_id) {
-                abort(404);
+            if ($request->entityType == 'COMPANY') {
+                if ($vtconfig->entity->id != $this->user->company_id) {
+                    abort(404);
+                }
+            } else if ($vtconfig->entityType == 'TEMPLATE') {
+                if ($vtconfig->entity->company_id != $this->user->company_id) {
+                    abort(404);
+                }
+            } else {
+                if (!in_array($vtconfig->entity->company_id, $this->user->getContractorIds())) {
+                    abort(404);
+                }
             }
         }
         $request->merge([
             'entity' => $request->entityType,
-            'entity_id' => end($this->args),
+            'entity_id' => is_numeric(end($this->args)) ? end($this->args) : $this->user->company_id,
         ]);
         if ($request->page_break == null) {
             $request->merge([
@@ -77,8 +91,18 @@ class MethodologyController extends Controller
         $vtconfig = new VTConfig($methodology->entity_id, $methodology->entity);
         $this->user = Auth::user();
         if ($this->user->company_id !== null && $vtconfig->entity !== null && $vtconfig->entity->company_id !== null) {
-            if ($this->user->company_id !== $vtconfig->entity->company_id) {
-                abort(404);
+            if ($request->entityType == 'COMPANY') {
+                if ($vtconfig->entity->id != $this->user->company_id) {
+                    abort(404);
+                }
+            } else if ($vtconfig->entityType == 'TEMPLATE') {
+                if ($vtconfig->entity->company_id != $this->user->company_id) {
+                    abort(404);
+                }
+            } else {
+                if (!in_array($vtconfig->entity->company_id, $this->user->getContractorIds())) {
+                    abort(404);
+                }
             }
         }
         if ($request->page_break == null) {
@@ -251,8 +275,18 @@ class MethodologyController extends Controller
         $vtconfig = new VTConfig($methodology->entity_id, $methodology->entity);
         $this->user = Auth::user();
         if ($this->user->company_id !== null && $vtconfig->entity !== null && $vtconfig->entity->company_id !== null) {
-            if ($this->user->company_id !== $vtconfig->entity->company_id) {
-                abort(404);
+            if ($vtconfig->entityType == 'COMPANY') {
+                if ($vtconfig->entity->id != $this->user->company_id) {
+                    abort(404);
+                }
+            } else if ($vtconfig->entityType == 'TEMPLATE') {
+                if ($vtconfig->entity->company_id != $this->user->company_id) {
+                    abort(404);
+                }
+            } else {
+                if (!in_array($vtconfig->entity->company_id, $this->user->getContractorIds())) {
+                    abort(404);
+                }
             }
         }
         if (VTLogic::canUseItem($methodology->entity_id, $methodology->entity)) {
@@ -311,8 +345,18 @@ class MethodologyController extends Controller
         $vtconfig = new VTConfig($methodology->entity_id, $methodology->entity);
         $this->user = Auth::user();
         if ($this->user->company_id !== null && $vtconfig->entity !== null && $vtconfig->entity->company_id !== null) {
-            if ($this->user->company_id !== $vtconfig->entity->company_id) {
-                abort(404);
+            if ($vtconfig->entityType == 'COMPANY') {
+                if ($vtconfig->entity->id != $this->user->company_id) {
+                    abort(404);
+                }
+            } else if ($vtconfig->entityType == 'TEMPLATE') {
+                if ($vtconfig->entity->company_id != $this->user->company_id) {
+                    abort(404);
+                }
+            } else {
+                if (!in_array($vtconfig->entity->company_id, $this->user->getContractorIds())) {
+                    abort(404);
+                }
             }
         }
         $existingMethodologies = Methodology::where('entity', $methodology->entity)
