@@ -42,6 +42,7 @@
         position:fixed;
         width: 95%;
         left: 0;
+        background-color: #FFF;
     }
 
     .footer-ref {

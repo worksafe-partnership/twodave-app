@@ -326,6 +326,24 @@ class VTLogic
                 $newMeth->entity = $config->entityType;
                 $newMeth->entity_id = $config->entityId;
                 $newMeth->save();
+
+                foreach ($meth->icons as $icon) {
+                    $newIcon = $icon->replicate();
+                    $newIcon->methodology_id = $newMeth->id;
+                    $newIcon->save();
+                }
+
+                foreach ($meth->instructions as $instruction) {
+                    $newInstruction = $instruction->replicate();
+                    $newInstruction->methodology_id = $newMeth->id;
+                    $newInstruction->save();
+                }
+
+                foreach ($meth->tableRows as $row) {
+                    $newRow = $row->replicate();
+                    $newRow->methodology_id = $newMeth->id;
+                    $newRow->save();
+                }
             }
         }
     }
