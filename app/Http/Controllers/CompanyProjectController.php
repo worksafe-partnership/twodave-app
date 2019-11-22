@@ -89,7 +89,7 @@ class CompanyProjectController extends Controller
         return parent::_view($this->args);
     }
 
-    protected function getProjectUsers($companyId, $isPrincipalContractor)
+    protected function getProjectUsers($companyId, $isPrincipalContractor, $piCompanyId = null)
     {
         $companiesOnProject = ProjectSubcontractor::where('project_id', $this->id)->pluck('contractor_or_sub', 'company_id');
         $translation = ["CONTRACTOR" => " (C)", "SUBCONTRACTOR" => " (S)"];
@@ -116,11 +116,25 @@ class CompanyProjectController extends Controller
                 }
                 $this->customValues['allUsers'][$user['id']] = $temp;
             }
+
+            if ($piCompanyId) {
+                $piUsers = Users::where('company_id', $piCompanyId)->get(['companies.name as company_name', 'users.name', 'users.id']);
+                foreach ($piUsers as $piUser) {
+                    $this->customValues['allUsers'][$user['id']] = $user->name . " (" . $user['company_name'] . ")";
+                }
+            }
+
+
         } else {
             // get all users for this company
             $users1 = User::withTrashed()
                          ->join('companies', 'users.company_id', '=', 'companies.id')
-                         ->where('company_id', '=', $companyId)
+                         ->when(is_null($piCompanyId), function ($onlyMine) use ($companyId) {
+                            $onlyMine->where('company_id', '=', $companyId);
+                         })
+                         ->when($piCompanyId, function ($mineAndPi) use ($companyId, $piCompanyId) {
+                            $mineAndPi->whereIn('company_id', [$companyId, $piCompanyId]);
+                         })
                          ->get(['companies.name as c_name', 'users.name', 'users.id']);
 
             foreach ($users1 as $user) {

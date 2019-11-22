@@ -60,7 +60,7 @@ class ProjectController extends CompanyProjectController
         $timescales[0] = "Use Company Schedule";
         $this->customValues['timescales'] = $timescales;
 
-        $this->getProjectUsers($this->user->company_id, $this->customValues['isPrincipalContractor']);
+        $this->getProjectUsers($this->user->company_id, $this->customValues['isPrincipalContractor'], $ownerCompany->id);
 
         $this->customValues['otherCompanies'] = Company::where('id', '!=', $company->id)->pluck('name', 'id');
         $this->getCurrentSubcontractors();
