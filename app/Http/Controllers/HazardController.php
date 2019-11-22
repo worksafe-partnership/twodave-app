@@ -20,8 +20,18 @@ class HazardController extends Controller
         $vtconfig = new VTConfig((int)end($this->args), $request->entityType);
         $this->user = Auth::user();
         if ($this->user->company_id !== null && $vtconfig->entity !== null && $vtconfig->entity->company_id !== null) {
-            if ($this->user->company_id !== $vtconfig->entity->company_id) {
-                abort(404);
+            if ($request->entityType == 'COMPANY') {
+                if ($vtconfig->entity->id != $this->user->company_id) {
+                    abort(404);
+                }
+            } else if ($vtconfig->entityType == 'TEMPLATE') {
+                if ($vtconfig->entity->company_id != $this->user->company_id) {
+                    abort(404);
+                }
+            } else {
+                if (!in_array($vtconfig->entity->company_id, $this->user->getContractorIds())) {
+                    abort(404);
+                }
             }
         }
         $request->merge([
@@ -55,8 +65,18 @@ class HazardController extends Controller
         $vtconfig = new VTConfig($hazard->entity_id, $hazard->entity);
         $this->user = Auth::user();
         if ($this->user->company_id !== null && $vtconfig->entity !== null && $vtconfig->entity->company_id !== null) {
-            if ($this->user->company_id !== $vtconfig->entity->company_id) {
-                abort(404);
+            if ($request->entityType == 'COMPANY') {
+                if ($vtconfig->entity->id != $this->user->company_id) {
+                    abort(404);
+                }
+            } else if ($request->entityType == 'TEMPLATE') {
+                if ($vtconfig->entity->company_id != $this->user->company_id) {
+                    abort(404);
+                }
+            } else {
+                if (!in_array($vtconfig->entity->company_id, $this->user->getContractorIds())) {
+                    abort(404);
+                }
             }
         }
         $response = parent::_update(func_get_args());
@@ -83,8 +103,18 @@ class HazardController extends Controller
         $vtconfig = new VTConfig($hazard->entity_id, $hazard->entity);
         $this->user = Auth::user();
         if ($this->user->company_id !== null && $vtconfig->entity !== null && $vtconfig->entity->company_id !== null) {
-            if ($this->user->company_id !== $vtconfig->entity->company_id) {
-                abort(404);
+            if ($vtconfig->entityType == 'COMPANY') {
+                if ($vtconfig->entity->id != $this->user->company_id) {
+                    abort(404);
+                }
+            } else if ($vtconfig->entityType == 'TEMPLATE') {
+                if ($vtconfig->entity->company_id != $this->user->company_id) {
+                    abort(404);
+                }
+            } else {
+                if (!in_array($vtconfig->entity->company_id, $this->user->getContractorIds())) {
+                    abort(404);
+                }
             }
         }
         if (VTLogic::canUseItem($hazard->entity_id, $hazard->entity)) {
@@ -124,8 +154,18 @@ class HazardController extends Controller
         $vtconfig = new VTConfig($hazard->entity_id, $hazard->entity);
         $this->user = Auth::user();
         if ($this->user->company_id !== null && $vtconfig->entity !== null && $vtconfig->entity->company_id !== null) {
-            if ($this->user->company_id !== $vtconfig->entity->company_id) {
-                abort(404);
+            if ($vtconfig->entityType == 'COMPANY') {
+                if ($vtconfig->entity->id != $this->user->company_id) {
+                    abort(404);
+                }
+            } else if ($vtconfig->entityType == 'TEMPLATE') {
+                if ($vtconfig->entity->company_id != $this->user->company_id) {
+                    abort(404);
+                }
+            } else {
+                if (!in_array($vtconfig->entity->company_id, $this->user->getContractorIds())) {
+                    abort(404);
+                }
             }
         }
         $existingHazards = Hazard::where('entity', $hazard->entity)

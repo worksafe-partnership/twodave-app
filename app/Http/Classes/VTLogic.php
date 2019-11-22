@@ -299,8 +299,18 @@ class VTLogic
         if (is_null($user->company_id)) {
             return true;
         }
-        if ($config->entity->company_id == $user->company_id) {
-            return true;
+        if ($entityType == 'COMPANY') {
+            if ($config->entity->id == $user->company_id) {
+                return true;
+            }
+        } else if ($entityType == 'TEMPLATE') {
+            if ($config->entity->company_id == $user->company_id) {
+                return true;
+            }
+        } else {
+            if (in_array($config->entity->company_id, $user->getContractorIds())) {
+                return true;
+            }
         }
 
         return false;
