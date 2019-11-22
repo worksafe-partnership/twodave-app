@@ -195,15 +195,20 @@ class User extends Authenticatable
 
     public function vtramsCompanyIds()
     {
-        $isSuper = is_null($this->company_id);
-        $isCompanyAdmin = $this->inRole('company_admin');
+        if (isset($this->id)) {
+            $user = $this;
+        } else {
+            $user = Auth::user();
+        }
+        $isSuper = is_null($user->company_id);
+        $isCompanyAdmin = $user->inRole('company_admin');
 
         $vtrams = Vtram::join('projects', 'projects.id', '=', 'vtrams.project_id')
                         ->leftJoin('project_subcontractors', 'projects.id', '=', 'project_subcontractors.project_id')
-                            ->unless($isSuper, function ($notSuper) {
-                                $notSuper->where(function ($sub) {
-                                    $sub->where('project_subcontractors.company_id', $this->company_id)
-                                      ->orWhere('projects.company_id', $this->company_id);
+                            ->unless($isSuper, function ($notSuper) use ($user) {
+                                $notSuper->where(function ($sub) use ($user) {
+                                    $sub->where('project_subcontractors.company_id', $user->company_id)
+                                      ->orWhere('projects.company_id', $user->company_id);
                                 });
                             })
                         ->with(['vtramsUsers'])
