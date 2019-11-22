@@ -143,7 +143,6 @@ class VtramController extends CompanyVtramController
                                 'users.name',
                                 'companies.id as company_id',
                                 'companies.name as c_name'
-
                               ]);
 
         $this->customValues['projectUsers'] = [];
@@ -154,6 +153,7 @@ class VtramController extends CompanyVtramController
                 $this->customValues['projectUsers'][$user->id] = $user->name . " (" . $user->c_name . ")";
             }
         }
+        $this->customValues['projectUsers'] = collect($this->customValues['projectUsers']);
 
         $this->customValues['associatedUsers'] = [];
         if ($this->pageType != "create") {
@@ -174,6 +174,7 @@ class VtramController extends CompanyVtramController
         } else if ($this->pageType != "create" && $this->record->vtram_is_file) {
             $this->customValues['is_file_vtram'] = 1;
         }
+
     }
 
     public function indexHook()

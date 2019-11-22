@@ -118,12 +118,13 @@ class CompanyProjectController extends Controller
             }
 
             if ($piCompanyId) {
-                $piUsers = Users::where('company_id', $piCompanyId)->get(['companies.name as company_name', 'users.name', 'users.id']);
+                $piUsers = User::where('company_id', $piCompanyId)
+                               ->join('companies', 'users.company_id', '=', 'companies.id')
+                               ->get(['companies.name as c_name', 'users.name', 'users.id']);
                 foreach ($piUsers as $piUser) {
-                    $this->customValues['allUsers'][$user['id']] = $user->name . " (" . $user['company_name'] . ")";
+                    $this->customValues['allUsers'][$piUser['id']] = $piUser->name . " (" . $piUser['c_name'] . ")";
                 }
             }
-
 
         } else {
             // get all users for this company
