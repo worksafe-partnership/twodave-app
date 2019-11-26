@@ -475,21 +475,27 @@ class Vtram extends Model
             }
 
             if (!is_null($this->pdf)) {
-                $file = EGFiles::findOrFail($this->pdf);
-                Storage::disk('local')->delete($file->location);
-                $file->forceDelete();
+                $file = EGFiles::withTrashed()->find($this->pdf);
+                if ($file != null) {
+                    Storage::disk('local')->delete($file->location);
+                    $file->forceDelete();
+                }
             }
 
             if (!is_null($this->havs_noise_assessment)) {
-                $file = EGFiles::findOrFail($this->havs_noise_assessment);
-                Storage::disk('local')->delete($file->location);
-                $file->forceDelete();
+                $file = EGFiles::withTrashed()->find($this->havs_noise_assessment);
+                if ($file != null) {
+                    Storage::disk('local')->delete($file->location);
+                    $file->forceDelete();
+                }
             }
 
             if (!is_null($this->coshh_assessment)) {
-                $file = EGFiles::findOrFail($this->coshh_assessment);
-                Storage::disk('local')->delete($file->location);
-                $file->forceDelete();
+                $file = EGFiles::withTrashed()->find($this->coshh_assessment);
+                if ($file != null) {
+                    Storage::disk('local')->delete($file->location);
+                    $file->forceDelete();
+                }
             }
 
             $project = Project::withTrashed()->findOrFail($this->project_id);

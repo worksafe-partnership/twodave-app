@@ -24,7 +24,7 @@
                 <tbody>
                     @foreach($data['data'] as $vtram)
                         <tr>
-                            <td> {{ $vtram->companyName() }} </td>
+                            <td>{{ $vtram->companyName() }}</td>
                             <td>{{ $vtram->name }}</td>
                             <td>{{ $vtram->number }}</td>
                             <td>{{ $vtram->niceStatus() }}</td>
@@ -59,9 +59,7 @@
                 },
                 buttons: [],
                 columns : [
-                    @if(is_null($companyId))
-                        { data: 'company_name', name: 'company_name' },
-                    @endif
+                    { data: 'company_name', name: 'company_name' },
                     { data: 'number', name: 'number' },
                     { data: 'name', name: 'name' },
                     { data: 'status', name: 'status' },
@@ -139,20 +137,18 @@
                     $("ul[data-dtr-index=" + row.index() + "] li").last().after("<li><a href='" + row.data().url + "' class='button is-success'>View VTRAM</a></li>")
                 }
             });
-
-
-            $('#show-hide-{{$key}}').click(function() {
-                let tablediv = "#"+$(this).data('table');
-                if ($(tablediv).is(':visible')) {
-                    $(tablediv).hide();
-                    $(tablediv).parent().css("border-bottom", "none");
-                } else {
-                    $(tablediv).show();
-                    table.responsive.recalc();
-                    $(tablediv).parent().css("border-bottom", "5px solid #203878");
-                }
-            })
         });
+        $('#show-hide-{{$key}}').click(function() {
+            let tablediv = "#"+$(this).data('table');
+            if ($(tablediv).is(':visible')) {
+                $(tablediv).hide();
+                $(tablediv).parent().css("border-bottom", "none");
+            } else {
+                $(tablediv).show();
+                table.responsive.recalc();
+                $(tablediv).parent().css("border-bottom", "5px solid #203878");
+            }
+        })
     </script>
 @endpush
 

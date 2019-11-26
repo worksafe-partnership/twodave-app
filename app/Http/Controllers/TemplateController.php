@@ -290,7 +290,7 @@ class TemplateController extends Controller
             ];
         }
 
-        if ($this->record->status != "NEW") {
+        if ($this->record->status != "NEW" && $this->record->deleted_at == null) {
             $this->pillButtons['view_comments'] = [
                 'label' => 'View All Comments',
                 'path' => $this->record->id.'/comment',
@@ -300,7 +300,7 @@ class TemplateController extends Controller
             ];
         }
 
-        if (VTLogic::canReview($this->record)) {
+        if (VTLogic::canReview($this->record) && $this->record->deleted_at == null) {
             if ($this->record->pages_in_pdf == 4) {
                 $path = 'javascript: window.open("'.$this->record->id.'/view_a3", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
             } else {
@@ -335,7 +335,7 @@ class TemplateController extends Controller
         foreach ($projects as $project) {
             $this->customValues['projects'][$project->id] = $project->name." (".$project->company->name.")";
         }
-        if ($this->record->status == 'CURRENT') {
+        if ($this->record->status == 'CURRENT' && $this->record->deleted_at == null) {
             $this->pillButtons[] = [
                 'label' => 'Create Blank '.($this->record->company->vtrams_name ?? 'VTRAMS'),
                 'path' => '',
@@ -391,7 +391,7 @@ class TemplateController extends Controller
         if ($companyId == null) {
             $companyId = $user->companyId;
         }
-        $template = Template::findOrFail($templateId);
+        $template = Template::withTrashed()->findOrFail($templateId);
         if ($user->company_id !== null) {
             if ($user->company_id !== $template->company_id) {
                 abort(404);
@@ -409,7 +409,7 @@ class TemplateController extends Controller
         if ($companyId == null) {
             $companyId = $user->companyId;
         }
-        $template = Template::findOrFail($templateId);
+        $template = Template::withTrashed()->findOrFail($templateId);
         if ($user->company_id !== null) {
             if ($user->company_id !== $template->company_id) {
                 abort(404);

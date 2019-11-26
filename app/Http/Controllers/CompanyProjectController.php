@@ -77,7 +77,7 @@ class CompanyProjectController extends Controller
 
         $this->customValues['isContractor'] = false;
         $role = $this->user->roles()->first()->slug;
-        if (in_array($this->user->company_id, array_merge((isset($this->record) ? [$this->record->company_id] : []), array_keys($this->customValues['selectedContractors']))) && $role != "supervisor") {
+        if ((in_array($this->user->company_id, array_merge((isset($this->record) ? [$this->record->company_id] : []), array_keys($this->customValues['selectedContractors']))) || $this->user->company_id == null) && $role != "supervisor") {
             $this->customValues['isContractor'] = true;
         }
     }
@@ -440,7 +440,6 @@ class CompanyProjectController extends Controller
                 'accept_label',
                 'amend_label',
                 'reject_label',
-                'logo',
                 'main_description',
                 'post_risk_assessment_text',
                 'show_document_ref_on_pdf',
@@ -503,7 +502,6 @@ class CompanyProjectController extends Controller
                 'accept_label',
                 'amend_label',
                 'reject_label',
-                'logo',
                 'main_description',
                 'post_risk_assessment_text',
                 'show_document_ref_on_pdf',

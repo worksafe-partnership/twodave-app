@@ -69,18 +69,22 @@ class Methodology extends Model
     public function entityRecord()
     {
         if ($this->entity == 'VTRAM') {
-            return $this->belongsTo(Vtram::class, 'entity_id', 'id');
+            return $this->belongsTo(Vtram::class, 'entity_id', 'id')
+                ->withTrashed();
         } else if ($this->entity == 'TEMPLATE') {
-            return $this->belongsTo(Template::class, 'entity_id', 'id');
+            return $this->belongsTo(Template::class, 'entity_id', 'id')
+                ->withTrashed();
         }
     }
 
     public function delete()
     {
         if (!is_null($this->image)) {
-            $file = EGFiles::findOrFail($this->image);
-            Storage::disk('local')->delete($file->location);
-            $file->forceDelete();
+            $file = EGFiles::withTrashed()->find($this->image);
+            if ($file != null) {
+                Storage::disk('local')->delete($file->location);
+                $file->forceDelete();
+            }
         }
 
         foreach ($this->instructions as $process) {
