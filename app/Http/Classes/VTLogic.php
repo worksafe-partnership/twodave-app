@@ -111,7 +111,6 @@ class VTLogic
             $response->header('Content-Disposition', 'filename="'.$file->filename.'.pdf"');
             return $response;
         }
-
         $company = Company::findOrFail($config->entity->company_id);
         if ($config->entity->status == 'PREVIOUS' || ($config->entity->pdf != null && !$force)) {
             return EGFiles::image($config->entity->pdf);

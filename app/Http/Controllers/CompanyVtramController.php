@@ -344,7 +344,7 @@ class CompanyVtramController extends Controller
             }
         }
 
-        if (VTLogic::canReview($this->record)) {
+        if (VTLogic::canReview($this->record) && $this->record->deleted_at == null) {
             // ALWAYS open for preview in A4 - only print should A3 it.
             $path = 'javascript: window.open("'.$this->record->id.'/view_a3", "_blank");window.open("'.$this->record->id.'/approve", "_self");window.focus();';
             $this->pillButtons['approve_vtrams'] = [
@@ -370,7 +370,7 @@ class CompanyVtramController extends Controller
             ];
         }
 
-        if ($this->record['status'] == 'CURRENT' && (is_null($this->user->company_id) || $this->user->inRole('company_admin'))) {
+        if ($this->record['status'] == 'CURRENT' && (is_null($this->user->company_id) || $this->user->inRole('company_admin')) && $this->record->deleted_at == null) {
             $this->pillButtons['save_as_template'] = [
                 'label' => "Save as Template",
                 'path' => '#',
@@ -424,7 +424,7 @@ class CompanyVtramController extends Controller
         if ($companyId == null) {
             $companyId = $user->companyId;
         }
-        $vtram = Vtram::findOrFail($vtramId);
+        $vtram = Vtram::withTrashed()->findOrFail($vtramId);
 
         if ($user->company_id !== null) {
             if (!in_array($vtram->id, $user->vtramsCompanyIds())) {
@@ -444,7 +444,7 @@ class CompanyVtramController extends Controller
         if ($companyId == null) {
             $companyId = $user->companyId;
         }
-        $vtram = Vtram::findOrFail($vtramId);
+        $vtram = Vtram::withTrashed()->findOrFail($vtramId);
 
         if ($user->company_id !== null) {
             if (!in_array($vtram->id, $user->vtramsCompanyIds())) {

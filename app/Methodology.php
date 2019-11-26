@@ -69,9 +69,11 @@ class Methodology extends Model
     public function entityRecord()
     {
         if ($this->entity == 'VTRAM') {
-            return $this->belongsTo(Vtram::class, 'entity_id', 'id');
+            return $this->belongsTo(Vtram::class, 'entity_id', 'id')
+                ->withTrashed();
         } else if ($this->entity == 'TEMPLATE') {
-            return $this->belongsTo(Template::class, 'entity_id', 'id');
+            return $this->belongsTo(Template::class, 'entity_id', 'id')
+                ->withTrashed();
         }
     }
 
