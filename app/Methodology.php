@@ -80,9 +80,11 @@ class Methodology extends Model
     public function delete()
     {
         if (!is_null($this->image)) {
-            $file = EGFiles::findOrFail($this->image);
-            Storage::disk('local')->delete($file->location);
-            $file->forceDelete();
+            $file = EGFiles::withTrashed()->find($this->image);
+            if ($file != null) {
+                Storage::disk('local')->delete($file->location);
+                $file->forceDelete();
+            }
         }
 
         foreach ($this->instructions as $process) {

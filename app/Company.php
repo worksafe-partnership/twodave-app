@@ -139,9 +139,11 @@ class Company extends Model
                 $template->delete();
             }
             if ($this->logo != null) {
-                $file = EGFiles::findOrFail($this->logo);
-                Storage::disk('local')->delete($file->location);
-                $file->forceDelete();
+                $file = EGFiles::withTrashed()->find($this->logo);
+                if ($file != null) {
+                    Storage::disk('local')->delete($file->location);
+                    $file->forceDelete();
+                }
             }
         }
         parent::delete();
