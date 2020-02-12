@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Storage;
 use Controller;
 // use File;
@@ -175,8 +176,42 @@ class CompanyController extends Controller
     public function clone($companyId)
     {
         $company = Company::findOrFail($companyId);
-        $newCompany = $company->replicate();
-        $newCompany->save();
+        $newCompany = DB::transaction(function () use ($company) {
+            $newCompany = $company->replicate();
+            $newCompany->save();
+            $insertIcons = [];
+            $insertTableRows = [];
+            $insertInstructions = [];
+            $insertHazMethLink = [];
+            foreach ($company->methodologies as $methodology) {
+                $newMeth = $methodology->toArray();
+                unset($newMeth['id']);
+                $newMeth['entity_id'] = $newCompany->id;
+                $meth = Methodology::create($newMeth);
+                foreach ($methodology->icons as $icon) {
+                    $newIcon = $icon->toArray();
+                    unset($newIcon['id']);
+                    $newIcon['methodology_id'] = $meth->id;
+                    $insertIcons[] = $newIcon;
+                }
+                foreach ($methodology->instructions as $instruction) {
+                    $newInstruction = $instruction->toArray();
+                    unset($newInstruction['id']);
+                    $newInstruction['methodology_id'] = $meth->id;
+                    $insertInstructions[] = $newInstruction;
+                }
+                foreach ($methodology->tableRows as $row) {
+                    $newRow = $row->toArray();
+                    unset($newRow['id']);
+                    $newRow['methodology_id'] = $meth->id;
+                    $insertTableRows[] = $newRow;
+                }
+            }
+            Icon::insert($insertIcons);
+            TableRow::insert($insertTableRows);
+            Instruction::insert($insertInstructions);
+            return $newCompany;
+        });
         toast()->success('Company Cloned!', 'You\'re now editing the new Company');
         return redirect('/company/'.$newCompany->id.'/edit');
     }
