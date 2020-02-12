@@ -148,6 +148,12 @@
                     break;
                 case 'PLANT_EQUIP':
                     title = 'Plant & Equipment';
+                    container = 'methodology-simple-table-form-container';
+                    cat = 'SIMPLE_TABLE';
+                    $('#simple-table tbody tr').remove();
+                    $('#simple-table').attr('data-next_row', 0);
+                    CKEDITOR.instances.simple_text_before.setData('');
+                    CKEDITOR.instances.simple_text_after.setData('');
                     CKEDITOR.instances.text_content.setData('');
                     $('#' + container + ' #text_page_break').prop('checked', false);
                     $('#' + container + ' input[name="text_page_break"]').val('');
@@ -248,6 +254,7 @@
                     break;
                 case 'ICON':
                     container = 'methodology-icon-form-container';
+                    title = 'PPE Requirements';
                     $('#top-body td').remove();
                     $('#bottom-body td').remove();
                     $('#icon_main_heading').val('');
@@ -574,13 +581,21 @@
 
         switch (category) {
             case 'TEXT':
+                var tickbox = $('#methodology-text-form-container [name="tickbox_answer"]:checked').val();
+                if (tickbox == undefined) {
+                    tickbox = '';
+                }
                 form_data.append('title', $('#methodology-text-form-container #title').val());
-                form_data.append('tickbox_answer', $('#methodology-text-form-container [name="tickbox_answer"]:checked').val());
+                form_data.append('tickbox_answer', tickbox);
                 form_data.append('text_before', CKEDITOR.instances.text_content.getData());
                 form_data.append('page_break', $('#methodology-text-form-container input[type="hidden"][name="text_page_break"]').val());
                 break;
             case 'TEXT_IMAGE':
-                form_data.append('tickbox_answer', $('#methodology-text-image-form-container [name="tickbox_answer"]:checked').val());
+                var tickbox = $('#methodology-text-image-form-container [name="tickbox_answer"]:checked').val();
+                if (tickbox == undefined) {
+                    tickbox = '';
+                }
+                form_data.append('tickbox_answer', tickbox);
                 form_data.append('title', $('#methodology-text-image-form-container #title').val());
                 if ($('#methodology-text-image-form-container #image').prop('files')[0] !== undefined){
                     form_data.append('image', $('#methodology-text-image-form-container #image').prop('files')[0]);
@@ -601,8 +616,12 @@
                 form_data.append('page_break', $('#methodology-text-image-form-container input[type="hidden"][name="image_page_break"]').val());
                 break;
             case 'SIMPLE_TABLE':
+                var tickbox = $('#methodology-simple-table-form-container [name="tickbox_answer"]:checked').val();
+                if (tickbox == undefined) {
+                    tickbox = '';
+                }
                 form_data.append('title', $('#methodology-simple-table-form-container #title').val());
-                form_data.append('tickbox_answer', $('#methodology-simple-table-form-container [name="tickbox_answer"]:checked').val());
+                form_data.append('tickbox_answer', tickbox);
 
                 // get all inputs within the $('#simple-table') element and attach them?
                 let simple_inputs = $('#simple-table textarea[name^=row_]');
@@ -615,8 +634,12 @@
                 form_data.append('page_break', $('#methodology-simple-table-form-container input[type="hidden"][name="simple_page_break"]').val());
                 break;
             case 'COMPLEX_TABLE':
+                var tickbox = $('#methodology-complex-table-form-container [name="tickbox_answer"]:checked').val();
+                if (tickbox == undefined) {
+                    tickbox = '';
+                }
                 form_data.append('title', $('#methodology-complex-table-form-container #title').val());
-                form_data.append('tickbox_answer', $('#methodology-complex-table-form-container [name="tickbox_answer"]:checked').val());
+                form_data.append('tickbox_answer', tickbox);
 
                 let complex_inputs = $('#complex-table textarea[name^=row_]');
                 $.each(complex_inputs, function(key, input) {
@@ -628,8 +651,12 @@
                 form_data.append('page_break', $('#methodology-complex-table-form-container input[type="hidden"][name="complex_page_break"]').val());
                 break;
             case 'PROCESS':
+                var tickbox = $('#methodology-process-form-container [name="tickbox_answer"]:checked').val();
+                if (tickbox == undefined) {
+                    tickbox = '';
+                }
                 form_data.append('title', $('#methodology-process-form-container #title').val());
-                form_data.append('tickbox_answer', $('#methodology-process-form-container [name="tickbox_answer"]:checked').val());
+                form_data.append('tickbox_answer', tickbox);
                 form_data.append('page_break', $('#methodology-process-form-container input[type="hidden"][name="page_break"]').val());
                 form_data.append('replacedImages', deletedImages);
 
@@ -650,8 +677,12 @@
                 })
                 break;
             case 'ICON':
+                var tickbox = $('#methodology-icon-form-container [name="tickbox_answer"]:checked').val();
+                if (tickbox == undefined) {
+                    tickbox = '';
+                }
                 form_data.append('title', $('#methodology-icon-form-container #title').val());
-                form_data.append('tickbox_answer', $('#methodology-icon-form-container [name="tickbox_answer"]:checked').val());
+                form_data.append('tickbox_answer', tickbox);
                 form_data.append('text_after', CKEDITOR.instances.icon_text_after.getData());
 
                 form_data.append('icon_main_heading', $('#methodology-icon-form-container #icon_main_heading').val());
