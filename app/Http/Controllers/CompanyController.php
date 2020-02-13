@@ -178,6 +178,7 @@ class CompanyController extends Controller
         $company = Company::findOrFail($companyId);
         $newCompany = DB::transaction(function () use ($company) {
             $newCompany = $company->replicate();
+            $newCompany->logo = null;
             $newCompany->save();
             $insertIcons = [];
             $insertTableRows = [];

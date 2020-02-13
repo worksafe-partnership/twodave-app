@@ -469,9 +469,11 @@ class Vtram extends Model
     {
         if (!is_null($this->deleted_at)) {
             if (!is_null($this->logo)) {
-                $file = EGFiles::findOrFail($this->logo);
-                Storage::disk('local')->delete($file->location);
-                $file->forceDelete();
+                $file = EGFiles::withTrashed()->find($this->logo);
+                if ($file != null) {
+                    Storage::disk('local')->delete($file->location);
+                    $file->forceDelete();
+                }
             }
 
             if (!is_null($this->pdf)) {
