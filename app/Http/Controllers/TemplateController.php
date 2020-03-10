@@ -329,7 +329,7 @@ class TemplateController extends Controller
             ];
         }
 
-        $projects = Project::where('company_id', '=', $this->record->company_id)
+        $projects = Project::whereIn('company_id', $this->user->projectCompanyIds())
             ->get();
         $this->customValues['projects'] = [];
         foreach ($projects as $project) {
