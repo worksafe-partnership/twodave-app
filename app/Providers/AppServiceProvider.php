@@ -78,6 +78,25 @@ class AppServiceProvider extends ServiceProvider
             // if they're not both set there can't be a conflict.
             return true;
         });
+
+        Validator::extend('duplicateEmailCheck', function ($attribute, $value, $parameters, $validator) {
+            $r = $validator->getData();
+            $emailsToCheck = [
+                $r['company_admin_email'],
+                $r['email']
+            ];
+            if($r['principle_contractor'] == '1') {
+                $emailsToCheck[] = $r['principle_contractor_email'];
+            }
+            if(isset($r['company_admin_email_con'])) {
+                $emailsToCheck[] = $r['company_admin_email_con'];
+            }
+            $check = array_unique($emailsToCheck);
+            if(count($check) == count($emailsToCheck)) {
+                return true;
+            }
+            return false;
+        });
     }
 
     /**

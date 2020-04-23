@@ -37,20 +37,20 @@ class ProjectRequest extends FormRequest
             'add_subcontractor' => 'required_with:company_name, short_name, company_admin_email, company_admin_name, contact_name, email, phone',
             'company_name' => 'required_with:add_subcontractor',
             'short_name' => 'required_with:add_subcontractor',
-            'company_admin_email' => 'required_with:add_subcontractor|nullable|email',
+            'company_admin_email' => 'required_with:add_subcontractor|nullable|email|unique:users,email|duplicateEmailCheck',
             'company_admin_name' => 'required_with:add_subcontractor',
             'contact_name' => 'required_with:add_subcontractor',
-            'email' => 'required_with:add_subcontractor|nullable|email',
+            'email' => 'required_with:add_subcontractor|nullable|email|unique:users,email|duplicateEmailCheck',
             'phone' => 'required_with:add_subcontractor',
 
             // Contractor stuff
             'add_contractor' => 'required_with:company_name_con, short_name_con, company_admin_email_con, company_admin_name_con, contact_name_con, email_con, phone_con',
             'company_name_con' => 'required_with:add_contractor',
             'short_name_con' => 'required_with:add_contractor',
-            'company_admin_email_con' => 'required_with:add_contractor|nullable|email',
+            'company_admin_email_con' => 'different:company_admin_email|required_with:add_contractor|nullable|email|unique:users,email|duplicateEmailCheck',
             'company_admin_name_con' => 'required_with:add_contractor',
             'contact_name_con' => 'required_with:add_contractor',
-            'email_con' => 'required_with:add_contractor|nullable|email',
+            'email_con' => 'different:email|required_with:add_contractor|nullable|email|unique:users,email|duplicateEmailCheck',
             'phone_con' => 'required_with:add_contractor',
 
             'contractors' => 'no_conflict_with_subs'
@@ -103,7 +103,11 @@ class ProjectRequest extends FormRequest
             'email_con.required_with' => 'Please populate Contractor Contact Email',
             'phone_con.required_with' => 'Please populate Contractor Phone Number',
 
-            'contractors.no_conflict_with_subs' => 'A company cannot be both a contractor and a sub-contractor on the same project - Please check your inputs'
+            'contractors.no_conflict_with_subs' => 'A company cannot be both a contractor and a sub-contractor on the same project - Please check your inputs',
+            'company_admin_email.duplicate_email_check' => 'This email must be unique',
+            'email.duplicate_email_check' => 'This email must be unique',
+            'company_admin_email_con.duplicate_email_check' => 'This email must be unique',
+            'email_con.duplicate_email_check' => 'This email must be unique'
         ];
     }
 }
