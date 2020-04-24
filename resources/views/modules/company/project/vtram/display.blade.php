@@ -110,7 +110,7 @@
                     ]) }}
                 </div>
             </div>
-            @if((isset($is_file_vtram) && !$is_file_vtram))
+            @if((isset($is_file_vtram) && $is_file_vtram == 1))
             <div class="column is-3">
                 <div class="field">
                     {{ EGForm::file('vtram_file', [
@@ -122,16 +122,16 @@
             </div>
             @endif
             @if((isset($is_file_vtram) && !$is_file_vtram) || strpos($identifierPath, 'template') !== false)
-            <div class="column is-3">
-                <div class="field">
-                    {{ EGForm::file('logo', [
-                        'label' => 'Logo (Company Logo used if blank)',
-                        'value' => isset($logo) ? $logo : $record['logo'],
-                        'type' => $pageType,
-                        'show_image' => true,
-                    ]) }}
+                <div class="column is-3">
+                    <div class="field">
+                        {{ EGForm::file('logo', [
+                            'label' => 'Logo (Company Logo used if blank)',
+                            'value' => isset($logo) ? $logo : $record['logo'],
+                            'type' => $pageType,
+                            'show_image' => true,
+                        ]) }}
+                    </div>
                 </div>
-            </div>
                 @if (strpos($identifierPath, 'template') === false)
                     <div class="column is-3">
                         <div class="field responsible-check">
