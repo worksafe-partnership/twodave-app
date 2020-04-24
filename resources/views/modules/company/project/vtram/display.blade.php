@@ -121,7 +121,7 @@
                 </div>
             </div>
             @endif
-            @if((isset($is_file_vtram) && $is_file_vtram == 1) || strpos($identifierPath, 'template') !== false)
+            @if((isset($is_file_vtram) && !$is_file_vtram) || strpos($identifierPath, 'template') !== false)
                 <div class="column is-3">
                     <div class="field">
                         {{ EGForm::file('logo', [
@@ -154,7 +154,7 @@
                 @endif
             @endif
         </div>
-        @if((isset($is_file_vtram) && $is_file_vtram == 1) || strpos($identifierPath, 'template') !== false)
+        @if((isset($is_file_vtram) && !$is_file_vtram) || strpos($identifierPath, 'template') !== false)
             <div class="columns">
                 @if (strpos($identifierPath, 'template') === false)
                     <div class="column is-3">
@@ -258,7 +258,7 @@
         @if ($pageType != 'create')
         </div>
     </div>
-    @if((isset($is_file_vtram) && $is_file_vtram == 1) || strpos($identifierPath, 'template') !== false)
+    @if((isset($is_file_vtram) && !$is_file_vtram) || strpos($identifierPath, 'template') !== false)
     <hr>
     <div class="columns">
         <div class="column is-10 is-offset-1">
@@ -288,7 +288,7 @@
         @if ($pageType == 'edit')
         </div>
     </div>
-    @if((isset($is_file_vtram) && $is_file_vtram == 1) || strpos($identifierPath, 'template') !== false)
+    @if((isset($is_file_vtram) && !$is_file_vtram) || strpos($identifierPath, 'template') !== false)
         <hr>
         <div class="columns is-multiline">
             <div class="column is-6 box-container">
@@ -315,7 +315,7 @@
                     <a download="Noise Vibration Assessment.xls" href="/Noise_Vibration_Assessment.xls" class="button">Download HAVS/Noise Assessment</a>
                 </div>
             </div>
-            @if((isset($is_file_vtram) && $is_file_vtram == 1) || strpos($identifierPath, 'template') !== false)
+            @if((isset($is_file_vtram) && !$is_file_vtram) || strpos($identifierPath, 'template') !== false)
             @if ($pageType != 'edit')
                 <div class="column is-6">
             @else 
@@ -361,7 +361,7 @@
                 </div>
             </div>
         </div>
-        @if((isset($is_file_vtram) && $is_file_vtram == 1) || strpos($identifierPath, 'template') !== false)
+        @if((isset($is_file_vtram) && !$is_file_vtram) || strpos($identifierPath, 'template') !== false)
         <div class="columns">
             @if ($pageType != 'edit')
                 <div class="column is-12">
