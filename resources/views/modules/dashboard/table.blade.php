@@ -10,6 +10,7 @@
                         $vtrams = $data['data'][0] ?? null;
                     @endphp
                     <th>Company</th>
+                    <th>Project</th>
                     <th>{{ $vtrams->company->vtrams_name ?? 'VTRAMS' }} Name</th>
                     <th>{{ $vtrams->company->vtrams_name ?? 'VTRAMS' }} Number</th>
                     <th>Status</th>
@@ -25,6 +26,7 @@
                     @foreach($data['data'] as $vtram)
                         <tr>
                             <td>{{ $vtram->companyName() }}</td>
+                            <td>{{ $vtram->project->name }}</td>
                             <td>{{ $vtram->name }}</td>
                             <td>{{ $vtram->number }}</td>
                             <td>{{ $vtram->niceStatus() }}</td>
