@@ -368,6 +368,16 @@
             @else 
                 <div class="column is-10 is-offset-1">
             @endif
+
+            @if($pageType == 'create' && isset($key_points))
+                <div class="field">
+                    {{ EGForm::ckeditor('key_points', [
+                        'label' => 'Key Points',
+                        'value' => $key_points,
+                        'type' => 'edit'
+                    ]) }}
+                </div>
+            @else 
                 <div class="field">
                     {{ EGForm::ckeditor('key_points', [
                         'label' => 'Key Points',
@@ -375,6 +385,7 @@
                         'type' => 'edit'
                     ]) }}
                 </div>
+            @endif          
             </div>
         </div>
         @endif
