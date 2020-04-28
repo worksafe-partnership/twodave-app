@@ -29,6 +29,10 @@ return [
             'revision_number' => ['label' => 'Revision Number'],
             'status' => ['label' => 'Status'],
             'submitted_by' => ['label' => 'Submitted By'],
+            'submitted_date' => [
+                'label' => 'Submitted Date',
+                'col_type' => 'date',
+            ],
             'approved_by' => ['label' => 'Approved By'],
             'resubmit_by' => [
                 'label' => 'Resubmit By',
