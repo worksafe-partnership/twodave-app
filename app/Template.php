@@ -69,6 +69,7 @@ class Template extends Model
                 'created_by',
                 'updated_by',
                 'submitted_by',
+                'submitted_date',
                 'approved_by',
                 'date_replaced',
                 'resubmit_by',
@@ -111,6 +112,12 @@ class Template extends Model
             ->editColumn('review_due', function ($item) {
                 if ($item->review_due !== null) {
                     return Carbon::createFromFormat('Y-m-d', $item->review_due)->timestamp;
+                }
+                return '';
+            })
+            ->editColumn('submitted_date', function($item) {
+                if ($item->submitted_date !== null) {
+                    return Carbon::createFromFormat('Y-m-d', $item->submitted_date)->timestamp;
                 }
                 return '';
             })

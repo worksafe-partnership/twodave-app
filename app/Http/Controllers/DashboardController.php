@@ -105,7 +105,8 @@ class DashboardController extends Controller
 
 
             // weird indentation but PSR2 demands it?
-            $tracker = Vtram::when($user->company_id !== null, function ($q) use ($user) {
+            $tracker = Vtram::with('project')
+                              ->when($user->company_id !== null, function ($q) use ($user) {
                             $q->where('company_id', '=', $user->company_id);
             })
             ->when($role == "project_admin", function ($pm) use ($user) {

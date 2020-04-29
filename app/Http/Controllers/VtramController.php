@@ -38,6 +38,10 @@ class VtramController extends CompanyVtramController
                 abort(404);
             }
 
+            if (isset($template['key_points'])) {
+                $this->customValues['key_points'] = $template['key_points'];
+            }
+
             $this->customValues['name'] = $template['name'];
             $this->customValues['reference'] = $template['reference'];
             $this->customValues['logo'] = $template['logo'];
