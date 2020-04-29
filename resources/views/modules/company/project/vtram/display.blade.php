@@ -339,6 +339,7 @@
             @else 
                 <div class="column is-10 is-offset-1">
             @endif
+            @if($pageType !== 'create')
                 <div class="columns">
                     <div class="column is-6">
                         <div class="field">
@@ -352,13 +353,14 @@
                     <div class="column is-6">
                         <div class="field">
                             {{ EGForm::file('havs_noise_assessment', [
-                                'label' => 'HAVS/Noise Assessment Document',
+                                'label' => 'HAVHAVS/Noise Assessment Document',
                                 'value' => $record["havs_noise_assessment"],
                                 'type' => $pageType
                             ]) }}
                         </div>
                     </div>
                 </div>
+            @endif
             </div>
         </div>
         @if((isset($is_file_vtram) && !$is_file_vtram) || strpos($identifierPath, 'template') !== false)
@@ -369,7 +371,7 @@
                 <div class="column is-10 is-offset-1">
             @endif
 
-            @if($pageType == 'create' && isset($key_points))
+            @if (isset($key_points))
                 <div class="field">
                     {{ EGForm::ckeditor('key_points', [
                         'label' => 'Key Points',
