@@ -12,9 +12,9 @@
                                     $path = "create";
                                 }
                             @endphp
-                            <a class="button is-success" href="{{$path}}">Create New VTRAM (No Template)</a><br><br>
+                            <a class="button is-success" href="{{$path}}">Create New VTRAMS (No Template)</a><br><br>
                             @if (isset($company) && $company->allow_file_uploads)
-                                <a class="button is-success" href="{{$path}}?file_upload=1">Create New VTRAM with File Upload</a><br><br>
+                                <a class="button is-success" href="{{$path}}?file_upload=1">Create New VTRAMS with File Upload</a><br><br>
                             @endif
 
                             @if(isset($templates) && $templates->isNotEmpty())

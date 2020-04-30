@@ -136,7 +136,7 @@
             table.on('responsive-display', function (e, datatable, row, showHide, update){
                 if (showHide) {
                     e.preventDefault();
-                    $("ul[data-dtr-index=" + row.index() + "] li").last().after("<li><a href='" + row.data().url + "' class='button is-success'>View VTRAM</a></li>")
+                    $("ul[data-dtr-index=" + row.index() + "] li").last().after("<li><a href='" + row.data().url + "' class='button is-success'>View VTRAMS</a></li>")
                 }
             });
         });
