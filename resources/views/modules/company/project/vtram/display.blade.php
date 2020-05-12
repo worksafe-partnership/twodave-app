@@ -363,7 +363,7 @@
             @endif
             </div>
         </div>
-        @if((isset($is_file_vtram) && !$is_file_vtram) || strpos($identifierPath, 'template') !== false)
+        @if(false && (isset($is_file_vtram) && !$is_file_vtram) || strpos($identifierPath, 'template') !== false)
         <div class="columns">
             @if ($pageType != 'edit')
                 <div class="column is-12">
@@ -387,7 +387,7 @@
                         'type' => 'edit'
                     ]) }}
                 </div>
-            @endif          
+            @endif
             </div>
         </div>
         @endif
