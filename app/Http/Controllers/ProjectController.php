@@ -96,6 +96,7 @@ class ProjectController extends CompanyProjectController
             'label' => 'Create '.($this->user->company->vtrams_name ?? 'VTRAMS'),
             'path' => '/project/'.$this->id.'/vtram/create',
             'icon' => 'document-add',
+            'class' => 'create_vtram',
             'order' => 700,
             'id' =>'createVtrams',
         ];
