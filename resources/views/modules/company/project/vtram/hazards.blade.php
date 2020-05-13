@@ -1,7 +1,7 @@
 <div class="columns">
     <div class="column is-12">
         <h2 class="sub-heading inline-block">Risk Assessment</h2>
-        <a href="javascript:createHazard()" class="button is-success is-pulled-right" title="Add Risk Assessment">
+        <a href="javascript:createHazard()" class="button is-success is-pulled-right" title="Add Hazard/Risk">
             {{ icon('plus2') }}<span class="action-text is-hidden-touch"></span>
         </a>
     </div>
