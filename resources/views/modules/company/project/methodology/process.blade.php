@@ -41,7 +41,7 @@
                                 <th class="column is-2">Heading</th>
                                 <th class="column is-1">No</th>
                                 <th class="column is-3">Description</th>
-                                <th class="column is-3">Thumbnail</th>
+                                <th class="column is-3">Image</th>
                                 <th class="column is-3">Actions</th>
                             </tr>
                         </thead>
