@@ -11,7 +11,7 @@
                     'selector' => true,
                 ]) }}
             </div>
-            <a title="Add Method Statement" href="javascript:createMethodology()" class="button is-success is-pulled-right">
+            <a title="Add Section" href="javascript:createMethodology()" class="button is-success is-pulled-right">
                 {{ icon('plus2') }}<span class="action-text is-hidden-touch"></span>
             </a>
         </div>
@@ -24,7 +24,7 @@
                 <table class="methodology-list-table">
                     <tr>
                         <th>No</th>
-                        <th>Title</th>
+                        <th>Section Title</th>
                         <th>Category</th>
                         <th></th>
                     </tr>
