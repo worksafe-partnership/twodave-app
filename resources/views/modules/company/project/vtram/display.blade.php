@@ -263,6 +263,7 @@
     <div class="columns">
         <div class="column is-10 is-offset-1">
             <h2 class="sub-heading">Configuration</h2>
+
             @include('modules.company.project.vtram.ckeditor-key')
             <div class="columns">
                 <div class="column is-6">
@@ -311,9 +312,6 @@
             @else 
                 <div class="column is-6 is-offset-1">
             @endif
-                <div class="field">
-                    <a download="Noise Vibration Assessment.xls" href="/Noise_Vibration_Assessment.xls" class="button">Download HAVS/Noise Assessment</a>
-                </div>
             </div>
             @if((isset($is_file_vtram) && !$is_file_vtram) || strpos($identifierPath, 'template') !== false)
             @if ($pageType != 'edit')
@@ -353,17 +351,20 @@
                     <div class="column is-6">
                         <div class="field">
                             {{ EGForm::file('havs_noise_assessment', [
-                                'label' => 'HAVHAVS/Noise Assessment Document',
+                                'label' => 'HAVS/Noise Assessment Document',
                                 'value' => $record["havs_noise_assessment"],
                                 'type' => $pageType
                             ]) }}
+                        </div>
+                        <div class="field">
+                            <a download="Noise Vibration Assessment.xls" href="/Noise_Vibration_Assessment.xls" class="button">Download HAVS/Noise Assessment Template</a>
                         </div>
                     </div>
                 </div>
             @endif
             </div>
         </div>
-        @if(false && (isset($is_file_vtram) && !$is_file_vtram) || strpos($identifierPath, 'template') !== false)
+        @if(strpos($identifierPath, 'template') !== false && $pageType != "create")
         <div class="columns">
             @if ($pageType != 'edit')
                 <div class="column is-12">
