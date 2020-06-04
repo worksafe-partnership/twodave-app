@@ -100,6 +100,14 @@ class CompanyProjectController extends Controller
             foreach ($users as $user) {
                 $selected[$user->user_id] = true;
             }
+        } else {
+            $users = User::withTrashed()->where('company_id', '=', $this->parentId)
+            ->whereHas('roles', function ($q) {
+                $q->where('slug', '=', 'company_admin');
+            })->get(["id"]);
+            foreach ($users as $user) {
+                $selected[$user->id] = true;
+            }
         }
         $this->customValues['allUsers'] = [];
         $this->customValues['selectedUsers'] = $selected;
