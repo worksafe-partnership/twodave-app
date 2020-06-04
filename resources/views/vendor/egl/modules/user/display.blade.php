@@ -38,7 +38,7 @@
             <div class="column is-6">
                 <div class="field">
                     {{ EGForm::password("password", [
-                        "label" => "Password",
+                        "label" => "Set New Password",
                         "attributes" =>[
                             "placeholder" => "Password Set",
                             "autocomplete" => "new-password",
@@ -51,7 +51,7 @@
                 <div class="column is-6">
                     <div class="field">
                     {{ EGForm::password("password_confirmation", [
-                        "label" => "Verify Password",
+                        "label" => "Verify New Password",
                         "attributes" =>[
                             "placeholder" => "Password Set"
                         ],
