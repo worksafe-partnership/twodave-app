@@ -101,7 +101,16 @@ class CompanyProjectController extends Controller
                 $selected[$user->user_id] = true;
             }
         } else {
-            $users = User::withTrashed()->where('company_id', '=', $this->parentId)
+            $where = $this->parentId;
+            if (empty($this->parentId)) {
+                if ($isPrincipalContractor) {
+                    $where = $piCompanyId;
+                } else { 
+                    $where = $companyId;
+                }
+            }
+            // dd($companyId, $isPrincipalContractor, $piCompanyId, empty($this->parentId));
+            $users = User::withTrashed()->where('company_id', '=', $where)
             ->whereHas('roles', function ($q) {
                 $q->where('slug', '=', 'company_admin');
             })->get(["id"]);
