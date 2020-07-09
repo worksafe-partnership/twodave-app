@@ -61,7 +61,7 @@ class TemplateController extends Controller
                     'is-primary',
                 ],
                 'name' => 'send_for_approval',
-                'label' => 'Save & Exit and Submit for Approval',
+                'label' => 'Save & Submit for Approval',
                 'order' => 150,
                 'value' => true,
             ];
