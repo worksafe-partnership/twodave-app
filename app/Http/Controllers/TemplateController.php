@@ -61,7 +61,7 @@ class TemplateController extends Controller
                     'is-primary',
                 ],
                 'name' => 'send_for_approval',
-                'label' => 'Update and Submit for Approval',
+                'label' => 'Save & Exit and Submit for Approval',
                 'order' => 150,
                 'value' => true,
             ];
@@ -74,10 +74,13 @@ class TemplateController extends Controller
                 'is-primary',
             ],
             'name' => 'back_to_edit',
-            'label' => 'Save',
+            'label' => 'Save & Continue',
             'order' => 150,
             'value' => true,
         ];
+
+        $this->submitButtonText = 'Save & Exit';
+
         $company = Company::find($this->record->company_id);
         if ($company != null) {
             $this->customValues['riskList'] = [

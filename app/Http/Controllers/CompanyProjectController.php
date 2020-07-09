@@ -28,10 +28,11 @@ class CompanyProjectController extends Controller
                 'is-primary',
             ],
             'name' => 'back_to_edit',
-            'label' => 'Save',
+            'label' => 'Save & Continue',
             'order' => 150,
             'value' => true,
         ];
+        $this->submitButtonText = 'Save & Exit';
     }
 
     public function bladeHook()

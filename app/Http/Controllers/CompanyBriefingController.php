@@ -48,7 +48,7 @@ class CompanyBriefingController extends Controller
                 'is-primary',
             ],
             'name' => 'back_to_edit',
-            'label' => 'Save',
+            'label' => 'Save & Continue',
             'order' => 150,
             'value' => true,
         ];
