@@ -236,7 +236,7 @@ class VtramController extends CompanyVtramController
                     'is-primary',
                 ],
                 'name' => 'send_for_approval',
-                'label' => 'Update and Submit for Approval',
+                'label' => 'Save & Exit & Submit for Approval',
                 'order' => 150,
                 'value' => true,
             ];
@@ -248,11 +248,11 @@ class VtramController extends CompanyVtramController
                 'is-primary',
             ],
             'name' => 'back_to_edit',
-            'label' => 'Save',
+            'label' => 'Save & Continue',
             'order' => 150,
             'value' => true,
         ];
-
+        $this->submitButtonText = 'Save & Exit';
         $project = $this->args[0];
         $this->customValues['path'] = '/project/'.$project.'/vtram/create';
 

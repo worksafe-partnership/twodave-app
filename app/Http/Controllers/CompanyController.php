@@ -30,11 +30,11 @@ class CompanyController extends Controller
                 'is-primary',
             ],
             'name' => 'back_to_edit',
-            'label' => 'Save',
+            'label' => 'Save & Continue',
             'order' => 150,
             'value' => true,
         ];
-
+        $this->submitButtonText = 'Save & Exit';
         $this->customValues['methTypeList'] = config('egc.methodology_list');
         $this->customValues['methodologies'] = Methodology::where('entity', '=', 'COMPANY')
             ->where('entity_id', '=', $this->id)
