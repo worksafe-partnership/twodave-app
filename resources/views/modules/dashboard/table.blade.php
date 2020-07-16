@@ -52,6 +52,9 @@
 @push('scripts')
     <script>
         $(document).ready(function(){
+            
+            
+            
             var table = $("#{{$data['table-id']}}").DataTable({
                 dom: 'Bfrtlip',
                 responsive: true,
@@ -62,6 +65,7 @@
                 buttons: [],
                 columns : [
                     { data: 'company_name', name: 'company_name' },
+                    { data: 'project_name', name: 'project_name' },
                     { data: 'number', name: 'number' },
                     { data: 'name', name: 'name' },
                     { data: 'status', name: 'status' },
@@ -147,7 +151,7 @@
                 $(tablediv).parent().css("border-bottom", "none");
             } else {
                 $(tablediv).show();
-                table.responsive.recalc();
+                {{-- table.responsive.recalc(); --}}
                 $(tablediv).parent().css("border-bottom", "5px solid #203878");
             }
         })
