@@ -52,55 +52,7 @@ class Template extends Model
 
     public static function scopeDatatableAll($query, $parent, $identifier)
     {
-        $query->withTrashed(can('permanentlyDelete', $identifier))->select([
-                'id',
-                'company_id',
-                'name',
-                'logo',
-                'reference',
-                'key_points',
-                'havs_noise_assessment',
-                'coshh_assessment',
-                'review_due',
-                'approved_date',
-                'current_id',
-                'revision_number',
-                'status',
-                'created_by',
-                'updated_by',
-                'submitted_by',
-                'submitted_date',
-                'approved_by',
-                'date_replaced',
-                'resubmit_by',
-                'deleted_at'
-            ]);
-
-        $user = Auth::user();
-
-        if ($identifier['identifier_path'] == 'company.template') {
-            $query->where('status', '!=', 'PREVIOUS')
-                  ->where(function ($q) use ($parent) {
-                    $q->where('company_id', $parent)
-                    ->orWhereNull('company_id');
-                  });
-        } else if (in_array($identifier['identifier_path'], ['template.previous', 'company.template.previous'])) {
-            $query->where('current_id', '=', $parent)
-                ->where('status', '=', 'PREVIOUS');
-        } else {
-            if (is_null($user->company_id)) {
-                $query->where('status', '!=', 'PREVIOUS');
-            } else {
-                $query->where(function ($myId) use ($user) {
-                    $myId->where('company_id', $user->company_id)
-                         ->where('status', '!=', 'PREVIOUS');
-                })
-                ->orWhere(function ($notMyId) use ($user) {
-                    $notMyId->whereIn('company_id', $user->getContractorIds())
-                            ->where('status', 'CURRENT');
-                });
-            }
-        }
+        $query = static::scopeDatatableAllQuery($query, $parent, $identifier);
 
         return app('datatables')->of($query)
             ->editColumn('approved_date', function ($item) {
@@ -149,6 +101,7 @@ class Template extends Model
                 return $item->resubmitByDateTimestamp();
             })
             ->make('query');
+
     }
 
     public function niceStatus()
@@ -229,6 +182,14 @@ class Template extends Model
             return Carbon::createFromFormat("Y-m-d", $this->submitted_date)->format('d/m/Y');
         }
         return "";
+    }
+
+    public function submittedName()
+    {
+        if (!is_null($this->submitted)) {
+            return $this->submitted->name;
+        }
+        return 'Not Submitted';
     }
 
     public function hazards()
@@ -331,5 +292,59 @@ class Template extends Model
     public function companyLogo()
     {
         return $this->hasOne(Company::class, 'id', 'company_logo_id');
+    }
+
+    public static function scopeDatatableAllQuery($query, $parent, $identifier) {
+        $query->withTrashed(can('permanentlyDelete', $identifier))->select([
+            'id',
+            'company_id',
+            'name',
+            'logo',
+            'reference',
+            'key_points',
+            'havs_noise_assessment',
+            'coshh_assessment',
+            'review_due',
+            'approved_date',
+            'current_id',
+            'revision_number',
+            'status',
+            'created_by',
+            'updated_by',
+            'submitted_by',
+            'submitted_date',
+            'approved_by',
+            'date_replaced',
+            'resubmit_by',
+            'deleted_at'
+        ]);
+
+        $user = Auth::user();
+
+        if ($identifier['identifier_path'] == 'company.template') {
+            $query->where('status', '!=', 'PREVIOUS')
+                ->where(function ($q) use ($parent) {
+                    $q->where('company_id', $parent)
+                        ->orWhereNull('company_id');
+                });
+        } else if (in_array($identifier['identifier_path'], ['template.previous', 'company.template.previous'])) {
+            $query->where('current_id', '=', $parent)
+                ->where('status', '=', 'PREVIOUS');
+        } else {
+            if (is_null($user->company_id)) {
+                $query->where('status', '!=', 'PREVIOUS');
+            } else {
+                $query->where(function ($myId) use ($user) {
+                    $myId->where('company_id', $user->company_id)
+                        ->where('status', '!=', 'PREVIOUS');
+                })
+                    ->orWhere(function ($notMyId) use ($user) {
+                        $notMyId->whereIn('company_id', $user->getContractorIds())
+                            ->where('status', 'CURRENT');
+                    });
+            }
+        }
+
+        return $query;
     }
 }
