@@ -116,6 +116,10 @@ class VtramController extends CompanyVtramController
         }
         $this->customValues['templates'] = collect($this->customValues['templates']);
 
+        if ($this->pageType == "create") {
+            $templateSelector = $this->customValues['templates']->toArray();
+            $this->customValues['templateSelector'] = $templateSelector;
+        }
         $this->customValues['path'] = 'create';
         $this->config['singular'] = $company->vtrams_name ?? 'VTRAMS';
         $this->config['plural'] = $company->vtrams_name ?? 'VTRAMS';
@@ -352,6 +356,12 @@ class VtramController extends CompanyVtramController
     {
         $user = Auth::user();
         $company = Company::findOrFail($user->company_id);
+        if (isset($request->template)) {
+            $request->merge([
+                'created_from_id' => $request->template,
+                'created_from_entity' => 'TEMPLATE'
+            ]);
+        } 
         $request->merge([
             'project_id' => $projectId,
             'company_id' => $user->company_id,

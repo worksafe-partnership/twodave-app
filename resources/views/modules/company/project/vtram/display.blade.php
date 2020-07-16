@@ -16,6 +16,20 @@
         ]) }}
     @endif
     <div class="column is-10 is-offset-1">
+        @if($pageType == 'create')
+            <div class="columns">
+                <div class="column is-3">
+                    {{ EGForm::select('template', [
+                        'label' => 'Templates',
+                        'value' => '',
+                        'type' => '',
+                        'list' => $templateSelector,
+                        'display_value' => '',
+                        'selector' => 1
+                    ]) }}
+                </div>
+            </div>
+        @endif
         <div class="columns">
             <div class="column is-3">
                 <div class="field">
@@ -635,6 +649,14 @@
         })
         @endif
     </script>
+    @if ($pageType == 'create')
+        <script>
+            @if(isset($_GET['template']))
+                var selectVal = '{{ $_GET['template']  }}';
+            @endif
+            $('#template').val(selectVal)
+        </script>
+    @endif
 @endpush
 
 @include('modules.company.project.vtram.create-modal')
