@@ -52,9 +52,6 @@
 @push('scripts')
     <script>
         $(document).ready(function(){
-            
-            
-            
             var table = $("#{{$data['table-id']}}").DataTable({
                 dom: 'Bfrtlip',
                 responsive: true,

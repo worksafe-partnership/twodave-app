@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Auth;
 use Carbon;
 use App\Vtram;
+use App\VtramUser;
 use Controller;
 
 class DashboardController extends Controller
@@ -115,6 +116,16 @@ class DashboardController extends Controller
                 });
             })
             ->where('status', '!=', 'PREVIOUS')
+            ->when(!is_null($user->company_id), function ($accessCheck) use ($user) {
+                // check the vtram has no vtram users (VtramUser) attached to it
+                $accessCheck->where(function ($noUsers) {
+                    $noUsers->whereIn('vtrams.id', Vtram::doesntHave('vtramsUsers')->pluck('vtrams.id'));
+                });
+                // or the user id is in the VTramUser list for the project
+                $accessCheck->orWhere(function ($myProjects) use ($user) {
+                    $myProjects->whereIn('vtrams.id', VtramUser::where('user_id', $user->id)->pluck('vtrams_id')->toArray());
+                });
+            })
             ->get($this->datatableFields);
 
             $this->customValues['tables'][] = [
