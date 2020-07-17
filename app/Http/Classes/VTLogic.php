@@ -59,7 +59,13 @@ class VTLogic
             /*$merger->addFile($path, new Pages(1));
             $merger->addFile($path, new Pages(2));
             $merger->addFile($path, new Pages(3));*/
-        } /*else if ($config->entity->pages_in_pdf == 2) {
+        } else if ($config->entity->pages_in_pdf == 3) {
+            $merger->addFile($path, new Pages(3));
+            $merger->addFile($path, new Pages(1));
+            $merger->addFile($path, new Pages(2));
+            $merger->addFile(public_path().'/blank_page.pdf', new Pages(4));
+        }
+        /*else if ($config->entity->pages_in_pdf == 2) {
             $merger->addFile($path, new Pages(2));
             $merger->addFile($path, new Pages(1));
         } else {*/
