@@ -16,6 +16,7 @@
                 <th>Submitted Date</th>
                 <th>Approved By</th>
                 <th>Resubmit By</th>
+                <th>URL</th>
                 </thead>
                 <tbody>
                 @foreach($data['data'] as $template)
@@ -30,6 +31,7 @@
                         <td>{{ $template->niceSubmittedDate() }}</td>
                         <td>{{ $template->approvedName() }}</td>
                         <td>{{ $template->niceResubmitByDate() }}</td>
+                        <td>{{ $template->url() }}</td>
                     </tr>
                 @endforeach
                 </tbody>

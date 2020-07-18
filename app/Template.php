@@ -347,4 +347,9 @@ class Template extends Model
 
         return $query;
     }
+
+    public function url()
+    {
+        return '/template/'.$this->id;
+    }
 }
