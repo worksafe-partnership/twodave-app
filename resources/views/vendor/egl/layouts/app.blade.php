@@ -82,22 +82,26 @@
             </div>
         </div>
     </aside>
-    <div class="bottom-menu">
-
-<div class="profile">
-                <div class="links">
-        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="button is-primary is-outlined is-inverted">
-            Logout
-        </a>
-        <form   id="logout-form"
-                action="{{ route('logout') }}"
-                method="POST"
-                style="display: none;">
-            {{ csrf_field() }}
-        </form>
-                <a href="https://evergreencomputing.com/case_study?site={{env('EGC_PROJECT_NAME')}}" class="egc-advert" target="_blank" title="Helping streamline business processes with bespoke application software development, customised CRM systems and online database systems."></a>
-                </div>
+    <div class="bottom-menu" style="height:9rem;">
+        <div class="profile" style="margin:0 1rem;">
+            <img src="/logo.png" />
+        </div>
+        <div class="profile">
+            <div class="links">
+                <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="button is-primary is-outlined is-inverted">
+                    Logout
+                </a>
+                <a href="#" style="background-color:#fff; margin-left:21px"><img src="/logo-cropped.png" width="42" /></a>
+                <form   id="logout-form"
+                        action="{{ route('logout') }}"
+                        method="POST"
+                        style="display: none;">
+                    {{ csrf_field() }}
+                <
+                </form>
+                        <a href="https://evergreencomputing.com/case_study?site={{env('EGC_PROJECT_NAME')}}" class="egc-advert" style="width:30%" target="_blank" title="Helping streamline business processes with bespoke application software development, customised CRM systems and online database systems."></a>
             </div>
+        </div>
     </div>
     <main id="app-main">
         <div class="nano">
