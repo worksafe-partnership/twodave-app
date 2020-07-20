@@ -25,14 +25,14 @@
                         <td>{{ $template->company->name }}</td>
                         <td>{{ $template->name }}</td>
                         <td>{{ $template->reference }}</td>
-                        <td>{{ $template->niceApprovedDate() }}</td>
-                        <td>{{ $template->niceReviewDueDate() }}</td>
+                        <td>{{ $template->approvedDateTimestamp() }}</td>
+                        <td>{{ $template->reviewDueDateTimestamp() }}</td>
                         <td>{{ $template->revision_number }}</td>
                         <td>{{ $template->niceStatus() }}</td>
                         <td>{{ $template->submittedName() }}</td>
-                        <td>{{ $template->niceSubmittedDate() }}</td>
+                        <td>{{ $template->submittedDateTimestamp() }}</td>
                         <td>{{ $template->approvedName() }}</td>
-                        <td>{{ $template->niceResubmitByDate() }}</td>
+                        <td>{{ $template->resubmitByDateTimestamp() }}</td>
                         <td>{{ $template->url() }}</td>
                     </tr>
                 @endforeach

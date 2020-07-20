@@ -160,10 +160,26 @@ class Template extends Model
         return "";
     }
 
+    public function approvedDateTimestamp()
+    {
+        if (!is_null($this->approved_date)) {
+            return Carbon::createFromFormat("Y-m-d", $this->approved_date)->timestamp;
+        }
+        return "";
+    }
+
     public function niceReviewDueDate()
     {
         if (!is_null($this->review_due)) {
             return Carbon::createFromFormat("Y-m-d", $this->review_due)->format('d/m/Y');
+        }
+        return "";
+    }
+
+    public function reviewDueDateTimestamp()
+    {
+        if (!is_null($this->review_due)) {
+            return Carbon::createFromFormat("Y-m-d", $this->review_due)->timestamp;
         }
         return "";
     }
@@ -180,6 +196,14 @@ class Template extends Model
     {
         if (!is_null($this->submitted_date)) {
             return Carbon::createFromFormat("Y-m-d", $this->submitted_date)->format('d/m/Y');
+        }
+        return "";
+    }
+
+    public function submittedDateTimestamp()
+    {
+        if (!is_null($this->submitted_date)) {
+            return Carbon::createFromFormat("Y-m-d", $this->submitted_date)->timestamp;
         }
         return "";
     }
