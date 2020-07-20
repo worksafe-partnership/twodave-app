@@ -6,7 +6,8 @@
         <div class="dash-table" id="table-{{$key}}" style="display:none">
             <table class="table" id="{{$data['table-id']}}" style="width:100%">
                 <thead>
-                <th>Company	Name</th>
+                <th>Company</th>
+                <th>Name</th>
                 <th>Reference</th>
                 <th>Approved Date</th>
                 <th>Review Due</th>
@@ -22,6 +23,7 @@
                 @foreach($data['data'] as $template)
                     <tr @if($template->trashed()) class="deleted" @endif >
                         <td>{{ $template->company->name }}</td>
+                        <td>{{ $template->name }}</td>
                         <td>{{ $template->reference }}</td>
                         <td>{{ $template->niceApprovedDate() }}</td>
                         <td>{{ $template->niceReviewDueDate() }}</td>
@@ -49,28 +51,13 @@
                 oLanguage: {
                     "sLengthMenu": "Show _MENU_ records",
                     "sSearch": "Search:",
+                    "sEmptyTable": "No Templates found",
                 },
                 buttons: [],
                 columns : [
                     { data: 'company_name', name: 'company_name' },
-                    { data: 'number', name: 'number' },
-                    { data: 'name', name: 'name' },
-                    { data: 'status', name: 'status' },
-                    { data: 'created_name', name: 'created_name' },
-                    { data: 'submitted_name', name: 'submitted_name' },
-                    { data: 'submitted_date', name: 'submitted_date',
-                        render: function ( data, type, row ) {
-                            if ( (type === 'display' || type === 'filter') && typeof(data) != "undefined") {
-                                if (data != '' && data != null) {
-                                    var dateFormat = "DD/MM/YYYY";
-                                    return (moment(data * 1000).format(dateFormat));
-                                } else {
-                                    return data;
-                                }
-                            }
-                            return data;
-                        },
-                    },
+                    { data: 'template_name', name: 'template_name' },
+                    { data: 'reference', name: 'reference' },
                     { data: 'approved_date', name: 'approved_date',
                         render: function ( data, type, row ) {
                             if ( (type === 'display' || type === 'filter') && typeof(data) != "undefined") {
@@ -84,8 +71,37 @@
                             return data;
                         },
                     },
+                    { data: 'review_due_date', name: 'review_due_date',
+                        render: function ( data, type, row ) {
+                            if ( (type === 'display' || type === 'filter') && typeof(data) != "undefined") {
+                                if (data != '' && data != null) {
+                                    var dateFormat = "DD/MM/YYYY";
+                                    return (moment(data * 1000).format(dateFormat));
+                                } else {
+                                    return '';
+                                }
+                            }
+                            return data;
+                        },
+                    },
+                    { data: 'revision_number', name: 'revision_number' },
+                    { data: 'status', name: 'status' },
+                    { data: 'submitted_name', name: 'submitted_name' },
+                    { data: 'submitted_date', name: 'submitted_date',
+                        render: function ( data, type, row ) {
+                            if ( (type === 'display' || type === 'filter') && typeof(data) != "undefined") {
+                                if (data != '' && data != null) {
+                                    var dateFormat = "DD/MM/YYYY";
+                                    return (moment(data * 1000).format(dateFormat));
+                                } else {
+                                    return '';
+                                }
+                            }
+                            return data;
+                        },
+                    },
                     { data: 'approved_name', name: 'approved_name' },
-                    { data: 'next_review_date', name: 'next_review_date',
+                    { data: 'resubmit_date', name: 'resubmit_date',
                         render: function ( data, type, row ) {
                             if ( (type === 'display' || type === 'filter') && typeof(data) != "undefined") {
                                 if (data != '' && data != null) {
@@ -99,11 +115,7 @@
                         },
                     },
                     { data: 'url', name: 'url', 'visible': '', 'searchable': false}
-                ],
-                "oLanguage": {
-                    "sEmptyTable": "No Vtrams found"
-                }
-
+                ]
             });
 
             $("#{{$data['table-id']}}").on('click', 'tr', function(e) {
