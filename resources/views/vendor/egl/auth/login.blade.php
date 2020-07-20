@@ -61,7 +61,7 @@
                             Welcome to www.2dave.site
                         </h1>
                     </header>
-                    <div class="card-content">
+                    <div class="card-content" style="padding-bottom: 1rem">
                         <div class="content">
                             <h3>Online tools that help you to:</h3>
                             <h4 style="font-size:3rem; font-weight:bold; margin-bottom:0;">
