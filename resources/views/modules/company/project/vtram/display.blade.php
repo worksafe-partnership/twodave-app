@@ -23,7 +23,7 @@
                         'label' => 'Templates',
                         'value' => '',
                         'type' => '',
-                        'list' => $templateSelector,
+                        'list' => $templateSelector ?? null,
                         'display_value' => '',
                         'selector' => 1
                     ]) }}
