@@ -66,7 +66,8 @@ class DashboardController extends Controller
             unset($statuses['EXTERNAL_REJECT']);
         }
 
-        $submitted = Vtram::where('submitted_by', $user->id)
+        $submitted = Vtram::with(['company'])
+                            ->where('submitted_by', $user->id)
                             ->whereIn('status', $statuses)
                             ->when($user->company_id !== null, function ($q) use ($user) {
                                 $q->where('company_id', '=', $user->company_id);
@@ -81,20 +82,31 @@ class DashboardController extends Controller
 
         if (in_array($role, ['company_admin', 'contract_manager', 'project_admin'])) {
             if ($role == 'company_admin') {
-                $roleCheck = ['contract_manager', 'project_admin', 'supervisor'];
+                $roleCheck = ['company_admin','contract_manager', 'project_admin', 'supervisor'];
             } else if ($role == 'contract_manager') {
                 $roleCheck = ['project_admin', 'supervisor'];
             } else { // must be project admin based on above if!
                 $roleCheck = ['supervisor'];
             }
 
-            $pending = Vtram::where('status', "PENDING")
+            $pending = Vtram::with(['submitted.roles', 'company'])
+                            ->where('status', "PENDING")
                             ->when($user->company_id !== null, function ($q) use ($user) {
                                 $q->where('company_id', '=', $user->company_id);
                             })
                             ->whereHas('submitted', function ($roleQuery) use ($roleCheck) {
                                 $roleQuery->whereHas('roles', function ($sub) use ($roleCheck) {
                                     $sub->whereIn('slug', $roleCheck);
+                                });
+                            })
+                            ->when(!is_null($user->company_id), function ($accessCheck) use ($user) {
+                                // check the vtram has no vtram users (VtramUser) attached to it
+                                $accessCheck->where(function ($noUsers) {
+                                    $noUsers->whereIn('vtrams.id', Vtram::doesntHave('vtramsUsers')->pluck('vtrams.id'));
+                                });
+                                // or the user id is in the VTramUser list for the project
+                                $accessCheck->orWhere(function ($myProjects) use ($user) {
+                                    $myProjects->whereIn('vtrams.id', VtramUser::where('user_id', $user->id)->pluck('vtrams_id')->toArray());
                                 });
                             })
                             ->get($this->datatableFields);
@@ -107,7 +119,7 @@ class DashboardController extends Controller
 
 
             // weird indentation but PSR2 demands it?
-            $tracker = Vtram::with('project')
+            $tracker = Vtram::with(['project','company'])
                               ->when($user->company_id !== null, function ($q) use ($user) {
                             $q->where('company_id', '=', $user->company_id);
             })
@@ -135,7 +147,8 @@ class DashboardController extends Controller
                 'data' => $tracker,
             ];
 
-            $rejected = Vtram::whereIn('status', ["EXTERNAL_REJECT", "REJECTED",'AMEND','EXTERNAL_AMEND'])
+            $rejected = Vtram::with(['project.admin','company'])
+                            ->whereIn('status', ["EXTERNAL_REJECT", "REJECTED",'AMEND','EXTERNAL_AMEND'])
                             ->when($user->company_id !== null, function ($q) use ($user) {
                                 $q->where('company_id', '=', $user->company_id);
                             })

@@ -70,6 +70,7 @@ class Vtram extends Model
     {
         $query->withTrashed(can('permanentlyDelete', $identifier))->select([
                 'id',
+                'company_id',
                 'project_id',
                 'name',
                 'logo',
@@ -109,6 +110,13 @@ class Vtram extends Model
                 $project = $item->project;
                 if (!is_null($project)) {
                     return $item->project->name;
+                }
+                return 'None Selected';
+            })
+            ->editColumn('company_id', function ($item) {
+                $company = $item->company;
+                if (!is_null($company)) {
+                    return $item->company->name;
                 }
                 return 'None Selected';
             })
@@ -173,7 +181,8 @@ class Vtram extends Model
                 'responsible_person',
                 'vtrams.deleted_at',
                 'number',
-                'companies.name as company_name'
+                'companies.name as company_name',
+                DB::raw('0 as external_approval_date')
             ])
         ->join('companies', 'companies.id', '=', 'vtrams.company_id');
 
@@ -183,6 +192,9 @@ class Vtram extends Model
         } else {
             $query->where('status', '!=', 'PREVIOUS')
                 ->where('project_id', '=', $parent)
+                ->with(['approvals' => function ($q) {
+                    $q->where('type', '=', 'PC_A');
+                }])
                 ->when(!is_null($user->company_id), function ($accessCheck) use ($user) {
                     // check the vtram has no vtram users (VtramUser) attached to it
                     $accessCheck->where(function ($noUsers) {
@@ -196,6 +208,17 @@ class Vtram extends Model
         }
 
         return app('datatables')->of($query)
+            ->editColumn('external_approval_date', function ($item) {
+                $approval = $item->approvals->first();
+                if ($approval != null) {
+                    $date = Carbon::createFromFormat('Y-m-d', $approval->approved_date);
+                    if ($date != null) {
+                        return $date->timestamp;
+                    }
+                }
+
+                return '';
+            })
             ->editColumn('project_id', function ($item) {
                 $project = $item->project;
                 if (!is_null($project)) {

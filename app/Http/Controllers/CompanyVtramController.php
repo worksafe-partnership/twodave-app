@@ -166,7 +166,7 @@ class CompanyVtramController extends Controller
                     'is-primary',
                 ],
                 'name' => 'send_for_approval',
-                'label' => 'Save & Submit for Approval',
+                'label' => 'Save & Submit for Review',
                 'order' => 150,
                 'value' => true,
             ];
@@ -307,7 +307,7 @@ class CompanyVtramController extends Controller
         ];
         if (in_array($this->record->status, ['NEW','REJECTED','EXTERNAL_REJECT','AMEND','EXTERNAL_AMEND']) && can('edit', $this->identifierPath) && is_null($this->record['deleted_at'])) {
             $this->pillButtons['submit_for_approval'] = [
-                'label' => 'Submit for Approval',
+                'label' => 'Submit for Review',
                 'path' => $this->record->id.'/submit',
                 'icon' => 'tick',
                 'order' => 100,
@@ -414,7 +414,7 @@ class CompanyVtramController extends Controller
         } else {
             $url = '/project/'.$projectId.'/vtram/'.$vtramId;
         }
-        toast()->success(($user->company->vtrams_name ?? "VTRAMS")." submitted for Approval");
+        toast()->success(($user->company->vtrams_name ?? "VTRAMS")." submitted for Review");
         return redirect($url);
     }
 
@@ -561,6 +561,17 @@ class CompanyVtramController extends Controller
                     'user_id' => $userId
                 ];
             }
+
+            if ($this->user == null) {
+                $this->user = Auth::user();
+            }
+
+            if (!in_array($this->user->id, $request['associated_users']) && $this->user->company_id != null) {
+                $toInsert[] = [
+                    'vtrams_id' => $insert['id'],
+                    'user_id' => $this->user->id,
+                ];
+            }   
             VtramUser::insert($toInsert);
         }
 
@@ -581,7 +592,7 @@ class CompanyVtramController extends Controller
     {
         if (isset($request['send_for_approval'])) {
             VTLogic::submitForApproval($update);
-            toast()->success("VTRAM submitted for Approval");
+            toast()->success("VTRAM submitted for Review");
         } else {
             VTLogic::createPdf($update, null, true);
         }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Auth;
 use Carbon;
 use Controller;
@@ -106,10 +107,22 @@ class ProjectTrackerController extends Controller
                             'submitted_date',
                             'approved_date',
                             'approved_by',
-                            'review_due'
+                            'review_due',
+                            DB::raw('0 as external_approval_date')
                         ]);
 
         return app('datatables')->of($query)
+            ->editColumn('external_approval_date', function ($item) {
+                $approval = $item->approvals->first();
+                if ($approval != null) {
+                    $date = Carbon::createFromFormat('Y-m-d', $approval->approved_date);
+                    if ($date != null) {
+                        return $date->timestamp;
+                    }
+                }
+
+                return '';
+            })
             ->editColumn('status', function ($item) {
                 return $item->niceStatus();
             })

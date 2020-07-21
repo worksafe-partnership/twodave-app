@@ -240,7 +240,7 @@ class VtramController extends CompanyVtramController
                     'is-primary',
                 ],
                 'name' => 'send_for_approval',
-                'label' => 'Save & Exit & Submit for Approval',
+                'label' => 'Save & Exit & Submit for Review',
                 'order' => 150,
                 'value' => true,
             ];
@@ -406,5 +406,7 @@ class VtramController extends CompanyVtramController
         if (isset($request['back_to_edit'])) {
             return $this->fullPath.'/edit';
         }
+
+        return parent::updated($record, $orig, $request, $args);
     }
 }

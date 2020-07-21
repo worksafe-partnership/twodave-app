@@ -61,7 +61,7 @@ class TemplateController extends Controller
                     'is-primary',
                 ],
                 'name' => 'send_for_approval',
-                'label' => 'Save & Submit for Approval',
+                'label' => 'Save & Submit for Review',
                 'order' => 150,
                 'value' => true,
             ];
@@ -275,7 +275,7 @@ class TemplateController extends Controller
         ];
         if (in_array($this->record->status, ['NEW','REJECTED','EXTERNAL_REJECT','AMEND','EXTERNAL_AMEND']) && is_null($this->record['deleted_at'])) {
             $this->pillButtons['submit_for_approval'] = [
-                'label' => 'Submit for Approval',
+                'label' => 'Submit for Review',
                 'path' => $this->record->id.'/submit',
                 'icon' => 'tick',
                 'order' => 100,
@@ -385,7 +385,7 @@ class TemplateController extends Controller
         } else {
             $url = '/template/'.$templateId;
         }
-        toast()->success("Template submitted for Approval");
+        toast()->success("Template submitted for Review");
         return redirect($url);
     }
 
@@ -426,7 +426,7 @@ class TemplateController extends Controller
     {
         if (isset($request['send_for_approval'])) {
             VTLogic::submitForApproval($update);
-            toast()->success("Template submitted for Approval");
+            toast()->success("Template submitted for Review");
         } else {
             VTLogic::createPdf($update, null, true);
         }

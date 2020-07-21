@@ -67,7 +67,7 @@
             <div class="column">
                 <p class="control">
                     <button class="button is-primary submitbutton">Save</button>
-                    <button class="button is-primary submitbutton" name="send_for_approval" value="1">Save & Submit for Approval</button>
+                    <button class="button is-primary submitbutton" name="send_for_approval" value="1">Save & Submit for Review</button>
                 </p>
             </div>
         </div>
