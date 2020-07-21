@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Template;
 use Auth;
 use Carbon;
 use App\Vtram;
@@ -149,6 +150,14 @@ class DashboardController extends Controller
                 'heading' => 'Rejected ('.$rejected->count().')',
                 'table-id' => 'rejected',
                 'data' => $rejected,
+            ];
+
+            $templates = Template::datatableAllQuery(false, config("structure.template.config"))->get();
+
+            $this->customValues['tables'][] = [
+                'heading' => 'Templates ('.$templates->count().')',
+                'table-id' => 'templates',
+                'data' => $templates,
             ];
         }
     }
