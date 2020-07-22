@@ -232,6 +232,48 @@ class VtramController extends CompanyVtramController
 
     public function editHook()
     {
+        $this->formButtons['save_method_statement'] = [
+            'class' => [
+                'button',
+                'is-primary',
+                'submit-meth-form',
+            ],
+            'name' => 'save_method_statement',
+            'label' => 'Save Method Statement',
+            'order' => 1,
+            'value' => true,
+        ];
+        $this->formButtons['cancel_method_statement'] = [
+            'class' => [
+                'button',
+            ],
+            'name' => 'cancel_method_statement',
+            'label' => 'Cancel Method Statement',
+            'order' => 2,
+            'value' => true,
+            'onclick' => "cancelForm('methodology');",
+        ];
+        $this->formButtons['save_hazard'] = [
+            'class' => [
+                'button',
+                'is-primary',
+                'submit-hazard-form',
+            ],
+            'name' => 'save_hazard',
+            'label' => 'Save Risk Assessment',
+            'order' => 3,
+            'value' => true,
+        ];
+        $this->formButtons['cancel_hazard'] = [
+            'class' => [
+                'button',
+            ],
+            'name' => 'cancel_hazard',
+            'label' => 'Cancel Risk Assessment',
+            'order' => 4,
+            'value' => true,
+            'onclick' => "cancelForm('hazard');",
+        ];
         if (in_array($this->record->status, ['REJECTED','EXTERNAL_REJECT','NEW','AMEND','EXTERNAL_AMEND'])) {
             $this->formButtons['save_and_submit'] = [
                 'class' => [

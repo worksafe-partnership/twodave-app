@@ -29,7 +29,7 @@ class HazardController extends Controller
                     abort(404);
                 }
             } else {
-                if (!in_array($vtconfig->entity->company_id, $this->user->getContractorIds())) {
+                if (!in_array($vtconfig->entity->project_id, $this->user->projectCompanyIds())) {
                     abort(404);
                 }
             }
@@ -74,7 +74,7 @@ class HazardController extends Controller
                     abort(404);
                 }
             } else {
-                if (!in_array($vtconfig->entity->company_id, $this->user->getContractorIds())) {
+                if (!in_array($vtconfig->entity->project_id, $this->user->projectCompanyIds())) {
                     abort(404);
                 }
             }

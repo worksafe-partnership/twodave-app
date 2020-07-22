@@ -36,14 +36,6 @@
             </div>
             <div id="hazard-form-container">
                 @include('modules.company.project.vtram.hazard.display')
-                <div class="field is-grouped is-grouped-centered">
-                    <p class="control">
-                        <button class="button is-primary submitbutton" onclick="submitHazardForm();">Save Hazard</button>
-                    </p>
-                    <p class="control">
-                        <button class="button" onclick="cancelForm('hazard');">Cancel</button>
-                    </p>
-                </div>
                 <br>
             </div>
         </div>
@@ -65,7 +57,7 @@
 
     var riskLabels = JSON.parse('{!! json_encode($riskList) !!}');
     function createHazard() {
-        $("#hazard-form-container .submitbutton").attr("onclick","submitHazardForm()");
+        $(".submit-hazard-form").attr("onclick","submitHazardForm()");
         $('.risk-rating').css('border', '1px solid #404040');
         $('#hazard-form-container').css('display', 'inherit');
         $('#hazard-list-container').hide();
@@ -83,7 +75,9 @@
         $('.r-risk-area .risk-rating').css('outline', 'none');
         $('.risk-area .risk-rating').css('outline', 'none');
         $('#related_methodologies_div .control select')[0].selectize.clear();
-        $('#main-hazard-container .submitbutton').attr("disabled", false);
+        $('.submit-hazard-form').attr("disabled", false);
+        $('button[name="save_hazard"]').show();
+        $('button[name="cancel_hazard"]').show();
     }
 
     function editHazard(id) {
@@ -116,19 +110,22 @@
             selectize.setValue(window.hazardMethodologies[hazard['id']]);
         }
 
-        $("#hazard-form-container .submitbutton").attr("onclick","submitHazardForm("+id+","+hazard['list_order']+")");
+        $(".submit-hazard-form").attr("onclick","submitHazardForm("+id+","+hazard['list_order']+")");
         $('#hazard-list-container').hide();
         $('.r-risk-area .risk-rating').css('outline', 'none');
         $('.risk-area .risk-rating').css('outline', 'none');
         $('.risk-area td[data-prob=' + hazard['risk_probability'] + '][data-severity=' + hazard['risk_severity'] + ']').css('outline', '3px solid blue');
         $('.r-risk-area td[data-prob=' + hazard['r_risk_probability'] + '][data-severity=' + hazard['r_risk_severity'] + ']').css('outline', '3px solid blue');
         $('#hazard-form-container').css('display', 'inherit');
-        $('#main-hazard-container .submitbutton').attr("disabled", false);
+        $('.submit-hazard-form').attr("disabled", false);
+        $('button[name="save_hazard"]').show();
+        $('button[name="cancel_hazard"]').show();
     }
 
     function submitHazardForm(editId=null, listOrder=null) {
 
-        $('#main-hazard-container .submitbutton').attr("disabled", true);
+        event.preventDefault();
+        $('.submit-hazard-form').attr("disabled", true);
 
         var selectedMethodologies = [];
         $.each($('#related_methodologies_div .item'), function(key, meth) {
@@ -259,9 +256,11 @@
                 $('.r-risk-area .risk-rating').css('outline', 'none');
                 $('.risk-area .risk-rating').css('outline', 'none');
                 $('#hazard-list-container').show();
+                $('button[name="save_hazard"]').hide();
+                $('button[name="cancel_hazard"]').hide();
             },
             error: function (data) {
-                $('#main-hazard-container .submitbutton').attr("disabled", false);
+                $('.submit-hazard-form').attr("disabled", false);
                 if (data.status == 422) {
                     var errorList = JSON.parse(data.responseText);
                     $.each(errorList.errors, function(key,val) {
