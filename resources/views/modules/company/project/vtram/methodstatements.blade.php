@@ -43,76 +43,28 @@
                     @endforeach
                 </table>
             </div>
-            <div id="methodology-text-form-container">
+            <div id="methodology-text-form-container" class="meth-container" data-type="TEXT">
                 @include('modules.company.project.methodology.text')
-                <div class="field is-grouped is-grouped-centered">
-                    <p class="control">
-                        <button class="button is-primary submitbutton" onclick="submitMethodologyForm('TEXT');">Save Method Statement</button>
-                    </p>
-                    <p class="control">
-                        <button class="button" onclick="cancelForm('methodology');">Cancel</button>
-                    </p>
-                </div>
                 <br>
             </div>
-            <div id="methodology-icon-form-container">
+            <div id="methodology-icon-form-container" class="meth-container" data-type="ICON">
                 @include('modules.company.project.methodology.icon')
-                <div class="field is-grouped is-grouped-centered">
-                    <p class="control">
-                        <button class="button is-primary submitbutton" onclick="submitMethodologyForm('ICON');">Save Method Statement</button>
-                    </p>
-                    <p class="control">
-                        <button class="button" onclick="cancelForm('methodology');">Cancel</button>
-                    </p>
-                </div>
                 <br>
             </div>
-            <div id="methodology-complex-table-form-container">
+            <div id="methodology-complex-table-form-container" class="meth-container" data-type="COMPLEX_TABLE">
                 @include('modules.company.project.methodology.complex_table')
-                <div class="field is-grouped is-grouped-centered">
-                    <p class="control">
-                        <button class="button is-primary submitbutton" onclick="submitMethodologyForm('COMPLEX_TABLE');">Save Method Statement</button>
-                    </p>
-                    <p class="control">
-                        <button class="button" onclick="cancelForm('methodology');">Cancel</button>
-                    </p>
-                </div>
                 <br>
             </div>
-            <div id="methodology-process-form-container">
+            <div id="methodology-process-form-container" class="meth-container" data-type="PROCESS">
                 @include('modules.company.project.methodology.process')
-                <div class="field is-grouped is-grouped-centered">
-                    <p class="control">
-                        <button class="button is-primary submitbutton" onclick="submitMethodologyForm('PROCESS');">Save Method Statement</button>
-                    </p>
-                    <p class="control">
-                        <button class="button" onclick="cancelForm('methodology');">Cancel</button>
-                    </p>
-                </div>
                 <br>
             </div>
-            <div id="methodology-simple-table-form-container">
+            <div id="methodology-simple-table-form-container" class="meth-container" data-type="SIMPLE_TABLE">
                 @include('modules.company.project.methodology.simple_table')
-                <div class="field is-grouped is-grouped-centered">
-                    <p class="control">
-                        <button class="button is-primary submitbutton" onclick="submitMethodologyForm('SIMPLE_TABLE');">Save Method Statement</button>
-                    </p>
-                    <p class="control">
-                        <button class="button" onclick="cancelForm('methodology');">Cancel</button>
-                    </p>
-                </div>
                 <br>
             </div>
-            <div id="methodology-text-image-form-container">
+            <div id="methodology-text-image-form-container" class="meth-container" data-type="TEXT_IMAGE">
                 @include('modules.company.project.methodology.text_image')
-                <div class="field is-grouped is-grouped-centered">
-                    <p class="control">
-                        <button class="button is-primary submitbutton" onclick="submitMethodologyForm('TEXT_IMAGE');">Save Method Statement</button>
-                    </p>
-                    <p class="control">
-                        <button class="button" onclick="cancelForm('methodology');">Cancel</button>
-                    </p>
-                </div>
                 <br>
             </div>
         </div>
@@ -283,8 +235,10 @@
             }
 
             $('#' + container).css('display', 'inherit');
-            $('#' + container + ' .submitbutton').attr("onclick","submitMethodologyForm('"+cat+"')");
-            $('#main-methodology-container .submitbutton').attr("disabled", false);
+            $('.submit-meth-form').attr("onclick","submitMethodologyForm('"+cat+"')");
+            $('.submit-meth-form').attr("disabled", false);
+            $('button[name="save_method_statement"]').show();
+            $('button[name="cancel_method_statement"]').show();
         }
     }
 
@@ -559,15 +513,18 @@
             $('#' + container + ' input[name="tickbox_answer"][value="' + methodology.tickbox_answer + '"]').prop('checked', true);
 
             $('#' + container).css('display', 'inherit');
-            $('#' + container + ' .submitbutton').attr("onclick","submitMethodologyForm('"+methodology.category+"',"+id+","+methodology.list_order+")");
-            $('#main-methodology-container .submitbutton').attr("disabled", false);
+            $('.submit-meth-form').attr("onclick","submitMethodologyForm('"+methodology.category+"',"+id+","+methodology.list_order+")");
+            $('.submit-meth-form').attr("disabled", false);
+            $('button[name="save_method_statement"]').show();
+            $('button[name="cancel_method_statement"]').show();
         }
     }
 
     function submitMethodologyForm(category, editId=null, listOrder=null) {
 
+        event.preventDefault();
         // stop double click submits
-        $('#main-methodology-container .submitbutton').attr("disabled", true);
+        $('.submit-meth-form').attr("disabled", true);
 
         var form_data = new FormData();
 
@@ -942,9 +899,11 @@
                 $('#methodology-list-container').show();
                 $('[id^=methodology-][id$=-form-container]').css('display', 'none');
                 $('#meth_type').val('');
+                $('button[name="save_method_statement"]').hide();
+                $('button[name="cancel_method_statement"]').hide();
             },
             error: function (data) {
-                $('#main-methodology-container .submitbutton').attr("disabled", false);
+                $('.submit-meth-form').attr("disabled", false);
                 if (data.status == 422) {
                     var errorList = JSON.parse(data.responseText);
                     $.each(errorList.errors, function(key,val) {

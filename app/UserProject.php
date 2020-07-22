@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserProject extends Model
 {
     protected $table = 'user_projects';
+    public $timestamps = false;
 
     protected $fillable = [
         'user_id',

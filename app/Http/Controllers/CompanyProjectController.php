@@ -347,6 +347,13 @@ class CompanyProjectController extends Controller
             }
             ProjectSubcontractor::insert($toInsert);
         }
+
+        if (isset($request['project_admin'])) {
+            UserProject::create([
+                'project_id' => $insert->id,
+                'user_id' => $request['project_admin'],
+            ]);
+        }
     }
 
     public function updated($updated, $orig, $request, $args)

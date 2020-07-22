@@ -24,6 +24,10 @@ return [
                 'label' => 'Approved Date',
                 'col_type' => 'date',
             ],
+            'external_approval_date' => [
+                'label' => 'External Approved Date',
+                'col_type' => 'date',
+            ],
             'review_due' => [
                 'label' => 'Review Due',
                 'col_type' => 'date',

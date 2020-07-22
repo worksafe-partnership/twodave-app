@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Auth;
 use Carbon;
 use Controller;
@@ -55,6 +56,9 @@ class CompanyProjectTrackerController extends Controller
         $nowCarbon = Carbon::now();
         $twoWeeksCarbon = $nowCarbon->copy()->addWeeks(2);
         $query = Vtram::withTrashed()
+                        ->with(['approvals' => function ($q) {
+                            $q->where('type', '=', 'PC_A');
+                        }])
                         ->where('status', '!=', 'PREVIOUS')
                         ->where('project_id', '=', $args[1])
                         ->where('company_id', '=', $args[0])
@@ -72,10 +76,22 @@ class CompanyProjectTrackerController extends Controller
                             'approved_date',
                             'approved_by',
                             'review_due',
-                            'deleted_at'
+                            'deleted_at',
+                            DB::raw('0 as external_approval_date')
                         ]);
 
         return app('datatables')->of($query)
+            ->editColumn('external_approval_date', function ($item) {
+                $approval = $item->approvals->first();
+                if ($approval != null) {
+                    $date = Carbon::createFromFormat('Y-m-d', $approval->approved_date);
+                    if ($date != null) {
+                        return $date->timestamp;
+                    }
+                }
+
+                return '';
+            })
             ->editColumn('company_id', function ($item) {
                 return $item->companyName();
             })

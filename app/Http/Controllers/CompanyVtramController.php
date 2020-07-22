@@ -158,6 +158,48 @@ class CompanyVtramController extends Controller
 
     public function postEditHook()
     {
+        $this->formButtons['save_method_statement'] = [
+            'class' => [
+                'button',
+                'is-primary',
+                'submit-meth-form',
+            ],
+            'name' => 'save_method_statement',
+            'label' => 'Save Method Statement',
+            'order' => 1,
+            'value' => true,
+        ];
+        $this->formButtons['cancel_method_statement'] = [
+            'class' => [
+                'button',
+            ],
+            'name' => 'cancel_method_statement',
+            'label' => 'Cancel Method Statement',
+            'order' => 2,
+            'value' => true,
+            'onclick' => "cancelForm('methodology');",
+        ];
+        $this->formButtons['save_hazard'] = [
+            'class' => [
+                'button',
+                'is-primary',
+                'submit-hazard-form',
+            ],
+            'name' => 'save_hazard',
+            'label' => 'Save Risk Assessment',
+            'order' => 3,
+            'value' => true,
+        ];
+        $this->formButtons['cancel_hazard'] = [
+            'class' => [
+                'button',
+            ],
+            'name' => 'cancel_hazard',
+            'label' => 'Cancel Risk Assessment',
+            'order' => 4,
+            'value' => true,
+            'onclick' => "cancelForm('hazard');",
+        ];
         if (in_array($this->record->status, ['REJECTED','EXTERNAL_REJECT','NEW','AMEND','EXTERNAL_AMEND'])) {
             $this->formButtons['save_and_submit'] = [
                 'class' => [
@@ -166,7 +208,7 @@ class CompanyVtramController extends Controller
                     'is-primary',
                 ],
                 'name' => 'send_for_approval',
-                'label' => 'Save & Submit for Approval',
+                'label' => 'Save & Submit for Review',
                 'order' => 150,
                 'value' => true,
             ];
@@ -307,7 +349,7 @@ class CompanyVtramController extends Controller
         ];
         if (in_array($this->record->status, ['NEW','REJECTED','EXTERNAL_REJECT','AMEND','EXTERNAL_AMEND']) && can('edit', $this->identifierPath) && is_null($this->record['deleted_at'])) {
             $this->pillButtons['submit_for_approval'] = [
-                'label' => 'Submit for Approval',
+                'label' => 'Submit for Review',
                 'path' => $this->record->id.'/submit',
                 'icon' => 'tick',
                 'order' => 100,
@@ -414,7 +456,7 @@ class CompanyVtramController extends Controller
         } else {
             $url = '/project/'.$projectId.'/vtram/'.$vtramId;
         }
-        toast()->success(($user->company->vtrams_name ?? "VTRAMS")." submitted for Approval");
+        toast()->success(($user->company->vtrams_name ?? "VTRAMS")." submitted for Review");
         return redirect($url);
     }
 
@@ -561,6 +603,17 @@ class CompanyVtramController extends Controller
                     'user_id' => $userId
                 ];
             }
+
+            if ($this->user == null) {
+                $this->user = Auth::user();
+            }
+
+            if (!in_array($this->user->id, $request['associated_users']) && $this->user->company_id != null) {
+                $toInsert[] = [
+                    'vtrams_id' => $insert['id'],
+                    'user_id' => $this->user->id,
+                ];
+            }   
             VtramUser::insert($toInsert);
         }
 
@@ -581,7 +634,7 @@ class CompanyVtramController extends Controller
     {
         if (isset($request['send_for_approval'])) {
             VTLogic::submitForApproval($update);
-            toast()->success("VTRAM submitted for Approval");
+            toast()->success("VTRAM submitted for Review");
         } else {
             VTLogic::createPdf($update, null, true);
         }
