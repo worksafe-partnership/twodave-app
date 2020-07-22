@@ -70,6 +70,9 @@
         .nopad {
             padding: 0px;
         }
+        button[name="save_method_statement"], button[name="cancel_method_statement"], button[name="save_hazard"], button[name="cancel_hazard"] {
+            display: none;
+        }
         @media screen and (max-width:1090px) {
             .box-container {
                 width: 100% !important;
@@ -97,11 +100,12 @@
                     $('.r-risk-area .risk-rating').css('outline', 'none');
                     $('.risk-area .risk-rating').css('outline', 'none');
                     $('#related_methodologies_div .control select')[0].selectize.clear();
-                    debugger
                 } else {
                     $('#methodology-list-container').show();
                     $('[id^=methodology-][id$=-form-container]').css('display', 'none');
                     $('#meth_type').val('');
+                    $('button[name="save_method_statement"]').hide();
+                    $('button[name="cancel_method_statement"]').hide();
                 }
             }
         }

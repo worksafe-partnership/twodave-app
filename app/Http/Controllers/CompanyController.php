@@ -23,6 +23,27 @@ class CompanyController extends Controller
     public function editHook()
     {
         $this->customValues['projects'] = Project::where('company_id', $this->id)->pluck('name', 'id');
+        $this->formButtons['save_method_statement'] = [
+            'class' => [
+                'button',
+                'is-primary',
+                'submit-meth-form',
+            ],
+            'name' => 'save_method_statement',
+            'label' => 'Save Method Statement',
+            'order' => 1,
+            'value' => true,
+        ];
+        $this->formButtons['cancel_method_statement'] = [
+            'class' => [
+                'button',
+            ],
+            'name' => 'cancel_method_statement',
+            'label' => 'Cancel Method Statement',
+            'order' => 2,
+            'value' => true,
+            'onclick' => "cancelForm('methodology');",
+        ];
         $this->formButtons['back_to_edit'] = [
             'class' => [
                 'submitbutton',
