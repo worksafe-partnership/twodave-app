@@ -27,7 +27,6 @@ return [
             'principle_contractor_email' => ['label' => 'Principal Contractor Email'],
             'client_name' => ['label' => 'Client Name'],
             'review_timescale' => ['label' => 'Review Timescale (Overrides Company)'],
-            'show_contact' => ['label' => 'Show Contact Information on VTRAMS']
         ]
     ],
     'sidebar' => [],

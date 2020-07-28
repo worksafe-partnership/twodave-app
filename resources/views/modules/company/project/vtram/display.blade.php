@@ -278,7 +278,24 @@
         <div class="column is-10 is-offset-1">
             <h2 class="sub-heading">Configuration</h2>
 
-            @include('modules.company.project.vtram.ckeditor-key')
+            <div class="columns">
+                <div class="column is-6">
+                    <div class="field">
+                        @include('modules.company.project.vtram.ckeditor-key')
+                    </div>
+                </div>
+                @if ($pageType == 'edit' && strpos($identifierPath, 'template') === false)
+                    <div class="column is-6">
+                        <div class="field">
+                            {{ EGForm::text('project_id', [
+                                'label' => 'Project',
+                                'value' => $record->project->name ?? '',
+                                'type' => 'view',
+                            ]) }}
+                        </div>
+                    </div>
+                @endif
+            </div>
             <div class="columns">
                 <div class="column is-6">
                     <div class="field">

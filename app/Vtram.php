@@ -195,14 +195,16 @@ class Vtram extends Model
                 ->with(['approvals' => function ($q) {
                     $q->where('type', '=', 'PC_A');
                 }])
-                ->when(!is_null($user->company_id), function ($accessCheck) use ($user) {
+                ->when(!is_null($user->company_id), function ($accessCheck) use ($user, $parent) {
                     // check the vtram has no vtram users (VtramUser) attached to it
-                    $accessCheck->where(function ($noUsers) {
-                        $noUsers->whereIn('vtrams.id', Vtram::doesntHave('vtramsUsers')->pluck('vtrams.id'));
+                    $accessCheck->where(function ($noUsers) use ($parent) {
+                        $noUsers->whereIn('vtrams.id', Vtram::doesntHave('vtramsUsers')->pluck('vtrams.id'))
+                            ->where('project_id', '=', $parent);
                     });
                     // or the user id is in the VTramUser list for the project
-                    $accessCheck->orWhere(function ($myProjects) use ($user) {
-                        $myProjects->whereIn('vtrams.id', VtramUser::where('user_id', $user->id)->pluck('vtrams_id')->toArray());
+                    $accessCheck->orWhere(function ($myProjects) use ($user, $parent) {
+                        $myProjects->whereIn('vtrams.id', VtramUser::where('user_id', $user->id)->pluck('vtrams_id')->toArray())
+                            ->where('project_id', '=', $parent);
                     });
                 });
         }

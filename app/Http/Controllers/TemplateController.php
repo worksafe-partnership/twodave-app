@@ -187,6 +187,11 @@ class TemplateController extends Controller
         }
     }
 
+    public function postEditHook()
+    {
+        $this->formButtons['cancel']['onclick'] = 'return confirm("Are you sure you want to cancel? Any unsaved changes will be lost")';
+    }
+
     public function viewHook()
     {
         $prevConfig = config('structure.template.previous.config');

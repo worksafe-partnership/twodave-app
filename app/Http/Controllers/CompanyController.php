@@ -55,6 +55,7 @@ class CompanyController extends Controller
             'order' => 150,
             'value' => true,
         ];
+
         $this->submitButtonText = 'Save & Exit';
         $this->customValues['methTypeList'] = config('egc.methodology_list');
         $this->customValues['methodologies'] = Methodology::where('entity', '=', 'COMPANY')
@@ -85,6 +86,11 @@ class CompanyController extends Controller
         foreach ($icons as $icon) {
             $this->customValues['icons'][$icon->methodology_id][$icon->type][] = $icon;
         }
+    }
+
+    public function postEditHook()
+    {
+        $this->formButtons['cancel']['onclick'] = 'return confirm("Are you sure you want to cancel? Any unsaved changes will be lost")';
     }
 
     public function viewHook()

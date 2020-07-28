@@ -377,6 +377,7 @@ class VtramController extends CompanyVtramController
     {
         $project = $this->args[0];
         $this->customValues['path'] = '/project/'.$project.'/vtram/create';
+        $this->formButtons['cancel']['onclick'] = 'return confirm("Are you sure you want to cancel? Any unsaved changes will be lost")';
     }
 
     public function submitForApproval($projectId, $vtramId, $otherId = null)

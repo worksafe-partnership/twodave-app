@@ -61,7 +61,7 @@
                     ]) }}
                     <p>This will show:
                         <ul>
-                            <li>Email Address, Phone and Fax numbers for the Company</li>
+                            <li>Email Address, Phone Number for the Company</li>
                             <li>Email Address of the Project Admin</li>
                         </ul>
                     </p>

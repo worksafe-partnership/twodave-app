@@ -100,6 +100,8 @@
                     $('.r-risk-area .risk-rating').css('outline', 'none');
                     $('.risk-area .risk-rating').css('outline', 'none');
                     $('#related_methodologies_div .control select')[0].selectize.clear();
+                    $('button[name="save_hazard"]').hide();
+                    $('button[name="cancel_hazard"]').hide();
                 } else {
                     $('#methodology-list-container').show();
                     $('[id^=methodology-][id$=-form-container]').css('display', 'none');

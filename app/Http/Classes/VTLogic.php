@@ -56,25 +56,20 @@ class VTLogic
         // NEED TO HAVE LAST PAGE FIRST IN 4 OR 2 - if so uncomment below
         if ($config->entity->pages_in_pdf == 4) {
             $merger->addFile($path, new Pages(4));
-            /*$merger->addFile($path, new Pages(1));
+            $merger->addFile($path, new Pages(1));
             $merger->addFile($path, new Pages(2));
-            $merger->addFile($path, new Pages(3));*/
+            $merger->addFile($path, new Pages(3));
         } else if ($config->entity->pages_in_pdf == 3) {
             $merger->addFile($path, new Pages(3));
             $merger->addFile($path, new Pages(1));
             $merger->addFile($path, new Pages(2));
             $merger->addFile(public_path().'/blank_page.pdf', new Pages(1));
-        }
-        /*else if ($config->entity->pages_in_pdf == 2) {
-            $merger->addFile($path, new Pages(2));
+        } else {
             $merger->addFile($path, new Pages(1));
-        } else {*/
-            $merger->addFile($path, new Pages(1));
-            $merger->addFile($path, new Pages(2));
-            if ($config->entity->pages_in_pdf > 2) {
-                $merger->addFile($path, new Pages(3));
+            if ($config->entity->pages_in_pdf == 2) {
+                $merger->addFile($path, new Pages(2));
             }
-        //}
+        }
 
         $now = Carbon::now();
         $storagePath = "files/".$now->year."/".$now->month."/".$now->day.'/';
