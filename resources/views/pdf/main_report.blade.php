@@ -61,7 +61,7 @@
                             <p><b>Project:</b> {{ $entity->project->name }}</p>
                             <p><b>Project Ref:</b> {{ $entity->project->ref }}</p>
                             @if ($entity->project->show_contact)
-                                <p><b>Trade Contractor Contact: </b><br>Email: {{ $entity->company->email }}<br>Phone: {{ $entity->company->phone }}<br>Fax: {{ $entity->company->fax }}</p>
+                                <p><b>Trade Contractor Contact: </b><br>Email: {{ $entity->company->email }}<br>Phone: {{ $entity->company->phone }}</p>
                                 <p><b>Project Admin Contact: </b> {{ $entity->project->admin->email }}</p>
                             @endif
                         @endif
@@ -82,11 +82,6 @@
                 </div>
                 <br>
                 <div id="title-block-text" class="pdf-heading" style="background-color: {{ $entity->company->secondary_colour }}">
-                    @if($entity->general_rams)
-                        <h1> General RAMS {{ $type == 'VTRAM' ? $entity->number : '' }} </h1>
-                    @else
-                        <h1>{{ $entity->company->vtrams_name ?? '' }} {{ $type == 'VTRAM' ? $entity->number : '' }}</h1>
-                    @endif
                     <p>{!! $titleBlockText !!}</p>
                 </div>
             </div>

@@ -297,6 +297,8 @@ class CompanyVtramController extends Controller
         foreach ($hms as $hm) {
             $this->customValues['hazard_methodologies'][$hm->hazard_id][] = $hm->methodology_id;
         }
+
+        $this->formButtons[7]['onclick'] = 'return confirm("Are you sure you want to cancel? Any unsaved changes will be lost")';
     }
 
     public function viewHook()
