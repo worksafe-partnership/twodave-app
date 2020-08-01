@@ -202,11 +202,11 @@
                                 </td>
                                 <td class="haz-small-width">{{ $hazard->risk_probability }}</td>
                                 <td class="haz-small-width">{{ $hazard->risk_severity }}</td>
-                                <td class="{{ $hazard->riskClass('risk') }} haz-small-width">{{ $riskList[$hazard->risk] }}</td>
+                                <td class="{{ $hazard->riskClass('risk') }} haz-small-width">{{ $hazard->risk }}</td>
                                 <td class="left control-width less-indent">{!! $hazard->control !!}</td>
                                 <td class="haz-small-width">{{ $hazard->r_risk_probability }}</td>
                                 <td class="haz-small-width">{{ $hazard->r_risk_severity }}</td>
-                                <td class="{{ $hazard->riskClass('r_risk') }} haz-small-width">{{ $riskList[$hazard->r_risk] }}</td>
+                                <td class="{{ $hazard->riskClass('r_risk') }} haz-small-width">{{ $hazard->r_risk }}</td>
                             </tr>
                         @endforeach
                         @if ($entity->dynamic_risk)
