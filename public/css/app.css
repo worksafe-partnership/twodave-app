@@ -14167,8 +14167,8 @@ body {
   height: 4rem;
   width: 16rem;
   border-right: 1px solid #dbdbdb;
-  color: #fff;
-  background: #203878;
+  color: #203878;
+  background: #fff;
 }
 
 main#app-main {
@@ -14590,7 +14590,7 @@ a.egc-advert:hover {
 }
 
 .bottom-menu {
-  background: #25418c;
+  background: #fff;
 }
 
 .card.egl-base {

@@ -88,10 +88,10 @@
         </div>
         <div class="profile">
             <div class="links">
-                <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="button is-primary is-outlined is-inverted">
+                <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="button is-primary is-outlined">
                     Logout
                 </a>
-                <a href="#" style="background-color:#fff; margin-left:21px"><img src="/logo-cropped.png" width="42" /></a>
+                <a href="#" style="background-color:#fff; margin-left:21px"><img src="/W-logo.png" width="42" /></a>
                 <form   id="logout-form"
                         action="{{ route('logout') }}"
                         method="POST"
