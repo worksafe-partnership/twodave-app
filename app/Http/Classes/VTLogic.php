@@ -194,8 +194,7 @@ class VTLogic
             toast()->error("Failed to save PDF");
         } else {
             $pdfFileName = $storagePath.$config->entityType."_".$config->entity->id."_PDF_TEMP.pdf";
-            $c = "google-chrome --headless --disable-gpu --print-to-pdf=".storage_path("app/".$pdfFileName)." --no-margins --no-footer ".storage_path("app/".$htmlFileName);
-            //$c = "chromium-browser --no-sandbox --headless --disable-gpu --print-to-pdf=".storage_path("app/".$pdfFileName)." --no-margins --no-footer ".storage_path("app/".$htmlFileName);
+            $c = (env('PDF_GEN') ?? "google-chrome")." --no-sandbox --headless --disable-gpu --print-to-pdf=".storage_path("app/".$pdfFileName)." --no-margins --no-footer ".storage_path("app/".$htmlFileName);
             exec($c);
             chmod(storage_path("app/".$pdfFileName), 0777);
 

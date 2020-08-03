@@ -272,7 +272,7 @@ class PrincipleContractorController extends Controller
         if ($this->totalVtrams == 0) {
             UniqueLink::where('unique_link', '=', $this->link)
                 ->delete();
-            toast()->success('Successfully Approved VTRAMS, there are no more VTRAMS to approve');
+            toast()->success('Successfully Reviewed VTRAMS, there are no more VTRAMS to review');
             return '/login';
         }
         return $this->redirectPath;
