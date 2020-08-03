@@ -87,7 +87,7 @@ class ProjectTrackerController extends Controller
                         ->where('project_id', '=', $args[0])
                         ->when(!is_null($user->company_id), function ($accessCheck) use ($user, $args) {
                             // check the vtram has no vtram users (VtramUser) attached to it
-                            $accessCheck->where(function ($noUsers, $args) {
+                            $accessCheck->where(function ($noUsers) use ($args) {
                                 $noUsers->whereIn('vtrams.id', Vtram::doesntHave('vtramsUsers')->pluck('vtrams.id'))
                                     ->where('project_id', '=', $args[0]);
                             });
