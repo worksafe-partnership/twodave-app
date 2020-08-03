@@ -169,11 +169,11 @@
                             <th colspan="3">Residual Risk</th>
                         </tr>
                         <tr>
-                            <th class="haz-small-width">P</th>
+                            <th class="haz-small-width">L</th>
                             <th class="haz-small-width">S</th>
                             <th class="haz-small-width">R</th>
                             <th class="control-width"></th>
-                            <th class="haz-small-width">P</th>
+                            <th class="haz-small-width">L</th>
                             <th class="haz-small-width">S</th>
                             <th class="haz-small-width">R</th>
                         </tr>
