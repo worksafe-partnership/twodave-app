@@ -115,44 +115,6 @@
     <div class="column is-10 is-offset-1">
         <h2 class="sub-heading">Colours, Labels and Logo</h2>
         <div class="columns">
-            <div class="column is-3">
-                <div class="field">
-                    {{ EGForm::text('low_risk_character', [
-                        'label' => 'Low Risk Label',
-                        'value' => $record->low_risk_character ?? 'L',
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-            <div class="column is-3">
-                <div class="field">
-                    {{ EGForm::text('med_risk_character', [
-                        'label' => 'Medium Risk Label',
-                        'value' => $record->med_risk_character ?? 'M',
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-            <div class="column is-3">
-                <div class="field">
-                    {{ EGForm::text('high_risk_character', [
-                        'label' => 'High Risk Label',
-                        'value' => $record->high_risk_character ?? 'H',
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-            <div class="column is-3">
-                <div class="field">
-                    {{ EGForm::text('no_risk_character', [
-                        'label' => 'No Risk Label',
-                        'value' => $record->no_risk_character ?? '#',
-                        'type' => $pageType
-                    ]) }}
-                </div>
-            </div>
-        </div>
-        <div class="columns">
             <div class="column is-4">
                 <div class="field">
                     {{ VTForm::colour('primary_colour', [

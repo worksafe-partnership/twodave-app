@@ -238,17 +238,15 @@ class CompanyVtramController extends Controller
         $company = Company::find($this->record->company_id);
         if ($company != null) {
             $this->customValues['riskList'] = [
-                0 => $company->no_risk_character,
-                1 => $company->low_risk_character,
-                2 => $company->med_risk_character,
-                3 => $company->high_risk_character,
+                0 => $company->low_risk_character,
+                1 => $company->med_risk_character,
+                2 => $company->high_risk_character,
             ];
         } else {
             $this->customValues['riskList'] = [
-                0 => '#',
-                1 => 'L',
-                2 => 'M',
-                3 => 'H',
+                0 => 'L',
+                1 => 'M',
+                2 => 'H',
             ];
             $company = collect([]); // blade requires a company for the TEXT methodology company defaults
         }

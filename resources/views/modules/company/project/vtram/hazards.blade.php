@@ -22,8 +22,8 @@
                         <tr id="hazard-{{ $hazard->id }}">
                             <td class="has-text-centered hazard-order">{{ $hazard->list_order }}</td>
                             <td class="hazard-desc">{!! $hazard->description !!}</td>
-                            <td class="has-text-centered hazard-risk">{{ $riskList[$hazard->risk] ?? '' }}</td>
-                            <td class="has-text-centered hazard-r-risk">{{ $riskList[$hazard->r_risk] ?? '' }}</td>
+                            <td class="has-text-centered hazard-risk">{{ $hazard->risk }}</td>
+                            <td class="has-text-centered hazard-r-risk">{{ $hazard->r_risk }}</td>
                             <td class="handms-actions">
                                 <a title="Edit" class="handms-icons" onclick="editHazard({{ $hazard->id }})">{{ icon('mode_edit') }}</a>
                                 <a title="Delete" class="handms-icons" onclick="deleteHazard({{ $hazard->id }})">{{ icon('delete') }}</a>

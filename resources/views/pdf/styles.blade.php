@@ -82,6 +82,9 @@
     .orange {
         background-color: #e09706;
     }
+    .amber {
+        background-color: #ffbf00;
+    }
     .red {
         background-color: #ff0000;
     }
