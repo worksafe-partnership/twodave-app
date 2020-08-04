@@ -55,19 +55,12 @@ class Hazard extends Model
     public function riskClass($field = 'risk')
     {
         $class = '';
-        switch ($this->{$field}) {
-            case 0:
-                $class = 'green';
-                break;
-            case 1:
-                $class = 'yellow';
-                break;
-            case 2:
-                $class = 'orange';
-                break;
-            case 3:
-                $class = 'red';
-                break;
+        if ($this->{$field} >= 15) {
+            $class = 'red';
+        } elseif ($this->{$field} >= 5) {
+            $class = 'amber';
+        } else {
+            $class = 'green';
         }
 
         return $class;
