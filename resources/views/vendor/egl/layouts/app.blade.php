@@ -84,14 +84,14 @@
     </aside>
     <div class="bottom-menu" id="bottom-menu" style="height:8rem;">
         <div class="profile" style="margin:1rem 1rem 0 1rem;">
-            <img src="/vtrams.2DAVE.beta.jpg" />
+            <img src="/vtrams.2dave.beta.jpg" />
         </div>
         <div class="profile">
             <div class="links">
                 <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="button is-primary is-outlined">
                     Logout
                 </a>
-                <a href="#" style="background-color:#fff; margin-left:21px"><img src="/W-logo.png" width="42" /></a>
+                <a href="#" style="background-color:#fff; margin-left:21px"><img src="/W-Logo.png" width="42" /></a>
                 <form   id="logout-form"
                         action="{{ route('logout') }}"
                         method="POST"
