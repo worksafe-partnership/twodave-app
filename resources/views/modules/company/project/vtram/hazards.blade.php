@@ -188,8 +188,8 @@
                     $('.hazard-list-table').append('<tr id="hazard-' + id + '">\
                             <td class="has-text-centered hazard-order">' + data.list_order + '</td>\
                             <td class="hazard-desc">' + data.description + '</td>\
-                            <td class="has-text-centered hazard-risk">' + riskLabels[data.risk] + '</td>\
-                            <td class="has-text-centered hazard-r-risk">' + riskLabels[data.r_risk] + '</td>\
+                            <td class="has-text-centered hazard-risk">' + data.risk + '</td>\
+                            <td class="has-text-centered hazard-r-risk">' + data.r_risk + '</td>\
                             <td class="handms-actions">\
                                 <a title="Edit" class="handms-icons" onclick="editHazard(' + id + ')">{{ icon('mode_edit') }}</a>\
                                 <a title="Delete" class="handms-icons" onclick="deleteHazard(' + id + ')">{{ icon('delete') }}</a>\
@@ -220,8 +220,8 @@
                             // need to edit hazard table
                             $('tr#hazard-' + editId + ' .hazard-order').html(data.list_order);
                             $('tr#hazard-' + editId + ' .hazard-desc').html(data.description);
-                            $('tr#hazard-' + editId + ' .hazard-risk').html(riskLabels[data.risk]);
-                            $('tr#hazard-' + editId + ' .hazard-r-risk').html(riskLabels[data.r_risk]);
+                            $('tr#hazard-' + editId + ' .hazard-risk').html(data.risk);
+                            $('tr#hazard-' + editId + ' .hazard-r-risk').html(data.r_risk);
                             break;
                         }
                     }
