@@ -82,9 +82,9 @@
             </div>
         </div>
     </aside>
-    <div class="bottom-menu" style="height:9rem;">
-        <div class="profile" style="margin:0 1rem;">
-            <img src="/logo.png" />
+    <div class="bottom-menu" id="bottom-menu" style="height:8rem;">
+        <div class="profile" style="margin:1rem 1rem 0 1rem;">
+            <img src="/vtrams.2DAVE.beta.jpg" />
         </div>
         <div class="profile">
             <div class="links">
@@ -99,7 +99,21 @@
                     {{ csrf_field() }}
                 <
                 </form>
-                        <a href="https://evergreencomputing.com/case_study?site={{env('EGC_PROJECT_NAME')}}" class="egc-advert" style="width:30%" target="_blank" title="Helping streamline business processes with bespoke application software development, customised CRM systems and online database systems."></a>
+                <a href="#" id="help-button" class="help-button">
+                    <img src="/help-icon-reverse.png" alt="Help"/>
+                </a>
+            </div>
+            <div id="help-section">
+                <p>
+                    If you need any help, don't hesitate to contact us.
+                </p>
+                <br/>
+                <p>
+                    Telephone: <b>0333 772 9195</b>
+                </p>
+                <p>
+                    E-mail: <b><a href="mailto:help@2dave.site">help@2dave.site</a></b>
+                </p>
             </div>
         </div>
     </div>
@@ -219,6 +233,19 @@
         setTimeout( function(){
             $('.submitbutton').removeClass('is-loading');
         }, 2000);
+    });
+
+    //Toggle show/hide help section
+    $('#help-button').click(function () {
+        if ($('#help-section').is(":visible")) {
+            $(this).find('img').attr("src","/help-icon-reverse.png");
+            $('#bottom-menu').height('8rem');
+            $('#help-section').fadeOut();
+        } else {
+            $(this).find('img').attr("src","/help-icon.png");
+            $('#help-section').show();
+            $('#bottom-menu').height('17rem');
+        }
     });
     </script>
 </body>
