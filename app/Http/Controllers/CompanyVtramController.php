@@ -25,6 +25,7 @@ use App\Methodology;
 use App\UserProject;
 use App\ProjectSubcontractor;
 use App\Http\Classes\VTLogic;
+use App\Http\Classes\VTConfig;
 use Illuminate\Http\Request;
 use App\Http\Requests\VtramRequest;
 use App\Http\Requests\EditVtramRequest;
@@ -127,6 +128,25 @@ class CompanyVtramController extends Controller
         } else if ($this->pageType != "create" && $this->record->vtram_is_file) {
             $this->customValues['is_file_vtram'] = 1;
         }
+
+        if ($this->record->status == 'AWAITING_EXTERNAL') {
+            $this->pillButtons['sent_to_pc'] = [
+                'label' => 'Submit to Principal Contractor for Review',
+                'path' => $this->record->id.'/send_to_pc',
+                'icon' => 'send',
+                'order' => 100,
+                'onclick' => 'return confirm("Are you sure you want to submit this VTRAMS for Review?")',
+            ];
+        }
+    }
+
+    public function sendToPc($companyId, $projectId, $vtramsId)
+    {
+        $this->vtconfig = new VTConfig($vtramsId, 'VTRAM');
+        VTLogic::sendPcApprovalEmail($this->vtconfig);
+
+        toast()->success('Successfully Submitted to Principal Contractor for Review');
+        return redirect('/company/'.$companyId.'/project/'.$projectId.'/vtram/'.$vtramsId);
     }
 
     public function createHook()

@@ -37,6 +37,6 @@ class PrincipleContractorEmail extends Mailable
     public function build()
     {
         return $this->view('emails.principle_contractor')
-            ->subject('VTRAMS to Review');
+            ->subject('VTRAMS for Review');
     }
 }

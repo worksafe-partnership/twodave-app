@@ -91,7 +91,7 @@
                 <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="button is-primary is-outlined">
                     Logout
                 </a>
-                <a href="#" style="background-color:#fff; margin-left:21px"><img src="/W-Logo.png" width="42" /></a>
+                <a href="https://worksafe-partnership.co.uk" target="_blank" style="background-color:#fff; margin-left:21px"><img src="/W-Logo.png" width="42" /></a>
                 <form   id="logout-form"
                         action="{{ route('logout') }}"
                         method="POST"

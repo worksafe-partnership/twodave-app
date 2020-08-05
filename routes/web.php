@@ -13,6 +13,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/', function () {
         return redirect('/dashboard');
     });
+    // Sent to PC
+    Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/send_to_pc', 'CompanyVtramController@sendToPc');
+    Route::get('/project/{project_id}/vtram/{vtram_id}/send_to_pc', 'VtramController@sendToPcCompanyLogin');
     // Revisions
     Route::get('/company/{company_id}/project/{project_id}/vtram/{vtram_id}/revision', [
         'middleware' => 'can:create-company.project.vtram',

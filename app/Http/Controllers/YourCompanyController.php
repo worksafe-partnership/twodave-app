@@ -32,6 +32,28 @@ class YourCompanyController extends Controller
     public function editHook()
     {
         $this->customValues['projects'] = Project::where('company_id', $this->user->company_id)->pluck('name', 'id');
+        $this->formButtons['save_method_statement'] = [
+            'class' => [
+                'button',
+                'is-primary',
+                'submit-meth-form',
+            ],
+            'name' => 'save_method_statement',
+            'label' => 'Save Method Statement',
+            'order' => 1,
+            'value' => true,
+        ];
+        $this->formButtons['cancel_method_statement'] = [
+            'class' => [
+                'button',
+            ],
+            'name' => 'cancel_method_statement',
+            'label' => 'Cancel Method Statement',
+            'order' => 2,
+            'value' => true,
+            'onclick' => "cancelForm('methodology');",
+        ];
+
         $this->customValues['methTypeList'] = config('egc.methodology_list');
         $this->customValues['methodologies'] = Methodology::where('entity', '=', 'COMPANY')
             ->where('entity_id', '=', $this->id)
@@ -61,5 +83,10 @@ class YourCompanyController extends Controller
         foreach ($icons as $icon) {
             $this->customValues['icons'][$icon->methodology_id][$icon->type][] = $icon;
         }
+    }
+
+    public function postEditHook()
+    {
+        $this->formButtons['cancel']['onclick'] = 'return confirm("Are you sure you want to cancel? Any unsaved changes will be lost")';
     }
 }

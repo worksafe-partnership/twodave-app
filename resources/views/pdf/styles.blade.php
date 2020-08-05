@@ -108,7 +108,7 @@
     .risk-chart {
         display: inline-block;
         width: 100px;
-        margin-left: 160px;
+        margin-left: 140px;
         font-size: 10px;
         margin-top: -40px;
     }
