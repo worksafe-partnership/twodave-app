@@ -388,7 +388,7 @@
                             ]) }}
                         </div>
                         <div class="field">
-                            <a download="Noise Vibration Assessment.xls" href="/Noise_Vibration_Assessment.xls" class="button">Download HAVS/Noise Assessment Template</a>
+                            <a download="Vibration and Noise Assessment Tool.xlsx" href="/Vibration and Noise Assessment Tool.xlsx" class="button">Download Vibration and Noise Assessment Tool</a>
                         </div>
                     </div>
                 </div>

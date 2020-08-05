@@ -56,8 +56,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'vtrams@worksafe-partnership.co.uk'),
-        'name' => env('MAIL_FROM_NAME', 'Worksafe VTRAMS System'),
+        'address' => env('MAIL_FROM_ADDRESS', 'review@2dave.site'),
+        'name' => env('MAIL_FROM_NAME', 'VTRAMS.2DAVE System'),
     ],
 
     /*

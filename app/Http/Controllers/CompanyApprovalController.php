@@ -71,7 +71,6 @@ class CompanyApprovalController extends Controller
                     'approved_by' => $this->user->id,
                     'resubmit_by' => null,
                 ]);
-                VTLogic::sendPcApprovalEmail($this->vtconfig);
                 $approval->update([
                     'type' => 'AC',
                 ]);
