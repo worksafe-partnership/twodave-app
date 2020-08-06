@@ -11,15 +11,17 @@
                     @endphp
                     <th>Company</th>
                     <th>Project</th>
-                    <th>{{ $vtrams->company->vtrams_name ?? 'VTRAMS' }} Name</th>
                     <th>{{ $vtrams->company->vtrams_name ?? 'VTRAMS' }} Number</th>
+                    <th>{{ $vtrams->company->vtrams_name ?? 'VTRAMS' }} Name</th>
+                    <th>Reference</th>
                     <th>Status</th>
-                    <th>Created By</th>
+                    <th>Approved Date</th>
+                    <th>External Approved Date</th>
+                    <th>Review Due</th>
+                    <th>Revision Number</th>
                     <th>Submitted By</th>
-                    <th>Submitted On</th>
-                    <th>Approval Date</th>
                     <th>Approved By</th>
-                    <th>Next Review Date</th>
+                    <th>Resubmit By</th>
                     <th>URL</th>
                 </thead>
                 <tbody>
@@ -27,15 +29,17 @@
                         <tr>
                             <td>{{ $vtram->companyName() }}</td>
                             <td>{{ $vtram->project->name }}</td>
-                            <td>{{ $vtram->name }}</td>
                             <td>{{ $vtram->number }}</td>
+                            <td>{{ $vtram->name }}</td>
+                            <td>{{ $vtram->reference }}</td>
                             <td>{{ $vtram->niceStatus() }}</td>
-                            <td>{{ $vtram->createdName() }}</td>
-                            <td>{{ $vtram->submittedName() }}</td>
-                            <td>{{ $vtram->submittedDateTimestamp() }}</td>
                             <td>{{ $vtram->approvedDateTimestamp() }}</td>
-                            <td>{{ $vtram->approvedName() }}</td>
+                            <td>{{ $vtram->externalDateTimestamp() }}</td>
                             <td class="{{$vtram->dTClass($nowCarbon, $twoWeeksCarbon)}}">{{ $vtram->nextReviewDateTimestamp() }}</td>
+                            <td>{{ $vtram->revision_number }}</td>
+                            <td>{{ $vtram->submittedName() }}</td>
+                            <td>{{ $vtram->approvedName() }}</td>
+                            <td>{{ $vtrams->resubmitByDateTimestamp() }}</td>
                             @if(is_null($companyId))
                                 <td>{{ $vtram->adminUrl() }}</td>
                             @else

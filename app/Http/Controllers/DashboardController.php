@@ -13,17 +13,20 @@ class DashboardController extends Controller
 {
     protected $identifierPath = 'dashboard';
     protected $datatableFields = [
-        'company_id',
-        'number',
-        'id',
-        'project_id',
-        'name',
-        'status',
-        'created_by',
-        'submitted_by',
+            'id',
+            'company_id',
+            'project_id',
+            'number',
+            'name',
+            'reference',
+            'status',
+            'approved_date',
+            'review_due',
+            'revision_number',
+            'submitted_by',
+            'approved_by',
+            'resubmit_by',
         'submitted_date',
-        'approved_date',
-        'approved_by',
         'review_due'
     ];
 

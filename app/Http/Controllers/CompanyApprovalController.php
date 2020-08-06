@@ -196,7 +196,7 @@ class CompanyApprovalController extends Controller
         $company = Company::findOrFail($this->user->company_id ?? $this->customValues['entity']->company_id);
         $this->customValues['company'] = $company;
 
-        if (($this->user->company_id == $company->id || is_null($user->company)) && $company->is_principal_contractor && $this->customValues['entity']->status == 'AWAITING_EXTERNAL') {
+        if (($this->user->company_id == $company->id || is_null($this->user->company)) && $company->is_principal_contractor && $this->customValues['entity']->status == 'AWAITING_EXTERNAL') {
             $types = config('egc.pc_approval_type');
             $types['PC_A'] = $company->accept_label;
             $types['PC_AC'] = $company->amend_label;
@@ -222,14 +222,14 @@ class CompanyApprovalController extends Controller
             'label' => 'Back to '.$type,
             'icon' => 'arrow-left',
         ];
-        $this->heading = "Viewing Approval Feedback";
+        $this->heading = "Viewing Review Feedback";
         $this->customValues['cancelPath'] = $this->backButton['path'];
         return parent::_renderView("layouts.custom");
     }
 
     public function viewEditHook()
     {
-        $this->heading = "Viewing Approval Feedback";
+        $this->heading = "Viewing Review Feedback";
         if ($this->record->entity_id != $this->parentId) {
             abort(404);
         }

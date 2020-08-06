@@ -62,7 +62,8 @@ class Vtram extends Model
         'general_rams',
         'company_logo_id',
         'vtram_is_file',
-        'vtram_file'
+        'vtram_file',
+        'pc_submitted',
     ];
 
 
@@ -98,6 +99,7 @@ class Vtram extends Model
                 'responsible_person',
                 'deleted_at',
                 'number',
+                DB::raw('0 as external_approval_date')
             ]);
 
         $query->whereHas('project', function ($q) use ($email) {
@@ -145,6 +147,9 @@ class Vtram extends Model
             })
             ->editColumn('resubmit_by', function ($item) {
                 return $item->resubmitByDateTimestamp();
+            })
+            ->editColumn('external_approval_date', function ($item) {
+                return $item->externalDateTimestamp();
             })
             ->make('query');
     }
@@ -211,15 +216,7 @@ class Vtram extends Model
 
         return app('datatables')->of($query)
             ->editColumn('external_approval_date', function ($item) {
-                $approval = $item->approvals->first();
-                if ($approval != null) {
-                    $date = Carbon::createFromFormat('Y-m-d', $approval->approved_date);
-                    if ($date != null) {
-                        return $date->timestamp;
-                    }
-                }
-
-                return '';
+                return $item->externalDateTimestamp();
             })
             ->editColumn('project_id', function ($item) {
                 $project = $item->project;
@@ -255,6 +252,19 @@ class Vtram extends Model
                 return $item->resubmitByDateTimestamp();
             })
             ->make('query');
+    }
+
+    public function externalDateTimestamp()
+    {
+        $approval = $this->approvals->first();
+        if ($approval != null) {
+            $date = Carbon::createFromFormat('Y-m-d', $approval->approved_date);
+            if ($date != null) {
+                return $date->timestamp;
+            }
+        }
+
+        return '';
     }
 
     public function niceStatus()

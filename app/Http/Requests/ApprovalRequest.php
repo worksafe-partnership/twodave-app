@@ -43,7 +43,7 @@ class ApprovalRequest extends FormRequest
             'review_document.mimes' => 'Only images and PDFs are allowed to be uploaded for the Review Document',
             'resubmit_date.after' => 'Please enter a Resubmit Date of today or a date in the future',
             'comment.required' => 'Please enter a Comment',
-            'type.required' => 'Please select an Approval Type',
+            'type.required' => 'Please select an Review Type',
         ];
     }
 }

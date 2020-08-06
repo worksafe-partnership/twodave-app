@@ -10,17 +10,18 @@ return [
     'datatable' => [
         "columns" => [
             'id' => ['visible' => false, 'searchable' => false, 'label' => 'Id'],
-            'number' => ['label' => 'VTRAMS Number'],
             'company_id' => ['label' => 'Company'],
+            'number' => ['label' => 'VTRAMS Number'],
             'name' => ['label' => 'VTRAMS Name'],
+            'reference' => ['label' => 'Reference'],
             'status' => ['label' => 'Status'],
-            'created_by' => ['label' => 'Created By'],
-            'submitted_by' => ['label' => 'Submitted By'],
-            'submitted_date' => ['label' => 'Submitted On', 'col_type' => 'date'],
             'approved_date' => ['label' => 'Approval Date', 'col_type' => 'date'],
             'external_approval_date' => ['label' => 'External Approval Date', 'col_type' => 'date'],
+            'review_due' => ['label' => 'Next Review Date', 'col_type' => 'coloured_date'],
+            'revision_number' => ['label' => 'Revision Number'],
+            'submitted_by' => ['label' => 'Submitted By'],
             'approved_by' => ['label' => 'Approved By'],
-            'review_due' => ['label' => 'Next Review Date', 'col_type' => 'coloured_date']
+            'resubmit_by' => [ 'label' => 'Resubmit By', 'col_type' => 'date', ],
         ],
         "href" => "vtram/%ID%"
     ],

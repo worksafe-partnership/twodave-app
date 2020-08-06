@@ -186,12 +186,20 @@ class VtramController extends CompanyVtramController
 
         if ($this->record->status == 'AWAITING_EXTERNAL') {
             $this->pillButtons['sent_to_pc'] = [
-                'label' => 'Submit to Principal Contractor for Review',
+                'label' => $this->record->pc_submitted ? 'VTRAMS submitted to PC' : 'Submit to PC for Review',
                 'path' => $this->record->id.'/send_to_pc',
                 'icon' => 'send',
                 'order' => 100,
                 'onclick' => 'return confirm("Are you sure you want to submit this VTRAMS for Review?")',
             ];
+
+            if ($this->record->pc_submitted) {
+                $this->pillButtons['sent_to_pc']['attributes'] = [
+                    'disabled' => 'disabled',
+                    'readonly' => 'readonly',
+                ];
+                $this->pillButtons['sent_to_pc']['class'] = 'disabled-button';
+            }
         }
     }
 
@@ -199,6 +207,10 @@ class VtramController extends CompanyVtramController
     {
         $this->vtconfig = new VTConfig($vtramsId, 'VTRAM');
         VTLogic::sendPcApprovalEmail($this->vtconfig);
+
+        $this->vtconfig->entity->update([
+            'pc_submitted' => 1,
+        ]);
 
         toast()->success('Successfully Submitted to Principal Contractor for Review');
         return redirect('/project/'.$projectId.'/vtram/'.$vtramsId);
