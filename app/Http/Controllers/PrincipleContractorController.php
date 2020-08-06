@@ -29,27 +29,18 @@ class PrincipleContractorController extends Controller
         $this->datatable['name'] = 'vtrams-approval';
         $this->datatable['columns'] = [
             'id' => ['visible' => false, 'searchable' => false, 'label' => 'Id'],
-            'number' => ['label' => 'VTRAMS Number'],
             'company_id' => ['label' => 'Company'],
-            'project_id' => ['label' => 'Project'],
+            'number' => ['label' => 'VTRAMS Number'],
             'name' => ['label' => 'Name'],
             'reference' => ['label' => 'Reference'],
-            'approved_date' => [
-                'label' => 'Approved Date',
-                'col_type' => 'date',
-            ],
-            'review_due' => [
-                'label' => 'Review Due',
-                'col_type' => 'date',
-            ],
-            'revision_number' => ['label' => 'Revision Number'],
             'status' => ['label' => 'Status'],
+            'approved_date' => [ 'label' => 'Approved Date', 'col_type' => 'date', ],
+            'external_approval_date' => [ 'label' => 'External Approved Date', 'col_type' => 'date', ],
+            'review_due' => [ 'label' => 'Review Due', 'col_type' => 'date', ],
+            'revision_number' => ['label' => 'Revision Number'],
             'submitted_by' => ['label' => 'Submitted By'],
             'approved_by' => ['label' => 'Approved By'],
-            'resubmit_by' => [
-                'label' => 'Resubmit By',
-                'col_type' => 'date',
-            ],
+            'resubmit_by' => [ 'label' => 'Resubmit By', 'col_type' => 'date', ],
         ];
         $this->datatable['serverSide'] = "false";
         return parent::_index();
@@ -262,11 +253,13 @@ class PrincipleContractorController extends Controller
             $this->vtconfig->entity->update([
                 'status' => 'EXTERNAL_REJECT',
                 'resubmit_by' => $request['resubmit_date'],
+                'pc_submitted' => null,
             ]);
         } else if ($approval->type == 'PC_AC') {
             $this->vtconfig->entity->update([
                 'status' => 'EXTERNAL_AMEND',
                 'resubmit_by' => $request['resubmit_date'],
+                'pc_submitted' => null,
             ]);
         }
         if ($this->totalVtrams == 0) {

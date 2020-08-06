@@ -109,6 +109,9 @@ class ProjectTrackerController extends Controller
                             'submitted_date',
                             'approved_date',
                             'approved_by',
+                            'reference',
+                            'revision_number',
+                            'resubmit_by',
                             'review_due',
                             DB::raw('0 as external_approval_date')
                         ]);

@@ -58,7 +58,7 @@
                 <div class="column is-12">
                     <div class="field type-check">
                         {{ EGForm::radio('type', [
-                            'label' => 'Approval Type',
+                            'label' => 'Review Type',
                             'value' => $record['type'],
                             'list' => $approvalTypes,
                             'type' => 'create',

@@ -32,7 +32,7 @@ class PreviousCompanyApprovalController extends Controller
 
     public function viewEditHook()
     {
-        $this->heading = "Viewing Approval Feedback";
+        $this->heading = "Viewing Review Feedback";
         if ($this->record->entity_id != $this->parentId) {
             abort(404);
         }

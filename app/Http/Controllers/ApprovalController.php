@@ -39,7 +39,7 @@ class ApprovalController extends CompanyApprovalController
 
     public function bladeHook()
     {
-        $this->heading = "Viewing Approval Feedback";
+        $this->heading = "Viewing Review Feedback";
 
         if ($this->user->company_id !== null && $this->record !== null) {
             $permittedVTrams = Auth::User()->vtramsCompanyIds();
