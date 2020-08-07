@@ -69,22 +69,8 @@
                     { data: 'project_name', name: 'project_name' },
                     { data: 'number', name: 'number' },
                     { data: 'name', name: 'name' },
+                    { data: 'reference', name: 'reference' },
                     { data: 'status', name: 'status' },
-                    { data: 'created_name', name: 'created_name' },
-                    { data: 'submitted_name', name: 'submitted_name' },
-                    { data: 'submitted_date', name: 'submitted_date',
-                        render: function ( data, type, row ) {
-                            if ( (type === 'display' || type === 'filter') && typeof(data) != "undefined") {
-                                if (data != '' && data != null) {
-                                    var dateFormat = "DD/MM/YYYY";
-                                    return (moment(data * 1000).format(dateFormat));
-                                } else {
-                                    return data;
-                                }
-                            }
-                            return data;
-                        },
-                    },
                     { data: 'approved_date', name: 'approved_date',
                         render: function ( data, type, row ) {
                             if ( (type === 'display' || type === 'filter') && typeof(data) != "undefined") {
@@ -98,7 +84,19 @@
                             return data;
                         },
                     },
-                    { data: 'approved_name', name: 'approved_name' },
+                    { data: 'external_approved_date', name: 'external_approved_date',
+                        render: function ( data, type, row ) {
+                            if ( (type === 'display' || type === 'filter') && typeof(data) != "undefined") {
+                                if (data != '' && data != null) {
+                                    var dateFormat = "DD/MM/YYYY";
+                                    return (moment(data * 1000).format(dateFormat));
+                                } else {
+                                    return '';
+                                }
+                            }
+                            return data;
+                        },
+                    },
                     { data: 'next_review_date', name: 'next_review_date',
                         render: function ( data, type, row ) {
                             if ( (type === 'display' || type === 'filter') && typeof(data) != "undefined") {
@@ -107,6 +105,22 @@
                                     return (moment(data * 1000).format(dateFormat));
                                 } else {
                                     return '';
+                                }
+                            }
+                            return data;
+                        },
+                    },
+                    { data: 'revision_number', name: 'revision_number' },
+                    { data: 'submitted_name', name: 'submitted_name' },
+                    { data: 'approved_name', name: 'approved_name' },
+                    { data: 'resubmit_by', name: 'resubmit_by',
+                        render: function ( data, type, row ) {
+                            if ( (type === 'display' || type === 'filter') && typeof(data) != "undefined") {
+                                if (data != '' && data != null) {
+                                    var dateFormat = "DD/MM/YYYY";
+                                    return (moment(data * 1000).format(dateFormat));
+                                } else {
+                                    return data;
                                 }
                             }
                             return data;
