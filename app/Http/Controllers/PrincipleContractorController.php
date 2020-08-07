@@ -247,6 +247,13 @@ class PrincipleContractorController extends Controller
             if ($approval->type == 'PC_A') {
                 $update['resubmit_by'] = null;
             }
+
+            if ($this->vtconfig->entity->project != null && $this->vtconfig->entity->project->review_timescale != 0) {
+                $update['review_due'] = date('Y-m-d', strtotime('+'.$this->vtconfig->entity->project->review_timescale.' month'));
+            } else if ($this->vtconfig->entity->company->review_timescale != 0) {
+                $update['review_due'] = date('Y-m-d', strtotime('+'.$this->vtconfig->entity->company->review_timescale.' month'));
+            }
+
             $this->vtconfig->entity->update($update);
 
         } else if ($approval->type == 'PC_R') {

@@ -99,13 +99,21 @@ class CompanyApprovalController extends Controller
                         ]);
                     }
                 }
-                $this->vtconfig->entity->update([
+
+                $update = [
                     'status' => 'CURRENT',
                     'approved_date' => date('Y-m-d'),
                     'approved_by' => $this->user->id,
                     'revision_number' => $revisionNumber,
                     'resubmit_by' => null,
-                ]);
+                ];
+
+                if ($this->vtconfig->entity->project != null && $this->vtconfig->entity->project->review_timescale != 0) {
+                    $update['review_due'] = date('Y-m-d', strtotime('+'.$this->vtconfig->entity->project->review_timescale.' month'));
+                } else if ($this->vtconfig->entity->company->review_timescale != 0) {
+                    $update['review_due'] = date('Y-m-d', strtotime('+'.$this->vtconfig->entity->company->review_timescale.' month'));
+                }
+                $this->vtconfig->entity->update($update);
             }
         } else if ($approval->type == 'R') {
             $this->vtconfig->entity->update([
