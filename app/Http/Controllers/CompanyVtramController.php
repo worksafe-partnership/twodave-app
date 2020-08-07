@@ -129,7 +129,7 @@ class CompanyVtramController extends Controller
             $this->customValues['is_file_vtram'] = 1;
         }
 
-        if ($this->record->status == 'AWAITING_EXTERNAL') {
+        if ($this->record != null && $this->record->status == 'AWAITING_EXTERNAL') {
             $this->pillButtons['sent_to_pc'] = [
                 'label' => $this->record->pc_submitted ? 'VTRAMS submitted to PC' : 'Submit to PC for Review',
                 'path' => $this->record->id.'/send_to_pc',
@@ -478,7 +478,7 @@ class CompanyVtramController extends Controller
         $user = Auth::user();
         $vtram = Vtram::findOrFail($vtramId);
         if ($user->company_id !== null) {
-            if ($user->company_id !== $vtram->company_id) {
+            if (!in_array($vtram->id, $user->vtramsCompanyIds())) {
                 abort(404);
             }
         }

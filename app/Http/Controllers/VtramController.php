@@ -184,7 +184,7 @@ class VtramController extends CompanyVtramController
             $this->customValues['is_file_vtram'] = 1;
         }
 
-        if ($this->record->status == 'AWAITING_EXTERNAL') {
+        if ($this->record != null && $this->record->status == 'AWAITING_EXTERNAL') {
             $this->pillButtons['sent_to_pc'] = [
                 'label' => $this->record->pc_submitted ? 'VTRAMS submitted to PC' : 'Submit to PC for Review',
                 'path' => $this->record->id.'/send_to_pc',
