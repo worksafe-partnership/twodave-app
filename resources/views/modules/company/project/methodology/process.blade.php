@@ -303,6 +303,7 @@
     }
 
     function editProcessImage(row) {
+        event.preventDefault();
         var form_data = new FormData();
         form_data.append('_token', '{{ csrf_token() }}');
         form_data.append('image', $('#methodology-process-form-container #edit_image_'+row).prop('files')[0]);
@@ -354,6 +355,7 @@
     }
 
     function deleteProcessImage(row) {
+        event.preventDefault();
         let image = $('img[data-process_row="row_'+row+'__image"]');
 
         if (image) {
