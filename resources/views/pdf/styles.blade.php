@@ -110,7 +110,7 @@
         width: 100px;
         margin-left: 140px;
         font-size: 10px;
-        margin-top: -40px;
+        margin-top: -11px;
     }
     .risk-chart-key {
         display: inline-block;
