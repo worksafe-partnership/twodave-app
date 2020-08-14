@@ -8,8 +8,14 @@ body > aside,
 }
 .pagination-link.is-current,
 .button.is-primary {
-    background-color: %COLOUR% !important;
+    background-color: %COLOUR%;
     border-color: %COLOUR%; 
+}
+.logout-button {
+    background-color: #FFF !important;
+}
+.logout-button:hover {
+    background-color: %COLOUR% !important;
 }
 .button.is-primary.is-inverted {
     border-color: #FFF !important;
