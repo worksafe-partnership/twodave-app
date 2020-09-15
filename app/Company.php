@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon;
 use EGFiles;
 use Storage;
 use Yajra\DataTables\Datatables;
@@ -47,7 +48,10 @@ class Company extends Model
         'show_revision_no_on_pdf',
         'billable',
         'allow_file_uploads',
-        'is_principal_contractor'
+        'is_principal_contractor',
+        'num_vtrams',
+        'sub_frequency',
+        'start_date',
     ];
 
     public static function scopeDatatableAll($query, $parent, $identifier)
@@ -129,6 +133,14 @@ class Company extends Model
         return $this->hasMany(Template::class, 'company_id', 'id')->withTrashed();
     }
 
+    public function vtrams()
+    {
+        if (is_null($this->deleted_at)) {
+            return $this->hasMany(Vtram::class, 'company_id', 'id');
+        }
+        return $this->hasMany(Vtram::class, 'company_id', 'id')->withTrashed();
+    }
+
     public function delete()
     {
         if (!is_null($this->deleted_at)) {
@@ -147,5 +159,84 @@ class Company extends Model
             }
         }
         parent::delete();
+    }
+
+    public function canCreateType($type = 'VTRAMS')
+    {
+        // No limit set so allow unlimited
+        if ($this->num_vtrams == null) {
+            return true;
+        }
+
+        // start date 15/06/2020 - monthly, get todays date
+        // get previous start date, so we're on 16/09, need to get 15/09 for monthly
+        $originalStart = Carbon::createFromFormat('Y-m-d', $this->start_date);
+        $now = Carbon::now();
+        $startingDate = Carbon::now();
+        if ($this->sub_frequency == 'MONTH') {
+            $year = $now->year;
+            $month = $now->month;
+            if ($now->month < $originalStart->month) {
+                $month = $now->month - 1;
+            } else if ($now->month == $originalStart->month && $now->day < $originalStart->day) {
+                $month = $now->month - 1;
+            }
+
+            if ($month < 1) {
+                $month = 12;
+                $year--;
+            }
+        } else {
+            if ($now->year > $originalStart->year && $now->month < $originalStart->month) {
+                $year = $now->year - 1;
+            } else if ($now->year > $originalStart->year && $now->month == $originalStart->month && $now->day < $originalStart->day) {
+                $year = $now->year - 1;
+            } else {
+                $year = $now->year;
+            }
+
+            $month = $originalStart->month;
+        }
+
+        $daysThisMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+        if ($originalStart->day > $daysThisMonth) {
+            if ($month == 2) { // February stuff
+                $day = $originalStart->day - 1;
+                while ($day >= 28) {
+                    if ($day <= $daysThisMonth) {
+                        $startingDate = Carbon::create($year, $month, $day, 0, 0, 0);
+                        break;
+                    }
+                    $day--;
+                }
+            } else {
+                // If not Feb, then we the subscription started on the 31st, so take it to the 30th
+                $startingDate = Carbon::create($year, $month, $originalStart->day - 1, 0, 0, 0);
+            }
+        } else {
+            $startingDate = Carbon::create($year, $month, $originalStart->day, 0, 0, 0);
+        }
+
+        if ($startingDate == null) {
+            return false;
+        }
+
+        // Calc end date
+        if ($this->sub_frequency == 'MONTH') {
+            $month++;
+        } else {
+            $year++;
+        }
+
+        $daysInEndMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+        $endingDate = Carbon::create($year, $month, $originalStart->day > $daysInEndMonth ? $daysInEndMonth : $originalStart->day, 0, 0, 0);//clone $startingDate;
+        $count = $this->{strtolower($type)}()
+            ->withTrashed()
+            ->whereDate('created_at', '>=', $startingDate)
+            ->whereDate('created_at', '<', $endingDate)
+            ->count();  
+
+        return $count < $this->num_vtrams;
     }
 }

@@ -24,7 +24,7 @@ class CompanyRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             'name' => 'required|max:100',
             'short_name' => 'required|max:100',
             'review_timescale' => 'required',
@@ -38,8 +38,17 @@ class CompanyRequest extends FormRequest
             'amend_label' => 'required|max:20',
             'reject_label' => 'required|max:20',
             'logo' => 'mimes:jpg,jpeg,png,bmp,tiff',
-            'message' => 'max:255'
+            'message' => 'max:255',
+            'num_vtrams' => 'required_with:sub_frequency,start_date',
+            'sub_frequency' => 'required_with:num_vtrams,start_date',
+            'start_date' => 'required_with:sub_frequency,num_vtrams',
         ];
+
+        if (strlen($this->start_date) > 0) {
+            $rules['start_date'] .= '|before:tomorrow';
+        }
+
+        return $rules;
     }
 
     public function messages()
@@ -69,7 +78,11 @@ class CompanyRequest extends FormRequest
             'amend_label.max' => 'The Amend Label cannot be more than 20 characters',
             'reject_label.required' => 'Please enter a Reject Label',
             'reject_label.max' => 'The Reject Label cannot be more than 20 characters',
-            'logo.mimes' => 'Only images are allowed to be uploaded for the Logo'
+            'logo.mimes' => 'Only images are allowed to be uploaded for the Logo',
+            'num_vtrams.required_with' => 'Please fill in all Subscription Information',
+            'sub_frequency.required_with' => 'Please fill in all Subscription Information',
+            'start_date.required_with' => 'Please fill in all Subscription Information',
+            'start_date.before' => 'The subscription must start today or in the past',
         ];
     }
 }

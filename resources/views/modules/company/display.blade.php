@@ -113,6 +113,47 @@
 <hr>
 <div class="columns">
     <div class="column is-10 is-offset-1">
+        <h2 class="sub-heading">Subscription Information</h2>
+        <div class="columns">
+            <div class="column is-4">
+                <div class="field">
+                    {{ EGForm::number('num_vtrams', [
+                        'label' => 'Number of VTRAMS and Templates (counted separately)',
+                        'value' => $record->num_vtrams ?? '',
+                        'type' => $pageType,
+                        'attributes' => [
+                            'step' => 1,
+                            'min' => 1,
+                        ]
+                    ]) }}
+                </div>
+            </div>
+            <div class="column is-4">
+                <div class="field">
+                    {{ EGForm::select('sub_frequency', [
+                        'label' => 'Subscription Frequency',
+                        'value' => $record->sub_frequency ?? '',
+                        'type' => $pageType,
+                        'list' => config('egc.sub_frequency'),
+                        'selector' => true
+                    ]) }}
+                </div>
+            </div>
+            <div class="column is-4">
+                <div class="field">
+                    {{ EGForm::date('start_date', [
+                        'label' => 'Start Date',
+                        'value' => $record->start_date ?? '',
+                        'type' => $pageType
+                    ]) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="columns">
+    <div class="column is-10 is-offset-1">
         <h2 class="sub-heading">Colours, Labels and Logo</h2>
         <div class="columns">
             <div class="column is-4">

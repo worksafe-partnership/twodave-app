@@ -25,6 +25,20 @@ class TemplateController extends Controller
 {
     protected $identifierPath = 'template';
 
+    public function create($companyId = null)
+    {
+        if ($this->user == null) {
+            $this->user = Auth::user();
+        }
+        $company = Company::find($companyId ?? $this->user->company_id);
+        if ($company != null && !$company->canCreateType('templates')) {
+            toast()->error("You've reached your subscription limit for Templates please contact The Worksafe Partnership to purchase more.");
+            return redirect(str_replace('create', '', url()->previous()));
+        }
+
+        return parent::_create(func_get_args());
+    }
+
     public function createHook()
     {
         if (strpos($this->identifierPath, 'company') === false) {
@@ -238,6 +252,11 @@ class TemplateController extends Controller
     public function store(TemplateRequest $request)
     {
         $company = Company::findOrFail($request->company_id);
+        if (!$company->canCreateType('templates')) {
+            toast()->error("You've reached your subscription limit for Templates please contact The Worksafe Partnership to purchase more.");
+            return redirect(str_replace('create', '', url()->previous()));
+        }
+
         $request->merge([
             'main_description' => $company->main_description,
             'post_risk_assessment_text' => $company->post_risk_assessment_text,

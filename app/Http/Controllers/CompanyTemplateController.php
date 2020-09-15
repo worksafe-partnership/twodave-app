@@ -42,6 +42,10 @@ class CompanyTemplateController extends TemplateController
     public function store(TemplateRequest $request, $companyId = null)
     {
         $company = Company::findOrFail($companyId ?? $request->company_id);
+        if (!$company->canCreateType('templates')) {
+            toast()->error("You've reached your subscription limit for Templates please contact The Worksafe Partnership to purchase more.");
+            return redirect('/company/'.$companyId.'/template');
+        }
         $request->merge([
             'company_id' => $companyId,
             'main_description' => $company->main_description,
