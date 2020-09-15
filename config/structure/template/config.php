@@ -44,5 +44,6 @@ return [
     'permissions' => true,
     'override_route_actions' => [
         '_edit' => 'edit',
+        '_create' => 'create',
     ]
 ];

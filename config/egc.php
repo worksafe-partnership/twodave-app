@@ -30,6 +30,10 @@ return [
         'on' => true,
         'url' => '/'
     ],
+    'sub_frequency' => [
+        'ANNUAL' => 'Annually',
+        'MONTH' => 'Monthly',
+    ],
     'review_timescales' => [
         0 => 'No Review Schedule',
         1 => '1 Month',

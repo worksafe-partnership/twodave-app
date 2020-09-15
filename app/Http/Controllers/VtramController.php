@@ -428,6 +428,10 @@ class VtramController extends CompanyVtramController
     {
         $user = Auth::user();
         $company = Company::findOrFail($user->company_id);
+        if (!$company->canCreateType()) {
+            toast()->error("You've reached your subscription limit for ".$company->vtrams_name." please contact The Worksafe Partnership to purchase more.");
+            return redirect('/project/'.$projectId);
+        }
         if (isset($request->template)) {
             $request->merge([
                 'created_from_id' => $request->template,

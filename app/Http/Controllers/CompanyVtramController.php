@@ -161,6 +161,24 @@ class CompanyVtramController extends Controller
         return redirect('/company/'.$companyId.'/project/'.$projectId.'/vtram/'.$vtramsId);
     }
 
+    public function create($companyId = null, $projectId = null)
+    {
+        if ($projectId == null) {
+            $projectId = $companyId;
+            $companyId = null;
+        }
+        if ($this->user == null) {
+            $this->user = Auth::user();
+        }
+        $company = Company::findOrFail($this->user->company_id ?? $companyId);
+        if (!$company->canCreateType()) {
+            toast()->error("You've reached your subscription limit for ".$company->vtrams_name." please contact The Worksafe Partnership to purchase more.");
+            return redirect(str_replace('create', '', url()->previous()));
+        }
+
+        return parent::_create(func_get_args());
+    }
+
     public function createHook()
     {
         $company = Company::findOrFail($this->args[0]);
@@ -531,6 +549,10 @@ class CompanyVtramController extends Controller
     public function store(VtramRequest $request, $companyId, $projectId)
     {
         $company = Company::findOrFail($companyId);
+        if (!$company->canCreateType()) {
+            toast()->error("You've reached your subscription limit for ".$company->vtrams_name." please contact The Worksafe Partnership to purchase more.");
+            return redirect('/company/'.$companyId.'/project/'.$projectId);
+        }
         $request->merge([
             'project_id' => $projectId,
             'company_id' => $companyId,
