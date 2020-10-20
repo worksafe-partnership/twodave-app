@@ -75,7 +75,7 @@ class CompanyApprovalController extends Controller
                     'type' => 'AC',
                 ]);
             } else {
-                $revisionNumber = 1;
+                $revisionNumber = 0;
                 if ($this->vtconfig->entityType == 'VTRAM') {
                     if ($this->vtconfig->entity->created_from_entity == 'VTRAM') {
                         $vtram = Vtram::find($this->vtconfig->entity->created_from_id);
@@ -126,7 +126,7 @@ class CompanyApprovalController extends Controller
                 'resubmit_by' => $request['resubmit_date'],
             ]);
         } else if (in_array($approval->type, ['PC_A'])) {
-            $revisionNumber = 1;
+            $revisionNumber = 0;
             if ($this->vtconfig->entityType == 'VTRAM') {
                 if ($this->vtconfig->entity->created_from_entity == 'VTRAM') {
                     $vtram = Vtram::find($this->vtconfig->entity->created_from_id);
