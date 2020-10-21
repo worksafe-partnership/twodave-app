@@ -96,3 +96,6 @@ body > aside,
 .pill-buttons {
     background-color: %COLOUR%;
 }
+.button.is-primary.is-hovered, .button.is-primary:hover {
+    background-color: %SEC_COLOUR%;
+}

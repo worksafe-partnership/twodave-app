@@ -145,12 +145,12 @@ class CompanyController extends Controller
 
     public function created($company, $request)
     {
-        $this->setupColour($company->primary_colour, $company->light_text, $company->id);
+        $this->setupColour($company->primary_colour, $company->light_text, $company->id, $company->secondary_colour);
     }
 
     public function updated($company, $orig, $request)
     {
-        $this->setupColour($company->primary_colour, $company->light_text, $company->id);
+        $this->setupColour($company->primary_colour, $company->light_text, $company->id, $company->secondary_colour);
         if (isset($request['timescale_update']) && $request['timescale_update'] != "forward") {
             $this->overrideTimescales($company->id, $request);
         }
@@ -165,14 +165,14 @@ class CompanyController extends Controller
         }
     }
 
-    protected function setupColour($primary, $light, $id)
+    protected function setupColour($primary, $light, $id, $secondary = null)
     {
         if (!is_null($primary)) {
             $template = base_path('/resources/assets/css/override_template.css');
             $lightTemplate = base_path('/resources/assets/css/override_light.css');
             if (file_exists($template)) {
                 $colours = file_get_contents($template);
-                $newColours = str_replace(['%COLOUR%'], [$primary], $colours);
+                $newColours = str_replace(['%COLOUR%', '%SEC_COLOUR%'], [$primary, $secondary], $colours);
                 if ($light && file_exists($lightTemplate)) {
                     $newColours .= file_get_contents($lightTemplate);
                 }
