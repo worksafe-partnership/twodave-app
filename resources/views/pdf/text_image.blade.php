@@ -14,9 +14,7 @@
                 $file = EGFiles::find($methodology->image);
                 if (!is_null($file) && Storage::exists($file->location)) {
                     $imageSrc = storage_path('/app/'.$file->location);
-//                    return Response::download(storage_path()."/app/".$file->location, $file->title);
                 }
-  //              $imageSrc = EGFiles::download($methodology->image)->getFile()->getPathName() ?? null;
             }
         @endphp
         <div class="image_text_block">
