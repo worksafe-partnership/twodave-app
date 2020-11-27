@@ -89,4 +89,47 @@ class YourCompanyController extends Controller
     {
         $this->formButtons['cancel']['onclick'] = 'return confirm("Are you sure you want to cancel? Any unsaved changes will be lost")';
     }
+
+    public function updated($company, $orig, $request)
+    {
+        $this->setupColour($company->primary_colour, $company->light_text, $company->id, $company->secondary_colour);
+        if (isset($request['timescale_update']) && $request['timescale_update'] != "forward") {
+            $this->overrideTimescales($company->id, $request);
+        }
+    }
+
+    protected function setupColour($primary, $light, $id, $secondary = null)
+    {
+        if (!is_null($primary)) {
+            $template = base_path('/resources/assets/css/override_template.css');
+            $lightTemplate = base_path('/resources/assets/css/override_light.css');
+            if (file_exists($template)) {
+                $colours = file_get_contents($template);
+                $newColours = str_replace(['%COLOUR%', '%SEC_COLOUR%'], [$primary, $secondary], $colours);
+                if ($light && file_exists($lightTemplate)) {
+                    $newColours .= file_get_contents($lightTemplate);
+                }
+                return file_put_contents(public_path('/css/company/'.$id.'_colour.css'), $newColours);
+            }
+        }
+    }
+
+    public function overrideTimescales($companyId, $request)
+    {
+        if ($request['timescale_update'] == "all") {
+            Project::where('company_id', $companyId)
+                   ->update(['review_timescale' => $request['review_timescale']]);
+        } else if ($request['timescale_update'] == "select") {
+            $projectIds = [];
+            foreach ($request['projects_to_update'] as $key => $value) {
+                if ($value == "1") {
+                    $projectIds[] = $key;
+                }
+            }
+
+            Project::where('company_id', $companyId)
+                   ->whereIn('id', $projectIds)
+                   ->update(['review_timescale' => $request['review_timescale']]);
+        }
+    }
 }
