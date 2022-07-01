@@ -1,5 +1,8 @@
-/node_modules
-/vendor
-.env
-public/css/company/*
-/storage
+**/.docker
+**/.DS_Store
+**/node_modules
+**/vendor
+
+**/.env
+**/public/css/company/*
+**/*.log

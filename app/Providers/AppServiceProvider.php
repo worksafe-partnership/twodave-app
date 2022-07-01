@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -54,7 +55,7 @@ class AppServiceProvider extends ServiceProvider
             ];
             foreach ($emails as $email) {
                 $data = [
-                    'email' => trim($email)
+                    'email' => trim($email),
                 ];
                 $validator = Validator::make($data, $rules);
                 if ($validator->fails()) {
@@ -83,20 +84,24 @@ class AppServiceProvider extends ServiceProvider
             $r = $validator->getData();
             $emailsToCheck = [
                 $r['company_admin_email'],
-                $r['email']
+                $r['email'],
             ];
-            if($r['principle_contractor'] == '1') {
+            if ($r['principle_contractor'] == '1') {
                 $emailsToCheck[] = $r['principle_contractor_email'];
             }
-            if(isset($r['company_admin_email_con'])) {
+            if (isset($r['company_admin_email_con'])) {
                 $emailsToCheck[] = $r['company_admin_email_con'];
             }
             $check = array_unique($emailsToCheck);
-            if(count($check) == count($emailsToCheck)) {
+            if (count($check) == count($emailsToCheck)) {
                 return true;
             }
             return false;
         });
+
+        if (env('APP_ENV') !== 'local') {
+            URL::forceScheme('https');
+        }
     }
 
     /**

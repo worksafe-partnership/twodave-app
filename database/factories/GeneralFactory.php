@@ -11,18 +11,18 @@ use Faker\Generator as Faker;
 | your application. Factories provide a convenient way to generate new
 | model instances for testing / seeding your application's database.
 |
-*/
+ */
 
 $factory->define(App\Company::class, function (Faker $faker) {
     $config = Config('egc');
 
     return [
         'name' => $faker->company,
+        'contact_name' => $faker->name,
         'review_timescale' => $faker->randomElement(array_flip($config['review_timescales'])),
         'vtrams_name' => 'TBC',
         'email' => $faker->safeEmail,
         'phone' => 'TBC',
-        'fax' => 'TBC',
         'low_risk_character' => 'L',
         'med_risk_character' => 'M',
         'high_risk_character' => 'H',
@@ -33,16 +33,8 @@ $factory->define(App\Company::class, function (Faker $faker) {
         'accept_label' => 'Accept Label Test',
         'amend_label' => 'Amend Label Test',
         'reject_label' => 'Reject Label Test',
-        'main_description' => '<p>'.$faker->words(20, true).'</p>',
-        'post_risk_assessment_text' => '<p>'.$faker->words(20, true).'</p>',
-        'task_description' => '<p>task_description text content (company)</p>',
-        'plant_and_equipment' => '<p>plant_and_equipment text content (company)</p>',
-        'disposing_of_waste' => '<p>disposing_of_waste text content (company)</p>',
-        'first_aid' => '<p>first_aid text content (company)</p>',
-        'noise' => '<p>noise text content (company)</p>',
-        'working_at_height' => '<p>working_at_height text content (company)</p>',
-        'manual_handling' => '<p>manual_handling text content (company)</p>',
-        'accident_reporting' => '<p>accident_reporting text content (company)</p>',
+        'main_description' => '<p>' . $faker->words(20, true) . '</p>',
+        'post_risk_assessment_text' => '<p>' . $faker->words(20, true) . '</p>',
     ];
 });
 
@@ -52,7 +44,7 @@ $factory->define(App\User::class, function (Faker $faker) {
         'name' => $faker->name,
         'company_id' => 1,
         'email' => $faker->safeEmail,
-        'password' => 'aaaaaaa'
+        'password' => 'aaaaaaa',
     ];
 });
 
@@ -93,7 +85,7 @@ $factory->define(App\Vtram::class, function (Faker $faker) {
         'name' => $faker->words(3, true),
         // 'logo',
         'reference' => $faker->words(2, true),
-        'key_points' => "<p>".$faker->words(50, true)."</p>",
+        'key_points' => "<p>" . $faker->words(50, true) . "</p>",
         // 'havs_noise_assessment',
         // 'coshh_assessment',
         'review_due' => $faker->dateTimeBetween('now', '+1 months', null),
@@ -115,7 +107,7 @@ $factory->define(App\Vtram::class, function (Faker $faker) {
         // 'created_from',
         // 'show_responsible_person',
         // 'responsible_person'
-        'number' => $number
+        'number' => $number,
     ];
 });
 
@@ -126,19 +118,18 @@ $factory->define(App\Briefing::class, function (Faker $faker) {
         'project_id' => 1,
         'vtram_id' => 1,
         'briefed_by' => 'seeded name',
-        'name' => 'Briefing '.$faker->numberBetween(0, 100),
-        'notes' => '<p>'.$faker->words(50, true).'</p>'
+        'name' => 'Briefing ' . $faker->numberBetween(0, 100),
+        'notes' => '<p>' . $faker->words(50, true) . '</p>',
     ];
 });
-
 
 $factory->define(App\Template::class, function (Faker $faker) {
     return [
         'company_id' => 1,
-        'name' => 'Seeded Template '.$faker->numberBetween(0, 100),
+        'name' => 'Seeded Template ' . $faker->numberBetween(0, 100),
         // 'logo',
         'reference' => 'Seeded Reference',
-        'key_points' => "<p>".$faker->words(50, true)."</p>",
+        'key_points' => "<p>" . $faker->words(50, true) . "</p>",
         // 'havs_noise_assessment',
         // 'coshh_assessment',
         // 'review_due',
@@ -160,8 +151,8 @@ $factory->define(App\Hazard::class, function (Faker $faker) {
     $args = func_get_args()[1];
 
     $listOrder = \App\Hazard::where('entity', $args['entity'])
-                          ->where('entity_id', $args['entity_id'])
-                          ->max('list_order');
+        ->where('entity_id', $args['entity_id'])
+        ->max('list_order');
 
     if (is_null($listOrder)) {
         $listOrder = 1;
@@ -194,8 +185,8 @@ $factory->define(App\Methodology::class, function (Faker $faker) {
     $numberOfWords = $faker->numberBetween(3, 20);
 
     $listOrder = \App\Methodology::where('entity', $args['entity'])
-                          ->where('entity_id', $args['entity_id'])
-                          ->max('list_order');
+        ->where('entity_id', $args['entity_id'])
+        ->max('list_order');
 
     if (is_null($listOrder)) {
         $listOrder = 1;
@@ -212,6 +203,6 @@ $factory->define(App\Methodology::class, function (Faker $faker) {
         'text_after' => $faker->words($numberOfWords, true),
         // 'image' => 1,
         // 'image_on' => 1,
-        'list_order' => $listOrder
+        'list_order' => $listOrder,
     ];
 });

@@ -124,7 +124,7 @@
                             @php
                                 $old = old('contractors');
 
-                                if (count($old) > 0) {
+                                if (is_array($old) && count($old) > 0) {
                                     foreach ($old as $val) {
                                         $selectedContractors[$val] = true;
                                     }
@@ -155,7 +155,7 @@
                             @php
                                 $old = old('subcontractors');
 
-                                if (count($old) > 0) {
+                                if (is_array($old) && count($old) > 0) {
                                     foreach ($old as $val) {
                                         $selectedSubs[$val] = true;
                                     }
@@ -185,7 +185,7 @@
                         @php
                             $old = old('users');
 
-                            if (count($old) > 0) {
+                            if (is_array($old) && count($old) > 0) {
                                 foreach ($old as $val) {
                                     $selectedUsers[$val] = true;
                                 }

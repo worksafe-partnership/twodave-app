@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class AddingContactNameToCompanies extends Migration
 {
@@ -15,7 +14,6 @@ class AddingContactNameToCompanies extends Migration
     {
         Schema::table('companies', function ($table) {
             $table->string('contact_name');
-            $table->dropColumn('fax');
         });
         Schema::table('table_rows', function ($table) {
             $table->text('col_5')->nullable();
@@ -38,7 +36,6 @@ class AddingContactNameToCompanies extends Migration
     {
         Schema::table('companies', function ($table) {
             $table->dropColumn('contact_name');
-            $table->string('fax');
         });
         Schema::table('table_rows', function ($table) {
             $table->dropColumn('col_5')->nullable();

@@ -251,7 +251,7 @@
                         @php
                             $old = old('associated_users');
 
-                            if (count($old) > 0) {
+                            if (is_array($old) && count($old) > 0) {
                                 foreach ($old as $val) {
                                     $associated_users[$val] = true;
                                 }

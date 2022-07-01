@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateCompanyTable extends Migration
 {
@@ -20,7 +20,6 @@ class CreateCompanyTable extends Migration
             $table->string('vtrams_name', 100);
             $table->string('email');
             $table->string('phone');
-            $table->string('fax')->nullable();
             $table->char('low_risk_character')->default('L');
             $table->char('med_risk_character')->default('M');
             $table->char('high_risk_character')->default('H');
