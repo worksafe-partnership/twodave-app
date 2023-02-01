@@ -1,32 +1,23 @@
 version: '3.9'
 
-networks:
-  twodave:
-
 services:
-  php:
+  app:
     build: .
     platform: linux/amd64
-    container_name: twodave
-    networks:
-      - twodave
     ports:
-      - "3000:80"
+      - 3000:80
     volumes:
-      - .:/var/www/html
+      - ./:/var/www/html/
 
-  mysql:
+  db:
     image: mysql:5.7
     platform: linux/amd64
-    container_name: twodavedb
-    networks:
-      - twodave
     ports:
-      - "3306:3306"
+      - 3306:3306
     environment:
-      - MYSQL_ROOT_PASSWORD=R00tPassw0rd!1
-      - MYSQL_DATABASE=twodave
-      - MYSQL_USER=twodave
-      - MYSQL_PASSWORD=Passw0rd!1
+      - MYSQL_ROOT_PASSWORD=R00tPassw0rd
+      - MYSQL_DATABASE=2dave
+      - MYSQL_USER=2dave
+      - MYSQL_PASSWORD=2davePassw0rd
     volumes:
-      - ./.docker/mysql:/var/lib/mysql
+      - ./.mysql/:/var/lib/mysql/
