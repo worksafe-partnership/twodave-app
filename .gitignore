@@ -1,5 +1,6 @@
 **/.docker/
 **/.DS_Store/
+**/.mysql/
 **/node_modules/
 **/vendor/
 
