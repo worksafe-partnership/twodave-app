@@ -4,20 +4,22 @@ services:
   app:
     build: .
     platform: linux/amd64
+    container_name: 2dave_app
     ports:
       - 3000:80
     volumes:
-      - ./:/var/www/html/
+      - .:/var/www/html
 
   db:
     image: mysql:5.7
     platform: linux/amd64
+    container_name: 2dave_db
     ports:
       - 3306:3306
     environment:
-      - MYSQL_ROOT_PASSWORD=R00tPassw0rd
+      - MYSQL_RANDOM_ROOT_PASSWORD=true
       - MYSQL_DATABASE=2dave
       - MYSQL_USER=2dave
       - MYSQL_PASSWORD=2davePassw0rd
-    volumes:
-      - ./.mysql/:/var/lib/mysql/
+    links:
+      - app

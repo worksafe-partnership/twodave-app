@@ -29,6 +29,11 @@ RUN apt-get update && apt-get install -yq google-chrome-stable
 # copy prepared files from nodejs stage
 COPY --from=nodejs --chown=www-data:www-data /var/app /var/www/html
 
+RUN php artisan key:generate
+RUN php artisan cache:clear
+RUN php artisan route:clear
+RUN php artisan view:clear
+
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
