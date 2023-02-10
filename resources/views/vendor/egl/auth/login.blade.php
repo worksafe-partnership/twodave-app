@@ -74,9 +74,12 @@
             <div class="column is-three-quarters">
                 <div class="card" style="font-family: Arial Black,Arial Bold,Gadget,sans-serif;">
                     <header class="card-header">
-                        <h1 class="card-header-title" style="font-size:3rem;">
-                            <span style="color:#203878">Welcome to</span>&nbsp;www.2dave.site
+                        <h1 class="card-header-title title is-1">
+                            <span style="color:#203878">Welcome to 2DAVE</span>
                         </h1>
+                        <h2 class="card-header-title title is-3">
+                            <span style="color:#203878">{{ env("APP_DESC") }}</span>
+                        </h2>
                     </header>
                     <div class="card-content" style="padding-bottom: 4rem">
                         <div class="content">
