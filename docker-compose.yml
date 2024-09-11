@@ -1,25 +1,32 @@
-version: '3.9'
-
 services:
   app:
     build: .
     platform: linux/amd64
-    container_name: 2dave_app
+    container_name: twodave
     ports:
       - 3000:80
+    networks:
+      - twodave
     volumes:
-      - .:/var/www/html
+      - ./:/var/www/html
+      - ./apache.conf:/etc/apache2/sites-available/000-default.conf
 
-  db:
-    image: mysql:5.7
+  data:
+    image: postgres:16.4
     platform: linux/amd64
-    container_name: 2dave_db
-    ports:
-      - 3306:3306
+    container_name: twodave-data
+    networks:
+      - twodave
     environment:
-      - MYSQL_RANDOM_ROOT_PASSWORD=true
-      - MYSQL_DATABASE=2dave
-      - MYSQL_USER=2dave
-      - MYSQL_PASSWORD=2davePassw0rd
-    links:
-      - app
+      POSTGRES_DB: twodave
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - twodave-data:/var/lib/postgresql/data
+
+networks:
+  twodave:
+
+
+volumes:
+  twodave-data:
